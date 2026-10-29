@@ -55,6 +55,8 @@ import { OrganizationModule } from "./modules/organization/organization.module";
 import { EntitlementModule } from "./modules/organization/entitlement.module";
 import { ExchangeModule } from "./modules/exchange/exchange.module";
 import { ClientModule } from "./modules/client/client.module";
+import { SupplierModule } from "./modules/supplier/supplier.module";
+import { CategoryModule } from "./modules/category/category.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -204,6 +206,8 @@ imports: [
     ModuleFrameworkModule,
     ExchangeModule,
     ClientModule,
+    SupplierModule,
+    CategoryModule,
   ],
   controllers: [AppController, SelectController],
   providers: [
