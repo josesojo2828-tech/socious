@@ -1,5 +1,5 @@
 {
-  "name": "nutringest_web_app",
+  "name": "socius-webapp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,6 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check:sports": "node src/scripts/check-sport-catalog-drift.mjs",
     "scaffold": "node src/script/scaffold-feature.js",
     "generate:ui": "node src/script/generate-ui.js"
   },

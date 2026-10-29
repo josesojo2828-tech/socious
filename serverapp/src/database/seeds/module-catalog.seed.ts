@@ -27,6 +27,54 @@ const prisma = new PrismaClient();
  */
 const MODULE_CATALOG = [
   {
+    key: "INVENTORY",
+    name: "Inventario y Productos",
+    description:
+      "Control de stock, catálogo de productos, SKU, códigos de barra y movimientos.",
+    icon: "package",
+    category: "OPERATIONS",
+    scopes: [ModuleScope.TENANT, ModuleScope.ADMIN],
+    operatorPermit: null,
+    dashboardKind: "ANALYTICS",
+    sortOrder: 10,
+  },
+  {
+    key: "POS",
+    name: "Punto de Venta y Caja",
+    description:
+      "Apertura y cierre de caja, cobros rápidos multi-moneda y arqueos de turno.",
+    icon: "calculator",
+    category: "SALES",
+    scopes: [ModuleScope.TENANT],
+    operatorPermit: null,
+    dashboardKind: "ANALYTICS",
+    sortOrder: 20,
+  },
+  {
+    key: "BILLING_SALES",
+    name: "Ventas y Facturación",
+    description:
+      "Emisión de comprobantes, facturación electrónica, notas de entrega e historial.",
+    icon: "receipt",
+    category: "SALES",
+    scopes: [ModuleScope.TENANT, ModuleScope.ADMIN],
+    operatorPermit: null,
+    dashboardKind: "ANALYTICS",
+    sortOrder: 30,
+  },
+  {
+    key: "CLIENTS",
+    name: "Clientes y CRM",
+    description:
+      "Gestión de cartera de clientes, estados de cuenta, saldos y límite de crédito.",
+    icon: "people",
+    category: "COMMERCIAL",
+    scopes: [ModuleScope.TENANT, ModuleScope.USER],
+    operatorPermit: null,
+    dashboardKind: "CONFIG",
+    sortOrder: 40,
+  },
+  {
     key: "ATTENDANCE_CONTROL",
     name: "Control de Asistencia",
     description:
@@ -36,42 +84,7 @@ const MODULE_CATALOG = [
     scopes: [ModuleScope.TENANT, ModuleScope.ADMIN],
     operatorPermit: null,
     dashboardKind: "CONFIG",
-    sortOrder: 10,
-  },
-  {
-    key: "INSTITUTIONAL_FOOD",
-    name: "Alimentación Institucional",
-    description:
-      "Cálculo de menús y raciones para servicios de alimentación institucional.",
-    icon: "calculator",
-    category: "NUTRITION",
-    scopes: [ModuleScope.TENANT],
-    operatorPermit: null,
-    dashboardKind: "ANALYTICS",
-    sortOrder: 20,
-  },
-  {
-    key: "COMMUNITY",
-    name: "Comunidad",
-    description:
-      "Red social, publicaciones y seguimiento entre profesionales.",
-    icon: "people",
-    category: "COMMUNITY",
-    scopes: [ModuleScope.TENANT, ModuleScope.USER],
-    operatorPermit: null,
-    dashboardKind: "ANALYTICS",
-    sortOrder: 30,
-  },
-  {
-    key: "PORTFOLIO",
-    name: "Portafolio",
-    description: "Portafolio profesional público con casos y experiencia.",
-    icon: "briefcase",
-    category: "COMMUNITY",
-    scopes: [ModuleScope.TENANT, ModuleScope.USER],
-    operatorPermit: null,
-    dashboardKind: "CONFIG",
-    sortOrder: 40,
+    sortOrder: 50,
   },
 ] as const;
 

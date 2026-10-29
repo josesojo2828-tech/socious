@@ -215,43 +215,37 @@ export class OrganizationService {
       throw new ForbiddenException('No tienes acceso a esta clínica');
     }
 
-    // Contar datos reales de la organización
+    // Contar datos reales de la organización (ERP)
     const [
-      totalPatients,
-      totalConsultations,
-      totalPlans,
+      totalClients,
+      totalProducts,
+      totalSales,
       activeMembers,
-      todayAppointments,
     ] = await Promise.all([
-      this.prisma.patient.count({
+      this.prisma.client.count({
         where: { organizationId: orgId },
       }),
-      this.prisma.consultation.count({
+      this.prisma.product.count({
         where: { organizationId: orgId },
       }),
-      this.prisma.nutritionalPlan.count({
+      this.prisma.sale.count({
         where: { organizationId: orgId },
       }),
       this.prisma.organizationMember.count({
         where: { organizationId: orgId, status: 'ACTIVE' },
       }),
-      this.prisma.appointment.count({
-        where: {
-          organizationId: orgId,
-          scheduledAt: {
-            gte: new Date(new Date().setHours(0, 0, 0, 0)),
-            lt: new Date(new Date().setHours(23, 59, 59, 999)),
-          },
-        },
-      }),
     ]);
 
     return {
-      totalPatients,
-      totalConsultations,
-      totalPlans,
+      totalClients,
+      totalProducts,
+      totalSales,
       activeMembers,
-      todayAppointments,
+      // Retrocompatibilidad con vistas
+      totalPatients: totalClients,
+      totalConsultations: totalSales,
+      totalPlans: totalProducts,
+      todayAppointments: 0,
     };
   }
 
@@ -266,76 +260,25 @@ export class OrganizationService {
     });
 
     if (!member || member.status !== 'ACTIVE') {
-      throw new ForbiddenException('No tienes acceso a esta clínica');
+      throw new ForbiddenException('No tienes acceso a esta organización');
     }
 
-    const nutritionist = await this.prisma.nutritionist.findUnique({
-      where: { userId },
-    });
-
-    if (!nutritionist) {
-      return {
-        myTodayAppointments: 0,
-        myPatients: 0,
-        myMenus: 0,
-        myAttendance: 100,
-      };
-    }
-
-    const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
-    const todayEnd = new Date(new Date().setHours(23, 59, 59, 999));
-
-    const [myTodayAppointments, myPatients, myMenus, totalConsultations, completedConsultations] =
-      await Promise.all([
-        this.prisma.appointment.count({
-          where: {
-            nutritionistId: nutritionist.id,
-            organizationId: orgId,
-            scheduledAt: { gte: todayStart, lt: todayEnd },
-          },
-        }),
-        this.prisma.patientNutritionist.count({
-          where: {
-            nutritionistId: nutritionist.id,
-            isActive: true,
-            patient: {
-              organizationId: orgId,
-            },
-          },
-        }),
-        this.prisma.menu.count({
-          where: {
-            nutritionistId: nutritionist.id,
-            organizationId: orgId,
-            deletedAt: null,
-            archivedAt: null,
-          },
-        }),
-        this.prisma.consultation.count({
-          where: {
-            nutritionistId: nutritionist.id,
-            organizationId: orgId,
-          },
-        }),
-        this.prisma.consultation.count({
-          where: {
-            nutritionistId: nutritionist.id,
-            organizationId: orgId,
-            status: 'COMPLETED',
-          },
-        }),
-      ]);
-
-    const myAttendance =
-      totalConsultations > 0
-        ? Math.round((completedConsultations / totalConsultations) * 100)
-        : 100;
+    const [myClients, mySales] = await Promise.all([
+      this.prisma.client.count({
+        where: { organizationId: orgId, createdById: userId },
+      }),
+      this.prisma.sale.count({
+        where: { organizationId: orgId, createdById: userId },
+      }),
+    ]);
 
     return {
-      myTodayAppointments,
-      myPatients,
-      myMenus,
-      myAttendance,
+      myTodayAppointments: 0,
+      myPatients: myClients,
+      myMenus: mySales,
+      myAttendance: 100,
+      myClients,
+      mySales,
     };
   }
 
@@ -759,75 +702,25 @@ export class OrganizationService {
       throw new NotFoundException('Miembro no encontrado en esta organización');
     }
 
-    const [patientCount, appointmentCount, menuCount] = await Promise.all([
-      this.prisma.patient.count({ where: { userId: member.userId } }),
-      this.prisma.appointment.count({ where: { nutritionistId: member.userId, organizationId: orgId } }),
-      this.prisma.menu.count({
-        where: { nutritionistId: member.userId, deletedAt: null, archivedAt: null },
-      }),
+    const [clientsCount, salesCount] = await Promise.all([
+      this.prisma.client.count({ where: { createdById: member.userId, organizationId: orgId } }),
+      this.prisma.sale.count({ where: { createdById: member.userId, organizationId: orgId } }),
     ]);
 
     return {
       member,
       stats: {
-        patientCount,
-        appointmentCount,
-        menuCount,
+        clientsCount,
+        salesCount,
+        patientCount: clientsCount,
+        appointmentCount: 0,
+        menuCount: salesCount,
       },
     };
   }
 
   async getTodayClinicAppointments(orgId: string) {
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999);
-
-    const members = await this.prisma.organizationMember.findMany({
-      where: { organizationId: orgId, status: 'ACTIVE' },
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            avatarUrl: true,
-          },
-        },
-      },
-    });
-
-    const memberColorMap = new Map<string, { colorHex: string; name: string }>();
-    members.forEach((m) => {
-      memberColorMap.set(m.userId, {
-        colorHex: m.colorHex,
-        name: `${m.user.firstName || ''} ${m.user.lastName || ''}`.trim() || 'Nutricionista',
-      });
-    });
-
-    const appointments = await this.prisma.appointment.findMany({
-      where: {
-        organizationId: orgId,
-        scheduledAt: {
-          gte: todayStart,
-          lte: todayEnd,
-        },
-      },
-      orderBy: { scheduledAt: 'asc' },
-    });
-
-    return appointments.map((app) => {
-      const nutriInfo = memberColorMap.get(app.nutritionistId) || {
-        colorHex: '#4F46E5',
-        name: 'Nutricionista',
-      };
-      return {
-        ...app,
-        nutritionistName: nutriInfo.name,
-        colorHex: nutriInfo.colorHex,
-      };
-    });
+    return [];
   }
 
   async getAgendaHistory(orgId: string, yearQuery?: string, monthQuery?: string) {

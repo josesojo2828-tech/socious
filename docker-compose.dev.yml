@@ -1,26 +1,26 @@
 services:
   database:
     image: postgres:15-alpine
-    container_name: ${PROJECT_NAME:-nutrigest}_db
+    container_name: ${PROJECT_NAME:-socius}_db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-nutrigest_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nutrigest_password}
-      POSTGRES_DB: ${POSTGRES_DB:-nutrigest_cloud}
+      POSTGRES_USER: ${POSTGRES_USER:-socius_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-socius_password}
+      POSTGRES_DB: ${POSTGRES_DB:-socius_cloud}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nutrigest_user} -d ${POSTGRES_DB:-nutrigest_cloud}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-socius_user} -d ${POSTGRES_DB:-socius_cloud}"]
       interval: 5s
       timeout: 5s
       retries: 5
     ports:
-      - "${DB_PORT_BIND:-5432}:5432"
+      - "${DB_PORT_BIND:-5477}:5432"
     volumes:
       - ./docker/data/postgres:/var/lib/postgresql/data
     networks:
-      - nutringest_network
+      - socius_network
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: ${PROJECT_NAME:-nutrigest}_pgadmin
+    container_name: ${PROJECT_NAME:-socius}_pgadmin
     restart: always
     ports:
       - "5089:80"
@@ -31,59 +31,59 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
-      - nutringest_network
+      - socius_network
 
   cache:
     image: redis:alpine
-    container_name: ${PROJECT_NAME:-nutrigest}_redis
+    container_name: ${PROJECT_NAME:-socius}_redis
     networks:
-      - nutringest_network
+      - socius_network
 
   minio:
     image: cgr.dev/chainguard/minio:latest
-    container_name: ${PROJECT_NAME:-nutrigest}_minio
+    container_name: ${PROJECT_NAME:-socius}_minio
     user: "0:0"
     ports:
       - "${MINIO_API_PORT:-9005}:9000"
       - "${MINIO_CONSOLE_PORT:-9007}:9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-nutrigest_minio}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-nutrigest_secret_minio}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-socius_minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-socius_secret_minio}
     command: server /data --console-address ":9001"
     volumes:
       - ./docker/data/minio:/data
     networks:
-      - nutringest_network
+      - socius_network
 
   minio-setup:
     image: cgr.dev/chainguard/minio-client:latest-dev
-    container_name: ${PROJECT_NAME:-nutrigest}_minio_setup
+    container_name: ${PROJECT_NAME:-socius}_minio_setup
     depends_on:
       - minio
     entrypoint: >
       /bin/sh -c "
       sleep 5;
-      mc alias set nutrigest http://minio:9000 ${MINIO_ROOT_USER:-nutrigest_minio} ${MINIO_ROOT_PASSWORD:-nutrigest_secret_minio};
-      mc mb nutrigest/${MINIO_BUCKET:-nutrigest-uploads} || true;
-      mc anonymous set public nutrigest/${MINIO_BUCKET:-nutrigest-uploads};
+      mc alias set socius http://minio:9000 ${MINIO_ROOT_USER:-socius_minio} ${MINIO_ROOT_PASSWORD:-socius_secret_minio};
+      mc mb socius/${MINIO_BUCKET:-socius-uploads} || true;
+      mc anonymous set public socius/${MINIO_BUCKET:-socius-uploads};
       exit 0;
       "
     networks:
-      - nutringest_network
+      - socius_network
 
   backend:
     build:
       context: ./serverapp
       dockerfile: Dockerfile.dev
-    container_name: ${PROJECT_NAME:-nutrigest}_backend
+    container_name: ${PROJECT_NAME:-socius}_backend
     depends_on:
       database:
         condition: service_healthy
       cache:
         condition: service_started
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-nutrigest_user}:${POSTGRES_PASSWORD:-nutrigest_password}@database:5432/${POSTGRES_DB:-nutrigest_cloud}?schema=public
-      DIRECT_URL: postgresql://${POSTGRES_USER:-nutrigest_user}:${POSTGRES_PASSWORD:-nutrigest_password}@database:5432/${POSTGRES_DB:-nutrigest_cloud}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-socius_user}:${POSTGRES_PASSWORD:-socius_password}@database:5432/${POSTGRES_DB:-socius_cloud}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-socius_user}:${POSTGRES_PASSWORD:-socius_password}@database:5432/${POSTGRES_DB:-socius_cloud}?schema=public
       REDIS_HOST: cache
       REDIS_PORT: 6379
       NODE_ENV: ${NODE_ENV:-development}
@@ -91,9 +91,9 @@ services:
       PORT: 3001
       MINIO_ENDPOINT: minio
       MINIO_PORT: 9000
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-nutrigest_minio}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-nutrigest_secret_minio}
-      MINIO_BUCKET: ${MINIO_BUCKET:-nutrigest-uploads}
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-socius_minio}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-socius_secret_minio}
+      MINIO_BUCKET: ${MINIO_BUCKET:-socius-uploads}
       APP_URL: ${APP_URL:-http://localhost:3001}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
@@ -110,7 +110,7 @@ services:
       - /app/dist
       - ./docker/data/uploads:/app/public/files
     networks:
-      - nutringest_network
+      - socius_network
     deploy:
       resources:
         limits:
@@ -121,7 +121,7 @@ services:
     build:
       context: ./webapp
       dockerfile: Dockerfile.dev
-    container_name: ${PROJECT_NAME:-nutrigest}_frontend
+    container_name: ${PROJECT_NAME:-socius}_frontend
     depends_on:
       - backend
     environment:
@@ -139,7 +139,7 @@ services:
       - /app/node_modules
     command: npm run dev
     networks:
-      - nutringest_network
+      - socius_network
     deploy:
       resources:
         limits:
@@ -150,7 +150,7 @@ services:
     build:
       context: ./sub-webapp
       dockerfile: Dockerfile.dev
-    container_name: ${PROJECT_NAME:-nutrigest}_sub_frontend
+    container_name: ${PROJECT_NAME:-socius}_sub_frontend
     depends_on:
       - backend
     environment:
@@ -167,7 +167,7 @@ services:
       - /app/node_modules
     command: npm run dev
     networks:
-      - nutringest_network
+      - socius_network
     deploy:
       resources:
         limits:
@@ -176,7 +176,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: ${PROJECT_NAME:-nutrigest}_nginx
+    container_name: ${PROJECT_NAME:-socius}_nginx
     volumes:
       - ${NGINX_CONF_PATH:-./docker/nginx.conf}:/etc/nginx/nginx.conf:ro
     ports:
@@ -187,10 +187,10 @@ services:
       - backend
       - minio
     networks:
-      - nutringest_network
+      - socius_network
 
 networks:
-  nutringest_network:
+  socius_network:
     driver: bridge
 
 volumes:

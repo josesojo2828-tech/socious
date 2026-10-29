@@ -156,19 +156,6 @@ export class DashboardService {
           },
         ],
       });
-
-      // 5. Marketplace Admin
-      sections.push({
-        title: "common.sidebar.marketplace_admin",
-        icon: "store",
-        items: [
-          {
-            title: "common.sidebar.marketplace_management",
-            icon: "adminstration",
-            link: "/dashboard/marketplace/admin",
-          },
-        ],
-      });
     } else if (isPatient) {
       // =========================================================================
       // SECCIONES EXCLUSIVAS PARA PACIENTE (isPatient)
@@ -217,146 +204,81 @@ export class DashboardService {
         });
       }
 
-      // 3. Gestión Clínica
-      const clinicalItems: SidebarItem[] = [];
-      if (
-        permits.includes(this.permitRepository.DIET_LIST_OWN) ||
-        permits.includes(this.permitRepository.DIET_LIST_ALL) ||
-        permits.includes(this.permitRepository.CONSULTATION_LIST_OWN) ||
-        permits.includes(this.permitRepository.CONSULTATION_LIST_ALL)
-      ) {
-        clinicalItems.push({
-          title: "common.sidebar.consultations",
-          icon: "calendar",
-          link: "/dashboard/diets",
-        });
-      }
-      if (
-        permits.includes(this.permitRepository.PATIENT_LIST_OWN) ||
-        permits.includes(this.permitRepository.PATIENT_LIST_ALL)
-      ) {
-        clinicalItems.push({
-          title: "common.sidebar.patients",
-          icon: "users",
-          link: "/dashboard/patients",
-        });
-      }
-      if (clinicalItems.length > 0) {
-        sections.push({
-          title: "common.sidebar.clinical_management",
-          icon: "users",
-          items: clinicalItems,
-        });
-      }
-
-      // 4. Herramientas Nutricionales
-      const nutritionalItems: SidebarItem[] = [];
-      if (
-        permits.includes(this.permitRepository.MENU_LIST_OWN) ||
-        permits.includes(this.permitRepository.MENU_LIST_ALL) ||
-        permits.includes("MENU_LIST")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.menu",
-          icon: "menu",
-          link: "/dashboard/menu",
-        });
-      }
-      if (
-        permits.includes(this.permitRepository.EXCHANGE_LIST_LIST_OWN) ||
-        permits.includes(this.permitRepository.EXCHANGE_LIST_LIST_ALL) ||
-        permits.includes("EXCHANGE_LIST_LIST")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.exchange",
-          icon: "exchange",
-          link: "/dashboard/exchange-list",
-        });
-      }
-      if (
-        permits.includes(this.permitRepository.FOOD_LIST_OWN) ||
-        permits.includes(this.permitRepository.FOOD_LIST_ALL) ||
-        permits.includes("FOOD_LIST")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.foods",
-          icon: "apple",
-          link: "/dashboard/foods",
-        });
-      }
-      if (
-        permits.includes(this.permitRepository.FOOD_LIST_OWN) ||
-        permits.includes(this.permitRepository.FOOD_LIST_ALL) ||
-        permits.includes("FOOD_LIST")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.exchange_foods",
-          icon: "arrow-left-right",
-          link: "/dashboard/exchange-food",
-        });
-      }
-      if (
-        permits.includes(this.permitRepository.CONDIMENT_LIST_OWN) ||
-        permits.includes(this.permitRepository.CONDIMENT_LIST_ALL) ||
-        permits.includes("CONDIMENT_LIST")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.condiments",
-          icon: "droplet",
-          link: "/dashboard/condiments",
-        });
-      }
-      if (
-        permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||
-        hasModule("INSTITUTIONAL_FOOD")
-      ) {
-        nutritionalItems.push({
-          title: "common.sidebar.institutional_food",
+      // 2. Operaciones & POS
+      const posItems: SidebarItem[] = [
+        {
+          title: "Punto de Venta (POS)",
           icon: "calculator",
-          link: "/dashboard/institutional",
-        });
-      }
-      if (nutritionalItems.length > 0) {
-        sections.push({
-          title: "common.sidebar.nutritional_tools",
-          icon: "food",
-          items: nutritionalItems,
-        });
-      }
+          link: "/dashboard/pos",
+        },
+        {
+          title: "Caja y Turnos",
+          icon: "wallet",
+          link: "/dashboard/caja",
+        },
+      ];
+      sections.push({
+        title: "Punto de Venta",
+        icon: "calculator",
+        items: posItems,
+      });
 
-      // 5. Comunidad & Red
-      const communityItems: SidebarItem[] = [];
-      if (!isPatient) {
-        if (hasModule("COMMUNITY")) {
-          communityItems.push({
-            title: "common.sidebar.community",
-            icon: "people",
-            link: "/dashboard/community",
-          });
-        }
-        communityItems.push({
-          title: "common.sidebar.campus",
-          icon: "mortarboard",
-          link: "/dashboard/campus",
-        });
-        communityItems.push({
-          title: "common.sidebar.marketplace",
-          icon: "shopping-bag",
-          link: "/dashboard/marketplace",
-        });
-        if (permits.includes("MARKET_SELLER")) {
-          communityItems.push({
-            title: "Mis Productos",
-            icon: "store",
-            link: "/dashboard/marketplace/products",
-          });
-          communityItems.push({
-            title: "Mis Campañas",
-            icon: "megaphone",
-            link: "/dashboard/marketplace/campaigns",
-          });
-        }
-      }
+      // 3. Ventas & Facturación
+      const salesItems: SidebarItem[] = [
+        {
+          title: "Ventas Realizadas",
+          icon: "receipt",
+          link: "/dashboard/ventas",
+        },
+      ];
+      sections.push({
+        title: "Ventas",
+        icon: "receipt",
+        items: salesItems,
+      });
+
+      // 4. Inventario & Catálogo
+      const inventoryItems: SidebarItem[] = [
+        {
+          title: "Productos y Servicios",
+          icon: "package",
+          link: "/dashboard/productos",
+        },
+        {
+          title: "Categorías",
+          icon: "folder",
+          link: "/dashboard/categorias",
+        },
+        {
+          title: "Movimientos / Stock",
+          icon: "arrows-down-up",
+          link: "/dashboard/inventario",
+        },
+        {
+          title: "Proveedores",
+          icon: "truck",
+          link: "/dashboard/proveedores",
+        },
+      ];
+      sections.push({
+        title: "Inventario",
+        icon: "package",
+        items: inventoryItems,
+      });
+
+      // 5. Clientes (CRM)
+      const clientItems: SidebarItem[] = [
+        {
+          title: "Clientes",
+          icon: "users",
+          link: "/dashboard/clientes",
+        },
+      ];
+      sections.push({
+        title: "Clientes",
+        icon: "users",
+        items: clientItems,
+      });
       if (communityItems.length > 0) {
         sections.push({
           title: "common.sidebar.community_network",

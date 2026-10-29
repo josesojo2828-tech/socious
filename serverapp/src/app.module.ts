@@ -45,31 +45,17 @@ import { FakerInitService } from "./shared/faker/faker-init.service";
 import { NotificationModule } from "./modules/notification/notification.module";
 import NotificationRepository from "./modules/notification/repository/notification.repository";
 import { UserCreatedListener } from "./shared/event/modules/user/user.listener";
-import { FoodModule } from "./modules/nutringest/food/food.module";
-import { DietModule } from "./modules/nutringest/consultation/diet.module";
-import { MenuModule } from "./modules/nutringest/menu/menu.module";
-import { ExchangeListModule } from "./modules/nutringest/exchange-list/exchange-list.module";
-import { CommunityModule } from "./modules/nutringest/community/community.module";
-import { PatientModule } from "./modules/nutringest/patient/patient.module";
-import { PatientReferralModule } from "./modules/nutringest/patient-referral/patient-referral.module";
-import { PriorityLeadsModule } from './modules/priority-leads/priority-leads.module';
 import { MailModule } from './modules/mail/mail.module';
-import { CampusModule } from "./modules/campus/campus.module";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { CmsModule } from "./modules/cms/cms.module";
 import CmsRepository from "./modules/cms/repository/cms.repository";
 import { ActivityModule } from "./modules/activity/activity.module";
 import { UsageModule } from "./modules/usage/usage.module";
-import { PortfolioModule } from "./modules/portfolio/portfolio.module";
-import { CondimentModule } from "./modules/nutringest/condiment/condiment.module";
-import { InstitutionalFoodModule } from "./modules/nutringest/institutional/institutional-food.module";
 import { ReferenceDataSeedModule } from "./shared/seed/reference-data-seed.module";
 import { OrganizationModule } from "./modules/organization/organization.module";
 import { EntitlementModule } from "./modules/organization/entitlement.module";
 import { ExchangeModule } from "./modules/exchange/exchange.module";
-import { MarketplaceModule } from "./modules/marketplace/marketplace.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
-import { PatientInvitationModule } from "./modules/patient-invitation/patient-invitation.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
 import { CountryModule } from "./modules/country/country.module";
@@ -208,30 +194,16 @@ imports: [
     CustomPersonalModule,
     NotificationModule,
 
-    // NUTRINGEST
-    FoodModule,
-    PatientModule,
-    DietModule,
-    MenuModule,
-    ExchangeListModule,
-    CommunityModule,
-    PriorityLeadsModule,
+    // CORE PLATFORM & ERP
     MailModule,
-    CampusModule,
     CmsModule,
     ActivityModule,
     UsageModule,
-    PortfolioModule,
-    CondimentModule,
-    PatientReferralModule,
-    InstitutionalFoodModule,
     ReferenceDataSeedModule,
     OrganizationModule,
     EntitlementModule,
     ModuleFrameworkModule,
     ExchangeModule,
-    MarketplaceModule,
-    PatientInvitationModule,
   ],
   controllers: [AppController, SelectController],
   providers: [

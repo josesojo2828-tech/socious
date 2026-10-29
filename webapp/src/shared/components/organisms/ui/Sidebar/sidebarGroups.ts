@@ -13,12 +13,39 @@ export interface SidebarGroup {
  */
 export const sidebarGroups: SidebarGroup[] = [
   {
-    label: "Usuarios",
+    label: "Punto de Venta",
+    icon: "calculator",
+    paths: [
+      "/dashboard/pos",
+      "/dashboard/caja",
+      "/dashboard/ventas",
+    ],
+  },
+  {
+    label: "Inventario",
+    icon: "package",
+    paths: [
+      "/dashboard/productos",
+      "/dashboard/categorias",
+      "/dashboard/inventario",
+      "/dashboard/proveedores",
+    ],
+  },
+  {
+    label: "Clientes",
     icon: "users",
     paths: [
+      "/dashboard/clientes",
+      "/dashboard/patients",
+    ],
+  },
+  {
+    label: "Organización",
+    icon: "buildings",
+    paths: [
+      "/dashboard/organization",
       "/dashboard/users",
       "/dashboard/permits",
-      "/dashboard/campus",
       "/dashboard/wallets",
       "/dashboard/wallet",
       "/dashboard/users/subscriptions",
@@ -27,37 +54,12 @@ export const sidebarGroups: SidebarGroup[] = [
     ],
   },
   {
-    label: "Nutrición",
-    icon: "food",
-    paths: [
-      "/dashboard/patients",
-      "/dashboard/foods",
-      "/dashboard/condiments",
-      "/dashboard/menu",
-      "/dashboard/exchange-food",
-      "/dashboard/exchange-list",
-      "/dashboard/diets",
-      "/dashboard/plans",
-      "/dashboard/referrals",
-      "/dashboard/organization",
-      "/dashboard/institutional",
-    ],
-  },
-  {
-    label: "Mi Salud",
-    icon: "heart-pulse",
-    paths: [
-      "/dashboard/patient",
-    ],
-  },
-  {
-    label: "Aplicación",
+    label: "Configuración",
     icon: "settings",
     paths: [
       "/dashboard/transactions",
       "/dashboard/payment-methods",
       "/dashboard/subscription",
-      "/dashboard/universities",
       "/dashboard/admin/countries",
       "/dashboard/admin/settings",
     ],
