@@ -604,6 +604,25 @@ model ExchangeRate {
 }
 
 // ======================================
+// SECUENCIAS POR TENANT (numeración atómica)
+// ======================================
+
+// Contador de documentos por tenant. `tenantKey` es `organizationId` o
+// `"GLOBAL"` para el contexto personal: Postgres trata cada NULL como distinto
+// en un índice único, así que una columna nullable no serviría para el upsert
+// atómico (`INSERT ... ON CONFLICT DO UPDATE ... RETURNING`).
+model Counter {
+  id        String   @id @default(uuid())
+  tenantKey String   @default("GLOBAL")
+  scope     String // SALE | ORDER | PURCHASE
+  value     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantKey, scope])
+  @@index([scope])
+}
+
+// ======================================
 // CLIENTES (CRM)
 // ======================================
 

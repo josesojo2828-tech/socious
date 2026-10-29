@@ -15,6 +15,8 @@ import {
 import { PaymentMethodService } from "./payment-method.service";
 import PaymentMethodRepository from "./repository/payment-method.repository"; // Corregido import
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
+import { Public } from "src/shared/decorators/public.decorator";
+import { BUSINESS_PAYMENT_METHODS } from "src/shared/constants/payment-methods";
 
 import type {
   PaymentMethodCreate,
@@ -77,6 +79,19 @@ export class PaymentMethodController {
   }
 
   // ---------- VISTAS Y DATOS (GET) ---------- //
+
+  /**
+   * Canonical business payment methods used by sales, purchases and cash
+   * movements (Efectivo USD/Bs, Pago Móvil, Zelle, USDT, ...).
+   *
+   * Public on purpose: the storefront needs it to render the checkout options
+   * before the customer is authenticated.
+   */
+  @Get("options")
+  @Public()
+  getBusinessPaymentMethodOptions() {
+    return BUSINESS_PAYMENT_METHODS;
+  }
 
   @Get("")
   @UseGuards(SessionAuthGuard)
