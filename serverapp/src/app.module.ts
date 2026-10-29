@@ -54,6 +54,7 @@ import { ReferenceDataSeedModule } from "./shared/seed/reference-data-seed.modul
 import { OrganizationModule } from "./modules/organization/organization.module";
 import { EntitlementModule } from "./modules/organization/entitlement.module";
 import { ExchangeModule } from "./modules/exchange/exchange.module";
+import { ClientModule } from "./modules/client/client.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -202,6 +203,7 @@ imports: [
     EntitlementModule,
     ModuleFrameworkModule,
     ExchangeModule,
+    ClientModule,
   ],
   controllers: [AppController, SelectController],
   providers: [
