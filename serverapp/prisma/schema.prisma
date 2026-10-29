@@ -94,7 +94,12 @@ model User {
   closedCashShifts              CashShift[]            @relation("ClosedCashShifts")
   createdCashMovements          CashMovement[]         @relation("CreatedCashMovements")
   createdSales                  Sale[]                 @relation("CreatedSaleRecords")
+  createdSalePayments           SalePayment[]          @relation("CreatedSalePaymentRecords")
+  createdPurchases              Purchase[]             @relation("CreatedPurchaseRecords")
+  createdPurchasePayments       PurchasePayment[]      @relation("CreatedPurchasePaymentRecords")
+  createdOrders                 Order[]                @relation("CreatedOrderRecords")
   createdStockMovements         StockMovement[]        @relation("CreatedStockMovementRecords")
+  createdExchangeRates          ExchangeRate[]         @relation("CreatedExchangeRateRecords")
 
   @@index([isDemo])
 }
@@ -521,36 +526,42 @@ model UserPermission {
 }
 
 // ======================================
-// ORGANIZACIONES Y SUCURSALES
+// ORGANIZACIONES Y SUCURSALES (SOCIUS ERP)
 // ======================================
 
 model Organization {
-  id                        String              @id @default(uuid())
-  name                      String
-  taxId                     String?
-  logoUrl                   String?
-  maxSeats                  Int                 @default(5)
-  status                    String              @default("ACTIVE")
-  createdAt                 DateTime            @default(now())
-  updatedAt                 DateTime            @updatedAt
-  deletedAt                 DateTime?
+  id                 String               @id @default(uuid())
+  name               String
+  slug               String?              @unique // Para la tienda pública: socius.com/shop/[slug]
+  taxId              String?              // RIF / Cédula / RUT / NIT
+  logoUrl            String?
+  maxSeats           Int                  @default(5)
+  status             String               @default("ACTIVE")
+  defaultCurrency    String               @default("USD") // Moneda base del negocio (USD, VES, COP, etc.)
+  currencyVisibility Json?                // { "showUSD": true, "showVES": true, "showUSDT": true, "showBCV": true }
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
 
-  members                   OrganizationMember[]
-  subscriptions             Subscription[]
-  transactions              Transaction[]
-  entitlements              Entitlement[]
-  invoices                  Invoice[]
-  userPermissions           UserPermission[]
-  moduleGrants              ModuleGrant[]
+  members            OrganizationMember[]
+  subscriptions      Subscription[]
+  transactions       Transaction[]
+  entitlements       Entitlement[]
+  invoices           Invoice[]
+  userPermissions    UserPermission[]
+  moduleGrants       ModuleGrant[]
 
   // Socius ERP Relations
-  clients                   Client[]
-  productCategories         ProductCategory[]
-  products                  Product[]
-  suppliers                 Supplier[]
-  cashRegisters             CashRegister[]
-  sales                     Sale[]
-  stockMovements            StockMovement[]
+  clients            Client[]
+  categories         Category[]
+  products           Product[]
+  suppliers          Supplier[]
+  cashRegisters      CashRegister[]
+  sales              Sale[]
+  purchases          Purchase[]
+  orders             Order[]
+  stockMovements     StockMovement[]
+  exchangeRates      ExchangeRate[]
 }
 
 model OrganizationMember {
@@ -572,21 +583,41 @@ model OrganizationMember {
 }
 
 // ======================================
-// MODELOS ERP: CLIENTES (CRM)
+// TASAS DE CAMBIO (BCV, USDT, PARALELO)
+// ======================================
+
+model ExchangeRate {
+  id             String        @id @default(uuid())
+  organizationId String?       // null = tasa global de plataforma
+  rateBcv        Decimal       @db.Decimal(14, 4) // Tasa oficial BCV
+  rateUsdt       Decimal       @db.Decimal(14, 4) // Tasa cripto USDT / Binance P2P
+  rateParallel   Decimal?      @db.Decimal(14, 4) // Tasa libre / paralelo opcional
+  date           DateTime      @default(now())
+  source         String        @default("MANUAL") // BCV_API, BINANCE_P2P, MANUAL
+  createdById    String?
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  createdBy      User?         @relation("CreatedExchangeRateRecords", fields: [createdById], references: [id])
+
+  @@index([organizationId, date(sort: Desc)])
+  @@index([date(sort: Desc)])
+}
+
+// ======================================
+// CLIENTES (CRM)
 // ======================================
 
 model Client {
   id             String        @id @default(uuid())
   name           String
-  businessName   String?
   taxId          String?       // Cédula, RIF, NIT, RUT, CIF
   email          String?
   phone          String?
   address        String?
   city           String?
   state          String?
-  creditLimit    Decimal       @default(0.00) @db.Decimal(12, 2)
-  currentBalance Decimal       @default(0.00) @db.Decimal(12, 2)
+  creditLimitUSD Decimal       @default(0.00) @db.Decimal(14, 2)
+  currentBalanceUSD Decimal    @default(0.00) @db.Decimal(14, 2) // Saldo pendiente por cobrar
   notes          String?
   isActive       Boolean       @default(true)
   createdById    String?       @map("created_by_id")
@@ -598,6 +629,7 @@ model Client {
   createdBy      User?         @relation("CreatedClientRecords", fields: [createdById], references: [id])
   organization   Organization? @relation(fields: [organizationId], references: [id])
   sales          Sale[]
+  orders         Order[]
 
   @@index([organizationId])
   @@index([taxId])
@@ -605,34 +637,20 @@ model Client {
 }
 
 // ======================================
-// MODELOS ERP: INVENTARIO & PRODUCTOS
+// PROVEEDORES
 // ======================================
-
-model ProductCategory {
-  id             String        @id @default(uuid())
-  name           String
-  code           String?
-  description    String?
-  organizationId String?
-  isActive       Boolean       @default(true)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  deletedAt      DateTime?
-
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  products       Product[]
-
-  @@index([organizationId])
-}
 
 model Supplier {
   id             String        @id @default(uuid())
   name           String
-  taxId          String?
+  taxId          String?       // RIF / Cédula del proveedor
   contactName    String?
   email          String?
   phone          String?
-  address        String?
+  address        String?       // Ubicación
+  city           String?
+  state          String?
+  currentBalanceUSD Decimal    @default(0.00) @db.Decimal(14, 2) // Deuda pendiente con el proveedor
   notes          String?
   organizationId String?
   isActive       Boolean       @default(true)
@@ -642,50 +660,100 @@ model Supplier {
 
   organization   Organization? @relation(fields: [organizationId], references: [id])
   products       Product[]
+  purchases      Purchase[]
 
   @@index([organizationId])
+  @@index([name])
+}
+
+// ======================================
+// CATEGORÍAS Y SUBCATEGORÍAS GENERALES
+// ======================================
+
+model Category {
+  id             String        @id @default(uuid())
+  name           String
+  slug           String
+  icon           String?
+  description    String?
+  parentId       String?
+  isSystem       Boolean       @default(true) // Catálogo estándar de plataforma (no manipulable por clientes comunes)
+  organizationId String?       // null = global del sistema
+
+  parent         Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  subCategories  Category[]    @relation("CategoryHierarchy")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  products       Product[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+
+  @@index([parentId])
+  @@index([organizationId])
+  @@index([slug])
+}
+
+// ======================================
+// PRODUCTOS Y CATÁLOGO
+// ======================================
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+  ON_SALE
 }
 
 model Product {
-  id             String           @id @default(uuid())
-  sku            String           // Código de referencia interna
-  barcode        String?          // Código de barras
-  name           String
-  description    String?
-  costPrice      Decimal          @default(0.00) @db.Decimal(12, 2)
-  salePrice      Decimal          @default(0.00) @db.Decimal(12, 2)
-  wholesalePrice Decimal?         @db.Decimal(12, 2)
-  stock          Decimal          @default(0.00) @db.Decimal(12, 2)
-  minStock       Decimal          @default(0.00) @db.Decimal(12, 2)
-  unit           String           @default("UND")
-  taxRate        Decimal          @default(16.00) @db.Decimal(5, 2)
-  isService      Boolean          @default(false)
-  isActive       Boolean          @default(true)
-  imageUrl       String?
-  categoryId     String?
-  supplierId     String?
-  organizationId String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deletedAt      DateTime?
+  id                String          @id @default(uuid())
+  sku               String          // Código interno / SKU
+  barcode           String?         // Código de barras
+  name              String
+  description       String?
+  costPriceUSD      Decimal         @default(0.00) @db.Decimal(14, 2)
+  salePriceUSD      Decimal         @default(0.00) @db.Decimal(14, 2)
+  wholesalePriceUSD Decimal?        @db.Decimal(14, 2)
+  stock             Decimal         @default(0.00) @db.Decimal(12, 2)
+  minStock          Decimal         @default(0.00) @db.Decimal(12, 2)
+  unit              String          @default("UND")
+  taxRate           Decimal         @default(0.00) @db.Decimal(5, 2)
+  isService         Boolean         @default(false)
+  isPublic          Boolean         @default(false) // Para mostrar en el carrito público / pedidos online
+  status            ProductStatus   @default(ACTIVE)
+  imageUrl          String?
+  categoryId        String?
+  supplierId        String?
+  organizationId    String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
 
-  category       ProductCategory? @relation(fields: [categoryId], references: [id])
-  supplier       Supplier?        @relation(fields: [supplierId], references: [id])
-  organization   Organization?    @relation(fields: [organizationId], references: [id])
-  stockMovements StockMovement[]
-  saleItems      SaleItem[]
+  category          Category?       @relation(fields: [categoryId], references: [id])
+  supplier          Supplier?       @relation(fields: [supplierId], references: [id])
+  organization      Organization?   @relation(fields: [organizationId], references: [id])
+  stockMovements    StockMovement[]
+  saleItems         SaleItem[]
+  purchaseItems     PurchaseItem[]
+  orderItems        OrderItem[]
 
   @@index([organizationId])
   @@index([sku])
   @@index([barcode])
   @@index([categoryId])
+  @@index([isPublic, status])
 }
+
+// ======================================
+// MOVIMIENTOS DE STOCK (KARDEX)
+// ======================================
 
 enum StockMovementType {
   IN
   OUT
   ADJUSTMENT
   SALE
+  PURCHASE
   RETURN
 }
 
@@ -696,10 +764,10 @@ model StockMovement {
   createdById    String?
   type           StockMovementType
   quantity       Decimal           @db.Decimal(12, 2)
-  unitCost       Decimal?          @db.Decimal(12, 2)
+  unitCostUSD    Decimal?          @db.Decimal(14, 2)
   previousStock  Decimal           @db.Decimal(12, 2)
   newStock       Decimal           @db.Decimal(12, 2)
-  reference      String?
+  reference      String?           // Nro de factura venta, compra o ajuste
   notes          String?
   createdAt      DateTime          @default(now())
 
@@ -713,7 +781,7 @@ model StockMovement {
 }
 
 // ======================================
-// MODELOS ERP: CAJA & TURNOS (POS)
+// CAJA & ARQUEOS DE TURNO (POS)
 // ======================================
 
 enum CashRegisterStatus {
@@ -723,7 +791,7 @@ enum CashRegisterStatus {
 
 model CashRegister {
   id             String             @id @default(uuid())
-  name           String
+  name           String             // "Caja Principal", "Caja 1"
   status         CashRegisterStatus @default(CLOSED)
   organizationId String?
   createdAt      DateTime           @default(now())
@@ -741,24 +809,26 @@ enum CashShiftStatus {
 }
 
 model CashShift {
-  id             String          @id @default(uuid())
-  cashRegisterId String
-  openedById     String
-  closedById     String?
-  openedAt       DateTime        @default(now())
-  closedAt       DateTime?
-  initialAmount  Decimal         @default(0.00) @db.Decimal(12, 2)
-  expectedAmount Decimal         @default(0.00) @db.Decimal(12, 2)
-  actualAmount   Decimal?        @db.Decimal(12, 2)
-  difference     Decimal?        @db.Decimal(12, 2)
-  status         CashShiftStatus @default(OPEN)
-  notes          String?
+  id                String            @id @default(uuid())
+  cashRegisterId    String
+  openedById        String
+  closedById        String?
+  openedAt          DateTime          @default(now())
+  closedAt          DateTime?
+  initialAmountUSD  Decimal           @default(0.00) @db.Decimal(14, 2)
+  initialAmountVES  Decimal           @default(0.00) @db.Decimal(14, 2)
+  expectedAmountUSD Decimal           @default(0.00) @db.Decimal(14, 2)
+  actualAmountUSD   Decimal?          @db.Decimal(14, 2)
+  differenceUSD     Decimal?          @db.Decimal(14, 2)
+  status            CashShiftStatus   @default(OPEN)
+  notes             String?
 
-  cashRegister   CashRegister    @relation(fields: [cashRegisterId], references: [id])
-  openedBy       User            @relation("OpenedCashShifts", fields: [openedById], references: [id])
-  closedBy       User?           @relation("ClosedCashShifts", fields: [closedById], references: [id])
-  movements      CashMovement[]
-  sales          Sale[]
+  cashRegister      CashRegister      @relation(fields: [cashRegisterId], references: [id])
+  openedBy          User              @relation("OpenedCashShifts", fields: [openedById], references: [id])
+  closedBy          User?             @relation("ClosedCashShifts", fields: [closedById], references: [id])
+  movements         CashMovement[]
+  salePayments      SalePayment[]
+  purchasePayments  PurchasePayment[]
 
   @@index([cashRegisterId])
   @@index([status])
@@ -772,8 +842,9 @@ enum CashMovementType {
 model CashMovement {
   id             String           @id @default(uuid())
   cashShiftId    String
-  type           CashMovementType
-  amount         Decimal          @db.Decimal(12, 2)
+  type           CashMovementType // INCOME = Entrada, EXPENSE = Retiro / Gasto
+  amount         Decimal          @db.Decimal(14, 2)
+  currency       String           @default("USD")
   paymentMethod  String           @default("CASH")
   reason         String
   reference      String?
@@ -787,86 +858,248 @@ model CashMovement {
 }
 
 // ======================================
-// MODELOS ERP: VENTAS & FACTURACIÓN
+// PEDIDOS WEB / CARRITO
+// ======================================
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  orderNumber     String        // PED-00001
+  organizationId  String?
+  clientId        String?
+  customerName    String
+  customerPhone   String?
+  customerEmail   String?
+  customerAddress String?
+  rateBcv         Decimal       @default(1.00) @db.Decimal(14, 4)
+  rateUsdt        Decimal       @default(1.00) @db.Decimal(14, 4)
+  totalUSD        Decimal       @default(0.00) @db.Decimal(14, 2)
+  totalVES        Decimal       @default(0.00) @db.Decimal(14, 2)
+  totalUSDT       Decimal       @default(0.00) @db.Decimal(14, 2)
+  status          OrderStatus   @default(PENDING)
+  notes           String?
+  saleId          String?       @unique
+  createdById     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  client          Client?       @relation(fields: [clientId], references: [id])
+  createdBy       User?         @relation("CreatedOrderRecords", fields: [createdById], references: [id])
+  sale            Sale?         @relation("OrderSale", fields: [saleId], references: [id])
+  items           OrderItem[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  productId   String?
+  productName String
+  quantity    Decimal  @db.Decimal(12, 2)
+  priceUSD    Decimal  @db.Decimal(14, 2)
+  totalUSD    Decimal  @db.Decimal(14, 2)
+
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// ======================================
+// COMPRAS A PROVEEDORES
+// ======================================
+
+enum PurchaseStatus {
+  PENDING
+  RECEIVED
+  CANCELLED
+}
+
+model Purchase {
+  id             String            @id @default(uuid())
+  purchaseNumber String            // Nro de factura o COM-00001
+  organizationId String?
+  supplierId     String?
+  issueDate      DateTime          @default(now())
+  dueDate        DateTime?         // Para compras a crédito
+  deliveryDate   DateTime?
+  rateBcv        Decimal           @default(1.00) @db.Decimal(14, 4)
+  rateUsdt       Decimal           @default(1.00) @db.Decimal(14, 4)
+  subtotalUSD    Decimal           @db.Decimal(14, 2)
+  taxUSD         Decimal           @default(0.00) @db.Decimal(14, 2)
+  totalUSD       Decimal           @db.Decimal(14, 2)
+  totalVES       Decimal           @default(0.00) @db.Decimal(14, 2)
+  totalUSDT      Decimal           @default(0.00) @db.Decimal(14, 2)
+  status         PurchaseStatus    @default(PENDING)
+  paymentStatus  PaymentStatus     @default(UNPAID)
+  notes          String?
+  createdById    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime?
+
+  organization   Organization?     @relation(fields: [organizationId], references: [id])
+  supplier       Supplier?         @relation(fields: [supplierId], references: [id])
+  createdBy      User?             @relation("CreatedPurchaseRecords", fields: [createdById], references: [id])
+  items          PurchaseItem[]
+  payments       PurchasePayment[]
+
+  @@index([organizationId])
+  @@index([supplierId])
+  @@index([purchaseNumber])
+  @@index([issueDate])
+}
+
+model PurchaseItem {
+  id          String    @id @default(uuid())
+  purchaseId  String
+  productId   String?
+  productName String
+  quantity    Decimal   @db.Decimal(12, 2)
+  unitCostUSD Decimal   @db.Decimal(14, 2)
+  totalUSD    Decimal   @db.Decimal(14, 2)
+
+  purchase    Purchase  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product     Product?  @relation(fields: [productId], references: [id])
+
+  @@index([purchaseId])
+  @@index([productId])
+}
+
+model PurchasePayment {
+  id             String        @id @default(uuid())
+  purchaseId     String
+  cashShiftId    String?
+  amountUSD      Decimal       @db.Decimal(14, 2)
+  amountVES      Decimal       @default(0.00) @db.Decimal(14, 2)
+  amountOriginal Decimal       @db.Decimal(14, 2)
+  currency       String        @default("USD")
+  paymentMethod  String        // PAGO_MOVIL, CASH_USD, CASH_VES, USDT_BINANCE, TRANSFER, ZELLE
+  rateBcv        Decimal       @default(1.00) @db.Decimal(14, 4)
+  rateUsdt       Decimal       @default(1.00) @db.Decimal(14, 4)
+  reference      String?
+  paidAt         DateTime      @default(now()) // Fecha real de cuando se pagó al proveedor
+  notes          String?
+  createdById    String?
+
+  purchase       Purchase      @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  cashShift      CashShift?    @relation(fields: [cashShiftId], references: [id])
+  createdBy      User?         @relation("CreatedPurchasePaymentRecords", fields: [createdById], references: [id])
+
+  @@index([purchaseId])
+  @@index([paidAt])
+}
+
+// ======================================
+// VENTAS Y FACTURACIÓN (DEVENGO VS COBRO)
 // ======================================
 
 enum SaleStatus {
   COMPLETED
-  PENDING
   CANCELLED
 }
 
-enum SalePaymentStatus {
-  PAID
-  PARTIAL
+enum PaymentStatus {
   UNPAID
+  PARTIAL
+  PAID
 }
 
 model Sale {
   id             String            @id @default(uuid())
-  saleNumber     String            // Correlativo e.g. VTA-00001
+  saleNumber     String            // VTA-00001
   organizationId String?
-  clientId       String?
-  cashShiftId    String?
-  createdById    String?
-  subtotal       Decimal           @db.Decimal(12, 2)
-  discountTotal  Decimal           @default(0.00) @db.Decimal(12, 2)
-  taxTotal       Decimal           @default(0.00) @db.Decimal(12, 2)
-  total          Decimal           @db.Decimal(12, 2)
-  currency       String            @default("USD")
-  exchangeRate   Decimal           @default(1.00) @db.Decimal(12, 4)
+  clientId       String?           // Opcional: venta genérica o identificada
+  orderId        String?           @unique // Vinculado a pedido web si vino del carrito
+  issueDate      DateTime          @default(now()) // Fecha de la venta (ej. Enero)
+  dueDate        DateTime?         // Fecha límite si fue a crédito
+
+  // Snapshot de tasas al momento de emitir la venta
+  rateBcv        Decimal           @default(1.00) @db.Decimal(14, 4)
+  rateUsdt       Decimal           @default(1.00) @db.Decimal(14, 4)
+
+  // Totales en múltiples monedas
+  subtotalUSD    Decimal           @db.Decimal(14, 2)
+  discountUSD    Decimal           @default(0.00) @db.Decimal(14, 2)
+  taxUSD         Decimal           @default(0.00) @db.Decimal(14, 2)
+  totalUSD       Decimal           @db.Decimal(14, 2)
+  totalVES       Decimal           @default(0.00) @db.Decimal(14, 2)
+  totalUSDT      Decimal           @default(0.00) @db.Decimal(14, 2)
+
   status         SaleStatus        @default(COMPLETED)
-  paymentStatus  SalePaymentStatus @default(PAID)
+  paymentStatus  PaymentStatus     @default(PAID) // PAID, PARTIAL, UNPAID (ventas a crédito)
   notes          String?
+  createdById    String?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   deletedAt      DateTime?
 
   organization   Organization?     @relation(fields: [organizationId], references: [id])
   client         Client?           @relation(fields: [clientId], references: [id])
-  cashShift      CashShift?        @relation(fields: [cashShiftId], references: [id])
   createdBy      User?             @relation("CreatedSaleRecords", fields: [createdById], references: [id])
+  order          Order?            @relation("OrderSale")
   items          SaleItem[]
   payments       SalePayment[]
 
   @@index([organizationId])
   @@index([clientId])
   @@index([saleNumber])
-  @@index([createdAt])
+  @@index([issueDate])
 }
 
 model SaleItem {
-  id             String            @id @default(uuid())
-  saleId         String
-  productId      String?
-  productName    String
-  quantity       Decimal           @db.Decimal(12, 2)
-  unitPrice      Decimal           @db.Decimal(12, 2)
-  discount       Decimal           @default(0.00) @db.Decimal(12, 2)
-  taxRate        Decimal           @default(0.00) @db.Decimal(5, 2)
-  taxAmount      Decimal           @default(0.00) @db.Decimal(12, 2)
-  total          Decimal           @db.Decimal(12, 2)
+  id          String   @id @default(uuid())
+  saleId      String
+  productId   String?
+  productName String
+  quantity    Decimal  @db.Decimal(12, 2)
+  unitPriceUSD Decimal @db.Decimal(14, 2)
+  discountUSD Decimal  @default(0.00) @db.Decimal(14, 2)
+  taxRate     Decimal  @default(0.00) @db.Decimal(5, 2)
+  totalUSD    Decimal  @db.Decimal(14, 2)
 
-  sale           Sale              @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  product        Product?          @relation(fields: [productId], references: [id])
+  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
 
   @@index([saleId])
   @@index([productId])
 }
 
 model SalePayment {
-  id             String            @id @default(uuid())
+  id             String     @id @default(uuid())
   saleId         String
-  method         String
-  amount         Decimal           @db.Decimal(12, 2)
-  currency       String            @default("USD")
-  exchangeRate   Decimal           @default(1.00) @db.Decimal(12, 4)
+  cashShiftId    String?    // Vinculado a turno de caja abierta
+  amountUSD      Decimal    @db.Decimal(14, 2)
+  amountVES      Decimal    @default(0.00) @db.Decimal(14, 2)
+  amountOriginal Decimal    @db.Decimal(14, 2)
+  currency       String     @default("USD")
+  paymentMethod  String     // PAGO_MOVIL, CASH_USD, CASH_VES, USDT_BINANCE, TRANSFER, ZELLE
+  rateBcv        Decimal    @default(1.00) @db.Decimal(14, 4)
+  rateUsdt       Decimal    @default(1.00) @db.Decimal(14, 4)
   reference      String?
-  createdAt      DateTime          @default(now())
+  paidAt         DateTime   @default(now()) // Fecha real en que se cobró (ej. Mayo, pero vinculado a venta de Enero)
+  notes          String?
+  createdById    String?
+  createdAt      DateTime   @default(now())
 
-  sale           Sale              @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  sale           Sale       @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  cashShift      CashShift? @relation(fields: [cashShiftId], references: [id])
+  createdBy      User?      @relation("CreatedSalePaymentRecords", fields: [createdById], references: [id])
 
   @@index([saleId])
+  @@index([paidAt])
 }
 
 // ======================================

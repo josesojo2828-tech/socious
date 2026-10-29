@@ -1,5 +1,8 @@
 -- CreateEnum
-CREATE TYPE "StockMovementType" AS ENUM ('IN', 'OUT', 'ADJUSTMENT', 'SALE', 'RETURN');
+CREATE TYPE "ProductStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'OUT_OF_STOCK', 'ON_SALE');
+
+-- CreateEnum
+CREATE TYPE "StockMovementType" AS ENUM ('IN', 'OUT', 'ADJUSTMENT', 'SALE', 'PURCHASE', 'RETURN');
 
 -- CreateEnum
 CREATE TYPE "CashRegisterStatus" AS ENUM ('OPEN', 'CLOSED');
@@ -11,10 +14,16 @@ CREATE TYPE "CashShiftStatus" AS ENUM ('OPEN', 'CLOSED');
 CREATE TYPE "CashMovementType" AS ENUM ('INCOME', 'EXPENSE');
 
 -- CreateEnum
-CREATE TYPE "SaleStatus" AS ENUM ('COMPLETED', 'PENDING', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PREPARING', 'DELIVERED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "SalePaymentStatus" AS ENUM ('PAID', 'PARTIAL', 'UNPAID');
+CREATE TYPE "PurchaseStatus" AS ENUM ('PENDING', 'RECEIVED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "SaleStatus" AS ENUM ('COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "PaymentStatus" AS ENUM ('UNPAID', 'PARTIAL', 'PAID');
 
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MANAGER', 'CASHIER', 'SELLER', 'USER', 'NUTRITIONIST', 'PATIENT');
@@ -544,10 +553,13 @@ CREATE TABLE "user_permission" (
 CREATE TABLE "Organization" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" TEXT,
     "taxId" TEXT,
     "logoUrl" TEXT,
     "maxSeats" INTEGER NOT NULL DEFAULT 5,
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
+    "defaultCurrency" TEXT NOT NULL DEFAULT 'USD',
+    "currencyVisibility" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -571,18 +583,31 @@ CREATE TABLE "OrganizationMember" (
 );
 
 -- CreateTable
+CREATE TABLE "ExchangeRate" (
+    "id" TEXT NOT NULL,
+    "organizationId" TEXT,
+    "rateBcv" DECIMAL(14,4) NOT NULL,
+    "rateUsdt" DECIMAL(14,4) NOT NULL,
+    "rateParallel" DECIMAL(14,4),
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "source" TEXT NOT NULL DEFAULT 'MANUAL',
+    "createdById" TEXT,
+
+    CONSTRAINT "ExchangeRate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Client" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "businessName" TEXT,
     "taxId" TEXT,
     "email" TEXT,
     "phone" TEXT,
     "address" TEXT,
     "city" TEXT,
     "state" TEXT,
-    "creditLimit" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "currentBalance" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    "creditLimitUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "currentBalanceUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
     "notes" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "created_by_id" TEXT,
@@ -595,21 +620,6 @@ CREATE TABLE "Client" (
 );
 
 -- CreateTable
-CREATE TABLE "ProductCategory" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "code" TEXT,
-    "description" TEXT,
-    "organizationId" TEXT,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-
-    CONSTRAINT "ProductCategory_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Supplier" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -618,6 +628,9 @@ CREATE TABLE "Supplier" (
     "email" TEXT,
     "phone" TEXT,
     "address" TEXT,
+    "city" TEXT,
+    "state" TEXT,
+    "currentBalanceUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
     "notes" TEXT,
     "organizationId" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
@@ -629,21 +642,39 @@ CREATE TABLE "Supplier" (
 );
 
 -- CreateTable
+CREATE TABLE "Category" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "icon" TEXT,
+    "description" TEXT,
+    "parentId" TEXT,
+    "isSystem" BOOLEAN NOT NULL DEFAULT true,
+    "organizationId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "sku" TEXT NOT NULL,
     "barcode" TEXT,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "costPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "salePrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "wholesalePrice" DECIMAL(12,2),
+    "costPriceUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "salePriceUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "wholesalePriceUSD" DECIMAL(14,2),
     "stock" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     "minStock" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     "unit" TEXT NOT NULL DEFAULT 'UND',
-    "taxRate" DECIMAL(5,2) NOT NULL DEFAULT 16.00,
+    "taxRate" DECIMAL(5,2) NOT NULL DEFAULT 0.00,
     "isService" BOOLEAN NOT NULL DEFAULT false,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "isPublic" BOOLEAN NOT NULL DEFAULT false,
+    "status" "ProductStatus" NOT NULL DEFAULT 'ACTIVE',
     "imageUrl" TEXT,
     "categoryId" TEXT,
     "supplierId" TEXT,
@@ -663,7 +694,7 @@ CREATE TABLE "StockMovement" (
     "createdById" TEXT,
     "type" "StockMovementType" NOT NULL,
     "quantity" DECIMAL(12,2) NOT NULL,
-    "unitCost" DECIMAL(12,2),
+    "unitCostUSD" DECIMAL(14,2),
     "previousStock" DECIMAL(12,2) NOT NULL,
     "newStock" DECIMAL(12,2) NOT NULL,
     "reference" TEXT,
@@ -693,10 +724,11 @@ CREATE TABLE "CashShift" (
     "closedById" TEXT,
     "openedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "closedAt" TIMESTAMP(3),
-    "initialAmount" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "expectedAmount" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "actualAmount" DECIMAL(12,2),
-    "difference" DECIMAL(12,2),
+    "initialAmountUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "initialAmountVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "expectedAmountUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "actualAmountUSD" DECIMAL(14,2),
+    "differenceUSD" DECIMAL(14,2),
     "status" "CashShiftStatus" NOT NULL DEFAULT 'OPEN',
     "notes" TEXT,
 
@@ -708,7 +740,8 @@ CREATE TABLE "CashMovement" (
     "id" TEXT NOT NULL,
     "cashShiftId" TEXT NOT NULL,
     "type" "CashMovementType" NOT NULL,
-    "amount" DECIMAL(12,2) NOT NULL,
+    "amount" DECIMAL(14,2) NOT NULL,
+    "currency" TEXT NOT NULL DEFAULT 'USD',
     "paymentMethod" TEXT NOT NULL DEFAULT 'CASH',
     "reason" TEXT NOT NULL,
     "reference" TEXT,
@@ -719,22 +752,124 @@ CREATE TABLE "CashMovement" (
 );
 
 -- CreateTable
+CREATE TABLE "Order" (
+    "id" TEXT NOT NULL,
+    "orderNumber" TEXT NOT NULL,
+    "organizationId" TEXT,
+    "clientId" TEXT,
+    "customerName" TEXT NOT NULL,
+    "customerPhone" TEXT,
+    "customerEmail" TEXT,
+    "customerAddress" TEXT,
+    "rateBcv" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "rateUsdt" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "totalUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalUSDT" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
+    "notes" TEXT,
+    "saleId" TEXT,
+    "createdById" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OrderItem" (
+    "id" TEXT NOT NULL,
+    "orderId" TEXT NOT NULL,
+    "productId" TEXT,
+    "productName" TEXT NOT NULL,
+    "quantity" DECIMAL(12,2) NOT NULL,
+    "priceUSD" DECIMAL(14,2) NOT NULL,
+    "totalUSD" DECIMAL(14,2) NOT NULL,
+
+    CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Purchase" (
+    "id" TEXT NOT NULL,
+    "purchaseNumber" TEXT NOT NULL,
+    "organizationId" TEXT,
+    "supplierId" TEXT,
+    "issueDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dueDate" TIMESTAMP(3),
+    "deliveryDate" TIMESTAMP(3),
+    "rateBcv" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "rateUsdt" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "subtotalUSD" DECIMAL(14,2) NOT NULL,
+    "taxUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalUSD" DECIMAL(14,2) NOT NULL,
+    "totalVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalUSDT" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "status" "PurchaseStatus" NOT NULL DEFAULT 'PENDING',
+    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'UNPAID',
+    "notes" TEXT,
+    "createdById" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Purchase_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PurchaseItem" (
+    "id" TEXT NOT NULL,
+    "purchaseId" TEXT NOT NULL,
+    "productId" TEXT,
+    "productName" TEXT NOT NULL,
+    "quantity" DECIMAL(12,2) NOT NULL,
+    "unitCostUSD" DECIMAL(14,2) NOT NULL,
+    "totalUSD" DECIMAL(14,2) NOT NULL,
+
+    CONSTRAINT "PurchaseItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PurchasePayment" (
+    "id" TEXT NOT NULL,
+    "purchaseId" TEXT NOT NULL,
+    "cashShiftId" TEXT,
+    "amountUSD" DECIMAL(14,2) NOT NULL,
+    "amountVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "amountOriginal" DECIMAL(14,2) NOT NULL,
+    "currency" TEXT NOT NULL DEFAULT 'USD',
+    "paymentMethod" TEXT NOT NULL,
+    "rateBcv" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "rateUsdt" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "reference" TEXT,
+    "paidAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "notes" TEXT,
+    "createdById" TEXT,
+
+    CONSTRAINT "PurchasePayment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Sale" (
     "id" TEXT NOT NULL,
     "saleNumber" TEXT NOT NULL,
     "organizationId" TEXT,
     "clientId" TEXT,
-    "cashShiftId" TEXT,
-    "createdById" TEXT,
-    "subtotal" DECIMAL(12,2) NOT NULL,
-    "discountTotal" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "taxTotal" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "total" DECIMAL(12,2) NOT NULL,
-    "currency" TEXT NOT NULL DEFAULT 'USD',
-    "exchangeRate" DECIMAL(12,4) NOT NULL DEFAULT 1.00,
+    "orderId" TEXT,
+    "issueDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dueDate" TIMESTAMP(3),
+    "rateBcv" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "rateUsdt" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "subtotalUSD" DECIMAL(14,2) NOT NULL,
+    "discountUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "taxUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalUSD" DECIMAL(14,2) NOT NULL,
+    "totalVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "totalUSDT" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
     "status" "SaleStatus" NOT NULL DEFAULT 'COMPLETED',
-    "paymentStatus" "SalePaymentStatus" NOT NULL DEFAULT 'PAID',
+    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'PAID',
     "notes" TEXT,
+    "createdById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -749,11 +884,10 @@ CREATE TABLE "SaleItem" (
     "productId" TEXT,
     "productName" TEXT NOT NULL,
     "quantity" DECIMAL(12,2) NOT NULL,
-    "unitPrice" DECIMAL(12,2) NOT NULL,
-    "discount" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    "unitPriceUSD" DECIMAL(14,2) NOT NULL,
+    "discountUSD" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
     "taxRate" DECIMAL(5,2) NOT NULL DEFAULT 0.00,
-    "taxAmount" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "total" DECIMAL(12,2) NOT NULL,
+    "totalUSD" DECIMAL(14,2) NOT NULL,
 
     CONSTRAINT "SaleItem_pkey" PRIMARY KEY ("id")
 );
@@ -762,11 +896,18 @@ CREATE TABLE "SaleItem" (
 CREATE TABLE "SalePayment" (
     "id" TEXT NOT NULL,
     "saleId" TEXT NOT NULL,
-    "method" TEXT NOT NULL,
-    "amount" DECIMAL(12,2) NOT NULL,
+    "cashShiftId" TEXT,
+    "amountUSD" DECIMAL(14,2) NOT NULL,
+    "amountVES" DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+    "amountOriginal" DECIMAL(14,2) NOT NULL,
     "currency" TEXT NOT NULL DEFAULT 'USD',
-    "exchangeRate" DECIMAL(12,4) NOT NULL DEFAULT 1.00,
+    "paymentMethod" TEXT NOT NULL,
+    "rateBcv" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
+    "rateUsdt" DECIMAL(14,4) NOT NULL DEFAULT 1.00,
     "reference" TEXT,
+    "paidAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "notes" TEXT,
+    "createdById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "SalePayment_pkey" PRIMARY KEY ("id")
@@ -940,6 +1081,9 @@ CREATE INDEX "user_permission_organization_id_idx" ON "user_permission"("organiz
 CREATE UNIQUE INDEX "user_permission_user_id_organization_id_permission_key" ON "user_permission"("user_id", "organization_id", "permission");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Organization_slug_key" ON "Organization"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "OrganizationMember_invitationToken_key" ON "OrganizationMember"("invitationToken");
 
 -- CreateIndex
@@ -952,6 +1096,12 @@ CREATE INDEX "OrganizationMember_userId_idx" ON "OrganizationMember"("userId");
 CREATE UNIQUE INDEX "OrganizationMember_organizationId_userId_key" ON "OrganizationMember"("organizationId", "userId");
 
 -- CreateIndex
+CREATE INDEX "ExchangeRate_organizationId_date_idx" ON "ExchangeRate"("organizationId", "date" DESC);
+
+-- CreateIndex
+CREATE INDEX "ExchangeRate_date_idx" ON "ExchangeRate"("date" DESC);
+
+-- CreateIndex
 CREATE INDEX "Client_organizationId_idx" ON "Client"("organizationId");
 
 -- CreateIndex
@@ -961,10 +1111,19 @@ CREATE INDEX "Client_taxId_idx" ON "Client"("taxId");
 CREATE INDEX "Client_name_idx" ON "Client"("name");
 
 -- CreateIndex
-CREATE INDEX "ProductCategory_organizationId_idx" ON "ProductCategory"("organizationId");
+CREATE INDEX "Supplier_organizationId_idx" ON "Supplier"("organizationId");
 
 -- CreateIndex
-CREATE INDEX "Supplier_organizationId_idx" ON "Supplier"("organizationId");
+CREATE INDEX "Supplier_name_idx" ON "Supplier"("name");
+
+-- CreateIndex
+CREATE INDEX "Category_parentId_idx" ON "Category"("parentId");
+
+-- CreateIndex
+CREATE INDEX "Category_organizationId_idx" ON "Category"("organizationId");
+
+-- CreateIndex
+CREATE INDEX "Category_slug_idx" ON "Category"("slug");
 
 -- CreateIndex
 CREATE INDEX "Product_organizationId_idx" ON "Product"("organizationId");
@@ -977,6 +1136,9 @@ CREATE INDEX "Product_barcode_idx" ON "Product"("barcode");
 
 -- CreateIndex
 CREATE INDEX "Product_categoryId_idx" ON "Product"("categoryId");
+
+-- CreateIndex
+CREATE INDEX "Product_isPublic_status_idx" ON "Product"("isPublic", "status");
 
 -- CreateIndex
 CREATE INDEX "StockMovement_organizationId_idx" ON "StockMovement"("organizationId");
@@ -1000,6 +1162,51 @@ CREATE INDEX "CashShift_status_idx" ON "CashShift"("status");
 CREATE INDEX "CashMovement_cashShiftId_idx" ON "CashMovement"("cashShiftId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Order_saleId_key" ON "Order"("saleId");
+
+-- CreateIndex
+CREATE INDEX "Order_organizationId_idx" ON "Order"("organizationId");
+
+-- CreateIndex
+CREATE INDEX "Order_status_idx" ON "Order"("status");
+
+-- CreateIndex
+CREATE INDEX "Order_createdAt_idx" ON "Order"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "OrderItem_orderId_idx" ON "OrderItem"("orderId");
+
+-- CreateIndex
+CREATE INDEX "OrderItem_productId_idx" ON "OrderItem"("productId");
+
+-- CreateIndex
+CREATE INDEX "Purchase_organizationId_idx" ON "Purchase"("organizationId");
+
+-- CreateIndex
+CREATE INDEX "Purchase_supplierId_idx" ON "Purchase"("supplierId");
+
+-- CreateIndex
+CREATE INDEX "Purchase_purchaseNumber_idx" ON "Purchase"("purchaseNumber");
+
+-- CreateIndex
+CREATE INDEX "Purchase_issueDate_idx" ON "Purchase"("issueDate");
+
+-- CreateIndex
+CREATE INDEX "PurchaseItem_purchaseId_idx" ON "PurchaseItem"("purchaseId");
+
+-- CreateIndex
+CREATE INDEX "PurchaseItem_productId_idx" ON "PurchaseItem"("productId");
+
+-- CreateIndex
+CREATE INDEX "PurchasePayment_purchaseId_idx" ON "PurchasePayment"("purchaseId");
+
+-- CreateIndex
+CREATE INDEX "PurchasePayment_paidAt_idx" ON "PurchasePayment"("paidAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Sale_orderId_key" ON "Sale"("orderId");
+
+-- CreateIndex
 CREATE INDEX "Sale_organizationId_idx" ON "Sale"("organizationId");
 
 -- CreateIndex
@@ -1009,7 +1216,7 @@ CREATE INDEX "Sale_clientId_idx" ON "Sale"("clientId");
 CREATE INDEX "Sale_saleNumber_idx" ON "Sale"("saleNumber");
 
 -- CreateIndex
-CREATE INDEX "Sale_createdAt_idx" ON "Sale"("createdAt");
+CREATE INDEX "Sale_issueDate_idx" ON "Sale"("issueDate");
 
 -- CreateIndex
 CREATE INDEX "SaleItem_saleId_idx" ON "SaleItem"("saleId");
@@ -1019,6 +1226,9 @@ CREATE INDEX "SaleItem_productId_idx" ON "SaleItem"("productId");
 
 -- CreateIndex
 CREATE INDEX "SalePayment_saleId_idx" ON "SalePayment"("saleId");
+
+-- CreateIndex
+CREATE INDEX "SalePayment_paidAt_idx" ON "SalePayment"("paidAt");
 
 -- CreateIndex
 CREATE INDEX "FinancialAuditLog_entityType_entityId_idx" ON "FinancialAuditLog"("entityType", "entityId");
@@ -1141,19 +1351,28 @@ ALTER TABLE "OrganizationMember" ADD CONSTRAINT "OrganizationMember_organization
 ALTER TABLE "OrganizationMember" ADD CONSTRAINT "OrganizationMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "ExchangeRate" ADD CONSTRAINT "ExchangeRate_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExchangeRate" ADD CONSTRAINT "ExchangeRate_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Client" ADD CONSTRAINT "Client_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Client" ADD CONSTRAINT "Client_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductCategory" ADD CONSTRAINT "ProductCategory_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Supplier" ADD CONSTRAINT "Supplier_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "ProductCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Category" ADD CONSTRAINT "Category_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Category" ADD CONSTRAINT "Category_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -1189,13 +1408,52 @@ ALTER TABLE "CashMovement" ADD CONSTRAINT "CashMovement_cashShiftId_fkey" FOREIG
 ALTER TABLE "CashMovement" ADD CONSTRAINT "CashMovement_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "Sale"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchaseItem" ADD CONSTRAINT "PurchaseItem_purchaseId_fkey" FOREIGN KEY ("purchaseId") REFERENCES "Purchase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchaseItem" ADD CONSTRAINT "PurchaseItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchasePayment" ADD CONSTRAINT "PurchasePayment_purchaseId_fkey" FOREIGN KEY ("purchaseId") REFERENCES "Purchase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchasePayment" ADD CONSTRAINT "PurchasePayment_cashShiftId_fkey" FOREIGN KEY ("cashShiftId") REFERENCES "CashShift"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchasePayment" ADD CONSTRAINT "PurchasePayment_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Sale" ADD CONSTRAINT "Sale_cashShiftId_fkey" FOREIGN KEY ("cashShiftId") REFERENCES "CashShift"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -1208,3 +1466,9 @@ ALTER TABLE "SaleItem" ADD CONSTRAINT "SaleItem_productId_fkey" FOREIGN KEY ("pr
 
 -- AddForeignKey
 ALTER TABLE "SalePayment" ADD CONSTRAINT "SalePayment_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "Sale"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SalePayment" ADD CONSTRAINT "SalePayment_cashShiftId_fkey" FOREIGN KEY ("cashShiftId") REFERENCES "CashShift"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SalePayment" ADD CONSTRAINT "SalePayment_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
