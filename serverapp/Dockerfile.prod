@@ -1,0 +1,35 @@
+FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl
+WORKDIR /app
+
+COPY package*.json ./
+COPY prisma ./prisma/
+RUN npm install
+
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+# ── Runner (imagen final ligera) ─────────────────────────────────
+FROM node:20-alpine
+RUN apk add --no-cache openssl
+WORKDIR /app
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Copiamos solo lo necesario desde el builder
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/package*.json ./
+COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/src/i18n ./src/i18n
+
+RUN mkdir -p /app/dist/i18n && chown -R node:node /app
+
+USER node
+
+EXPOSE 3001
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["npm", "run", "start:prod"]

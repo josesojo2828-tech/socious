@@ -1,0 +1,3939 @@
+[
+  {
+    "name": "Café con leche con tostada de aceite y jamón york",
+    "category": "desayuno",
+    "description": "Desayuno saludable con café, leche y tostada de aceite y jamón york",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Café descafeinado en polvo soluble",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Jamón cocido (York, Dulce, etc.)",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de pimientos asados",
+    "category": "almuerzo",
+    "description": "Ensalada saludable con pimientos asados y aliñada con aceite y vinagre",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pimiento rojo",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Lentejas guisadas con arroz",
+    "category": "almuerzo",
+    "description": "Comida saludable con lentejas y arroz",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Patata nueva doble cocción",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate enlatado",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 0.76,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Cocido con fideos",
+    "category": "almuerzo",
+    "description": "Comida saludable con cocido y fideos",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Carne de vaca 2ª y 3ª",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tocino",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Repollo doble cocción",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Puerro doble cocción",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Apio",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Patata nueva doble cocción",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Fideos",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Judías verdes congeladas con pimiento",
+    "category": "almuerzo",
+    "description": "Comida saludable con judías verdes y pimiento",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Judía verde congelada doble cocción",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Café con leche y bizcocho con mermelada",
+    "category": "desayuno",
+    "description": "Desayuno saludable con café, leche y bizcocho con mermelada",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Café descafeinado en polvo soluble",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Mermelada",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y bizcocho con mermelada",
+    "category": "desayuno",
+    "description": "Infusión de té con bizcocho y mermelada de frambuesa.",
+    "tags": [
+      "diabetes",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Bizcocho",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.75,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Puchero",
+    "category": "almuerzo",
+    "description": "Puchero con garbanzos, carne vaca magra, pollo, zanahoria, patata y calabaza.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Carne de res magra",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Papa",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de pasta",
+    "category": "almuerzo",
+    "description": "Ensalada de pasta con tomate casero y atún.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Atún en agua",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate enlatado",
+        "quantity": 35,
+        "unit": "g",
+        "_matchScore": 0.76,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de judías verdes congeladas",
+    "category": "almuerzo",
+    "description": "Ensalada de judías verdes congeladas con zanahoria y cebolla.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 2.5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Compota de pera",
+    "category": "almuerzo",
+    "description": "Compota de pera con azúcar y canela.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pera",
+        "quantity": 170,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Canela",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Café con leche y tostada con aceite y jamón york",
+    "category": "desayuno",
+    "description": "Café con leche y tostada con aceite y jamón york",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Café descafeinado en polvo soluble",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Jamón cocido (york, dulce, etc.)",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Arroz al horno",
+    "category": "almuerzo",
+    "description": "Arroz al horno con ensalada primavera",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Papa",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate enlatado",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.76,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Azafrán",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada primavera",
+    "category": "almuerzo",
+    "description": "Ensalada primavera con lechuga, escarola, zanahoria y maíz",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Escarola",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz A. enlatado, grano entero",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.55,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Miel",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con verduras al curry",
+    "category": "almuerzo",
+    "description": "Arroz con verduras al curry",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.56,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Judía verde congelada",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Espeicas",
+        "quantity": 0,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada lechuga y cebolla",
+    "category": "almuerzo",
+    "description": "Ensalada lechuga y cebolla",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Paella de verduras",
+    "category": "almuerzo",
+    "description": "Paella de verduras",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Judía verde congelada doble cocción",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Guisante congelado doble cocción",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate enlatado",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.76,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Azafrán",
+        "quantity": 0.1,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Manzana Asada",
+    "category": "almuerzo",
+    "description": "Manzana asada",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Café con leche y tostada de aceite y jamón york",
+    "category": "desayuno",
+    "description": "Un clásico desayuno con café, leche y tostada de aceite y jamón york.",
+    "tags": [
+      "diabetico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Café descafeinado en polvo soluble",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Jamón cocido (york, dulce, etc.)",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Puré de patata",
+    "category": "almuerzo",
+    "description": "Un puré de patata cremoso y delicioso.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Filete de merluza a la plancha",
+    "category": "almuerzo",
+    "description": "Un filete de merluza a la plancha con especias y zumo de limón.",
+    "tags": [
+      "bajo-ig",
+      "alto-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 2.5,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con leche",
+    "category": "almuerzo",
+    "description": "Un arroz con leche cremoso y delicioso.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y tostada con mantequilla",
+    "category": "desayuno",
+    "description": "Un clásico desayuno con infusión y tostada con mantequilla.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pan Blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.8,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Pollo al horno",
+    "category": "almuerzo",
+    "description": "Un pollo al horno con cebolla y vino blanco.",
+    "tags": [
+      "bajo-ig",
+      "alto-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de cebolla",
+    "category": "almuerzo",
+    "description": "Una sopa de cebolla cremosa y deliciosa.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Coñac",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Agua mineralización débil",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ternera estofada",
+    "category": "almuerzo",
+    "description": "Ternera estofada",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Ternera magro",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Vino tinto",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Laurel",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Caldo de pollo con fideos",
+    "category": "almuerzo",
+    "description": "Caldo de pollo con fideos",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Fideos",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de merluza",
+    "category": "almuerzo",
+    "description": "Sopa de merluza",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Fideos",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Filete de cerdo al vino",
+    "category": "almuerzo",
+    "description": "Filete de cerdo al vino",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Lomo de cerdo",
+        "quantity": 140,
+        "unit": "g",
+        "_matchScore": 0.65,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Café con leche y galletas con margarina",
+    "category": "desayuno",
+    "description": "Café con leche y galletas con margarina",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Dulce (tipo María) galletas",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.68,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Café en grano",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas de choco",
+    "category": "almuerzo",
+    "description": "Albóndigas de choco",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Cacao en polvo",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de arroz",
+    "category": "almuerzo",
+    "description": "Ensalada de arroz",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz A. enlatado, grano entero",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.55,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Café con leche y tostada de aceite",
+    "category": "desayuno",
+    "description": "Un clásico desayuno con café, leche y tostada de aceite.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Café descafeinado en polvo soluble",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Leche semidesnatada de vaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Merluza rebozada",
+    "category": "almuerzo",
+    "description": "Un plato de merluza rebozada con ensalada de judías verdes y manzana asada.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 17,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 2.5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Dorada al horno",
+    "category": "almuerzo",
+    "description": "Una dorada al horno con arroz guarnición.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Dorada",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Arroz guarnición",
+    "category": "almuerzo",
+    "description": "Un arroz guarnición con aceite y ajo.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Lenguado a la plancha",
+    "category": "almuerzo",
+    "description": "Un lenguado a la plancha con ensalada de pasta.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Lenguado (pescado)",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Fideua de Marisco",
+    "category": "almuerzo",
+    "description": "Una fideua de marisco con ensalada lechuga y cebolla.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Fideua de Marisco",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pasta con Bacalao",
+    "category": "almuerzo",
+    "description": "Pasta con bacalao y verduras",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pescado blanco",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Azafrán",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Esparragos con Mayonesa",
+    "category": "almuerzo",
+    "description": "Esparragos con mayonesa y vinagre",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Espárragos",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Mayonesa comercial",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Migas",
+    "category": "almuerzo",
+    "description": "Migas con pan blanco y tocino",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tocino",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tallarines Marineros",
+    "category": "almuerzo",
+    "description": "Tallarines marineros con cebolla y gambas",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Fideos",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 6,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharaditas postre",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Camarones",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Rape",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 19,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Lechuga, Zanahoria y Maíz",
+    "category": "almuerzo",
+    "description": "Ensalada de lechuga, zanahoria y maíz",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz A. enlatado, grano entero",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.55,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich mixto",
+    "category": "almuerzo",
+    "description": "Un sándwich mixto con pan de molde, queso, jamón y pimiento.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso en lonchas",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón cocido de cerdo, estándar",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pizza casera",
+    "category": "almuerzo",
+    "description": "Una pizza casera con tomate, jamón, queso y pimiento.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate frito en conserva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón cocido de cerdo, estándar",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Queso en lonchas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pera asada",
+    "category": "cena",
+    "description": "Una pera asada con azúcar y mantequilla.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pera",
+        "quantity": 170,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Calabacín relleno de pollo",
+    "category": "almuerzo",
+    "description": "Un calabacín relleno de pollo con aceite, harina y queso.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 3,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Codorníz, Gallina, huevo de",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate enlatado",
+        "quantity": 45,
+        "unit": "g",
+        "_matchScore": 0.76,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y galleta con margarina",
+    "category": "snack",
+    "description": "Una infusión y galleta con margarina.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Dulce (tipo María) galletas",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.75,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y tostada de mantequilla con mermelada",
+    "category": "snack",
+    "description": "Una infusión y tostada de mantequilla con mermelada.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.8,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Menestra de verduras congeladas jamón serrano",
+    "category": "almuerzo",
+    "description": "Una menestra de verduras congeladas jamón serrano.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Menestra de verduras congeladas",
+        "quantity": 130,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón serrano",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Crema de Verduras",
+    "category": "cena",
+    "description": "Una crema de verduras deliciosa y ligera.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Judía verde congelada doble cocción",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Patata nueva doble cocción",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 0.5,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 125,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Filete de Cerdo Plancha",
+    "category": "cena",
+    "description": "Un filete de cerdo delicioso y jugoso.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lomo de cerdo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.65,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Judía verde congelada doble cocción",
+        "quantity": 110,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Pijota frita",
+    "category": "cena",
+    "description": "Pescado frito con limón y harina de trigo.",
+    "tags": [
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pijota",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Champiñones con ajo",
+    "category": "cena",
+    "description": "Champiñones con ajo y pimienta.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñón en conserva",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y galletas con mermelada",
+    "category": "snack",
+    "description": "Infusión y galletas con mermelada.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Dulce (tipo María) galletas",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Arroz a la cubana",
+    "category": "almuerzo",
+    "description": "Arroz con jamón, manzana y huevo.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 55,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Merluza en salsa de pimientos",
+    "category": "almuerzo",
+    "description": "Merluza con salsa de pimientos y limón.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tortilla de espinacas",
+    "category": "cena",
+    "description": "Tortilla de espinacas con huevo y ajo",
+    "tags": [
+      "vegetariano",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 39,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Huevos rellenos de atún mayonesa comercial",
+    "category": "cena",
+    "description": "Huevos rellenos de atún y mayonesa",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Atún en agua",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Mayonesa comercial",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento morrón en conserva",
+        "quantity": 0,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pera al horno",
+    "category": "cena",
+    "description": "Pera al horno con azúcar y canela",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pera",
+        "quantity": 170,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zumo de limón natural",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y tostada con mantequilla y mermelada",
+    "category": "snack",
+    "description": "Merienda con infusión y tostada con mantequilla y mermelada",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan Blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.8,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Patatas Alioli",
+    "category": "cena",
+    "description": "Patatas alioli con doble cocción y salsa alioli",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Patatas fritas con pimentón",
+    "category": "cena",
+    "description": "Patatas fritas con pimentón y salsa alioli",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Orégano seco",
+        "quantity": 0.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espinacas rehogadas",
+    "category": "cena",
+    "description": "Espinacas rehogadas con ajo y pimentón",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Setas con jamón",
+    "category": "cena",
+    "description": "Setas con jamón y especias",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 175,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Jamón serrano",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Compota de manzana",
+    "category": "cena",
+    "description": "Compota de manzana con azúcar blanco y canela",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Crema de calabacín",
+    "category": "cena",
+    "description": "Crema de calabacín con calabacín doble cocción, puerro, patata y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Puerro",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Papa",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 0.5,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Patilla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.63,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Brécol con bechamel",
+    "category": "cena",
+    "description": "Brécol doble cocción con bechamel de leche, queso y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Brécol",
+        "quantity": 280,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 11,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pera en almíbar",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y pan con dulce de membrillo",
+    "category": "snack",
+    "description": "Merienda ligera con infusión y pan con dulce de membrillo.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.75,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Dulce de membrillo y pastas de frutas",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Menestra de verduras congeladas",
+    "category": "cena",
+    "description": "Cena ligera con menestra de verduras congeladas.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Guisante congelado doble cocción",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Alcachofa congelada doble cocción",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Judía verde congelada doble cocción",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 0.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Infusión y tostada con mantequilla y jamón york",
+    "category": "snack",
+    "description": "Merienda ligera con infusión y tostada con mantequilla y jamón york.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 1.8,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón cocido (york, dulce, etc.)",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Guisantes",
+    "category": "cena",
+    "description": "Cena ligera con guisantes.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Guisante congelado doble cocción",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Laurel",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas soperas",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Tomate frito en conserva",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón serrano",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesa de pollo casera",
+    "category": "cena",
+    "description": "Cena ligera con hamburguesa de pollo casera.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pan blanco sin sal",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Flamenquín casero",
+    "category": "cena",
+    "description": "Cena ligera con flamenquín casero.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Jamón cocido (york, dulce, etc.)",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso en lonchas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 12,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Patatas cocidas con aceite guarnición",
+    "category": "cena",
+    "description": "Cena ligera con patatas cocidas con aceite guarnición.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Patata nueva doble cocción",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Agua corriente",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta blanca",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tortilla de patatas",
+    "category": "cena",
+    "description": "Tortilla de patatas con huevo y verduras",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Caldo cocido casero sin Jamón con fideos",
+    "category": "cena",
+    "description": "Caldo cocido casero sin Jamón con fideos y verduras",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne semigrasa de vaca",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Tocino",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Puerro",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pasta cocida",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  }
+]

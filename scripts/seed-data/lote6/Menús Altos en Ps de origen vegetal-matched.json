@@ -1,0 +1,164 @@
+[
+  {
+    "name": "Pollo a la Plancha con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Pollo a la plancha con quinoa y verduras frescas.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tostada de Salmón",
+    "category": "almuerzo",
+    "description": "Tostada de salmón con pimientos y lechuga fresca.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pollo",
+    "category": "almuerzo",
+    "description": "Sándwich de pollo con verduras frescas.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 0.75,
+        "unit": "taza",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan de caja",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Carne Asada con Calabacitas y Chile Poblano",
+    "category": "almuerzo",
+    "description": "Carne asada con calabacitas y chile poblano fresco.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Chile poblano",
+        "quantity": 0.5,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Zanahoria Rallada y Pepinos",
+    "category": "snack",
+    "description": "Zanahoria rallada y pepinos frescos.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Jícama Picada",
+    "category": "snack",
+    "description": "Jícama picada fresca.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  }
+]

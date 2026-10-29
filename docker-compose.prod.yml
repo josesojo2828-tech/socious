@@ -1,0 +1,168 @@
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: ${PROJECT_NAME:-nutrigest}_db_prod
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nutrigest_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-nutrigest_cloud}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nutrigest_user} -d ${POSTGRES_DB:-nutrigest_cloud}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ${DB_DATA_PATH:-./data/postgres}:/var/lib/postgresql/data
+    networks:
+      - nutringest_network
+
+  cache:
+    image: redis:alpine
+    container_name: ${PROJECT_NAME:-nutrigest}_redis_prod
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ${REDIS_DATA_PATH:-./data/redis}:/data
+    networks:
+      - nutringest_network
+
+  minio:
+    image: cgr.dev/chainguard/minio:latest
+    container_name: ${PROJECT_NAME:-nutrigest}_minio_prod
+    user: "0:0"
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-nutrigest_minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD is required}
+    command: server /data --console-address ":9001"
+    volumes:
+      - ${MINIO_DATA_PATH:-./data/minio}:/data
+    networks:
+      - nutringest_network
+
+  minio-setup:
+    image: cgr.dev/chainguard/minio-client:latest-dev
+    container_name: ${PROJECT_NAME:-nutrigest}_minio_setup_prod
+    depends_on:
+      - minio
+    networks:
+      - nutringest_network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      mc alias set nutrigest http://minio:9000 ${MINIO_ROOT_USER:-nutrigest_minio} ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD is required};
+      mc mb nutrigest/${MINIO_BUCKET:-nutrigest-uploads} || true;
+      mc anonymous set public nutrigest/${MINIO_BUCKET:-nutrigest-uploads};
+      exit 0;
+      "
+
+  backend:
+    build:
+      context: ./serverapp
+      dockerfile: Dockerfile.prod
+      network: host
+    container_name: ${PROJECT_NAME:-nutrigest}_backend_prod
+    ports:
+      - "${BACKEND_PORT:-11003}:3001"
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_started
+      minio:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nutrigest_user}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@database:5432/${POSTGRES_DB:-nutrigest_cloud}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-nutrigest_user}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@database:5432/${POSTGRES_DB:-nutrigest_cloud}?schema=public
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      NODE_ENV: ${NODE_ENV:-production}
+      JWT_SECRET: ${JWT_SECRET}
+      AT_SECRET: ${AT_SECRET}
+      RT_SECRET: ${RT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET is required}
+      PORT: 3001
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio}
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      MINIO_ENDPOINT_URL: ${MINIO_ENDPOINT_URL:-}
+      MINIO_USE_SSL: ${MINIO_USE_SSL:-false}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-${MINIO_ROOT_USER:-nutrigest_minio}}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-${MINIO_ROOT_PASSWORD:-nutrigest_secret_minio}}
+      MINIO_BUCKET: ${MINIO_BUCKET:-nutrigest-uploads}
+      APP_URL: ${APP_URL}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+    networks:
+      - nutringest_network
+
+  frontend:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile.prod
+      network: host
+    container_name: ${PROJECT_NAME:-nutrigest}_frontend_prod
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      INTERNAL_API_URL: http://backend:3001
+      NODE_ENV: ${NODE_ENV:-production}
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+    networks:
+      - nutringest_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: ${PROJECT_NAME:-nutrigest}_nginx_prod
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ${NGINX_CONF_PATH:-./docker/nginx.prod.conf}:/etc/nginx/nginx.conf:ro
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - nutringest_network
+
+networks:
+  nutringest_network:
+    driver: bridge

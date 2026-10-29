@@ -1,0 +1,263 @@
+[
+  {
+    "name": "Ensalada de Lentejas",
+    "category": "almuerzo",
+    "description": "Ensalada de lentejas con jitomates, cebolla y mango.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Limón",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Salsa Tipo Inglesa CROSSE & BLACKWELL",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Mango",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Galletas de soda",
+        "quantity": 186,
+        "unit": "g",
+        "_matchScore": 0.56,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Ensalada Rusa",
+    "category": "almuerzo",
+    "description": "Tostadas de ensalada rusa con pollo, mayonesa y aguacate.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Media Crema NESTLÉ",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Mayonesa comercial",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 300,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Papa",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tostadas de maíz",
+        "quantity": 8,
+        "unit": "unidades"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Mexicana",
+    "category": "almuerzo",
+    "description": "Ensalada mexicana con pollo, jitomates, cebolla y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Atún en salsa 3 chiles",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Verde",
+    "category": "almuerzo",
+    "description": "Ensalada verde con espinacas, berros, manzana y queso de cabra.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Berro",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso de cabra",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tocineta frita",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Atún",
+    "category": "almuerzo",
+    "description": "Ensalada de atún con nopales, cebolla y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nopales",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Atún en salsa 3 chiles",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  }
+]

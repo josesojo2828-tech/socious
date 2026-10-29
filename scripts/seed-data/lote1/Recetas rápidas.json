@@ -1,0 +1,247 @@
+[
+  {
+    "name": "Rollitos de Huevo con Salsa y Queso",
+    "category": "almuerzo",
+    "description": "Rollitos de huevo con salsa y queso, acompañados de una deliciosa salsa y queso Oaxaca.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 7,
+        "unit": "unidad"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 1.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Carnitas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Ejotes",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento morrón rojo",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Oaxaca",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de harina integral",
+        "quantity": 8,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Pepino y Garbanzos",
+    "category": "snack",
+    "description": "Una deliciosa ensalada de pepino y garbanzos, con un toque de cilantro fresco.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cilantro fresco",
+        "quantity": 10,
+        "unit": "ramita"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Salsa Tipo Inglesa",
+        "quantity": 3,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Jugo MAGGI",
+        "quantity": 3,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Tostadas de maíz",
+        "quantity": 1,
+        "unit": "paquete"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Salsa de Tomate con Pollo",
+    "category": "cena",
+    "description": "Una deliciosa salsa de tomate con pollo, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Pollo",
+        "quantity": 4,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Concentrado de Tomate con Pollo",
+        "quantity": 1.5,
+        "unit": "cubo"
+      }
+    ]
+  },
+  {
+    "name": "Tocino con Papas y Queso",
+    "category": "almuerzo",
+    "description": "Un delicioso plato de tocino con papas y queso, perfecto para acompañar cualquier comida.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tocino",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.5,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Chile jalapeño",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Papas cambray",
+        "quantity": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo MAGGI",
+        "quantity": 2.5,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Salsa Tipo Inglesa",
+        "quantity": 2.5,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Queso tipo manchego",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salsa de Fresas",
+    "category": "snack",
+    "description": "Una deliciosa salsa de fresas, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Azúcar",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 2,
+        "unit": "envase"
+      },
+      {
+        "name": "Leche Condensada",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+{
+    "sections": {
+        "basic_info": "Información Básica"
+    },
+    "form": {
+        "name": "Nombre de la Lista",
+        "name_placeholder": "Ej: Harinas, Frutas...",
+        "description": "Descripción",
+        "description_placeholder": "Notas sobre este grupo de alimentos...",
+        "base_kcal": "Kcal / Intercambio",
+        "base_carbs": "Carbohidratos (g)",
+        "base_protein": "Proteína (g)",
+        "base_fat": "Grasa (g)"
+    },
+    "item": {
+        "food": "Alimento",
+        "food_placeholder": "Buscar alimento...",
+        "amount": "Cantidad (g)",
+        "amount_placeholder": "Ej: 30",
+        "label": "Medida Casera",
+        "label_placeholder": "Ej: 1 rebanada"
+    },
+    "actions": {
+        "create_title": "Crear Lista de Intercambio",
+        "update_title": "Editar Lista de Intercambio"
+    }
+}

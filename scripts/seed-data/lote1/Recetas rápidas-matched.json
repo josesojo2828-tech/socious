@@ -1,0 +1,293 @@
+[
+  {
+    "name": "Rollitos de Huevo con Salsa y Queso",
+    "category": "almuerzo",
+    "description": "Rollitos de huevo con salsa y queso, acompañados de una deliciosa salsa y queso Oaxaca.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 7,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Carnitas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso Oaxaca",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de harina integral",
+        "quantity": 8,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Pepino y Garbanzos",
+    "category": "snack",
+    "description": "Una deliciosa ensalada de pepino y garbanzos, con un toque de cilantro fresco.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cilantro fresco",
+        "quantity": 10,
+        "unit": "ramita"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salsa Tipo Inglesa",
+        "quantity": 3,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "cucharada",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tostadas de maíz",
+        "quantity": 1,
+        "unit": "paquete"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Salsa de Tomate con Pollo",
+    "category": "cena",
+    "description": "Una deliciosa salsa de tomate con pollo, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 5,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 4,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Concentrado de Tomate con Pollo",
+        "quantity": 1.5,
+        "unit": "cubo"
+      }
+    ]
+  },
+  {
+    "name": "Tocino con Papas y Queso",
+    "category": "almuerzo",
+    "description": "Un delicioso plato de tocino con papas y queso, perfecto para acompañar cualquier comida.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tocino",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.5,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Chile jalapeño",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Papa",
+        "quantity": 500,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Limón",
+        "quantity": 2.5,
+        "unit": "cucharada",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Salsa Tipo Inglesa",
+        "quantity": 2.5,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Queso tipo manchego",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salsa de Fresas",
+    "category": "snack",
+    "description": "Una deliciosa salsa de fresas, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 2,
+        "unit": "envase"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  }
+]

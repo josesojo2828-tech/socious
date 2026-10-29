@@ -1,0 +1,596 @@
+[
+  {
+    "name": "Hot Cakes Clásicos",
+    "category": "desayuno",
+    "description": "Un clásico desayuno con hot cakes y frutas frescas.",
+    "tags": [
+      "diabetes",
+      "hipertension"
+    ],
+    "foods": [
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Harina para hot cakes",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mora azul",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Menta",
+        "quantity": 6,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Crema de Elote y Queso Crema",
+    "category": "cena",
+    "description": "Una crema cremosa y deliciosa con elote y queso crema.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Margarina",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 400,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tira de tortilla",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti con Salsa de Jalapeño y Cilantro",
+    "category": "cena",
+    "description": "Un espagueti cremoso y picante con salsa de jalapeño y cilantro.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Cilantro",
+        "quantity": 12,
+        "unit": "ramas"
+      },
+      {
+        "name": "Chile jalapeño",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Espagueti",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Canelones con Salsa de Poblano",
+    "category": "cena",
+    "description": "Un plato cremoso y delicioso con canelones y salsa de poblano.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Raja de chile poblano",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Fécula de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Lámina de lasaña",
+        "quantity": 12,
+        "unit": "hojas"
+      },
+      {
+        "name": "Queso Cheddar",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Queso manchego",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga Cordon Bleu con Salsa de 3 Chiles",
+    "category": "cena",
+    "description": "Un plato cremoso y picante con pechuga cordon bleu y salsa de 3 chiles.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Chile ancho",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chile guajillo",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chile chipotle",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cubo de Concentrado de Tomate con Pollo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 400,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga Cordon Bleu",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo rellena con queso y jamón.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Jamón de espalda",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con Leche",
+    "category": "cena",
+    "description": "Arroz con leche y canela.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Menta",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tarta de Arroz con Leche y Fresas",
+    "category": "cena",
+    "description": "Tarta de arroz con leche y fresas.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Grenetina",
+        "quantity": 14,
+        "unit": "g"
+      },
+      {
+        "name": "Gelatina preparada",
+        "quantity": 16,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Menta",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Avena",
+    "category": "snack",
+    "description": "Agua de avena con canela.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Hielo",
+        "quantity": 300,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Atole de Chocolate con Nuez",
+    "category": "snack",
+    "description": "Atole de chocolate con nuez.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Cacao en polvo",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Fécula de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Esencia de nuez",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  }
+]

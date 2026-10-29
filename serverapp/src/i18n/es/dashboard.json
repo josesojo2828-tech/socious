@@ -1,0 +1,165 @@
+{
+    "lang": "es",
+    "sidebar": {
+        "dashboard_group": "DASHBOARD",
+        "dashboard": "Dashboard",
+        "users_group": "USUARIOS",
+        "users": "Usuarios",
+        "wallets": "Billeteras",
+        "files": "Archivos",
+        "application_group": "APLICACIÓN",
+        "transactions": "Transacciones",
+        "payment_methods": "Métodos de Pago",
+        "subscriptions": "Suscripciones"
+    },
+    "header": {
+        "welcome_back": "Bienvenido de nuevo, "
+    },
+    "tabs": {
+        "overview": "Resumen",
+        "analytics": "Analíticas",
+        "activity": "Actividad",
+        "reports": "Reportes",
+        "alerts": "Alertas",
+        "export": "Exportar",
+        "settings": "Configuración",
+        "website": "Web"
+    },
+    "main": {
+        "today_is": "Hoy es, ",
+        "export_report_button": "Exportar Reporte",
+        "filters_button": "Filtros"
+    },
+    "stats": {
+        "total_revenue": "Ingresos Totales",
+        "active_users": "Usuarios Activos",
+        "conversion_rate": "Tasa de Conversión",
+        "avg_session": "Sesión Promedio",
+        "from_last_month": "desde el mes pasado"
+    },
+    "charts": {
+        "revenue_overview_title": "Resumen de Ingresos (Últimos 12 Meses)",
+        "last_12_months": "Últimos 12 Meses",
+        "traffic_sources_title": "Fuentes de Tráfico ({monthYear})",
+        "view_all": "Ver todo"
+    },
+    "sections": {
+        "analytics": {
+            "sumary": "Sección de analíticas"
+        },
+        "reports": {
+            "sumary": "Sección de reportes"
+        },
+        "alerts": {
+            "sumary": "Sección de alertas"
+        },
+        "export": {
+            "sumary": "Sección de exportar información"
+        },
+        "settings": {
+            "sumary": "Sección de configuración"
+        },
+        "website": {
+            "sumary": "Sección de sitio web"
+        }
+    },
+    "modals": {
+        "add_ingredient": {
+            "title": "Agregar Ingrediente",
+            "search_placeholder": "Buscar ingrediente (ej: Avena, Huevo...)",
+            "quantity_label": "Cantidad",
+            "unit_label": "Unidad",
+            "portion_label": "Etiqueta de Porción",
+            "portion_label_optional": "(Opcional)",
+            "portion_label_help": "Texto amigable visible para el paciente en el menú.",
+            "placeholder_quantity": "Ej: 100",
+            "placeholder_portion": "Ej: 1 taza mediana picada",
+            "no_results": "No se encontraron ingredientes.",
+            "db_search_prompt": "Busca en la base de datos de alimentos",
+            "change_selection": "Cambiar",
+            "back": "Atrás",
+            "add_btn": "Agregar al Menú",
+            "ingredient_label": "Ingrediente"
+        },
+        "add_food": {
+            "title": "Agregar Alimento",
+            "search_placeholder": "Buscar alimento (ej: Manzana, Pollo...)",
+            "amount_label": "Peso Neto (g)",
+            "serving_label": "Medida Casera",
+            "placeholder_amount": "Ej: 100",
+            "placeholder_serving": "Ej: 1 taza, 1 unidad...",
+            "no_results": "No encontramos alimentos con ese nombre.",
+            "db_search_prompt": "Escribe para buscar en la base de datos maestra",
+            "selected_label": "Alimento Seleccionado",
+            "amount_help": "Cantidad para 1 intercambio",
+            "serving_help": "Texto visible para el paciente",
+            "change_selection": "Cambiar",
+            "back": "Atrás",
+            "add_btn": "Agregar a la Lista"
+        },
+        "assign_exchange": {
+            "title": "Asignar Intercambio",
+            "group_label": "Grupo de Alimentos",
+            "portions_label": "Porciones",
+            "moment_label": "Momento",
+            "search_placeholder": "Buscar (ej: Frutas)...",
+            "no_results": "Sin resultados.",
+            "cancel": "Cancelar",
+            "assign": "Asignar"
+        },
+        "assign_menu": {
+            "title": "Asignar Menú",
+            "search_label": "Buscar Receta / Menú",
+            "moment_label": "Momento de Consumo",
+            "notes_label": "Notas (Opcional)",
+            "search_placeholder": "Escribe para filtrar...",
+            "notes_placeholder": "Ej: Solo días de entrenamiento...",
+            "loading": "Cargando...",
+            "no_results": "No se encontraron menús.",
+            "cancel": "Cancelar",
+            "assign": "Asignar Menú"
+        },
+        "add_lab_result": {
+            "title": "Registrar Resultados Manuales",
+            "exam_name_label": "Nombre del Examen",
+            "date_label": "Fecha de Toma",
+            "exam_placeholder": "Ej: Perfil Lipídico",
+            "sections_label": "Parámetros",
+            "col_param": "Parámetro",
+            "col_value": "Valor",
+            "col_unit": "Unidad",
+            "param_placeholder": "Ej: Glucosa",
+            "unit_placeholder": "Unidad",
+            "add_param": "Agregar otro parámetro",
+            "cancel": "Cancelar",
+            "save_btn": "Guardar Resultados",
+            "saving_btn": "Guardando..."
+        },
+        "create_consultation": {
+            "title": "Agendar Nueva Consulta",
+            "patient_label": "Paciente",
+            "date_label": "Fecha",
+            "time_label": "Hora",
+            "type_label": "Tipo de Consulta",
+            "reason_label": "Motivo (Opcional)",
+            "patient_placeholder": "Seleccione un paciente...",
+            "reason_placeholder": "Ej: Revisión de exámenes...",
+            "types": {
+                "first_time": "Primera Vez",
+                "follow_up": "Control / Seguimiento",
+                "emergency": "Emergencia"
+            },
+            "status": {
+                "scheduled": "Agendada",
+                "completed": "Completada",
+                "canceled": "Cancelada",
+                "no_show": "No Asistió"
+            },
+            "form_sections": {
+                "data": "Datos de la Cita"
+            },
+            "cancel": "Cancelar",
+            "schedule_btn": "Agendar Cita"
+        }
+    }
+}

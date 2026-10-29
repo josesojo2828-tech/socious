@@ -1,0 +1,144 @@
+[
+  {
+    "name": "Pollo a la Plancha con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Pollo a la plancha con quinoa y verduras frescas.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tostada de Salmón",
+    "category": "almuerzo",
+    "description": "Tostada de salmón con pimientos y lechuga fresca.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Pimientos",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pollo",
+    "category": "almuerzo",
+    "description": "Sándwich de pollo con verduras frescas.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo deshebrado",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Pan de caja",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Carne Asada con Calabacitas y Chile Poblano",
+    "category": "almuerzo",
+    "description": "Carne asada con calabacitas y chile poblano fresco.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Calabacitas",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Chile poblano",
+        "quantity": 0.5,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Zanahoria Rallada y Pepinos",
+    "category": "snack",
+    "description": "Zanahoria rallada y pepinos frescos.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Jícama Picada",
+    "category": "snack",
+    "description": "Jícama picada fresca.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  }
+]

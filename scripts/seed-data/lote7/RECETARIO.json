@@ -1,0 +1,634 @@
+[
+  {
+    "name": "Hot cakes de avena y plátano",
+    "category": "desayuno",
+    "description": "Un delicioso desayuno con avena y plátano.",
+    "tags": [
+      "dieta",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Leche light",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Torta de aguacate",
+    "category": "snack",
+    "description": "Una deliciosa torta de aguacate.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de queso",
+    "category": "snack",
+    "description": "Un delicioso sándwich de queso.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa baja en grasa",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Omelette con jamón",
+    "category": "almuerzo",
+    "description": "Una deliciosa omelette con jamón.",
+    "tags": [
+      "saludable",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado verde + pan con jamón",
+    "category": "desayuno",
+    "description": "Un delicioso licuado verde con pan y jamón.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Nopal",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de papaya con avena",
+    "category": "desayuno",
+    "description": "Un delicioso licuado de papaya con avena.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche light",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Pan tostado",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Avena cocida con fruta",
+    "category": "desayuno",
+    "description": "Un delicioso avena cocida con fruta.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Huevo con tortilla",
+    "category": "almuerzo",
+    "description": "Un delicioso huevo con tortilla.",
+    "tags": [
+      "saludable",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan tostado con aguacate + huevo cocido",
+    "category": "snack",
+    "description": "Un delicioso pan tostado con aguacate y huevo cocido.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Pan tostado",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo cocido",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de naranja",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Salchicha con queso",
+    "category": "snack",
+    "description": "Una deliciosa salchicha con queso.",
+    "tags": [
+      "saludable",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Salchicha de pavo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de kiwi",
+    "category": "desayuno",
+    "description": "Un delicioso licuado de kiwi.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Kiwi",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Leche light",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Yogur light",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Crema de mango",
+    "category": "snack",
+    "description": "Una deliciosa crema de mango.",
+    "tags": [
+      "saludable",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur light",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Jugo de naranja",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Chilaquiles Rojos",
+    "category": "cena",
+    "description": "Chilaquiles rojos con tortillas de maíz, salsa roja y aguacate.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa roja",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Tortilla",
+    "category": "cena",
+    "description": "Sopa de tortilla con verduras y queso fresco.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan Tostado con Mermelada",
+    "category": "desayuno",
+    "description": "Pan tostado con mermelada y leche light.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan tostado",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Mermelada",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Leche light",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Avena con Yogurt",
+    "category": "desayuno",
+    "description": "Avena cocida con yogurt light y frutas.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Avena cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Yogurt light",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frutas",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de Nopales",
+    "category": "cena",
+    "description": "Tacos de nopales con salsa bandera y aguacate.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Nopales",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas con Aguacate",
+    "category": "cena",
+    "description": "Quesadillas con aguacate y queso panela.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de Pollo",
+    "category": "cena",
+    "description": "Tacos de pollo con salsa bandera y aguacate.",
+    "tags": [
+      "proteico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Enfrijoladas",
+    "category": "cena",
+    "description": "Enfrijoladas con salsa bandera y queso fresco.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles de la olla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso fresco",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de Rajas",
+    "category": "cena",
+    "description": "Tacos de rajas con salsa bandera y pollo.",
+    "tags": [
+      "proteico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Chile poblano",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa bandera",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Carne Asada",
+    "category": "cena",
+    "description": "Carne asada con verduras y aguacate.",
+    "tags": [
+      "proteico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+{
+    "tabs": {
+        "active": "Activos",
+        "archived": "Archivados"
+    },
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
+    "notifications": {
+        "archive_success": "Lista archivada",
+        "archive_message": "La lista \"{name}\" se archivó y ya no aparece en la lista activa.",
+        "unarchive_success": "Lista desarchivada",
+        "unarchive_message": "La lista \"{name}\" volvió a la lista activa.",
+        "delete_success": "Lista eliminada",
+        "delete_message": "La lista \"{name}\" se eliminó."
+    },
+
+    "sections": {
+        "basic_info": "Información Básica"
+    },
+    "form": {
+        "name": "Nombre de la Lista",
+        "description": "Descripción",
+        "base_kcal": "Kcal / Intercambio",
+        "base_carbs": "Carbohidratos (g)",
+        "base_protein": "Proteína (g)",
+        "base_fat": "Grasa (g)"
+    },
+    "item": {
+        "food": "Alimento",
+        "amount": "Cantidad (g)",
+        "label": "Medida Casera"
+    },
+    "actions": {
+        "create_title": "Crear Lista de Intercambio",
+        "update_title": "Editar Lista de Intercambio",
+        "list_title": "Listas de Intercambio",
+        "food_list_title": "Base de Datos Maestra"
+    }
+}

@@ -1,0 +1,328 @@
+[
+  {
+    "name": "Hot Cakes de Almendra con Frutas",
+    "category": "desayuno",
+    "description": "Un desayuno rápido y ligero con hot cakes de almendra y frutas frescas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Polvo para hornear",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 4,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 6,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Fresas y Frambuesas",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con fresas y frambuesas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 3,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 5,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Coco y Plátano",
+    "category": "desayuno",
+    "description": "Un smoothie cremoso y delicioso con coco y plátano.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Coco rallado",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Té instantáneo sabor a chai",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 4,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 5,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Granola",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Aguacate y Piña",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con aguacate y piña.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "limones",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Avena",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 3,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Menta",
+        "quantity": 4,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Manzana",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con manzana.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Hielo",
+        "quantity": 2.5,
+        "unit": "tazas"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 4,
+        "unit": "manzanas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Miel",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  }
+]

@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Tortilla de Flor de Calabaza",
+    "category": "cena",
+    "description": "Tortilla de huevo con flor de calabaza y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "rapido"
+    ],
+    "foods": [
+      {
+        "name": "Clara de huevo",
+        "quantity": 2,
+        "unit": "pzas"
+      },
+      {
+        "name": "Diente de ajo",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Flor de calabaza",
+        "quantity": 0.5,
+        "unit": "manojo"
+      },
+      {
+        "name": "Aceite de soya",
+        "quantity": 2,
+        "unit": "ctas"
+      }
+    ]
+  },
+  {
+    "name": "Arroz a la Primavera",
+    "category": "almuerzo",
+    "description": "Arroz con verduras y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Elote cocido",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Calabaza",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Pimiento amarillo",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Diente de ajo",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Mantequilla sin sal",
+        "quantity": 1.5,
+        "unit": "Cdit"
+      },
+      {
+        "name": "Pimienta molida",
+        "quantity": 1,
+        "unit": "gr"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Croquetas de Arroz",
+    "category": "snack",
+    "description": "Croquetas de arroz y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz",
+        "quantity": 0.125,
+        "unit": "taza"
+      },
+      {
+        "name": "Pimiento",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 10,
+        "unit": "gr"
+      },
+      {
+        "name": "Clara de huevo",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 8,
+        "unit": "Cdit"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 4,
+        "unit": "Cdas"
+      }
+    ]
+  }
+]

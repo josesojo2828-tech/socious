@@ -1,0 +1,1558 @@
+[
+  {
+    "name": "Smoothie de espinacas y plátano",
+    "category": "snack",
+    "description": "Smoothie de espinacas y plátano",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas baby",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 2,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de cítricos y mango",
+    "category": "snack",
+    "description": "Smoothie de cítricos y mango",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de canónigos y aguacate",
+    "category": "snack",
+    "description": "Smoothie de canónigos y aguacate",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Canónigos",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Batido frío de arándanos y cardamomo",
+    "category": "desayuno",
+    "description": "Batido frío de arándanos y cardamomo",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Arándanos congelados",
+        "quantity": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de avena",
+        "quantity": 450,
+        "unit": "ml"
+      },
+      {
+        "name": "Cardamomo",
+        "quantity": 2,
+        "unit": "c.c."
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de piña y mango con agua de coco",
+    "category": "snack",
+    "description": "Smoothie de piña y mango con agua de coco",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 150,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de mango y acelgas con jengibre",
+    "category": "snack",
+    "description": "Smoothie de mango y acelgas con jengibre",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Acelgas",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Jengibre",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de lechuga y albahaca con pera",
+    "category": "snack",
+    "description": "Smoothie de lechuga y albahaca con pera",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Pera",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie picante de mango y zanahoria con jengibre",
+    "category": "snack",
+    "description": "Smoothie picante de mango y zanahoria con jengibre",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Jengibre",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de melón, manzanas verdes y espinacas",
+    "category": "snack",
+    "description": "Smoothie de melón, manzanas verdes y espinacas",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana verde",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Espinacas baby",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de apio y manzana verde",
+    "category": "snack",
+    "description": "Rico en vitamina C y carotenoides",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Apio",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana verde",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de pepino, hierbas silvestres y canónigos",
+    "category": "snack",
+    "description": "Refrescante y rico en clorofila",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Hierbas silvestres",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Canónigos",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Albaricoques",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 300,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de fresas y tomates con albahaca",
+    "category": "snack",
+    "description": "Rico en vitamina C y ácido fólico",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie picante de aguacate y espinacas",
+    "category": "snack",
+    "description": "Rico en clorofila y capsaicina",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Espinacas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Chili",
+        "quantity": 0.5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de piña y espinacas",
+    "category": "snack",
+    "description": "Refrescante y digestivo",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Espinacas",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Zumo de lima",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de espinacas, kiwi y alga chlorella",
+    "category": "snack",
+    "description": "Rico en clorofila y vitamina B12",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Kiwi",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Alga chlorella",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 0.5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 300,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana verde",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de frutas y hortalizas con semillas de chía",
+    "category": "snack",
+    "description": "Gran digestivo",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Piña congelada",
+        "quantity": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Plátano congelado",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Zumo de limón",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de papaya y manzana",
+    "category": "snack",
+    "description": "Rico en papaína",
+    "tags": [
+      "dieta",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Hielo",
+        "quantity": 15,
+        "unit": "cubitos"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de col rizada y apio",
+    "category": "snack",
+    "description": "Batido refrescante con col rizada, apio y aguacate.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Col rizada",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Agua",
+        "quantity": 400,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de piña y mandarina",
+    "category": "snack",
+    "description": "Batido refrescante con piña y mandarina.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mandarina",
+        "quantity": 4,
+        "unit": "unidad"
+      },
+      {
+        "name": "Leche",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Jengibre",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Good morning smoothie",
+    "category": "desayuno",
+    "description": "Batido energético con aguacate, plátano y espinacas.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 0.5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 0.25,
+        "unit": "unidad"
+      },
+      {
+        "name": "Espinacas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 80,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Refreshing detox",
+    "category": "snack",
+    "description": "Batido refrescante con kiwi y mango.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Kiwi",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 2,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie tónico de plátano",
+    "category": "snack",
+    "description": "Batido refrescante con plátano y manzana.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Menta",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Pink protein bomb",
+    "category": "snack",
+    "description": "Batido proteico con frambuesas y leche de soja.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Frambuesas",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soja",
+        "quantity": 450,
+        "unit": "ml"
+      },
+      {
+        "name": "Semillas de cáñamo",
+        "quantity": 4,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sirope de arce",
+        "quantity": 4,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Batido tropical",
+    "category": "snack",
+    "description": "Batido refrescante con naranja, kiwi y plátano.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Kiwi",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Antioxidant shake",
+    "category": "snack",
+    "description": "Batido antioxidante con uva, arándanos y granada.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Uva",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Granada",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur griego",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 160,
+        "unit": "ml"
+      },
+      {
+        "name": "Sirope de agave",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Fresh detox",
+    "category": "snack",
+    "description": "Batido refrescante con col rizada y lima.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Col rizada",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Menta",
+        "quantity": 2,
+        "unit": "ramitas"
+      },
+      {
+        "name": "Lima",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Hielo",
+        "quantity": 3,
+        "unit": "cubitos"
+      }
+    ]
+  },
+  {
+    "name": "Batido de arándanos y granada",
+    "category": "snack",
+    "description": "Batido antioxidante con arándanos y granada.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arándanos",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Granada",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Batido verde de espinacas",
+    "category": "snack",
+    "description": "Batido saludable con espinacas y frutas.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": ""
+      },
+      {
+        "name": "Apio",
+        "quantity": 1,
+        "unit": "tallo"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Agua de coco",
+        "quantity": 150,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Batido de piña con menta",
+    "category": "snack",
+    "description": "Batido refrescante con piña y menta.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": ""
+      },
+      {
+        "name": "Menta",
+        "quantity": 6,
+        "unit": "tallos"
+      },
+      {
+        "name": "Leche de coco",
+        "quantity": 400,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "All-terrain shake",
+    "category": "snack",
+    "description": "Batido energético con brócoli y frutas.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 2,
+        "unit": ""
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": "",
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Batido de albaricoques",
+    "category": "snack",
+    "description": "Batido refrescante con albaricoques y suero de leche.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Albaricoques",
+        "quantity": 650,
+        "unit": "g"
+      },
+      {
+        "name": "Suero de leche",
+        "quantity": 400,
+        "unit": "ml"
+      },
+      {
+        "name": "Pistachos",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Canela",
+        "quantity": 0.5,
+        "unit": "rama"
+      }
+    ]
+  },
+  {
+    "name": "Granizado de limón",
+    "category": "snack",
+    "description": "Granizado refrescante con limón y azúcar.",
+    "tags": [
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Limón",
+        "quantity": 2,
+        "unit": ""
+      },
+      {
+        "name": "Azúcar blanco",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Hielo picado",
+        "quantity": "",
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Batido de Oreo",
+    "category": "snack",
+    "description": "Batido dulce con galletas Oreo y helado.",
+    "tags": [
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Galletas Oreo",
+        "quantity": 6,
+        "unit": "g"
+      },
+      {
+        "name": "Helado de vainilla",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Leche",
+        "quantity": 150,
+        "unit": "ml"
+      },
+      {
+        "name": "Esencia de vainilla",
+        "quantity": "",
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Batido de fresas con bayas de Goji",
+    "category": "snack",
+    "description": "Batido saludable con fresas y bayas de Goji.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Bayas de Goji",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 0.5,
+        "unit": ""
+      },
+      {
+        "name": "Naranja",
+        "quantity": 2,
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Sunny morning bowl",
+    "category": "desayuno",
+    "description": "Tazón saludable con mango, naranjas y crema de almendras.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": ""
+      },
+      {
+        "name": "Naranjas",
+        "quantity": 2,
+        "unit": ""
+      },
+      {
+        "name": "Crema de almendras",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Moras",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Copos de avena",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Melisa",
+        "quantity": 2,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "The perfect breakfast",
+    "category": "desayuno",
+    "description": "Desayuno saludable con arándanos, lechuga y dátiles.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Arándanos",
+        "quantity": 130,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Dátiles",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salsa Verde",
+    "category": "snack",
+    "description": "Salsa verde fresca y refrescante.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Hielo picado",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de girasol",
+        "quantity": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "Mostaza picante",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Nuez moscada",
+        "quantity": 1,
+        "unit": "pizca"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 1,
+        "unit": "pizca"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Huevos",
+        "quantity": 2,
+        "unit": "unidades"
+      },
+      {
+        "name": "Hierbas",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Gazpacho",
+    "category": "cena",
+    "description": "Sopa fría de tomate y pepino.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 3,
+        "unit": "unidades"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Vinagre de Jerez",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.5,
+        "unit": "diente"
+      }
+    ]
+  },
+  {
+    "name": "Ajoblanco",
+    "category": "snack",
+    "description": "Batido de almendras y ajo.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Agua fría",
+        "quantity": 300,
+        "unit": "ml"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.25,
+        "unit": "diente"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Vinagre de Jerez",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Hummus",
+    "category": "snack",
+    "description": "Crema de garbanzos y tahini.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 800,
+        "unit": "g"
+      },
+      {
+        "name": "Tahini",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Zumo de limón",
+        "quantity": 3,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 125,
+        "unit": "ml"
+      },
+      {
+        "name": "Comino",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Salmorejo",
+    "category": "cena",
+    "description": "Sopa fría de tomate y pan.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 4,
+        "unit": "unidades"
+      },
+      {
+        "name": "Pan duro",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón serrano",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "Huevo duro",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Vinagre de Jerez",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Spicy salad dressing",
+    "category": "snack",
+    "description": "Aliño picante para ensaladas.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Vinagre balsámico",
+        "quantity": 150,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de calabaza",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 0.5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chili",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Mayonesa",
+    "category": "snack",
+    "description": "Mayonesa clásica.",
+    "tags": [
+      "vegetariano",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Huevo",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Vinagre de Jerez",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Helado de yogur y arándanos",
+    "category": "snack",
+    "description": "Helado de yogur y arándanos congelados",
+    "tags": [
+      "diabetes",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "arándanos congelados",
+        "quantity": 600,
+        "unit": "g"
+      },
+      {
+        "name": "yogur",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "leche",
+        "quantity": 200,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sorbete de albaricoque y jengibre",
+    "category": "snack",
+    "description": "Sorbete de albaricoque y jengibre",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "albaricoques congelados",
+        "quantity": 600,
+        "unit": "g"
+      },
+      {
+        "name": "jengibre",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "sirope de arce",
+        "quantity": 4,
+        "unit": "c.s."
+      },
+      {
+        "name": "pepitas de cacao",
+        "quantity": 2,
+        "unit": "c.s."
+      },
+      {
+        "name": "sirope de agave",
+        "quantity": 4,
+        "unit": "c.s."
+      },
+      {
+        "name": "zumo de manzana",
+        "quantity": 250,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Helado de mango y plátano",
+    "category": "snack",
+    "description": "Helado de mango y plátano",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "mango",
+        "quantity": 1,
+        "unit": ""
+      },
+      {
+        "name": "plátanos",
+        "quantity": 2,
+        "unit": ""
+      },
+      {
+        "name": "arándanos secos",
+        "quantity": 2,
+        "unit": "c.s."
+      },
+      {
+        "name": "zumo de manzana",
+        "quantity": 300,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Bol de acai",
+    "category": "desayuno",
+    "description": "Bol de acai con mezcla de bayas congeladas",
+    "tags": [
+      "hipocalorico",
+      "anti-inflamatorio"
+    ],
+    "foods": [
+      {
+        "name": "polvo de acai",
+        "quantity": 2,
+        "unit": "c.s."
+      },
+      {
+        "name": "mezcla de bayas congeladas",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "plátanos",
+        "quantity": 2,
+        "unit": ""
+      },
+      {
+        "name": "yogur",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "semillas de chía",
+        "quantity": 2,
+        "unit": "c.s."
+      },
+      {
+        "name": "muesli",
+        "quantity": 4,
+        "unit": "c.s."
+      }
+    ]
+  }
+]

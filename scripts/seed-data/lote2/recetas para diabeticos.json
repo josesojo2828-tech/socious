@@ -1,0 +1,329 @@
+[
+  {
+    "name": "Albóndigas Integrales para Diabéticos",
+    "category": "almuerzo",
+    "description": "Albóndigas integrales para diabéticos, hechas con pan integral, avena, nueces y leche de soya.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soya",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Papas Escalfadas",
+    "category": "almuerzo",
+    "description": "Papas escalfadas con sal y leche de soya.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papas",
+        "quantity": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 7,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soya",
+        "quantity": 600,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Panqueques de Avena y Manzana",
+    "category": "desayuno",
+    "description": "Panqueques de avena y manzana, hechos con claras de huevo, avena y puré de manzana.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Claras de huevo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Puré de manzana",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Burritos de Quinoa",
+    "category": "almuerzo",
+    "description": "Burritos de quinoa, hechos con quinoa, claras de huevo, aguacate y salsa de tomate.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Claras de huevo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de tomate",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pilaf de Champiñones y Nueces",
+    "category": "almuerzo",
+    "description": "Pilaf de champiñones y nueces, hechos con arroz integral, champiñones y nueces.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ceviche de Champiñones",
+    "category": "cena",
+    "description": "Ceviche de champiñones, hechos con champiñones, tomate, chile morrón y jugo de limón.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Barritas de Nuez y Coco",
+    "category": "snack",
+    "description": "Barritas de nuez y coco, hechas con harina integral, coco rallado y aceite de oliva.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Harina integral",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Galletas de Plátano y Dátiles",
+    "category": "snack",
+    "description": "Galletas de plátano y dátiles, hechas con plátano machacado, coco rallado y aceite de oliva.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano machacado",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Reyna",
+    "category": "cena",
+    "description": "Ensalada reyna, hecha con repollo, tomate, cebolla y aguacate.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Repollo",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan de Plátano",
+    "category": "almuerzo",
+    "description": "Pan de plátano, hecho con plátano machacado, harina integral y aceite de oliva.",
+    "tags": [
+      "diabetes",
+      "integro",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano machacado",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Harina integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Un plato equilibrado y saludable para personas con diabetes, con proteínas magras y carbohidratos complejos.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  }
+]

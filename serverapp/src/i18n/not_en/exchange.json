@@ -1,0 +1,27 @@
+{
+    "sections": {
+        "basic_info": "Basic Information"
+    },
+    "form": {
+        "name": "List Name",
+        "name_placeholder": "E.g., Starches, Fruits...",
+        "description": "Description",
+        "description_placeholder": "Notes about this food group...",
+        "base_kcal": "Kcal / Exchange",
+        "base_carbs": "Carbohydrates (g)",
+        "base_protein": "Protein (g)",
+        "base_fat": "Fat (g)"
+    },
+    "item": {
+        "food": "Food",
+        "food_placeholder": "Search food...",
+        "amount": "Amount (g)",
+        "amount_placeholder": "E.g., 30",
+        "label": "Household Measure",
+        "label_placeholder": "E.g., 1 slice"
+    },
+    "actions": {
+        "create_title": "Create Exchange List",
+        "update_title": "Edit Exchange List"
+    }
+}

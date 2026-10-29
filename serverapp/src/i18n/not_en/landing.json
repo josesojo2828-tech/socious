@@ -1,0 +1,100 @@
+{
+    "lang": "en",
+    "hero": {
+        "title": "The All-in-One Platform to Launch Your Subscription Business",
+        "subtitle": "From user management and recurring payments to an integrated wallet system. We give you the robust backend you need to scale.",
+        "cta": "Start Your Free Trial",
+        "note": "No credit card required. Cancel anytime.",
+        "support": "24/7 Support"
+    },
+    "problem": {
+        "badge": "Have your own subscription software",
+        "title": "Building a",
+        "dest": "recurring payment",
+        "title2": "system is complicated",
+        "text": "You need to manage secure authentication, authorize who can do what, integrate payment gateways, handle recurring invoices, and protect your users' funds. It's a technical headache that distracts you from what really matters: growing your product.",
+        "industry": "In the sector of",
+        "safe_clients": "Satisfied clients"
+    },
+    "logos": {
+        "title": "Trusted by leading institutions"
+    },
+    "service": {
+        "badge": "Services",
+        "title": "Robust Solutions",
+        "dest": "for Your Business",
+        "text": "Ready-to-use backend services, designed to launch your subscription platform quickly."
+    },
+    "solution": {
+        "title": "We do it for you",
+        "text": "We build the robust, secure, and scalable backend infrastructure your business needs. Forget the complexity and launch your subscription service in days, not months."
+    },
+    "features": {
+        "title": "Everything you need in one place"
+    },
+    "pricing": {
+        "title": "Choose the plan that fits your growth"
+    },
+    "cta_final": {
+        "title": "Ready to launch your subscription business?",
+        "text": "Stop wasting time configuring infrastructure. Focus on your product and let us handle the backend.",
+        "button": "Sign Up Free Today"
+    },
+    "stats": {
+        "title": "Results you can trust"
+    },
+    "about": {
+        "badge": "Why Subkit",
+        "title": "Your <span class=\"gradient-text\">Subscription</span> Business",
+        "text": "Subkit is more than just a backend; we are your strategic partner. Built on NestJS, Prisma, and a robust architecture, we give you the tools to launch and scale your subscription business securely, allowing you to focus on your product, not the infrastructure.",
+        "expertise_title": "Our Core Expertise",
+        "cta_primary": "Get Started Now",
+        "cta_secondary": "Read the Documentation"
+    },
+    "testimonials": {
+        "badge": "Testimonials",
+        "title": "Customer <span class=\"gradient-text\">Success</span> Stories",
+        "subtitle": "Hear from developers and companies that have transformed their ideas into profitable businesses with Subkit."
+    },
+    "footer": {
+        "about_text": "Providing the robust backend infrastructure for subscription businesses, with integrity and performance.",
+        "services_title": "Services",
+        "quick_links_title": "Quick Links",
+        "newsletter_title": "Newsletter",
+        "newsletter_text": "Subscribe to receive technical insights and platform updates.",
+        "newsletter_placeholder": "Your email address",
+        "copyright": "© 2025 Subkit. All rights reserved."
+    },
+    "service_items": {
+        "subscription": {
+            "title": "Subscription Management",
+            "description": "Handle recurring payment plans, billing cycles, and user subscriptions effortlessly."
+        },
+        "wallet": {
+            "title": "Integrated Wallet System",
+            "description": "Allow your users to deposit funds and manage internal balances for payments and services on your platform."
+        },
+        "auth": {
+            "title": "Authentication and Security",
+            "description": "A robust system for registration, login (API and MVC), and role management ready to protect your users and your application."
+        }
+    },
+    "logos_item": {
+        "techcorp": "TechCorp Logo",
+        "saasify": "SaaSify Logo",
+        "elearn": "E-Learn Platform Logo",
+        "fintech": "Fintech Solutions Logo"
+    },
+    "stats_item": {
+        "uptime": "Guaranteed Uptime",
+        "subscriptions": "Active Subscriptions",
+        "apiCalls": "API Calls Processed",
+        "avgResponse": "API Response (avg.)"
+    },
+    "experience_item": {
+        "secure": "Secure Architecture",
+        "payments": "Payment Management",
+        "wallets": "Wallet Systems",
+        "apis": "Scalable APIs"
+    }
+}

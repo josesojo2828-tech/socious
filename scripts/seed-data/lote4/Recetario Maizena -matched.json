@@ -1,0 +1,350 @@
+[
+  {
+    "name": "Rollito de nopal y queso panela",
+    "category": "desayuno",
+    "description": "Un rollito delicioso y saludable para desayunar.",
+    "tags": [
+      "fácil",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Maizena Instantánea",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Hielo",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Frappé de vainilla",
+    "category": "desayuno",
+    "description": "Un frappé cremoso y delicioso para desayunar.",
+    "tags": [
+      "fácil",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Maizena Fécula de Maíz Original",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Knorr Caldo de Pollo",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Chile ancho relleno de frijoles",
+    "category": "cena",
+    "description": "Un plato delicioso y saludable para cenar.",
+    "tags": [
+      "fácil",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Knorr Tomate Sazonador de Tomate",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Comino",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Chile ancho",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Deditos de pollo",
+    "category": "cena",
+    "description": "Un plato delicioso y saludable para cenar.",
+    "tags": [
+      "fácil",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Salsa de soya baja en sodio",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Maizena Fécula de Maíz Original",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Agua de pepino con limón y jengibre",
+    "category": "snack",
+    "description": "Un refresco delicioso y saludable para tomar.",
+    "tags": [
+      "fácil",
+      "snack"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 0.95,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1000,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Jengibre fresco",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua de jamaica y jengibre",
+    "category": "snack",
+    "description": "Un refresco delicioso y saludable para tomar.",
+    "tags": [
+      "fácil",
+      "snack"
+    ],
+    "foods": [
+      {
+        "name": "Flor de jamaica",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1000,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Jengibre fresco",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Agua de tamarindo y durazno con té negro",
+    "category": "snack",
+    "description": "Un refresco delicioso y saludable para tomar.",
+    "tags": [
+      "fácil",
+      "snack"
+    ],
+    "foods": [
+      {
+        "name": "Tamarindo",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1000,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Lipton Té negro limón",
+        "quantity": 600,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Chile piquín",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  }
+]

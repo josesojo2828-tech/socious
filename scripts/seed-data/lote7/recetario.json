@@ -1,0 +1,492 @@
+[
+  {
+    "name": "Hot Cakes Clásicos",
+    "category": "desayuno",
+    "description": "Un clásico desayuno con hot cakes y frutas frescas.",
+    "tags": [
+      "diabetes",
+      "hipertension"
+    ],
+    "foods": [
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Harina para hot cakes",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mora azul",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Fresa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Menta",
+        "quantity": 6,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Crema de Elote y Queso Crema",
+    "category": "cena",
+    "description": "Una crema cremosa y deliciosa con elote y queso crema.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Margarina",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Grano de elote",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g"
+      },
+      {
+        "name": "Consomé de pollo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Tira de tortilla",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti con Salsa de Jalapeño y Cilantro",
+    "category": "cena",
+    "description": "Un espagueti cremoso y picante con salsa de jalapeño y cilantro.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Cilantro",
+        "quantity": 12,
+        "unit": "ramas"
+      },
+      {
+        "name": "Chile jalapeño",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g"
+      },
+      {
+        "name": "Consomé de pollo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Agua",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Espagueti",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Canelones con Salsa de Poblano",
+    "category": "cena",
+    "description": "Un plato cremoso y delicioso con canelones y salsa de poblano.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Mantequilla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Raja de chile poblano",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Consomé de pollo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Fécula de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Lámina de lasaña",
+        "quantity": 12,
+        "unit": "hojas"
+      },
+      {
+        "name": "Queso cheddar",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso manchego",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga Cordon Bleu con Salsa de 3 Chiles",
+    "category": "cena",
+    "description": "Un plato cremoso y picante con pechuga cordon bleu y salsa de 3 chiles.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Media Crema",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Agua",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Chile ancho",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chile guajillo",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chile chipotle",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cubo de Concentrado de Tomate con Pollo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Sal con cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 400,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga Cordon Bleu",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo rellena con queso y jamón.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con Leche",
+    "category": "cena",
+    "description": "Arroz con leche y canela.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Leche Condensada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Menta",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tarta de Arroz con Leche y Fresas",
+    "category": "cena",
+    "description": "Tarta de arroz con leche y fresas.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Arroz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Leche Condensada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 190,
+        "unit": "g"
+      },
+      {
+        "name": "Grenetina",
+        "quantity": 14,
+        "unit": "g"
+      },
+      {
+        "name": "Gelatina",
+        "quantity": 16,
+        "unit": "g"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Menta",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Avena",
+    "category": "snack",
+    "description": "Agua de avena con canela.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Leche Condensada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Hielo",
+        "quantity": 300,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Atole de Chocolate con Nuez",
+    "category": "snack",
+    "description": "Atole de chocolate con nuez.",
+    "tags": [
+      "dieta",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Chocolate",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Leche Evaporada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Fécula de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Esencia de nuez",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  }
+]

@@ -1,0 +1,98 @@
+import { NestFactory } from "@nestjs/core";
+import {
+  NestFastifyApplication,
+  FastifyAdapter,
+} from "@nestjs/platform-fastify";
+import { AppModule } from "./app.module";
+import { ValidationPipe } from "@nestjs/common";
+import { fastifyMultipart } from "@fastify/multipart";
+import { GlobalExceptionFilter } from "./shared/error/global-exception.filter";
+import { Logger } from "nestjs-pino";
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({
+      bodyLimit: 1024 * 1024 * 30,
+    }),
+    { bufferLogs: true },
+  );
+
+  app.useLogger(app.get(Logger));
+
+  const defaultOrigins = [
+    "https://nutringest.com",
+    "https://www.nutringest.com",
+    "https://api.nutringest.com",
+    "https://nutringest.quanticarch.com",
+    "https://backend-nutrigest.ramirezicode.com.ve",
+    "http://localhost:3000",
+    "http://localhost:7782",
+    "http://localhost:3001",
+    "http://localhost:5173",
+  ];
+
+  const envOrigins = [
+    process.env.CORS_ORIGINS,
+    process.env.ALLOWED_ORIGINS,
+    process.env.CORS_ORIGIN,
+    process.env.APP_URL,
+  ]
+    .filter((val): val is string => Boolean(val))
+    .flatMap((val) => val.split(","))
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  const allowedOrigins = Array.from(
+    new Set([...defaultOrigins, ...envOrigins].map((o) => o.replace(/\/$/, "")))
+  );
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      // Permitir peticiones sin header Origin (ej. cURL, Postman, llamadas servidor a servidor)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = origin.trim().replace(/\/$/, "");
+
+      const isAllowed =
+        allowedOrigins.includes("*") ||
+        allowedOrigins.includes(normalizedOrigin) ||
+        normalizedOrigin.endsWith(".nutringest.com") ||
+        normalizedOrigin.endsWith(".quanticarch.com") ||
+        normalizedOrigin.endsWith(".ramirezicode.com.ve");
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+
+      return callback(null, false);
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "X-Access-Token",
+      "X-Refresh-Token",
+    ],
+  });
+
+  await app.register(fastifyMultipart);
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  await app.listen(process.env.PORT ?? 3001, "0.0.0.0");
+}
+bootstrap();

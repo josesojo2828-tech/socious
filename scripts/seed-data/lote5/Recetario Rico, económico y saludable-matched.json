@@ -1,0 +1,727 @@
+[
+  {
+    "name": "Pancakes de Cacao",
+    "category": "desayuno",
+    "description": "Pancakes saludables con cacao y frutas",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Hojuelas de Avena",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Monk fruit",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Bicarbonato",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Esencia de vainilla",
+        "quantity": 0.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sandwich de Queso Panela",
+    "category": "desayuno",
+    "description": "Sandwich saludable con queso panela y aguacate",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de centeno",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Germinado alfalfa",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Avena con Manzana",
+    "category": "desayuno",
+    "description": "Licuado saludable con avena y manzana",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Fibra",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Canela",
+        "quantity": 0.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Plato de Frutas con Arándanos",
+    "category": "desayuno",
+    "description": "Plato saludable con frutas y arándanos",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pancakes",
+    "category": "desayuno",
+    "description": "Pancakes saludables con cacao y frutas",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Hojuelas de Avena",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Monk fruit",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Bicarbonato",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Esencia de vainilla",
+        "quantity": 0.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pasta Cremosa de Espinaca con Tofu",
+    "category": "almuerzo",
+    "description": "Pasta saludable con espinaca y tofu",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tofu",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Milanesa de Res con Puré",
+    "category": "almuerzo",
+    "description": "Milanesa saludable con res y puré",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pulpa Negra (res)",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Puré de Papa con Milanesa",
+    "category": "cena",
+    "description": "Puré de papa con milanesa y brócoli cocido.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Milanesa",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Atún",
+    "category": "snack",
+    "description": "Tostadas con atún, aguacate y mayonesa-chipotle.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mayonesa-chipotle",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Tostadas",
+        "quantity": 3,
+        "unit": "unidades"
+      }
+    ]
+  },
+  {
+    "name": "Pollo Empanizado y Brócoli",
+    "category": "cena",
+    "description": "Pollo empanizado con brócoli cocido.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Avena",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Lentejas con Tostadas de Aguacate",
+    "category": "cena",
+    "description": "Lentejas con tostadas de aguacate.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tostadas",
+        "quantity": 3,
+        "unit": "unidades"
+      }
+    ]
+  },
+  {
+    "name": "Bowl de Arroz con Salmón y Espinaca",
+    "category": "cena",
+    "description": "Bowl de arroz con salmón y espinaca.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Caldo Tlalpeño",
+    "category": "cena",
+    "description": "Caldo tlalpeño con pollo y verduras.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Camarones al Coco con Ensalada",
+    "category": "cena",
+    "description": "Camarones al coco con ensalada.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Camarones",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Avena",
+        "quantity": 25,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pasta al Chipotle",
+    "category": "cena",
+    "description": "Pasta al chipotle con pollo y verduras.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Chipotle molido",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Flautas",
+    "category": "cena",
+    "description": "Flautas con pollo y verduras.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "unidades"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Chilaquiles Rojos con Huevo",
+    "category": "cena",
+    "description": "Chilaquiles rojos con huevo.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas horneadas",
+        "quantity": 3,
+        "unit": "unidades"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso asadero",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Fresca",
+    "category": "cena",
+    "description": "Ensalada fresca con verduras y queso.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de Carne Asada",
+    "category": "cena",
+    "description": "Tacos de carne asada con verduras y salsa.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Milanesa de res",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Nopal",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Ceviche Tropical",
+    "category": "cena",
+    "description": "Ceviche tropical con atún y verduras.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Mango",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  }
+]

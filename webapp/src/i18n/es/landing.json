@@ -1,0 +1,324 @@
+{
+    "lang": "es",
+    "navbar": {
+        "login": "Iniciar Sesión",
+        "try_free": "Prueba Gratis"
+    },
+    "hero": {
+        "badge_text_p1": "Software de ",
+        "badge_text_highlight": "nutricionistas",
+        "badge_text_p2": " para nutricionistas",
+        "title_p1": "Cansado de",
+        "title_highlight": "transcribir",
+        "title_p2": ", todo a mano.",
+        "subtitle": "Nutringest es el software definitivo para nutricionistas que automatiza lo aburrido para que puedas enfocarte en transformar vidas.",
+        "cta": "Comenzar Prueba Gratis",
+        "greeting": "Hola, Dr. Ramírez",
+        "specialty": "Nutricionista Deportivo",
+        "stat_patients": "Pacientes hoy",
+        "stat_growth": "Incremento mensual",
+        "stat_appointments": "Próximas Citas",
+        "stat_view_all": "Ver todo",
+        "notification_menu": "Menú Enviado",
+        "notification_time": "Hace 2 min"
+    },
+    "features": {
+        "badge": "Características",
+        "title_p1": "Todo lo que necesitas para ",
+        "title_highlight": "triunfar",
+        "subtitle": "Diseñamos cada herramienta pensando en tu flujo de trabajo diario, eliminando la fricción administrativa.",
+        "items": {
+            "menus": {
+                "title": "Menús en Segundos",
+                "description": "Crea planes con cálculo automático de macros y base de datos localizable."
+            },
+            "food_db": {
+                "title": "Base de Datos de Alimentos",
+                "description": "Miles de alimentos validados con desglose completo de macro y micronutrientes para una planificación nutricional precisa."
+            },
+            "exchanges": {
+                "title": "Listas de Intercambio",
+                "description": "Da libertad a tus pacientes con opciones equivalentes pre-cargadas."
+            },
+            "monitoring": {
+                "title": "Monitoreo Continuo",
+                "description": "Gráficos de evolución de peso, grasa y medidas antropométricas."
+            },
+            "new_features": {
+                "title": "Nuevas Funcionalidades",
+                "description": "Se agregaron nuevas funcionalidades para mejorar la experiencia de usuario, tanto para el nutricionista como para el paciente."
+            }
+        },
+        "app_view": "Vista de la App del Paciente",
+        "connected_patients": "Tus pacientes siempre conectados",
+        "benefits": [
+            "Visualización de plan de alimentación en tiempo real",
+            "Lista de compras generada automáticamente"
+        ]
+    },
+    "pricing": {
+        "title": "Planes a tu medida",
+        "subtitle": "Precios transparentes para potenciar tu consultorio. Sin complicaciones.",
+        "plans": {
+            "pro": {
+                "name": "PRO",
+                "price": "10.00",
+                "presale_price": "4.00",
+                "cta": "Obtener PRO",
+                "period": "Facturado mensualmente",
+                "badge": "Preventa",
+                "description": "Todo lo que necesitas para tu consultorio individual",
+                "features": {
+                    "patients_unlimited": "Pacientes Ilimitados",
+                    "menus": "Menús y Planes de Alimentación",
+                    "exchanges": "Listas de Intercambio",
+                    "consultations": "Consultas y Seguimiento",
+                    "portal": "App/Portal para Pacientes",
+                    "shopping_list": "Listas de Compras Automáticas",
+                    "anthropometry": "Cálculo Antropométrico",
+                    "food_db": "Base de Alimentos Completa"
+                }
+            },
+            "premium": {
+                "name": "PREMIUM",
+                "price": "25.00",
+                "presale_price": "20.00",
+                "cta": "Obtener PREMIUM",
+                "period": "Facturado mensualmente",
+                "badge": "Más Adquirido",
+                "description": "La opción favorita de los nutricionistas, con todo lo de PRO más herramientas especializadas",
+                "features": {
+                    "patients_unlimited": "Pacientes Ilimitados",
+                    "menus": "Menús y Planes de Alimentación",
+                    "exchanges": "Listas de Intercambio",
+                    "consultations": "Consultas y Seguimiento",
+                    "portal": "App/Portal para Pacientes",
+                    "shopping_list": "Listas de Compras Automáticas",
+                    "anthropometry": "Cálculo Antropométrico",
+                    "food_db": "Base de Alimentos Completa",
+                    "diet_templates": "Plantillas de Dietas",
+                    "portfolios": "Portafolios Digitales",
+                    "custom_templates": "Personalización de Plantillas",
+                    "sports_nutrition": "Nutrición Deportiva",
+                    "pediatric_nutrition": "Nutrición Pediátrica",
+                    "referrals": "Sistema de Referidos",
+                    "group_care": "Atención en Grupos"
+                }
+            },
+            "clinica": {
+                "name": "Clínica",
+                "price": "99.99",
+                "price_per_nutritionist": "9.99",
+                "cta": "Contactar Ventas",
+                "period": "Facturado mensualmente",
+                "badge": "Equipos",
+                "description": "Para clínicas y equipos de nutricionistas",
+                "price_note": "o $9.99/nutricionista",
+                "features": {
+                    "everything_pro": "Todo lo incluido en PREMIUM",
+                    "team_management": "Gestión de Equipo",
+                    "clinic_branding": "Marca Personalizada",
+                    "priority_support": "Soporte Prioritario VIP",
+                    "multi_nutritionist": "Multi-nutricionista",
+                    "analytics": "Analíticas Avanzadas"
+                }
+            }
+        }
+    },
+    "ceo": {
+        "quote": "\"La buena alimentación es el puente hacia tu mejor versión.\"",
+        "badge": "Liderazgo & Visión",
+        "name_p1": "Lcdo. Winder ",
+        "name_highlight": "Gonzalez",
+        "role": "CEO & Founder de Nutringest",
+        "bio_p1": "Nutricionista especializado en ",
+        "bio_highlight1": "Psiconutrición, Nutrición Deportiva y Clínica",
+        "bio_p2": ". Su visión con ",
+        "bio_highlight2": "NUTRINGEST",
+        "bio_p3": " es proyectar en el espacio digital soluciones integrales, conectando a quienes desean ",
+        "bio_highlight3": "MEJORAR",
+        "bio_p4": " su estilo de vida a través de la alimentación.",
+        "specialties": {
+            "psycho": {
+                "title": "Psiconutrición",
+                "desc": "Equilibrio mente y cuerpo"
+            },
+            "sports": {
+                "title": "Nutrición Deportiva",
+                "desc": "Rendimiento máximo"
+            }
+        }
+    },
+    "cta": {
+        "title": "¿Listo para digitalizar tu consulta?",
+        "subtitle": "Únete a la comunidad de nutricionistas que ya usan Nutringest para crecer su práctica.",
+        "btn_primary": "Obtener mi mes gratis",
+        "btn_secondary": "Agendar demostración",
+        "note": "Prueba de 30 días sin compromiso. No requerimos tarjeta."
+    },
+    "footer": {
+                "description": "Plataforma para la gestión integral de consultorios nutricionales. Tecnología al servicio de la salud.",
+        "cols": {
+            "product": "Producto",
+            "resources": "Recursos",
+            "legal": "Legal"
+        },
+        "links": {
+            "features": "Características",
+            "pricing": "Precios",
+            "app": "App para Pacientes",
+            "calc": "Calculadora Macros",
+            "blog": "Blog de Nutrición",
+            "webinars": "Webinars Gratuitos",
+            "help": "Centro de Ayuda",
+            "community": "Comunidad",
+            "privacy": "Privacidad",
+            "terms": "Términos",
+            "security": "Seguridad"
+        },
+        "rights": "© 2026 Nutringest Inc. Todos los derechos reservados.",
+        "made_with": "La plataforma definitiva para profesionales de la nutrición.",
+        "for_nutritionists": ""
+    },
+    "blog": {
+        "header": {
+            "kicker": "Blog & Actualizaciones",
+            "title": "Novedades en NutrinGest",
+            "desc": "Descubre las últimas funcionalidades, mejoras y noticias sobre la plataforma para nutricionistas."
+        },
+        "categories": {
+            "all": "Todos",
+            "major": "Major Update",
+            "features": "Features",
+            "security": "Security",
+            "integration": "Integration",
+            "news": "News"
+        },
+        "empty": {
+            "message": "No hay publicaciones en esta categoría.",
+            "view_all": "Ver todas"
+        },
+        "card": {
+            "by": "Por",
+            "read_more": "Leer más"
+        },
+        "newsletter": {
+            "title": "¿Quieres estar al día?",
+            "desc": "Suscríbete a nuestro boletín para recibir las últimas actualizaciones de NutrinGest directamente en tu bandeja de entrada.",
+            "placeholder": "Tu correo electrónico",
+            "btn": "Suscribirse"
+        }
+    },
+    "feedback": {
+        "header": {
+            "title": "Ayúdanos a mejorar",
+            "desc": "¿Tienes una idea para una nueva función? ¿Encontraste un error? Queremos escucharte para hacer de NutrinGest la mejor plataforma para ti."
+        },
+        "success": {
+            "title": "¡Mensaje Enviado!",
+            "message": "Agradecemos mucho tu tiempo. Revisaremos tu solicitud y la tendremos en cuenta para futuras actualizaciones.",
+            "btn_another": "Enviar otro mensaje",
+            "toast_title": "¡Recibido!",
+            "toast_message": "Gracias por tus comentarios. Los hemos recibido correctamente."
+        },
+        "form": {
+            "types": {
+                "feature": "Nueva Función",
+                "bug": "Reportar Error",
+                "general": "Otro Comentario",
+                "error": "Selecciona un tipo de solicitud"
+            },
+            "labels": {
+                "name": "Tu Nombre (Opcional)",
+                "email": "Tu Email",
+                "subject": "Asunto",
+                "desc": "Descripción detallada"
+            },
+            "placeholders": {
+                "name": "Ej. Dr. Juan Pérez",
+                "email": "ejemplo@correo.com",
+                "subject_feature": "Ej. Integración con Google Calendar",
+                "subject_bug": "Ej. Error al guardar paciente",
+                "desc": "Cuéntanos más detalles. Si es un error, ¿cómo podemos reproducirlo? Si es una idea, ¿cómo te ayudaría?"
+            },
+            "validation": {
+                "email": "Por favor ingresa un email válido",
+                "subject_min": "El asunto debe tener al menos 5 caracteres",
+                "desc_min": "La descripción debe tener al menos 20 caracteres"
+            },
+            "submit": "Enviar Solicitud"
+        }
+    },
+    "legal": {
+        "terms": {
+            "title": "Términos y Condiciones",
+            "last_updated": "Última actualización: 14 de Diciembre, 2025",
+            "back_home": "Volver al inicio",
+            "welcome": "Bienvenido a NutrinGest. Estos términos y condiciones describen las reglas y regulaciones para el uso del sitio web y los servicios de NutrinGest.",
+            "sections": [
+                {
+                    "title": "1. Aceptación de los Términos",
+                    "content": "Al acceder y utilizar NutrinGest ('la Plataforma'), usted ('el Usuario') acepta estar legalmente vinculado por estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar nuestros servicios. Estos términos se aplican a todos los visitantes, usuarios y otras personas que accedan o utilicen el Servicio."
+                },
+                {
+                    "title": "2. Descripción del Servicio",
+                    "content": "NutrinGest es una plataforma SaaS (Software as a Service) diseñada para facilitar la gestión de consultorios nutricionales, la creación de planes dietéticos y el seguimiento de pacientes. Nos reservamos el derecho de modificar, suspender o interrumpir el servicio (o cualquier parte del contenido) en cualquier momento con o sin previo aviso."
+                },
+                {
+                    "title": "3. Cuentas y Seguridad",
+                    "list": [
+                        "Usted es responsable de mantener la confidencialidad de su cuenta y contraseña.",
+                        "Debe notificarnos inmediatamente sobre cualquier violación de seguridad o uso no autorizado de su cuenta.",
+                        "Usted es responsable de toda la actividad que ocurra bajo su cuenta.",
+                        "La información proporcionada durante el registro debe ser precisa, actual y completa."
+                    ]
+                },
+                {
+                    "title": "4. Planes y Pagos",
+                    "list": [
+                        "<strong>Suscripciones:</strong> El servicio se factura por adelantado de forma mensual.",
+                        "<strong>Renovación Automática:</strong> A menos que cancele su suscripción antes del final del período de facturación actual, su suscripción se renovará automáticamente.",
+                        "<strong>Cambios de Precio:</strong> NutrinGest se reserva el derecho de ajustar los precios de los planes, notificando a los usuarios con al menos 30 días de antelación."
+                    ]
+                },
+                {
+                    "title": "5. Uso Aceptable",
+                    "content": "Usted se compromete a no utilizar el Servicio para ningún propósito ilegal o prohibido por estos Términos. Está prohibido: intentar acceder sin autorización a otras cuentas, sistemas informáticos o redes conectadas al Servicio; cargar virus o códigos maliciosos; o utilizar la plataforma para enviar spam."
+                },
+                {
+                    "title": "6. Propiedad Intelectual",
+                    "content": "El Servicio y su contenido original (excluyendo el contenido proporcionado por los usuarios), características y funcionalidad son y seguirán siendo propiedad exclusiva de NutrinGest y sus licenciantes. El Servicio está protegido por derechos de autor, marcas registradas y otras leyes."
+                },
+                {
+                    "title": "7. Datos del Paciente y Privacidad",
+                    "content": "Como profesional de la salud, usted es el responsable del tratamiento de los datos de sus pacientes. NutrinGest actúa como encargado del tratamiento, proporcionando la infraestructura segura para almacenar y gestionar dicha información. Nos comprometemos a mantener medidas técnicas y organizativas apropiadas para proteger estos datos."
+                },
+                {
+                    "title": "8. Limitación de Responsabilidad",
+                    "content": "En ningún caso NutrinGest, ni sus directores, empleados, socios, agentes, proveedores o afiliados, serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo, sin limitación, pérdida de beneficios, datos, uso, buena voluntad u otras pérdidas intangibles."
+                },
+                {
+                    "title": "9. Ley Aplicable",
+                    "content": "Estos Términos se regirán e interpretarán de acuerdo con las leyes vigentes en su jurisdicción, sin tener en cuenta sus disposiciones sobre conflictos de leyes."
+                },
+                {
+                    "title": "10. Contacto",
+                    "content": "Si tiene alguna pregunta sobre estos Términos, por favor contáctenos en legal@nutringest.com."
+                }
+            ],
+            "support": {
+                "title": "¿Necesitas ayuda?",
+                "desc": "Si tienes dudas sobre cómo estos términos se aplican a tu caso específico, no dudes en contactar a nuestro equipo legal o de soporte. Estamos aquí para ayudarte."
+            }
+        }
+    },
+    "register_branding": {
+        "title": "Únete a la comunidad de nutricionistas más innovadora.",
+        "subtitle": "Administra tus pacientes, planifica dietas y haz crecer tu negocio con nuestras herramientas avanzadas.",
+        "copyright": "© 2025 NutrinGest Platform.",
+        "legal_notice_p1": "Al registrarte, aceptas nuestros",
+        "legal_notice_terms": "Términos de Servicio",
+        "legal_notice_p2": "y",
+        "legal_notice_privacy": "Política de Privacidad"
+    }
+}

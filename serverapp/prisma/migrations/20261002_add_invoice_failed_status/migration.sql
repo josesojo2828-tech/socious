@@ -1,0 +1,11 @@
+-- Migration: add_invoice_failed_status
+-- Extends the design's InvoiceStatus model with FAILED so a monthly invoice whose
+-- settlement attempt could not complete (insufficient wallet balance, missing
+-- payment method, no active subscription) is persisted with a terminal failure
+-- state instead of being silently left as ISSUED.
+--
+-- Additive and backward compatible:
+--   * ISSUED remains the pending / awaiting-payment state (the invoice is issued
+--     and, for auto-renew owners, settled in the same monthly run).
+--   * Existing rows keep their current status; no data rewrite.
+ALTER TYPE "InvoiceStatus" ADD VALUE IF NOT EXISTS 'FAILED';

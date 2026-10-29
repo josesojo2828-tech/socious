@@ -1,0 +1,8 @@
+{
+    "lang": "en",
+
+    "auth": {
+        "invalid_credentials": "Invalid credentials"
+    }
+
+}

@@ -1,0 +1,533 @@
+[
+  {
+    "name": "Consomé de Pollo con Verduras",
+    "category": "cena",
+    "description": "Un caldo ligero y refrescante para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Verduras mixtas",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 480,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Espinacas",
+    "category": "cena",
+    "description": "Una sopa rica y nutritiva para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 480,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Ejotes con Cacahuate",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 14,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Brochetas de Pollo",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo, pechuga de, cocida",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.59,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Aplastaditas con Ensalada Rusa",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Papa",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Carne de res magra",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Nopales Cocidos",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nopales",
+        "quantity": 480,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo Asada con Nopales y Ensalada de Pepinos",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 480,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas con Ensalada de Zanahoria y Verduras",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón de Pollo",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Bisteces a la Mexicana con Frijoles",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Jitomate, cebolla y chile serrano",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Empañadas de Pollo",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Sincronizadas",
+    "category": "almuerzo",
+    "description": "Tortillas de maíz con jamón y queso.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "tortillas"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 4,
+        "unit": "rebanadas",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de pavo",
+    "category": "almuerzo",
+    "description": "Pan de caja con jamón de pavo y queso.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 2,
+        "unit": "rebanadas"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 2,
+        "unit": "rebanadas",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas de picadillo",
+    "category": "almuerzo",
+    "description": "Tortillas de maíz con picadillo y pepino rallado.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "tortillas"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Picadillo",
+        "quantity": 0.75,
+        "unit": "taza"
+      }
+    ]
+  }
+]

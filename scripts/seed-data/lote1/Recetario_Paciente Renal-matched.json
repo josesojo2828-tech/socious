@@ -1,0 +1,186 @@
+[
+  {
+    "name": "Tortilla de Flor de Calabaza",
+    "category": "cena",
+    "description": "Tortilla de huevo con flor de calabaza y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "rapido"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "pzas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Diente de ajo",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 0.5,
+        "unit": "manojo",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 2,
+        "unit": "ctas",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Arroz a la Primavera",
+    "category": "almuerzo",
+    "description": "Arroz con verduras y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Diente de ajo",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1.5,
+        "unit": "Cdit",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Pimienta molida",
+        "quantity": 1,
+        "unit": "gr"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Croquetas de Arroz",
+    "category": "snack",
+    "description": "Croquetas de arroz y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.125,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 10,
+        "unit": "gr",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 8,
+        "unit": "Cdit",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 4,
+        "unit": "Cdas",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  }
+]

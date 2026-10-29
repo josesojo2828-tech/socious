@@ -1,0 +1,3548 @@
+[
+  {
+    "imageFile": "hot-cakes-de-almendra-con-frutas.jpg",
+    "name": "Hot Cakes de Almendra con Frutas",
+    "category": "desayuno",
+    "description": "Un desayuno rápido y ligero con hot cakes de almendra y frutas frescas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Miel",
+        "quantity": 6,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 2,
+        "unit": "tazas"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-de-fresas-y-frambuesas.jpg",
+    "name": "Smoothie de Fresas y Frambuesas",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con fresas y frambuesas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 3,
+        "unit": "tazas"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-de-coco-y-plátano.jpg",
+    "name": "Smoothie de Coco y Plátano",
+    "category": "desayuno",
+    "description": "Un smoothie cremoso y delicioso con coco y plátano.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Coco rallado",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 4,
+        "unit": "unidad"
+      },
+      {
+        "name": "Miel",
+        "quantity": 5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-de-aguacate-y-piña.jpg",
+    "name": "Smoothie de Aguacate y Piña",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con aguacate y piña.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "limones"
+      },
+      {
+        "name": "Avena",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 3,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-de-manzana.jpg",
+    "name": "Smoothie de Manzana",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con manzana.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 4,
+        "unit": "manzanas"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Miel",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "albóndigas-integrales.jpg",
+    "name": "Albóndigas Integrales",
+    "category": "almuerzo",
+    "description": "Albóndigas saludables hechas con pan integral, avena, nueces y hierbas.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "papas-escalfadas.jpg",
+    "name": "Papas Escalfadas",
+    "category": "cena",
+    "description": "Papas escalfadas con un toque de sal y un poco de cebolla.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 375,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "panqueques-de-avena-y-manzana.jpg",
+    "name": "Panqueques de Avena y Manzana",
+    "category": "desayuno",
+    "description": "Panqueques saludables hechos con avena, manzana y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "burritos-de-quinoa.jpg",
+    "name": "Burritos de Quinoa",
+    "category": "almuerzo",
+    "description": "Burritos saludables hechos con quinoa, frijoles y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pilaf-de-champiñones-y-nueces.jpg",
+    "name": "Pilaf de Champiñones y Nueces",
+    "category": "almuerzo",
+    "description": "Pilaf saludable hecho con champiñones, nueces y un poco de apio.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "ceviche-de-champiñones.jpg",
+    "name": "Ceviche de Champiñones",
+    "category": "cena",
+    "description": "Ceviche saludable hecho con champiñones, tomate y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "barritas-de-nuez-y-coco.jpg",
+    "name": "Barritas de Nuez y Coco",
+    "category": "snack",
+    "description": "Barritas saludables hechas con nueces, coco y un poco de miel.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "galletas-de-plátano-y-dátiles.jpg",
+    "name": "Galletas de Plátano y Dátiles",
+    "category": "snack",
+    "description": "Galletas saludables hechas con plátano, dátiles y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-reyna.jpg",
+    "name": "Ensalada Reyna",
+    "category": "cena",
+    "description": "Ensalada saludable hecha con repollo, zanahoria y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pan-de-plátano.jpg",
+    "name": "Pan de Plátano",
+    "category": "desayuno",
+    "description": "Pan saludable hecho con plátano, harina integral y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "tortilla-de-flor-de-calabaza.jpg",
+    "name": "Tortilla de Flor de Calabaza",
+    "category": "cena",
+    "description": "Tortilla de huevo con flor de calabaza y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "rapido"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "pzas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 0.5,
+        "unit": "manojo"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 2,
+        "unit": "ctas"
+      }
+    ]
+  },
+  {
+    "imageFile": "arroz-a-la-primavera.jpg",
+    "name": "Arroz a la Primavera",
+    "category": "almuerzo",
+    "description": "Arroz con verduras y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1.5,
+        "unit": "Cdit"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "croquetas-de-arroz.jpg",
+    "name": "Croquetas de Arroz",
+    "category": "snack",
+    "description": "Croquetas de arroz y especias.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.125,
+        "unit": "taza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 10,
+        "unit": "gr"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 8,
+        "unit": "Cdit"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 4,
+        "unit": "Cdas"
+      }
+    ]
+  },
+  {
+    "imageFile": "macedonia-de-frutas.jpg",
+    "name": "Macedonia de frutas",
+    "category": "snack",
+    "description": "Rico en fibra, minerales y vitaminas",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Melón",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "fresas-con-yogurt-y-granola.jpg",
+    "name": "Fresas con yogurt y granola",
+    "category": "snack",
+    "description": "Rico en fibra",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "quantity": 45,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "plato-de-frutas-con-arándano-y-yogurt.jpg",
+    "name": "Plato de frutas con arándano y yogurt",
+    "category": "snack",
+    "description": "Ricos en fibra, minerales y antioxidantes",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Arándanos",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pico-de-gallo.jpg",
+    "name": "Pico de gallo",
+    "category": "snack",
+    "description": "Rico en vitamina c y antioxidantes",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "ceviche-de-mango.jpg",
+    "name": "Ceviche de mango",
+    "category": "snack",
+    "description": "Rico en vitaminas, omega 3 y fibra",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-campo.jpg",
+    "name": "Ensalada de campo",
+    "category": "snack",
+    "description": "Rico en antioxidantes, fibra y vitamina A",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-atún-con-vegetales.jpg",
+    "name": "Ensalada de atún con vegetales",
+    "category": "snack",
+    "description": "Rico en omega 3, fibra y proteína",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-calabaza.jpg",
+    "name": "Ensalada de Calabaza",
+    "category": "cena",
+    "description": "Rico en fibra, omega 3 y antioxidantes",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-verduras-con-aguacate.jpg",
+    "name": "Ensalada de verduras con aguacate",
+    "category": "cena",
+    "description": "Rico en vitaminas y complejo B",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "base-de-ensalada.jpg",
+    "name": "Base de ensalada",
+    "category": "cena",
+    "description": "Rico en vitaminas y fibra",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Acelga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pera",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "dip-de-aguacate.jpg",
+    "name": "Dip de aguacate",
+    "category": "snack",
+    "description": "Rico en fibra",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "quesadillas-de-hongos-con-queso.jpg",
+    "name": "Quesadillas de hongos con queso",
+    "category": "almuerzo",
+    "description": "Rico en fibra y proteína",
+    "tags": [
+      "alto-fibra",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "tacos-de-huitlacoche.jpg",
+    "name": "Tacos de huitlacoche",
+    "category": "almuerzo",
+    "description": "Rico en fibra, omega 3 y antioxidantes",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "omelette-de-espinacas-y-queso.jpg",
+    "name": "Omelette de espinacas y queso",
+    "category": "almuerzo",
+    "description": "Rico en fibra y proteína",
+    "tags": [
+      "alto-fibra",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "huevo-con-verduras.jpg",
+    "name": "Huevo con verduras",
+    "category": "desayuno",
+    "description": "Rico en proteína, omega 3 y antioxidantes",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "emparedado-de-queso-panela-con-germinado.jpg",
+    "name": "Emparedado de queso panela con germinado",
+    "category": "desayuno",
+    "description": "Rico en proteínas, vitaminas y minerales",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Pan de centeno",
+        "quantity": 2,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.33,
+        "unit": "pza"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "rebanada"
+      }
+    ]
+  },
+  {
+    "imageFile": "tostadas-vegetarianas.jpg",
+    "name": "Tostadas vegetarianas",
+    "category": "desayuno",
+    "description": "Rico en fibra, omega 3 y proteína",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.33,
+        "unit": "pza"
+      }
+    ]
+  },
+  {
+    "imageFile": "pan-con-tomate.jpg",
+    "name": "Pan con tomate",
+    "category": "desayuno",
+    "description": "Rico en fibra y omega 3",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "emparedado-de-queso-panela.jpg",
+    "name": "Emparedado de queso panela",
+    "category": "desayuno",
+    "description": "Rico en fibra y proteína",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 0.5,
+        "unit": "hoja"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.33,
+        "unit": "pza"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 2,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 2,
+        "unit": "rebanada"
+      }
+    ]
+  },
+  {
+    "imageFile": "molletes-con-pico-de-gallo.jpg",
+    "name": "Molletes con pico de gallo",
+    "category": "desayuno",
+    "description": "Rico en fibra y proteína",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "cda"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "imageFile": "tostadas-de-requesón.jpg",
+    "name": "Tostadas de requesón",
+    "category": "desayuno",
+    "description": "Rico en proteína y bajo en grasas",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Queso cottage",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.33,
+        "unit": "pza"
+      }
+    ]
+  },
+  {
+    "imageFile": "sándwich-sin-culpa.jpg",
+    "name": "Sándwich sin culpa",
+    "category": "desayuno",
+    "description": "Rico en fibra y proteína",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de centeno",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 10,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "sopa-de-papa-con-acelgas.jpg",
+    "name": "Sopa de papa con acelgas",
+    "category": "cena",
+    "description": "Rico en omega 3 y antioxidantes",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Acelga",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Papa",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "ml"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 25,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "crema-de-calabacitas.jpg",
+    "name": "Crema de calabacitas",
+    "category": "cena",
+    "description": "Rico en potasio y antioxidantes",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "gazpacho.jpg",
+    "name": "Gazpacho",
+    "category": "cena",
+    "description": "Rico en vitaminas y fibra",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 52,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 38,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 10,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "lentejas.jpg",
+    "name": "Lentejas",
+    "category": "cena",
+    "description": "Rico en ácido fólico y antioxidantes",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 10,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "espagueti-en-salsa-pomodoro.jpg",
+    "name": "Espagueti en salsa pomodoro",
+    "category": "cena",
+    "description": "Rico en vitaminas y antioxidantes",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "pizca"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "ml"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "pizca"
+      }
+    ]
+  },
+  {
+    "imageFile": "setas-al-ajo-y-cebolla.jpg",
+    "name": "Setas al ajo y cebolla",
+    "category": "cena",
+    "description": "Rico en fibra y omega 3",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "timbalitos-de-acelgas.jpg",
+    "name": "Timbalitos de acelgas",
+    "category": "cena",
+    "description": "Rico en fibra y omega 3",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Acelga",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "tostadas-de-atún-al-pastor.jpg",
+    "name": "Tostadas de atún al pastor",
+    "category": "cena",
+    "description": "Rico en proteína, fibra y omega 3",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "chiles-rellenos-de-champiñones.jpg",
+    "name": "Chiles rellenos de champiñones",
+    "category": "cena",
+    "description": "Rico en fibra y omega 3",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "hamburguesa-de-soya.jpg",
+    "name": "Hamburguesa de soya",
+    "category": "cena",
+    "description": "Rico en proteína y fibra",
+    "tags": [
+      "vegetariano",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "ceviche-de-soya.jpg",
+    "name": "Ceviche de Soya",
+    "category": "cena",
+    "description": "Rico en fibra, proteína y omega 3",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "brochetas-vegetarianas.jpg",
+    "name": "Brochetas Vegetarianas",
+    "category": "cena",
+    "description": "Brochetas vegetarianas con chile morrón, calabacita, champiñones y queso panela.",
+    "tags": [
+      "vegetariano",
+      "hipertensión"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 2,
+        "unit": "cda"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "tomates-rellenos.jpg",
+    "name": "Tomates Rellenos",
+    "category": "cena",
+    "description": "Tomates rellenos con zanahoria, papas y chícharos.",
+    "tags": [
+      "rico en hierro",
+      "antioxidantes"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Papa",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 1,
+        "unit": "cda"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 0.5,
+        "unit": "rama"
+      }
+    ]
+  },
+  {
+    "imageFile": "truchas-a-las-finas-hierbas.jpg",
+    "name": "Truchas a las Finas Hierbas",
+    "category": "cena",
+    "description": "Truchas a las finas hierbas con ajo y romero.",
+    "tags": [
+      "rico en proteína",
+      "omega 3"
+    ],
+    "foods": [
+      {
+        "name": "Trucha",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "pizza-de-requesón.jpg",
+    "name": "Pizza de Requesón",
+    "category": "cena",
+    "description": "Pizza de requesón con jitomate y espinaca.",
+    "tags": [
+      "rico en proteína",
+      "omega 3"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-en-salsa-verde.jpg",
+    "name": "Pollo en Salsa Verde",
+    "category": "cena",
+    "description": "Pollo en salsa verde con tomate verde y cebolla.",
+    "tags": [
+      "rico en proteína",
+      "fibra",
+      "antioxidantes"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 0.25,
+        "unit": "pza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cda"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "verduras-con-pollo.jpg",
+    "name": "Verduras con Pollo",
+    "category": "cena",
+    "description": "Verduras con pollo y cebolla.",
+    "tags": [
+      "rico en proteína",
+      "fibra",
+      "antioxidantes"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 0.5,
+        "unit": "pza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 14,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 33,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cda"
+      }
+    ]
+  },
+  {
+    "imageFile": "agua-de-ciruelas-rojas.jpg",
+    "name": "Agua de Ciruelas Rojas",
+    "category": "snack",
+    "description": "Rico en antioxidantes",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "agua-de-guayaba.jpg",
+    "name": "Agua de Guayaba",
+    "category": "snack",
+    "description": "Rico en vitamina C",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "agua-de-naranja.jpg",
+    "name": "Agua de Naranja",
+    "category": "snack",
+    "description": "Rico en vitamina C",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "horchata-de-espinacas.jpg",
+    "name": "Horchata de Espinacas",
+    "category": "snack",
+    "description": "Rico en antioxidantes y hierro",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "jugo-de-zanahoria-y-betabel.jpg",
+    "name": "Jugo de Zanahoria y Betabel",
+    "category": "snack",
+    "description": "Rico en vitamina C",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "jugo-de-naranja.jpg",
+    "name": "Jugo de Naranja",
+    "category": "snack",
+    "description": "Rico en vitamina C",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "licuado-de-avena-con-manzana.jpg",
+    "name": "Licuado de Avena con Manzana",
+    "category": "desayuno",
+    "description": "Rico en fibra",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "licuado-de-sábila.jpg",
+    "name": "Licuado de Sábila",
+    "category": "snack",
+    "description": "Rico en hierro y proteína",
+    "tags": [
+      "hipocalorico",
+      "bajo-en-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "licuado-energético.jpg",
+    "name": "Licuado energético",
+    "category": "snack",
+    "description": "Rico en potasio, hierro y proteínas",
+    "tags": [
+      "hipocalorico",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Yogur natural",
+        "quantity": 400,
+        "unit": "ml"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-saludable.jpg",
+    "name": "Smoothie saludable",
+    "category": "snack",
+    "description": "Rico en proteína y hierro",
+    "tags": [
+      "hipocalorico",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Acelga",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-amarillo.jpg",
+    "name": "Smoothie amarillo",
+    "category": "snack",
+    "description": "Rico en vitaminas y fibra",
+    "tags": [
+      "hipocalorico",
+      "alto-en-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Yogur natural",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Piña",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Mango",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-rojo.jpg",
+    "name": "Smoothie rojo",
+    "category": "snack",
+    "description": "Rico en proteína y fibra",
+    "tags": [
+      "hipocalorico",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 180,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-verde.jpg",
+    "name": "Smoothie verde",
+    "category": "snack",
+    "description": "Rico en vitaminas y fibra",
+    "tags": [
+      "hipocalorico",
+      "alto-en-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "smoothie-de-frutas.jpg",
+    "name": "Smoothie de frutas",
+    "category": "snack",
+    "description": "Rico en vitaminas y fibra",
+    "tags": [
+      "hipocalorico",
+      "alto-en-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Piña",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "licuado-energético-+-emparedado-de-queso-panela-con-jamón-de-pavo.jpg",
+    "name": "Licuado Energético + Emparedado de queso panela con jamón de pavo",
+    "category": "almuerzo",
+    "description": "Menú saludable para un día de trabajo y ejercicio.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-a-la-plancha.jpg",
+    "name": "Pollo a la plancha",
+    "category": "almuerzo",
+    "description": "Menú saludable para un día de trabajo y ejercicio.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "trucha-a-las-finas-hierbas.jpg",
+    "name": "Trucha a las finas hierbas",
+    "category": "almuerzo",
+    "description": "Menú saludable para un día de trabajo y ejercicio.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Trucha",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "timbalitos-de-acelga.jpg",
+    "name": "Timbalitos de acelga",
+    "category": "almuerzo",
+    "description": "Menú saludable para un día de trabajo y ejercicio.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Acelga",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "setas-al-ajo-acompañadas-de-cebolla.jpg",
+    "name": "Setas al ajo acompañadas de cebolla",
+    "category": "cena",
+    "description": "Menú saludable para una cena ligera.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "rollitos-de-huevo-con-salsa-y-queso.jpg",
+    "name": "Rollitos de Huevo con Salsa y Queso",
+    "category": "almuerzo",
+    "description": "Rollitos de huevo con salsa y queso, acompañados de una deliciosa salsa y queso Oaxaca.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 7,
+        "unit": "unidad"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-pepino-y-garbanzos.jpg",
+    "name": "Ensalada de Pepino y Garbanzos",
+    "category": "snack",
+    "description": "Una deliciosa ensalada de pepino y garbanzos, con un toque de cilantro fresco.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Limón",
+        "quantity": 3,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "imageFile": "salsa-de-tomate-con-pollo.jpg",
+    "name": "Salsa de Tomate con Pollo",
+    "category": "cena",
+    "description": "Una deliciosa salsa de tomate con pollo, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 5,
+        "unit": "unidad"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 4,
+        "unit": "unidad"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "imageFile": "tocino-con-papas-y-queso.jpg",
+    "name": "Tocino con Papas y Queso",
+    "category": "almuerzo",
+    "description": "Un delicioso plato de tocino con papas y queso, perfecto para acompañar cualquier comida.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.5,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Papa",
+        "quantity": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 2.5,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "imageFile": "salsa-de-fresas.jpg",
+    "name": "Salsa de Fresas",
+    "category": "snack",
+    "description": "Una deliciosa salsa de fresas, perfecta para acompañar cualquier plato.",
+    "tags": [
+      "dieta",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Azúcar blanca",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "imageFile": "berenjena-frita-con-mantequilla-y-plato-halloumi.jpg",
+    "name": "Berenjena frita con mantequilla y plato Halloumi",
+    "category": "cena",
+    "description": "Berenjena frita con mantequilla y plato Halloumi es un plato delicioso y saludable que combina la textura crujiente de la berenjena con la riqueza del queso Halloumi.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Berenjena",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "salsa-de-cerdo-y-queso-perfecta.jpg",
+    "name": "Salsa de cerdo y queso perfecta",
+    "category": "cena",
+    "description": "Esta salsa de cerdo y queso es una deliciosa combinación de sabores que se puede servir con carne o como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Lomo de cerdo",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Queso azul",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "ensalada-de-tocino-y-col-caliente-y-saludable.jpg",
+    "name": "Ensalada de tocino y col caliente y saludable",
+    "category": "cena",
+    "description": "Esta ensalada de tocino y col es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 360,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "tantalizador-de-sabor-a-atún-picante.jpg",
+    "name": "Tantalizador de sabor a atún picante",
+    "category": "cena",
+    "description": "Este plato de atún picante es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "chicken-&-bacon-one-pot-heaven.jpg",
+    "name": "Chicken & Bacon One-Pot Heaven",
+    "category": "cena",
+    "description": "Este plato de pollo y tocino es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 360,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "curry-de-cilantro-y-garbanzos.jpg",
+    "name": "Curry de cilantro y garbanzos",
+    "category": "cena",
+    "description": "Este curry de cilantro y garbanzos es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 360,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-cremoso-mediterráneo-con-ajo.jpg",
+    "name": "Pollo cremoso mediterráneo con ajo",
+    "category": "almuerzo",
+    "description": "Pollo cremoso con espinacas y tomates secados al sol",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 24,
+        "unit": "oz"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "bacalao-crujiente,-crujiente-y-recubierto-de-queso.jpg",
+    "name": "Bacalao crujiente, crujiente y recubierto de queso",
+    "category": "cena",
+    "description": "Bacalao crujiente con parmesano y pimentón",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 4,
+        "unit": "filetes"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "camarones-al-ajo-y-fideos-de-calabacín.jpg",
+    "name": "Camarones al ajo y fideos de calabacín",
+    "category": "almuerzo",
+    "description": "Camarones al ajo con fideos de calabacín",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Camarones",
+        "quantity": 12,
+        "unit": "oz"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 2,
+        "unit": "calabacines"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "limón"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 4,
+        "unit": "dientes"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Avena",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "perfección-perfecta-de-pizza.jpg",
+    "name": "Perfección perfecta de pizza",
+    "category": "almuerzo",
+    "description": "Pizza perfecta con queso cheddar y pepperoni",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 3,
+        "unit": "huevos"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso cheddar",
+        "quantity": 0.33,
+        "unit": "taza"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "cortada en cubitos"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "keto-kick--of--heat-wraps-de-pollo.jpg",
+    "name": "Keto Kick- of- Heat Wraps de pollo",
+    "category": "almuerzo",
+    "description": "Wraps de pollo con queso de cabra y pimientos",
+    "tags": [
+      "keto",
+      "proteico",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 32,
+        "unit": "oz"
+      },
+      {
+        "name": "Apio",
+        "quantity": 4,
+        "unit": "tallos"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "cabeza"
+      },
+      {
+        "name": "Queso de cabra",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Avena",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "plato-de-filete-y-huevo-abundante.jpg",
+    "name": "Plato de filete y huevo abundante",
+    "category": "almuerzo",
+    "description": "Filete y huevo con aguacate",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 3,
+        "unit": "huevos"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.25,
+        "unit": "en rodajas"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-picante.jpg",
+    "name": "Pollo Picante",
+    "category": "almuerzo",
+    "description": "Pollo picante con muslos de pollo",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 6,
+        "unit": "muslos"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-a-la-plancha-con-salsa-picante.jpg",
+    "name": "Pollo a la Plancha con Salsa Picante",
+    "category": "cena",
+    "description": "Pollo a la plancha con una salsa picante y sabrosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "cazuela-de-pollo-con-queso.jpg",
+    "name": "Cazuela de Pollo con Queso",
+    "category": "cena",
+    "description": "Una deliciosa cazuela de pollo con queso y sabores.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "chiles-a-mitad-de-semana-carnosos.jpg",
+    "name": "Chiles a Mitad de Semana Carnosos",
+    "category": "cena",
+    "description": "Un plato sabroso de chiles rellenos de carne y queso.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Queso cheddar",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "chuletas-cremosas-de-tocino-y-champiñones.jpg",
+    "name": "Chuletas Cremosas de Tocino y Champiñones",
+    "category": "cena",
+    "description": "Chuletas de cerdo con tocino y champiñones en una salsa cremosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Chuleta de cerdo",
+        "quantity": 800,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "dip-de-pollo-y-aguacate-a-la-parmesana.jpg",
+    "name": "Dip de Pollo y Aguacate a la Parmesana",
+    "category": "snack",
+    "description": "Un dip cremoso de pollo y aguacate con parmesano.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "bolsas-de-salmón-ardientes.jpg",
+    "name": "Bolsas de Salmón Ardientes",
+    "category": "cena",
+    "description": "Filetes de salmón con una salsa picante y sabrosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de manzana",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 7,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 3,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "mezcla-de-pollo-y-pimienta.jpg",
+    "name": "Mezcla de Pollo y Pimienta",
+    "category": "cena",
+    "description": "Pechugas de pollo con una mezcla de pimienta y sabores.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 400,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "pollo-con-pimientos-y-cebolla.jpg",
+    "name": "Pollo con Pimientos y Cebolla",
+    "category": "almuerzo",
+    "description": "Pollo a la parrilla con pimientos y cebolla.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "pimientos-rellenos-súper-picantes.jpg",
+    "name": "Pimientos Rellenos Súper Picantes",
+    "category": "almuerzo",
+    "description": "Pimientos rellenos con carne picada y especias.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pimiento rojo",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "imageFile": "sopa-de-tomate-y-hierbas.jpg",
+    "name": "Sopa de Tomate y Hierbas",
+    "category": "cena",
+    "description": "Sopa de tomate y hierbas con queso crema.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Queso crema",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 480,
+        "unit": "ml"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  }
+]

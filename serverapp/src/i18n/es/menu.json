@@ -1,0 +1,36 @@
+{
+    "lang": "es",
+    "form": {
+        "name": "Nombre",
+        "category": "Categoría",
+        "description": "Descripción",
+        "tags": "Etiquetas",
+        "prep_time": "Tiempo (minutos)",
+        "difficulty": "Dificultad"
+    },
+    "placeholders": {
+        "name": "Ej: Tortilla de Avena",
+        "description": "Describe los beneficios o el momento de consumo...",
+        "tags": "vegano, sin-gluten, rápido",
+        "prep_time": "Ej: 15"
+    },
+    "category": {
+        "breakfast": "Desayuno",
+        "morning_snack": "Media Mañana",
+        "lunch": "Almuerzo",
+        "snack": "Merienda",
+        "dinner": "Cena",
+        "pre_workout": "Pre-Entreno",
+        "post_workout": "Post-Entreno",
+        "other": "Otro"
+    },
+    "difficulty": {
+        "easy": "Fácil",
+        "medium": "Media",
+        "hard": "Difícil"
+    },
+    "actions": {
+        "create_title": "Crear Menú",
+        "update_title": "Editar Menú"
+    }
+}

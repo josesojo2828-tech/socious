@@ -1,0 +1,3566 @@
+[
+  {
+    "name": "Quinoa con leche de coco, manzana y blueberry",
+    "category": "desayuno",
+    "description": "Quinoa con leche de coco, manzana y blueberry",
+    "tags": [
+      "dieta lactante",
+      "embarazo",
+      "lactancia"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "ml",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 400,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "raja",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 70,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 125,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 125,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Miel",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Hierbabuena",
+        "quantity": 4,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich verde",
+    "category": "almuerzo",
+    "description": "Sándwich verde con dip de garbanzo",
+    "tags": [
+      "vegetariano",
+      "sin-gluten"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 125,
+        "unit": "ml",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 40,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 4,
+        "unit": "limones",
+        "_matchScore": 0.95,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 4,
+        "unit": "cucharaditas",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Comino",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 2,
+        "unit": "piezas",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 8,
+        "unit": "rebanadas",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Berro",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 200,
+        "unit": "gr",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pescado al limón",
+    "category": "almuerzo",
+    "description": "Pescado al limón con aceite de oliva",
+    "tags": [
+      "pescado",
+      "sin-gluten"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pescado blanco",
+        "quantity": 480,
+        "unit": "gr",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pollo con Espinacas y Garbanzos",
+    "category": "almuerzo",
+    "description": "Pollo con espinacas y garbanzos en salsa de vino blanco",
+    "tags": [
+      "alto-acido",
+      "alto-vitamina-en"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 4,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Nabo blanco",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "limón",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Bowl de Sushi",
+    "category": "almuerzo",
+    "description": "Bowl de sushi con surimi y ensalada de verduras",
+    "tags": [
+      "alto-acido",
+      "alto-vitamina-en"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Surimi",
+        "quantity": 3,
+        "unit": "barras"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Apio",
+        "quantity": 2,
+        "unit": "ramas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Media Crema NESTLÉ",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Limón",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Salsa de Soya MAGGI",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Alga nori",
+        "quantity": 3,
+        "unit": "piezas"
+      },
+      {
+        "name": "Ajonjolí blanco tostado",
+        "quantity": 1.5,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Quinoa y Espinaca",
+    "category": "almuerzo",
+    "description": "Ensalada de quinoa y espinaca con vinagreta de manzana",
+    "tags": [
+      "alto-acido",
+      "alto-vitamina-en"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 4,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 4,
+        "unit": "gajos",
+        "_matchScore": 0.97,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 0.33,
+        "unit": "taza",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Limón",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Miel",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pizza Slim Margarita",
+    "category": "almuerzo",
+    "description": "Pizza slim margarita con queso mozzarella y jitomate",
+    "tags": [
+      "alto-acido",
+      "alto-vitamina-en"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 4,
+        "unit": "piezas",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Puré de tomate condimentado",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 250,
+        "unit": "gr",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 2,
+        "unit": "piezas",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Albahaca fresca",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Huevos Cazuela con Salsa Tatemada",
+    "category": "almuerzo",
+    "description": "Huevos cazuela con salsa tatemada y nopales",
+    "tags": [
+      "alto-acido",
+      "alto-vitamina-en"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 4,
+        "unit": "piezas",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "pieza",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "piezas",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 0.5,
+        "unit": "cucharada",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 0.5,
+        "unit": "cucharada",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Azúcar morena",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.85,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "piezas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tortillas",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 1,
+        "unit": "pieza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de pollo en costra con ensalada verde de semilla de calabaza",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo empanizada con ensalada verde de semilla de calabaza",
+    "tags": [
+      "dieta equilibrada",
+      "bajo en grasas"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 480,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Salsa Tipo Inglesa",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 2.5,
+        "unit": "cucharadas",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 3,
+        "unit": "pepinos",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Apio",
+        "quantity": 5,
+        "unit": "ramas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Jengibre natural",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.56,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Salsa de Soya MAGGI",
+        "quantity": 3,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Semilla de ajonjolí negro",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Semilla de ajonjolí blanco",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de frutos rojos",
+    "category": "desayuno",
+    "description": "Smoothie de frutos rojos con yogurt natural y semillas de linaza",
+    "tags": [
+      "bajo en grasas",
+      "alto en fibra"
+    ],
+    "foods": [
+      {
+        "name": "Frutos rojos",
+        "quantity": 4,
+        "unit": "tazas",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 1,
+        "unit": "litro",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "lata",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 1.25,
+        "unit": "tazas"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 8,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Miel",
+        "quantity": 12,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Brochetas de res a las hierbas con ensalada de papa y berros",
+    "category": "almuerzo",
+    "description": "Brochetas de res a las hierbas con ensalada de papa y berros",
+    "tags": [
+      "dieta equilibrada",
+      "bajo en grasas"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 1,
+        "unit": "limón",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Sazonador Líquido MAGGI",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Menta",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Tomillo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Romero",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Estragón",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Carne de res magra",
+        "quantity": 420,
+        "unit": "gr",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 4,
+        "unit": "cuartos",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate cherry",
+        "quantity": 8,
+        "unit": "unidades",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 1.5,
+        "unit": "tazas",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Budín de tapioca con almendras",
+    "category": "desayuno",
+    "description": "Budín de tapioca con almendras y miel de abeja",
+    "tags": [
+      "bajo en grasas",
+      "alto en fibra"
+    ],
+    "foods": [
+      {
+        "name": "Apio",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Miel",
+        "quantity": 8,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.125,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 0.5,
+        "unit": "lata",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1.5,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Extracto de vainilla",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Puré de calabacita y ejote con albahaca",
+    "category": "desayuno",
+    "description": "Puré de calabacita y ejote con albahaca",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Papilla Gerber® Verdura y Jamón Etapa 2",
+        "quantity": 0,
+        "unit": ""
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Hojas de albahaca",
+        "quantity": 0,
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Puré de durazno",
+    "category": "desayuno",
+    "description": "Puré de durazno",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Durazno",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Puré de plátano",
+    "category": "desayuno",
+    "description": "Puré de plátano",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Puré de pollo con verduras",
+    "category": "desayuno",
+    "description": "Puré de pollo con verduras",
+    "tags": [
+      "proteico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cereal Gerber® Arroz",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Chayote al vapor",
+    "category": "desayuno",
+    "description": "Chayote al vapor",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Chayota",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Cerealito de mango",
+    "category": "desayuno",
+    "description": "Cerealito de mango",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 35,
+        "unit": "gr",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cereal Gerber® 4 Cereales",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Consomé de verduras con pollo y arroz",
+    "category": "desayuno",
+    "description": "Consomé de verduras con pollo y arroz",
+    "tags": [
+      "proteico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Mango con Yogur Natural",
+    "category": "desayuno",
+    "description": "Batido de mango y yogur natural.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 125,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Bolitas de Brócoli con Queso",
+    "category": "cena",
+    "description": "Bolitas de brócoli con queso y cereal.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso oaxaca",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cereal Gerber 4 cereales",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Croquetas de Camote",
+    "category": "desayuno",
+    "description": "Croquetas de camote con aceite de coco.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Camote / Batata",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Dedos de Hamburguesa de Pavo",
+    "category": "cena",
+    "description": "Dedos de hamburguesa de pavo con cereal.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pavo molido",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cereal Gerber Arroz",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Avena con Manzana",
+    "category": "cena",
+    "description": "Avena con manzana y leche materna.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Cereal Gerber Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 125,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Arroz con Guacamole",
+    "category": "desayuno",
+    "description": "Tostadas de arroz con guacamole.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas de arroz",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Guacamole",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesas de Calabacita, Chayote y Zanahoria",
+    "category": "cena",
+    "description": "Hamburguesas de calabacita, chayote y zanahoria.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con Lenteja",
+    "category": "cena",
+    "description": "Arroz con lenteja.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Hot cakes de betabel",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, fruta, verdura, hidratos de carbono y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Betabel",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Canela",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Vainilla",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos de frijol con ensalada de nopales",
+    "category": "desayuno",
+    "description": "Un plato saludable y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles negros",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Muffin de espinaca y maíz",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 125,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 160,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 4,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Levadura en polvo",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Omelette con papa",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Uva",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Mango",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Yogurt con puffs",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Yogurt Gerber",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Gerber Puffs",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Fruta picada",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas de pavo",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pavo molido",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cereal Gerber",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Romero",
+        "quantity": 2,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Crema de champiñones u hongos",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Coliflor",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 150,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Sal gruesa",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 2,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado a la veracruzana",
+    "category": "desayuno",
+    "description": "Un plato nutritivo y completo para niños de 1 año, con proteína, verdura y grasa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Limón",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón de res",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para niños de 1 año.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Papilla Gerber de res con verduras y pasta",
+        "quantity": 0,
+        "unit": ""
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 4,
+        "unit": "",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cilantro fresco",
+        "quantity": 0.25,
+        "unit": ""
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 2,
+        "unit": "",
+        "_matchScore": 0.97,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Falafel",
+    "category": "almuerzo",
+    "description": "Un plato vegetariano y saludable para niños de 1 año.",
+    "tags": [
+      "vegetariano",
+      "saludable"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cereal Gerber",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Comino",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Hot cakes de avena y plátano",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para niños de 1 año.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Cereal Gerber de avena",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Chorrito de leche",
+        "quantity": 0,
+        "unit": ""
+      },
+      {
+        "name": "Plátano",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas con jocoque",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para niños de 1 año.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas de arroz inflado o trigo",
+        "quantity": 0,
+        "unit": ""
+      },
+      {
+        "name": "Jocoque",
+        "quantity": 0,
+        "unit": ""
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 0,
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Hash Brown de camote",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para niños de 1 año.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Camote / Batata",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Perejil desinfectado y picado",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cereal Gerber de avena",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de verduras ralladas",
+    "category": "cena",
+    "description": "Un plato saludable y delicioso para niños de 1 año.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Apio",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Chícharos congelados",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Caldo de pollo natural",
+        "quantity": 1,
+        "unit": "L"
+      }
+    ]
+  },
+  {
+    "name": "Quinoa sabor manzana",
+    "category": "desayuno",
+    "description": "Un plato saludable y delicioso para niños de 2 años.",
+    "tags": [
+      "saludable",
+      "alimento de origen animal"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Miel",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Canela",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0,
+        "unit": "",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Panquecitos de avena con arándanos",
+    "category": "desayuno",
+    "description": "Un desayuno nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Miel",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 0.53,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Yogurt con frutas",
+    "category": "desayuno",
+    "description": "Un desayuno sencillo y nutritivo para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Yogur natural",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Miel",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tortitas de frijol",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles negros",
+        "quantity": 360,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Muffins de huevo con verdura y queso",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas de res",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 250,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.53,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Bolitas de arroz con lenteja",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 360,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Harina de trigo, variedad (HAD)",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Bowl de quinoa Tex-Mex",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Tortitas de pescado con papa y perejil",
+    "category": "almuerzo",
+    "description": "Un plato nutritivo y delicioso para niños.",
+    "tags": [
+      "dieta infantil",
+      "nutrición infantil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pescado blanco",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.63,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesas de pescado",
+    "category": "almuerzo",
+    "description": "Hamburguesas de pescado con poco aceite y cocidas por los dos lados.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pasta con brócoli y camarones",
+    "category": "almuerzo",
+    "description": "Pasta con brócoli y camarones en salsa roja de tipo pizza.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pasta tipo fusilli",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Camarones",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salsa roja de tipo pizza",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesas de coliflor y zanahoria con curry",
+    "category": "almuerzo",
+    "description": "Hamburguesas de coliflor y zanahoria con curry y pan rallado.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Coliflor",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Mezcla de curry o garam masala",
+        "quantity": 2,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Rollitos de salmón ahumado",
+    "category": "almuerzo",
+    "description": "Rollitos de salmón ahumado con pan de caja integral y jocoque.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Salmón ahumado",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.58,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Jocoque",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 5,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tostaditas mexicanas",
+    "category": "almuerzo",
+    "description": "Tostaditas mexicanas con nopal, frijol molido, queso rallado y aguacate.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas de maíz",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Nopal",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Frijol",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Waffles de espinaca",
+    "category": "almuerzo",
+    "description": "Waffles de espinaca con avena, aceite, espinaca, hummus y semillas de chía.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Hummus",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pizzitas",
+    "category": "almuerzo",
+    "description": "Pizzitas con pan árabe, salsa de jitomate, champiñones y queso mozzarella.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Quinoa con guayaba",
+    "category": "desayuno",
+    "description": "Quinoa con guayaba, leche, canela y vainilla.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 100,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Guayaba brasilera",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Esencia de vainilla",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Yogurt con granola",
+    "category": "desayuno",
+    "description": "Yogurt con granola, durazno y mango.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Yogur natural",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Granola",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mango",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Frittata de huevo con verdura",
+    "category": "almuerzo",
+    "description": "Una frittata de huevo con verdura es una excelente opción para una comida saludable y deliciosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "unidad",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Entomatadas de queso panela",
+    "category": "almuerzo",
+    "description": "Una receta sencilla y nutritiva que los niños aman.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 2,
+        "unit": "palitos"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 1,
+        "unit": "pizca"
+      },
+      {
+        "name": "Albahaca seca",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Pan francés",
+    "category": "almuerzo",
+    "description": "Una receta muy sencilla, nutritiva y completa que los niños aman.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 2,
+        "unit": "rebanadas",
+        "_matchScore": 0.58,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "rodaja",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesas de pollo",
+    "category": "almuerzo",
+    "description": "Una receta nutritiva y deliciosa para los niños.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 250,
+        "unit": "gr",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cereal Gerber o harina integral de trigo",
+        "quantity": 125,
+        "unit": "gr"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de arroz salvaje con pimientos",
+    "category": "almuerzo",
+    "description": "Una receta saludable y deliciosa para los niños.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Apio",
+        "quantity": 1,
+        "unit": "rama",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "unidad",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "unidad",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "unidad",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Noodles orientales",
+    "category": "almuerzo",
+    "description": "Una receta saludable y deliciosa para los niños.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Noodles o pasta de arroz",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 3,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Edamame en grano",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.25,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Jengibre",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Salsa de soya",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.63,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Piernitas de pollo agridulces",
+    "category": "almuerzo",
+    "description": "Una receta saludable y deliciosa para los niños.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Piernitas de pollo",
+        "quantity": 3,
+        "unit": "unidad"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.89,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Salsa de soya",
+        "quantity": 3,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Azúcar morena",
+        "quantity": 3,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Miel",
+        "quantity": 3,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Vinagre blanco",
+        "quantity": 3,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Maicena",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Pescado horneado con aceitunas y tomillo",
+    "category": "cena",
+    "description": "Pescado blanco horneado con aceitunas y tomillo, acompañado de verduras y arroz.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomillo",
+        "quantity": 2,
+        "unit": "ramitas"
+      },
+      {
+        "name": "Nopal",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesas de arroz con garbanzo",
+    "category": "almuerzo",
+    "description": "Hamburguesas de arroz y garbanzo, servidas con ensalada y jocoque.",
+    "tags": [
+      "vegetariano",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 300,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 2,
+        "unit": "unidades",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de ensalada de atún",
+    "category": "almuerzo",
+    "description": "Tostadas de ensalada de atún, servidas con aguacate y jocoque.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Apio",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tortitas de brócoli con calabaza",
+    "category": "almuerzo",
+    "description": "Tortitas de brócoli y calabaza, servidas con jocoque y fruta.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Chilaquiles saludables",
+    "category": "almuerzo",
+    "description": "Chilaquiles saludables, servidos con salsa verde y verduras.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Totopos",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa verde",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.57,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Rábano",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Mini chapata con verduras",
+    "category": "almuerzo",
+    "description": "Mini chapata con verduras y pavo, servida con aguacate.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Mini chapata",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Semillas de calabaza",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Berenjena",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  }
+]

@@ -1,0 +1,217 @@
+[
+  {
+    "name": "Ensalada de Lentejas",
+    "category": "almuerzo",
+    "description": "Ensalada de lentejas con jitomates, cebolla y mango.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo MAGGI",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Salsa Tipo Inglesa CROSSE & BLACKWELL",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Jitomates",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Mango",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Galletas saladas",
+        "quantity": 186,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Ensalada Rusa",
+    "category": "almuerzo",
+    "description": "Tostadas de ensalada rusa con pollo, mayonesa y aguacate.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Media Crema NESTLÉ",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahorias",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Papas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Tostadas de maíz",
+        "quantity": 8,
+        "unit": "unidades"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Mexicana",
+    "category": "almuerzo",
+    "description": "Ensalada mexicana con pollo, jitomates, cebolla y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomates",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles bayos",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Atún en salsa 3 chiles",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Verde",
+    "category": "almuerzo",
+    "description": "Ensalada verde con espinacas, berros, manzana y queso de cabra.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Berros",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Queso de cabra",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Tocino frito",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Arándanos deshidratados",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Atún",
+    "category": "almuerzo",
+    "description": "Ensalada de atún con nopales, cebolla y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nopales",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomates",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Atún en salsa 3 chiles",
+        "quantity": 200,
+        "unit": "g"
+      }
+    ]
+  }
+]

@@ -1,0 +1,482 @@
+{
+    "lang": "en",
+    "sidebar": {
+        "dashboard_group": "DASHBOARD",
+        "dashboard": "Dashboard",
+        "users_group": "USERS",
+        "users": "Users",
+        "wallets": "Wallets",
+        "files": "Files",
+        "application_group": "APPLICATION",
+        "transactions": "Transactions",
+        "payment_methods": "Payment Methods",
+        "subscriptions": "Subscriptions"
+    },
+    "header": {
+        "welcome_back": "Welcome back, "
+    },
+    "tabs": {
+        "overview": "Overview",
+        "analytics": "Analytics",
+        "reports": "Reports",
+        "alerts": "Alerts",
+        "export": "Export",
+        "settings": "Settings",
+        "website": "Website",
+        "adoption": "Adoption"
+    },
+    "main": {
+        "today_is": "Today is, ",
+        "export_report_button": "Export Report",
+        "filters_button": "Filters"
+    },
+    "stats": {
+        "total_revenue": "Total Revenue",
+        "active_users": "Active Users",
+        "conversion_rate": "Conversion Rate",
+        "avg_session": "Average Session",
+        "from_last_month": "from last month"
+    },
+    "charts": {
+        "revenue_overview_title": "Revenue Overview (Last 12 Months)",
+        "last_12_months": "Last 12 Months",
+        "traffic_sources_title": "Traffic Sources ({monthYear})",
+        "view_all": "View all"
+    },
+    "sections": {
+        "analytics": {
+            "sumary": "Analytics section",
+            "office_locations": "Offices",
+            "office_locations_empty": "No offices registered yet"
+        },
+        "reports": {
+            "sumary": "Reports section"
+        },
+        "alerts": {
+            "sumary": "Alerts section"
+        },
+        "export": {
+            "sumary": "Export information section"
+        },
+        "settings": {
+            "sumary": "Settings section"
+        },
+        "website": {
+            "sumary": "Website section"
+        }
+    },
+    "activity": {
+        "title": "Activity",
+        "subtitle": "History of recorded actions and events.",
+        "total_actions": "Total Actions",
+        "actions_today": "Actions Today",
+        "active_users": "Active Users",
+        "actions_per_day": "Actions per day",
+        "daily_trend": "Daily Trend",
+        "actions_by_type": "Actions by Type",
+        "recent_activity": "Recent Activity",
+        "filter_user": "Nutritionist",
+        "all_users": "All users",
+        "load_more": "Load more",
+        "loading": "Loading...",
+        "empty": "No activity",
+        "empty_description": "No activity recorded.",
+        "error_title": "Error loading activity",
+        "retry": "Try again",
+        "refresh": "Refresh",
+        "actions": {
+            "created": "created",
+            "updated": "updated",
+            "deleted": "deleted",
+            "login": "Sign in",
+            "logout": "Sign out",
+            "failed_login": "Failed sign in",
+            "session_refresh": "session refreshed",
+            "password_reset": "Password reset",
+            "archived": "archived",
+            "unarchived": "unarchived",
+            "started": "started",
+            "completed": "completed",
+            "saved": "saved",
+            "viewed": "viewed",
+            "searched": "searched",
+            "used": "used",
+            "renewed": "renewed",
+            "failed": "failed",
+            "changed": "changed",
+            "role_changed": "role changed",
+            "invited": "invited",
+            "removed": "removed",
+            "switched": "switched",
+            "exported": "exported"
+        },
+        "entities": {
+            "patient": "Patient",
+            "nutritional_plan": "Nutritional Plan",
+            "menu": "Menu",
+            "consultation": "Consultation",
+            "exchange_list": "Exchange List",
+            "food": "Food",
+            "lab_result": "Lab Result",
+            "user": "User",
+            "wallet": "Wallet",
+            "transaction": "Transaction",
+            "subscription": "Subscription",
+            "payment_method": "Payment Method",
+            "meal_plan": "Meal Plan",
+            "recipe": "Recipe",
+            "session": "Session",
+            "plan": "Plan",
+            "note": "Note",
+            "calculator": "Calculator",
+            "payment": "Payment",
+            "org": "Organization",
+            "setting": "Setting",
+            "data": "Data",
+            "workspace": "Workspace",
+            "member": "Member",
+            "tools": "Tools"
+        }
+    },
+    "condiments_menu": {
+        "title": "Condiments",
+        "empty": "This menu has no condiments yet.",
+        "add_btn": "Add Condiment"
+    },
+    "menu_image": {
+        "title": "Menu photo",
+        "empty": "This menu has no photo yet.",
+        "upload_btn": "Upload photo",
+        "change_btn": "Change photo",
+        "remove_btn": "Remove photo",
+        "uploaded_title": "Photo updated",
+        "uploaded_message": "The menu photo was updated successfully.",
+        "removed_title": "Photo removed",
+        "removed_message": "The menu photo was removed."
+    },
+    "modals": {
+        "add_ingredient": {
+            "title": "Add Ingredient",
+            "search_placeholder": "Search ingredient (e.g., Oatmeal, Egg...)",
+            "quantity_label": "Quantity",
+            "unit_label": "Unit",
+            "portion_label": "Portion Label",
+            "portion_label_optional": "(Optional)",
+            "portion_label_help": "Friendly text visible to the patient in the menu.",
+            "placeholder_quantity": "e.g., 100",
+            "placeholder_portion": "e.g., 1 medium chopped cup",
+            "no_results": "No ingredients found.",
+            "db_search_prompt": "Search in the food database",
+            "change_selection": "Change",
+            "back": "Back",
+            "add_btn": "Add to Menu",
+            "ingredient_label": "Ingredient"
+        },
+        "add_condiment": {
+            "title": "Add Condiment",
+            "search_placeholder": "Search condiment (e.g., Salt, Olive oil...)",
+            "quantity_label": "Quantity (optional)",
+            "unit_label": "Unit",
+            "no_results": "No condiments found.",
+            "db_search_prompt": "Search the condiment catalog",
+            "change_selection": "Change",
+            "back": "Back",
+            "add_btn": "Add to Menu",
+            "condiment_label": "Condiment",
+            "remove_title": "Remove condiment"
+        },
+        "add_food": {
+            "title": "Add Food",
+            "search_placeholder": "Search food (e.g., Apple, Chicken...)",
+            "amount_label": "Net Weight (g)",
+            "serving_label": "Household Measure",
+            "placeholder_amount": "e.g., 100",
+            "placeholder_serving": "e.g., 1 cup, 1 unit...",
+            "no_results": "No foods found with that name.",
+            "db_search_prompt": "Type to search in the master database",
+            "selected_label": "Selected Food",
+            "amount_help": "Amount for 1 exchange",
+            "serving_help": "Text visible to the patient",
+            "change_selection": "Change",
+            "back": "Back",
+            "add_btn": "Add to List"
+        },
+        "assign_exchange": {
+            "title": "Assign Exchange",
+            "group_label": "Food Group",
+            "portions_label": "Portions",
+            "moment_label": "Moment",
+            "search_placeholder": "Search (e.g., Fruits)...",
+            "no_results": "No results.",
+            "cancel": "Cancel",
+            "assign": "Assign"
+        },
+        "assign_menu": {
+            "title": "Assign Menu",
+            "search_label": "Search Recipe / Menu",
+            "moment_label": "Consumption Moment",
+            "notes_label": "Notes (Optional)",
+            "search_placeholder": "Type to filter...",
+            "notes_placeholder": "e.g., Only training days...",
+            "loading": "Loading...",
+            "no_results": "No menus found.",
+            "cancel": "Cancel",
+            "assign": "Assign Menu"
+        },
+        "add_lab_result": {
+            "title": "Record Manual Results",
+            "exam_name_label": "Exam Name",
+            "date_label": "Collection Date",
+            "exam_placeholder": "e.g., Lipid Profile",
+            "sections_label": "Parameters",
+            "col_param": "Parameter",
+            "col_value": "Value",
+            "col_unit": "Unit",
+            "param_placeholder": "e.g., Glucose",
+            "unit_placeholder": "Unit",
+            "add_param": "Add another parameter",
+            "cancel": "Cancel",
+            "save_btn": "Save Results",
+            "saving_btn": "Saving..."
+        },
+        "create_consultation": {
+            "title": "Schedule New Consultation",
+            "patient_label": "Patient",
+            "date_label": "Date",
+            "time_label": "Time",
+            "type_label": "Consultation Type",
+            "reason_label": "Reason (Optional)",
+            "patient_placeholder": "Select a patient...",
+            "reason_placeholder": "e.g., Review of exams...",
+            "types": {
+                "first_time": "First Time",
+                "follow_up": "Control / Follow-up",
+                "emergency": "Emergency"
+            },
+            "status": {
+                "scheduled": "Scheduled",
+                "completed": "Completed",
+                "canceled": "Canceled",
+                "no_show": "No Show"
+            },
+            "form_sections": {
+                "data": "Appointment Data"
+            },
+            "cancel": "Cancel",
+            "schedule_btn": "Schedule Appointment"
+        }
+    },
+    "condiments": {
+        "detail": {
+            "title": "Condiment Record",
+            "back": "Back to condiments",
+            "not_found": "Condiment not found",
+            "info_card": "Condiment Information",
+            "name": "Name",
+            "status": "Status",
+            "active": "Active",
+            "inactive": "Inactive",
+            "edit": "Edit",
+            "delete": "Delete",
+            "deleted_success": "Condiment deleted",
+            "read_only_note": "Premium users can view this record."
+        }
+    },
+    "calendar": {
+        "views": {
+            "month": "Month",
+            "week": "Week",
+            "day": "Day",
+            "year": "Year"
+        },
+        "today": "Today",
+        "nav": {
+            "prev": "Previous",
+            "next": "Next"
+        },
+        "search_placeholder": "Search patient...",
+        "filter": {
+            "status_all": "All statuses"
+        },
+        "legend": {
+            "title": "Status"
+        },
+        "empty": {
+            "title": "No consultations",
+            "body": "There are no consultations for this period."
+        },
+        "error": {
+            "title": "Could not load the agenda",
+            "retry": "Retry"
+        },
+        "week": {
+            "total": "Total",
+            "average": "Average"
+        },
+        "month": {
+            "more": "+{count} more"
+        },
+        "year": {
+            "legend": "Status per day"
+        },
+        "ficha": {
+            "title": "Consultation detail",
+            "patient": "Patient",
+            "reason": "Reason",
+            "notes": "Notes",
+            "view_record": "View record",
+            "edit": "Edit",
+            "delete": "Delete",
+            "close": "Close"
+        },
+        "agendar": {
+            "title": "Schedule consultation",
+            "cta": "New appointment",
+            "created_ok": "Consultation scheduled",
+            "error": "Could not schedule the consultation"
+        }
+    },
+    "user_dashboard": {
+        "total_menus": "Total Menus",
+        "total_exchange_lists": "Total Exchange Lists"
+    },
+    "patients": {
+        "tabs": {
+            "active": "Active",
+            "archived": "Archived"
+        },
+        "invitation": {
+            "label": "Send email invitation (the patient creates their own password)",
+            "note": "The patient will receive an email with a link to create their password. The link expires in 72 hours.",
+            "missing_email": "The patient needs an email to receive the invitation: enter their email or untick the option."
+        },
+        "form": {
+            "missing_measurements": "Complete the patient's weight and height before registering."
+        },
+        "pediatric": {
+            "general_tab": "Patient details",
+            "tab": "Pediatric",
+            "switch_label": "Is a pediatric patient",
+            "switch_hint": "Turn it on when the patient is a minor: the account, the portal access and the notifications belong to the representative, not to the minor.",
+            "representative_name": "Representative's name *",
+            "representative_email": "Representative's email *",
+            "representative_phone": "Representative's phone",
+            "representative_relationship": "Relationship *",
+            "relationship_placeholder": "Select the relationship",
+            "patient_email_optional": "The patient's email is optional: the account is opened with the representative's email.",
+            "invitation_note": "Because this is a minor, the invitation is sent to the representative's email, the account holder. The link expires in 72 hours.",
+            "invitation_missing_email": "The representative needs an email to receive the invitation: enter their email or untick the option.",
+            "relationship_padre": "Father",
+            "relationship_madre": "Mother",
+            "relationship_tutor": "Guardian",
+            "relationship_otro": "Other",
+            "missing_representative_name": "Enter the representative's name.",
+            "missing_representative_email": "Enter the representative's email.",
+            "invalid_representative_email": "The representative's email is not valid.",
+            "missing_relationship": "Select the representative's relationship.",
+            "invalid_relationship": "The representative's relationship must be PADRE, MADRE, TUTOR or OTRO."
+        },
+        "archive": "Archive",
+        "unarchive": "Unarchive",
+        "archive_confirm_title": "Archive Patient",
+        "archive_confirm_body": "Archive {name}? The patient will no longer appear in the active list.",
+        "archive_confirm_reason_label": "Reason (optional)",
+        "archive_confirm_reason_placeholder": "e.g., Patient inactive for 6 months",
+        "archive_success": "Patient archived",
+        "archive_success_message": "Patient archived successfully.",
+        "unarchive_success": "Patient unarchived",
+        "unarchive_success_message": "Patient \"{name}\" restored to the active list.",
+        "delete_success": "Patient deleted",
+        "delete_success_message": "Patient permanently deleted.",
+        "detail": {
+            "tabs": {
+                "overview": "Overview",
+                "anthropometry": "Measurements",
+                "goals": "Goals",
+                "plans": "Plans",
+                "labs": "Labs",
+                "diet": "Current Diet",
+                "team": "Team",
+                "shopping": "Shopping",
+                "calculadora": "Calculator"
+            },
+            "team": {
+                "invitePlaceholder": "Nutritionist's email",
+                "inviteHint": "Only nutritionists with a PREMIUM plan can collaborate",
+                "inviteSuccess": "Invitation sent. The nutritionist must accept it from their referrals.",
+                "inviteSearching": "Searching nutritionists...",
+                "inviteNoResults": "No nutritionists found with that email.",
+                "readOnlyBanner": "You can only view the team. You need the PREMIUM plan to manage collaborators.",
+                "typeLabel": "Type",
+                "type": {
+                    "transfer": "Referral",
+                    "collaborator": "Collaboration"
+                },
+                "errors": {
+                    "notPremium": "The nutritionist does not have the PREMIUM plan.",
+                    "emailNotFound": "No nutritionist found with that email.",
+                    "alreadyMember": "That nutritionist is already part of the team.",
+                    "generic": "Could not send the invitation."
+                }
+            },
+            "not_found": "Patient not found"
+        }
+    },
+    "adoption": {
+        "title": "Adoption & Clinical Flow Panel",
+        "subtitle": "Software adoption, cohort retention, clinical funnel and feature depth.",
+        "scope": {
+            "org": "My organization",
+            "global": "Global"
+        },
+        "timezone": "Timezone",
+        "as_of": "As of {date}",
+        "refresh": "Refresh data",
+        "loading": "Loading adoption metrics...",
+        "error_title": "Error loading adoption",
+        "retry": "Try again",
+        "no_access_title": "No access",
+        "no_access_body": "You don't have permission to view the adoption panel. The dashboard permit is required for your organization scope, or ADMIN/SUPERADMIN role for the global scope.",
+        "metrics": {
+            "active_users": "Active Users",
+            "dau": "DAU (daily)",
+            "wau": "WAU (weekly)",
+            "mau": "MAU (monthly)",
+            "dau_help": "Active users on the calendar day",
+            "wau_help": "Active in the last 7 calendar days",
+            "mau_help": "Active in the last 30 calendar days",
+            "dormant": "Dormant Users",
+            "dormant_help": "Inactive for {days} days or more"
+        },
+        "dormant": {
+            "title": "Dormant Users",
+            "last_seen": "Last activity",
+            "logins": "logins",
+            "empty": "No dormant users in the period"
+        },
+        "cohorts": {
+            "title": "Cohort Retention",
+            "week": "Weekly",
+            "month": "Monthly",
+            "empty": "No cohorts in the period"
+        },
+        "funnel": {
+            "title": "Clinical Funnel",
+            "stage": "Stage",
+            "count": "Patients",
+            "conversion_previous": "Conversion (previous stage)",
+            "conversion_first": "Conversion (from start)",
+            "patients": "Patients",
+            "anamnesis": "Anamnesis",
+            "anthropometry": "Anthropometry",
+            "consultation": "Consultations",
+            "plan": "Plans"
+        },
+        "depth": {
+            "title": "Feature Depth",
+            "calculators": "Calculators",
+            "menus": "Menus",
+            "exchange_lists": "Exchange Lists"
+        }
+    }
+}

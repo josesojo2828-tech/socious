@@ -1,0 +1,692 @@
+[
+  {
+    "name": "Calabacitas con Carne de Puerco",
+    "category": "almuerzo",
+    "description": "Plato de carne de puerco con calabacitas y queso panela.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Paleta de cerdo",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.59,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso panela rallado",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas",
+    "category": "almuerzo",
+    "description": "Albóndigas de carne molida con puré de tomate.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 0.75,
+        "unit": "taza",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.25,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Pescado en Salsa de Perejil",
+    "category": "almuerzo",
+    "description": "Pescado blanco en salsa de perejil.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 0.75,
+        "unit": "taza",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Calabacitas con Carne Molida",
+    "category": "almuerzo",
+    "description": "Calabacitas con carne molida y puré de tomate.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Paleta de cerdo",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 0.59,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Chile Relleno de Atún",
+    "category": "almuerzo",
+    "description": "Chile poblano relleno de atún.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Chile poblano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Atún en agua",
+        "quantity": 1,
+        "unit": "lata",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Mole de Olla",
+    "category": "almuerzo",
+    "description": "Mole de olla con verduras y carne de res.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.98,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.63,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Papa",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Chambarete de res",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Chile pasilla",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Chile Relleno de Frijol y Queso Panela",
+    "category": "almuerzo",
+    "description": "Chile poblano relleno de frijol y queso panela.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Chile poblano",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Milanesa de Pollo",
+    "category": "almuerzo",
+    "description": "Milanesa de pollo con lechuga y pepinos.",
+    "tags": [
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Milanesa de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1.5,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Especias",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Limón",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Pollo a la plancha con quinoa y verduras",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón de Pollo",
+    "category": "almuerzo",
+    "description": "Salpicón de pollo con verduras y crema",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Brochetas de Pollo",
+    "category": "almuerzo",
+    "description": "Brochetas de pollo con verduras y tortilla",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado con Champiñones",
+    "category": "almuerzo",
+    "description": "Pescado con champiñones y chile serrano",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Frijoles",
+    "category": "cena",
+    "description": "Frijoles con tortilla",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles negros",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tostada de Salpicón de Pollo",
+    "category": "almuerzo",
+    "description": "Tostada de salpicón de pollo con verduras y crema",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.97,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Lechuga",
+    "category": "cena",
+    "description": "Ensalada de lechuga con pollo deshebrado",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Brócoli",
+    "category": "cena",
+    "description": "Ensalada de brócoli",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Calabacitas con Pechuga Asada",
+    "category": "almuerzo",
+    "description": "Ensalada de calabacitas con pechuga asada",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pollo",
+    "category": "almuerzo",
+    "description": "Sándwich de pollo con lechuga y jitomate",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 80,
+        "unit": "g",
+        "_matchScore": 0.96,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Carne Asada con Calabacitas y Chile Poblano",
+    "category": "almuerzo",
+    "description": "Carne asada con calabacitas y chile poblano",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Chile poblano",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Jícama Picada",
+    "category": "snack",
+    "description": "Jícama picada con limón",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Zanahoria Rallada",
+    "category": "snack",
+    "description": "Zanahoria rallada con limón",
+    "tags": [
+      "vegetariano",
+      "sin-gluten",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Limón",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  }
+]

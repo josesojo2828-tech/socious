@@ -1,0 +1,1 @@
+export { AuthHeroSlider } from './AuthHeroSlider';

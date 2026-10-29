@@ -1,0 +1,13 @@
+{
+    "lang": "es",
+    "goal": {
+        "title": "Título de la Meta",
+        "type": "Tipo de Meta",
+        "deadline": "Fecha Límite",
+        "start_value": "Valor Inicial",
+        "target_value": "Valor Objetivo",
+        "current_value": "Valor Actual",
+        "is_achieved": "¿Meta alcanzada?",
+        "description": "Descripción"
+    }
+}

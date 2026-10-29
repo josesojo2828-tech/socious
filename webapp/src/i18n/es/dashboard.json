@@ -1,0 +1,783 @@
+{
+    "lang": "es",
+    "sidebar": {
+        "dashboard_group": "DASHBOARD",
+        "dashboard": "Dashboard",
+        "users_group": "USUARIOS",
+        "users": "Usuarios",
+        "wallets": "Billeteras",
+        "files": "Archivos",
+        "application_group": "APLICACIÓN",
+        "transactions": "Transacciones",
+        "payment_methods": "Métodos de Pago",
+        "subscriptions": "Suscripciones",
+        "support": "Soporte"
+    },
+    "header": {
+        "welcome_back": "Bienvenido de nuevo, "
+    },
+    "tabs": {
+        "overview": "Resumen",
+        "analytics": "Analíticas",
+        "activity": "Actividad",
+        "adoption": "Adopción",
+        "reports": "Reportes",
+        "alerts": "Alertas",
+        "export": "Exportar",
+        "settings": "Configuración",
+        "website": "Web",
+        "user_action": {
+            "administration": "General",
+            "profile": "Perfil",
+            "payment_method": "Métodos de Pago",
+            "wallet": "Billeteras",
+            "transaction": "Transacciones",
+            "subscription": "Suscripciones"
+        }
+    },
+    "main": {
+        "today_is": "Hoy es, ",
+        "export_report_button": "Exportar Reporte",
+        "filters_button": "Filtros"
+    },
+    "stats": {
+        "total_revenue": "Ingresos Totales",
+        "active_users": "Usuarios Activos",
+        "conversion_rate": "Tasa de Conversión",
+        "avg_session": "Sesión Promedio",
+        "from_last_month": "desde el mes pasado"
+    },
+    "charts": {
+        "revenue_overview_title": "Resumen de Ingresos (Últimos 12 Meses)",
+        "last_12_months": "Últimos 12 Meses",
+        "traffic_sources_title": "Fuentes de Tráfico ({monthYear})",
+        "view_all": "Ver todo"
+    },
+    "sections": {
+        "analytics": {
+            "sumary": "Resumen de Analíticas",
+            "plans_distribution": "Distribución de Planes",
+            "office_locations": "Consultorios",
+            "office_locations_empty": "Aún no hay consultorios registrados"
+        },
+        "reports": {
+            "sumary": "Sección de reportes"
+        },
+        "alerts": {
+            "sumary": "Sección de alertas"
+        },
+        "export": {
+            "sumary": "Sección de exportar información"
+        },
+        "settings": {
+            "sumary": "Sección de configuración"
+        },
+        "website": {
+            "sumary": "Sección de sitio web"
+        }
+    },
+    "activity": {
+        "title": "Actividad",
+        "subtitle": "Historial de acciones y eventos registrados.",
+        "total_actions": "Total Acciones",
+        "actions_today": "Acciones Hoy",
+        "active_users": "Usuarios Activos",
+        "actions_per_day": "Acciones por día",
+        "daily_trend": "Tendencia Diaria",
+        "actions_by_type": "Acciones por Tipo",
+        "recent_activity": "Actividad Reciente",
+        "filter_user": "Nutricionista",
+        "all_users": "Todos los usuarios",
+        "load_more": "Cargar más",
+        "loading": "Cargando...",
+        "empty": "Sin actividad",
+        "empty_description": "No hay actividad registrada.",
+        "error_title": "Error al cargar actividad",
+        "retry": "Intentar de nuevo",
+        "refresh": "Refrescar",
+        "actions": {
+            "created": "creado",
+            "updated": "actualizado",
+            "deleted": "eliminado",
+            "login": "Inicio de sesión",
+            "logout": "Cierre de sesión",
+            "failed_login": "Inicio de sesión fallido",
+            "session_refresh": "sesión renovada",
+            "password_reset": "Contraseña restablecida",
+            "archived": "archivado",
+            "unarchived": "desarchivado",
+            "started": "iniciado",
+            "completed": "completado",
+            "saved": "guardado",
+            "viewed": "visto",
+            "searched": "buscado",
+            "used": "usado",
+            "renewed": "renovado",
+            "failed": "fallido",
+            "changed": "cambiado",
+            "role_changed": "rol cambiado",
+            "invited": "invitado",
+            "removed": "removido",
+            "switched": "cambiado",
+            "exported": "exportado"
+        },
+        "entities": {
+            "patient": "Paciente",
+            "nutritional_plan": "Plan Nutricional",
+            "menu": "Menú",
+            "consultation": "Consulta",
+            "exchange_list": "Lista de Intercambio",
+            "food": "Alimento",
+            "lab_result": "Resultado de Laboratorio",
+            "user": "Usuario",
+            "wallet": "Billetera",
+            "transaction": "Transacción",
+            "subscription": "Suscripción",
+            "payment_method": "Método de Pago",
+            "meal_plan": "Plan de Comidas",
+            "recipe": "Receta",
+            "session": "Sesión",
+            "plan": "Plan",
+            "note": "Nota",
+            "calculator": "Calculadora",
+            "payment": "Pago",
+            "org": "Organización",
+            "setting": "Configuración",
+            "data": "Datos",
+            "workspace": "Workspace",
+            "member": "Miembro",
+            "tools": "Herramientas"
+        }
+    },
+    "menu": {
+        "total_menus": "Total Menús",
+        "active_system": "Activos en sistema",
+        "avg_calories": "Calorías Promedio",
+        "kcal_per_menu": "Kcal / Menú",
+        "top_category": "Categoría Top",
+        "most_frequent": "Más frecuente",
+        "assigned_patients": "Pacientes Asignados",
+        "active_plans": "En planes activos",
+        "category_distribution": "Distribución de Categorías",
+        "avg_macros": "Macros Promedio",
+        "global": "Global",
+        "no_data": "Sin datos",
+        "trend": "Tus menús tienden a ser",
+        "high_protein": "altos en proteína",
+        "balanced": "balanceados",
+        "all_foods": "Todos los Alimentos",
+        "protein": "Proteínas",
+        "carbs": "Carbohidratos",
+        "fats": "Grasas",
+        "obj": "Obj",
+        "exceeds_target": "Excede el objetivo"
+    },
+    "plans": {
+        "edit_title": "Editar Plan Nutricional",
+        "create_title": "Nuevo Plan Nutricional",
+        "subtitle_edit": "Modifica los objetivos y asignaciones.",
+        "subtitle_create": "Define objetivos y asigna la dieta inicial.",
+        "save_btn": "Guardar Plan",
+        "saving_btn": "Guardando...",
+        "configuration": "Configuración",
+        "name": "Nombre del Plan",
+        "start_date": "Inicio",
+        "status_label": "Estado",
+        "daily_goals": "Objetivos Diarios",
+        "total_calories": "Calorías Totales",
+        "menus": "Menús Estructurados",
+        "exchanges": "Intercambios",
+        "supplements": "Suplementación",
+        "recommendations": "Recomendaciones",
+        "no_menus": "Sin menús asignados.",
+        "no_exchanges": "Sin listas asignadas.",
+        "no_supplements": "Sin suplementos.",
+        "notes_placeholder": "Escribe aquí notas adicionales para el paciente...",
+        "loading": "Cargando datos del plan...",
+        "error_load": "No se pudo cargar el plan para editar.",
+        "error_patient_id": "Error: Falta el ID del paciente.",
+        "error_save": "Error al guardar el plan.",
+        "status": {
+            "active": "Activo",
+            "draft": "Borrador",
+            "archived": "Archivado"
+        },
+        "macros": {
+            "prot": "PROT",
+            "carb": "CARB",
+            "fat": "GRASA",
+            "water_label": "Agua (ml)",
+            "unit_g": "g",
+            "unit_kcal": "kcal"
+        },
+        "general_moment": "General"
+    },
+    "foods": {
+        "title": "Base de Datos de Alimentos",
+        "total_records": "Total Registros",
+        "active": "Activos",
+        "verified": "Verificados",
+        "system_data": "Datos del sistema",
+        "needs_review": "Por Revisar",
+        "possible_errors": "Posibles errores (0 kcal)",
+        "avg_calories": "Calorías Promedio",
+        "energy_density": "Densidad energética media",
+        "category_dist": "Distribución por Categorías",
+        "based_on": "Basado en listas de intercambio asociadas.",
+        "db_quality": "Calidad de la Base de Datos",
+        "healthy": "Saludable",
+        "improvable": "Mejorable",
+        "fiber_data": "Datos de Fibra",
+        "sodium_data": "Datos de Sodio",
+        "iron_data": "Datos de Hierro",
+        "completed": "% completados",
+        "all_foods": "Todos los Alimentos",
+        "table": {
+            "food": "Alimento",
+            "net_weight": "Peso Neto",
+            "serving": "Medida Casera",
+            "actions": "Acciones",
+            "empty": "Esta lista aún no tiene alimentos.",
+            "search_results_empty": "No se encontraron alimentos con \"{term}\"",
+            "footer_showing": "Mostrando {current} de {total} alimentos registrados"
+        },
+        "categories": {
+            "all": "Todas las categorías",
+            "fruits": "Frutas",
+            "meats": "Carnes",
+            "milk": "Leche",
+            "fats": "Grasas",
+            "cereals": "Cereales",
+            "vegetables": "Vegetales",
+            "tubers": "Tubérculos"
+        }
+    },
+    "payment_methods": {
+        "title": "Métodos de Pago",
+        "subtitle": "Gestiona tus tarjetas y facturación activa.",
+        "new_method": "Nuevo Método",
+        "active_cards": "Tarjetas Activas",
+        "status_title": "Estado de Métodos",
+        "total": "Total",
+        "active": "Activos",
+        "expired": "Expirados",
+        "error": "Error",
+        "search_placeholder": "Buscar por terminación o titular...",
+        "status_filter": "Estado",
+        "all": "Todos",
+        "table": {
+            "method": "Método",
+            "holder": "Titular",
+            "expiry": "Vencimiento",
+            "status": "Estado",
+            "actions": "Acciones",
+            "default": "PREDETERMINADO"
+        },
+        "empty": {
+            "title": "No se encontraron resultados",
+            "subtitle": "Prueba ajustando los filtros o tu búsqueda."
+        },
+        "pagination": {
+            "showing": "Mostrando",
+            "of": "de",
+            "results": "resultados",
+            "prev": "Anterior",
+            "next": "Siguiente"
+        }
+    },
+    "entities": {
+        "products": {
+            "title": "Inventario de Productos",
+            "description": "Control de stock y precios.",
+            "columns": {
+                "product": "Producto",
+                "sku": "SKU",
+                "price": "Precio",
+                "stock": "Stock"
+            }
+        },
+        "reports": {
+            "title": "Reportes del Sistema",
+            "description": "Descarga y visualiza métricas clave.",
+            "columns": {
+                "report": "Reporte",
+                "type": "Tipo",
+                "generated": "Generado",
+                "size": "Tamaño"
+            }
+        },
+        "common": {
+            "create": "Crear",
+            "search_in": "Buscar en",
+            "filters": "Filtros",
+            "actions": "Acciones"
+        }
+    },
+    "condiments_menu": {
+        "title": "Condimentos",
+        "empty": "Este menú aún no tiene condimentos.",
+        "add_btn": "Agregar Condimento"
+    },
+    "menu_image": {
+        "title": "Foto del menú",
+        "empty": "Este menú no tiene foto todavía.",
+        "upload_btn": "Subir foto",
+        "change_btn": "Cambiar foto",
+        "remove_btn": "Quitar foto",
+        "uploaded_title": "Foto actualizada",
+        "uploaded_message": "La foto del menú se actualizó correctamente.",
+        "removed_title": "Foto eliminada",
+        "removed_message": "La foto del menú fue eliminada."
+    },
+    "modals": {
+        "add_ingredient": {
+            "title": "Agregar Ingrediente",
+            "search_placeholder": "Buscar ingrediente (ej: Avena, Huevo...)",
+            "quantity_label": "Cantidad",
+            "unit_label": "Unidad",
+            "portion_label": "Etiqueta de Porción",
+            "portion_label_optional": "(Opcional)",
+            "portion_label_help": "Texto amigable visible para el paciente en el menú.",
+            "placeholder_quantity": "Ej: 100",
+            "placeholder_portion": "Ej: 1 taza mediana picada",
+            "no_results": "No se encontraron ingredientes.",
+            "db_search_prompt": "Busca en la base de datos de alimentos",
+            "change_selection": "Cambiar",
+            "back": "Atrás",
+            "add_btn": "Agregar al Menú",
+            "ingredient_label": "Ingrediente"
+        },
+        "add_condiment": {
+            "title": "Agregar Condimento",
+            "search_placeholder": "Buscar condimento (ej: Sal, Aceite de oliva...)",
+            "quantity_label": "Cantidad (opcional)",
+            "unit_label": "Unidad",
+            "no_results": "No se encontraron condimentos.",
+            "db_search_prompt": "Busca en el catálogo de condimentos",
+            "change_selection": "Cambiar",
+            "back": "Atrás",
+            "add_btn": "Agregar al Menú",
+            "condiment_label": "Condimento",
+            "remove_title": "Quitar condimento"
+        },
+        "add_food": {
+            "title": "Agregar Alimento",
+            "search_placeholder": "Buscar alimento (ej: Manzana, Pollo...)",
+            "amount_label": "Peso Neto (g)",
+            "serving_label": "Medida Casera",
+            "placeholder_amount": "Ej: 100",
+            "placeholder_serving": "Ej: 1 taza, 1 unidad...",
+            "no_results": "No encontramos alimentos con ese nombre.",
+            "db_search_prompt": "Escribe para buscar en la base de datos maestra",
+            "selected_label": "Alimento Seleccionado",
+            "amount_help": "Cantidad para 1 intercambio",
+            "serving_help": "Texto visible para el paciente",
+            "change_selection": "Cambiar",
+            "back": "Atrás",
+            "add_btn": "Agregar a la Lista"
+        },
+        "assign_exchange": {
+            "title": "Asignar Intercambio",
+            "group_label": "Grupo de Alimentos",
+            "portions_label": "Porciones",
+            "moment_label": "Momento",
+            "search_placeholder": "Buscar (ej: Frutas)...",
+            "no_results": "Sin resultados.",
+            "cancel": "Cancelar",
+            "assign": "Asignar"
+        },
+        "assign_menu": {
+            "title": "Asignar Menú",
+            "search_label": "Buscar Receta / Menú",
+            "moment_label": "Momento de Consumo",
+            "notes_label": "Notas (Opcional)",
+            "search_placeholder": "Escribe para filtrar...",
+            "notes_placeholder": "Ej: Solo días de entrenamiento...",
+            "loading": "Cargando...",
+            "no_results": "No se encontraron menús.",
+            "cancel": "Cancelar",
+            "assign": "Asignar Menú"
+        },
+        "add_lab_result": {
+            "title": "Registrar Resultados Manuales",
+            "exam_name_label": "Nombre del Examen",
+            "date_label": "Fecha de Toma",
+            "exam_placeholder": "Ej: Perfil Lipídico",
+            "sections_label": "Parámetros",
+            "col_param": "Parámetro",
+            "col_value": "Valor",
+            "col_unit": "Unidad",
+            "param_placeholder": "Ej: Glucosa",
+            "unit_placeholder": "Unidad",
+            "add_param": "Agregar otro parámetro",
+            "cancel": "Cancelar",
+            "save_btn": "Guardar Resultados",
+            "saving_btn": "Guardando..."
+        },
+        "create_consultation": {
+            "title": "Agendar Nueva Consulta",
+            "patient_label": "Paciente",
+            "date_label": "Fecha",
+            "time_label": "Hora",
+            "type_label": "Tipo de Consulta",
+            "reason_label": "Motivo (Opcional)",
+            "patient_placeholder": "Seleccione un paciente...",
+            "reason_placeholder": "Ej: Revisión de exámenes...",
+            "types": {
+                "first_time": "Primera Vez",
+                "follow_up": "Control / Seguimiento",
+                "emergency": "Emergencia"
+            },
+            "status": {
+                "scheduled": "Agendada",
+                "completed": "Completada",
+                "canceled": "Cancelada",
+                "no_show": "No Asistió"
+            },
+            "form_sections": {
+                "data": "Datos de la Cita"
+            },
+            "cancel": "Cancelar",
+            "schedule_btn": "Agendar Cita"
+        }
+    },
+    "common": {
+        "titles": {
+            "patients": "Mis Pacientes",
+            "menus": "Mis Menús",
+            "exchange_lists": "Listas de Intercambio"
+        },
+        "placeholder": {
+            "search_patients": "Buscar paciente...",
+            "search_menus": "Buscar menú...",
+            "search_exchange": "Buscar lista..."
+        }
+    },
+    "patients": {
+        "tabs": {
+            "active": "Activos",
+            "archived": "Archivados"
+        },
+        "invitation": {
+            "label": "Enviar invitación por correo (el paciente crea su propia contraseña)",
+            "note": "El paciente recibirá un correo con un enlace para crear su contraseña. El enlace vence a las 72 horas.",
+            "missing_email": "El paciente necesita un correo para recibir la invitación: escribe su correo o desmarca la opción."
+        },
+        "form": {
+            "missing_measurements": "Completa el peso y la talla del paciente antes de registrarlo."
+        },
+        "pediatric": {
+            "general_tab": "Datos del paciente",
+            "tab": "Pediátrico",
+            "switch_label": "Es paciente pediátrico",
+            "switch_hint": "Actívalo cuando el paciente es menor de edad: la cuenta, el acceso al portal y las notificaciones pertenecen al representante, no al menor.",
+            "representative_name": "Nombre del representante *",
+            "representative_email": "Correo del representante *",
+            "representative_phone": "Teléfono del representante",
+            "representative_relationship": "Parentesco *",
+            "relationship_placeholder": "Selecciona el parentesco",
+            "patient_email_optional": "El correo del paciente es opcional: la cuenta se abre con el correo del representante.",
+            "invitation_note": "Por ser un paciente menor, la invitación se envía al correo del representante, que es el titular de la cuenta. El enlace vence a las 72 horas.",
+            "invitation_missing_email": "El representante necesita un correo para recibir la invitación: escribe su correo o desmarca la opción.",
+            "relationship_padre": "Padre",
+            "relationship_madre": "Madre",
+            "relationship_tutor": "Tutor",
+            "relationship_otro": "Otro",
+            "missing_representative_name": "Ingresa el nombre del representante.",
+            "missing_representative_email": "Ingresa el correo del representante.",
+            "invalid_representative_email": "El correo del representante no es válido.",
+            "missing_relationship": "Selecciona el parentesco del representante.",
+            "invalid_relationship": "El parentesco del representante debe ser PADRE, MADRE, TUTOR u OTRO."
+        },
+        "archive": "Archivar",
+        "unarchive": "Desarchivar",
+        "archive_confirm_title": "Archivar Paciente",
+        "archive_confirm_body": "¿Archivar a {name}? El paciente ya no aparecerá en la lista activa.",
+        "archive_confirm_reason_label": "Motivo (opcional)",
+        "archive_confirm_reason_placeholder": "Ej: Paciente inactivo hace 6 meses",
+        "archive_success": "Paciente archivado",
+        "archive_success_message": "Paciente archivado correctamente.",
+        "unarchive_success": "Paciente desarchivado",
+        "unarchive_success_message": "Paciente \"{name}\" restaurado a la lista activa.",
+        "delete_success": "Paciente eliminado",
+        "delete_success_message": "Paciente eliminado permanentemente.",
+        "detail": {
+            "tabs": {
+                "overview": "Resumen",
+                "anthropometry": "Mediciones",
+                "goals": "Metas",
+                "plans": "Planes",
+                "labs": "Exámenes",
+                "diet": "Dieta Actual",
+                "team": "Equipo",
+                "shopping": "Compras",
+                "calculadora": "Calculadora"
+            },
+            "team": {
+                "invitePlaceholder": "Correo del nutricionista",
+                "inviteHint": "Solo nutricionistas con plan PREMIUM pueden colaborar",
+                "inviteSuccess": "Invitación enviada. El nutricionista debe aceptarla desde sus referidos.",
+                "inviteSearching": "Buscando nutricionistas...",
+                "inviteNoResults": "No se encontraron nutricionistas con ese correo.",
+                "readOnlyBanner": "Solo podés ver el equipo. Necesitás el plan PREMIUM para gestionar colaboradores.",
+                "typeLabel": "Tipo",
+                "type": {
+                    "transfer": "Referido",
+                    "collaborator": "Colaboración"
+                },
+                "errors": {
+                    "notPremium": "El nutricionista no tiene el plan PREMIUM.",
+                    "emailNotFound": "No se encontró ningún nutricionista con ese correo.",
+                    "alreadyMember": "Ese nutricionista ya forma parte del equipo.",
+                    "generic": "No se pudo enviar la invitación."
+                }
+            },
+            "not_found": "Paciente no encontrado"
+        }
+    },
+    "condiments": {
+        "detail": {
+            "title": "Ficha del condimento",
+            "back": "Volver a condimentos",
+            "not_found": "Condimento no encontrado",
+            "info_card": "Información del condimento",
+            "name": "Nombre",
+            "status": "Estado",
+            "active": "Activo",
+            "inactive": "Inactivo",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "deleted_success": "Condimento eliminado",
+            "read_only_note": "Los usuarios premium pueden consultar esta ficha."
+        }
+    },
+    "consultations": {
+        "agenda_title": "Agenda de Consultas"
+    },
+    "calendar": {
+        "title": "Agenda",
+        "subtitle": "Gestiona tus citas y disponibilidad.",
+        "new_appointment": "Nueva Cita",
+        "views": {
+            "month": "Mes",
+            "week": "Semana",
+            "day": "Día",
+            "year": "Año"
+        },
+        "weekdays": {
+            "mon": "Lun",
+            "tue": "Mar",
+            "wed": "Mié",
+            "thu": "Jue",
+            "fri": "Vie",
+            "sat": "Sáb",
+            "sun": "Dom"
+        },
+        "schedule": "Cronograma",
+        "events_today": "eventos programados para hoy",
+        "stats": {
+            "consultations": "Consultas",
+            "completed": "Completado"
+        },
+        "pending": "Pendiente",
+        "no_events": "No hay eventos para este día.",
+        "add_event": "Agregar evento +",
+        "today": "Hoy",
+        "nav": {
+            "prev": "Anterior",
+            "next": "Siguiente"
+        },
+        "search_placeholder": "Buscar paciente...",
+        "filter": {
+            "status_all": "Todos los estados"
+        },
+        "legend": {
+            "title": "Estado"
+        },
+        "empty": {
+            "title": "Sin consultas",
+            "body": "No hay consultas para este período."
+        },
+        "error": {
+            "title": "No se pudo cargar la agenda",
+            "retry": "Reintentar"
+        },
+        "week": {
+            "total": "Total",
+            "average": "Promedio"
+        },
+        "month": {
+            "more": "+{count} más"
+        },
+        "year": {
+            "legend": "Estado por día"
+        },
+        "ficha": {
+            "title": "Ficha de consulta",
+            "patient": "Paciente",
+            "reason": "Motivo",
+            "notes": "Notas",
+            "view_record": "Ver expediente",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "close": "Cerrar"
+        },
+        "agendar": {
+            "title": "Agendar consulta",
+            "cta": "Nueva cita",
+            "created_ok": "Consulta agendada",
+            "error": "No se pudo agendar la consulta"
+        }
+    },
+    "user_dashboard": {
+        "member_since": "Miembro desde",
+        "wallet_balance": "Saldo en Billetera",
+        "subscription_status": "Estado Suscripción",
+        "renews": "Renueva:",
+        "trust_level": "Nivel de Confianza",
+        "payment_methods": "Métodos de pago",
+        "level_2": "Nivel 2",
+        "auto_renew": "Renovación Auto",
+        "manual_renew": "Renovación Manual",
+        "current_plan": "Plan Actual",
+        "per_month": "/mes",
+        "current_balance": "Saldo Actual",
+        "current_subscription": "Suscripción Actual",
+        "payment_methods_count": "Métodos de pago",
+        "last_access": "Último acceso: Hoy, 10:23 AM",
+        "panel_title": "Panel de usuario",
+        "data_title": "Datos",
+        "security_title": "Seguridad",
+        "notifications_title": "Notificaciones",
+        "preferences_title": "Preferencias",
+        "references_title": "Referidos",
+        "total_patients": "Pacientes Totales",
+        "total_consultations": "Consultas Realizadas",
+        "total_menus": "Total Menús",
+        "total_exchange_lists": "Total Listas de Intercambio"
+    },
+    "entities": {
+        "common": {
+            "search_in": "Buscar en",
+            "filters": "Filtros",
+            "actions": "Acciones",
+            "create": "Crear",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "no_data": "No se encontraron registros.",
+            "loading": "Cargando registros...",
+            "previous": "Anterior",
+            "next": "Siguiente"
+        },
+        "users": {
+            "title": "Usuarios",
+            "description": "Administración de cuentas de usuarios, roles y estados.",
+            "columns": {
+                "name": "Nombre",
+                "username": "Usuario",
+                "email": "Email",
+                "status": "Estado",
+                "role": "Rol",
+                "created": "Fecha de Registro"
+            }
+        },
+        "subscriptions": {
+            "title": "Suscripciones",
+            "description": "Gestión y seguimiento de suscripciones activas y planes de usuarios.",
+            "columns": {
+                "plan": "Plan",
+                "startDate": "Fecha Inicio",
+                "endDate": "Fecha Fin",
+                "status": "Estado",
+                "email": "Email",
+                "created": "Creado"
+            }
+        },
+        "transactions": {
+            "title": "Transacciones",
+            "description": "Historial de pagos, depósitos y movimientos financieros.",
+            "columns": {
+                "reference": "Código de Referencia",
+                "amount": "Monto",
+                "status": "Estado",
+                "type": "Tipo",
+                "description": "Descripción",
+                "method": "Método de Pago",
+                "user": "Usuario",
+                "created": "Fecha"
+            }
+        }
+    },
+    "wallet": {
+        "transferred_money": "Dinero Transferido ($)",
+        "amount_usd": "Monto (USD)",
+        "operations_volume": "Volumen de Operaciones (#)",
+        "transactions": "Transacciones",
+        "requests_status": "Estado de Solicitudes",
+        "no_data": "No hay datos",
+        "loading": "Cargando...",
+        "table": {
+            "date": "Fecha",
+            "method": "Método",
+            "amount": "Monto",
+            "status": "Estado"
+        }
+    },
+    "adoption": {
+        "title": "Panel de Adopción y Flujo Clínico",
+        "subtitle": "Adopción del software, retención por cohortes, embudo clínico y profundidad de uso.",
+        "scope": {
+            "org": "Mi organización",
+            "global": "Global"
+        },
+        "timezone": "Zona horaria",
+        "as_of": "Al {date}",
+        "refresh": "Refrescar datos",
+        "loading": "Cargando métricas de adopción...",
+        "error_title": "Error al cargar adopción",
+        "retry": "Intentar de nuevo",
+        "no_access_title": "Sin acceso",
+        "no_access_body": "No tenés permisos para ver el panel de adopción. Se requiere el permiso de dashboard para el alcance de tu organización, o rol ADMIN/SUPERADMIN para el alcance global.",
+        "metrics": {
+            "active_users": "Usuarios Activos",
+            "dau": "DAU (diarios)",
+            "wau": "WAU (semanales)",
+            "mau": "MAU (mensuales)",
+            "dau_help": "Usuarios activos del día calendario",
+            "wau_help": "Activos en los últimos 7 días calendario",
+            "mau_help": "Activos en los últimos 30 días calendario",
+            "dormant": "Usuarios Dormidos",
+            "dormant_help": "Sin actividad por {days} días o más"
+        },
+        "dormant": {
+            "title": "Usuarios Dormidos",
+            "last_seen": "Última actividad",
+            "logins": "ingresos",
+            "empty": "No hay usuarios dormidos en el período"
+        },
+        "cohorts": {
+            "title": "Retención por Cohorte",
+            "week": "Semanal",
+            "month": "Mensual",
+            "empty": "Sin cohortes en el período"
+        },
+        "funnel": {
+            "title": "Embudo Clínico",
+            "stage": "Etapa",
+            "count": "Pacientes",
+            "conversion_previous": "Conversión (etapa previa)",
+            "conversion_first": "Conversión (desde el inicio)",
+            "patients": "Pacientes",
+            "anamnesis": "Anamnesis",
+            "anthropometry": "Antropometría",
+            "consultation": "Consultas",
+            "plan": "Planes"
+        },
+        "depth": {
+            "title": "Profundidad de Uso",
+            "calculators": "Calculadoras",
+            "menus": "Menús",
+            "exchange_lists": "Listas de Intercambio"
+        }
+    }
+}

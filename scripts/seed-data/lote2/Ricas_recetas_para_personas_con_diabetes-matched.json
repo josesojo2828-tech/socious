@@ -1,0 +1,793 @@
+[
+  {
+    "name": "Pollo a la Plancha con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Un plato saludable y equilibrado para personas con diabetes.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Salmón al Horno con Arroz Integral",
+    "category": "almuerzo",
+    "description": "Un plato saludable y equilibrado para personas con diabetes.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Frutas y Yogur Griego",
+    "category": "desayuno",
+    "description": "Un batido saludable y refrescante para personas con diabetes.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Frutas variadas",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Yogur griego",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Lechuga, Tomate y Pepino",
+    "category": "cena",
+    "description": "Un plato saludable y refrescante para personas con diabetes.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tortilla Española",
+    "category": "desayuno",
+    "description": "Tortilla española con variedad de verduras saludables",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Papas baby",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 3,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 5,
+        "unit": "unidad",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Carne de Pavo o de Res Guisada",
+    "category": "almuerzo",
+    "description": "Carne de pavo o de res guisada con ensalada de lechuga y pepino",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pavo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pan de trigo integral",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Comino",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Apio",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Consomé de res o pavo sin grasa",
+        "quantity": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Papas baby",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Habas verdes",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.53,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Pargo rojo caribeño",
+    "category": "almuerzo",
+    "description": "Pargo rojo caribeño con verduras y queso.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pargo rojo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Feta",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Pizza de dos quesos",
+    "category": "almuerzo",
+    "description": "Pizza de dos quesos con champiñones y pimentón rojo.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Masa de pizza",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 0.53,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con pollo a la española",
+    "category": "almuerzo",
+    "description": "Una buena forma de incluir verduras en su plan de comidas.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "bajo-grasas",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 6,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Apio",
+        "quantity": 2,
+        "unit": "tallos",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "unidad",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Arroz integral",
+        "quantity": 2,
+        "unit": "tazas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 3,
+        "unit": "libras",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Consomé de pollo bajo en grasa",
+        "quantity": 2.5,
+        "unit": "tazas"
+      },
+      {
+        "name": "Azafrán o Sazón",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 3,
+        "unit": "unidad",
+        "_matchScore": 0.97,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Arvejas congeladas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Maíz congelado",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.94,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Pozole",
+    "category": "almuerzo",
+    "description": "Una pequeña cantidad de aceite para sofreír la carne.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "bajo-grasas",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Carne de res magra",
+        "quantity": 1,
+        "unit": "libra",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "unidad",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cilantro fresco",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "lata",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 1,
+        "unit": "onzas",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Maíz descascarillado",
+        "quantity": 1,
+        "unit": "libra"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de aguacate",
+    "category": "cena",
+    "description": "Tacos frescos y deliciosos para una comida ligera.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de tomate fresca",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Tortillas de harina de trigo",
+        "quantity": 12,
+        "unit": "unidades"
+      }
+    ]
+  },
+  {
+    "name": "Fantasía de frutas tropicales",
+    "category": "snack",
+    "description": "Deliciosa y colorida receta con frutas tropicales.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Yogur de naranja sin azúcar y sin grasa",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Melón",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Mango",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Salmón Ahumado con Ensalada de Lechuga",
+    "category": "almuerzo",
+    "description": "Un plato ligero y saludable para una comida deliciosa.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal",
+      "anti-inflamatorio"
+    ],
+    "foods": [
+      {
+        "name": "Salmón ahumado",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Frutas con Yogur Griego",
+    "category": "desayuno",
+    "description": "Un batido saludable y delicioso para una comida ligera.",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal",
+      "anti-inflamatorio"
+    ],
+    "foods": [
+      {
+        "name": "Frutas variadas",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Yogur griego",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  }
+]

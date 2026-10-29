@@ -1,0 +1,1346 @@
+[
+  {
+    "name": "Berenjena frita con mantequilla y plato Halloumi",
+    "category": "cena",
+    "description": "Berenjena frita con mantequilla y plato Halloumi es un plato delicioso y saludable que combina la textura crujiente de la berenjena con la riqueza del queso Halloumi.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Halloumi",
+        "quantity": 280,
+        "unit": "g"
+      },
+      {
+        "name": "Berenjena",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Salsa de cerdo y queso perfecta",
+    "category": "cena",
+    "description": "Esta salsa de cerdo y queso es una deliciosa combinación de sabores que se puede servir con carne o como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Lomo de cerdo",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 140,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso azúl danés",
+        "quantity": 140,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Crema espesa",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de tocino y col caliente y saludable",
+    "category": "cena",
+    "description": "Esta ensalada de tocino y col es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Tocino",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Coles de Bruselas",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 360,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      }
+    ]
+  },
+  {
+    "name": "Tantalizador de sabor a atún picante",
+    "category": "cena",
+    "description": "Este plato de atún picante es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Apio",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mayonesa comercial",
+        "quantity": 180,
+        "unit": "ml",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 60,
+        "unit": "ml",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Alcaparras",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Vinagre de vino blanco",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Chicken & Bacon One-Pot Heaven",
+    "category": "cena",
+    "description": "Este plato de pollo y tocino es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tocino",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 360,
+        "unit": "g",
+        "_matchScore": 0.95,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Curry de cilantro y garbanzos",
+    "category": "cena",
+    "description": "Este curry de cilantro y garbanzos es una deliciosa y saludable combinación de sabores que se puede servir como acompañamiento.",
+    "tags": [
+      "keto",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 360,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 180,
+        "unit": "ml",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jengibre",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Garam masala",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Comino",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cúrcuma",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo cremoso mediterráneo con ajo",
+    "category": "almuerzo",
+    "description": "Pollo cremoso con espinacas y tomates secados al sol",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 24,
+        "unit": "oz",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Crema espesa",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomates secados al sol",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Condimento italiano",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.64,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Bacalao crujiente, crujiente y recubierto de queso",
+    "category": "cena",
+    "description": "Bacalao crujiente con parmesano y pimentón",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 4,
+        "unit": "filetes",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 1,
+        "unit": "taza",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Camarones al ajo y fideos de calabacín",
+    "category": "almuerzo",
+    "description": "Camarones al ajo con fideos de calabacín",
+    "tags": [
+      "diabetes",
+      "hipertension",
+      "renal"
+    ],
+    "foods": [
+      {
+        "name": "Camarones",
+        "quantity": 12,
+        "unit": "oz",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 2,
+        "unit": "calabacines",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "limón",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 4,
+        "unit": "dientes",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Hojuelas de Avena",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.52,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Perfección perfecta de pizza",
+    "category": "almuerzo",
+    "description": "Pizza perfecta con queso cheddar y pepperoni",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 3,
+        "unit": "huevos",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aceitunas negras",
+        "quantity": 5,
+        "unit": "aceitunas"
+      },
+      {
+        "name": "Pepperoni",
+        "quantity": 5,
+        "unit": "rodajas"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso Cheddar",
+        "quantity": 0.33,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "cortada en cubitos",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 0.5,
+        "unit": "cucharadita",
+        "_matchScore": 0.64,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Condimento italiano",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Keto Kick- of- Heat Wraps de pollo",
+    "category": "almuerzo",
+    "description": "Wraps de pollo con queso de cabra y pimientos",
+    "tags": [
+      "keto",
+      "proteico",
+      "alto-en-proteinas"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 32,
+        "unit": "oz",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Apio",
+        "quantity": 4,
+        "unit": "tallos",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolletas",
+        "quantity": 2,
+        "unit": "cortadas en cubitos"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "cabeza",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso de cabra",
+        "quantity": 0.5,
+        "unit": "taza",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 0.5,
+        "unit": "cortado en cubitos",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Hojuelas de Avena",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.52,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.64,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Plato de filete y huevo abundante",
+    "category": "almuerzo",
+    "description": "Filete y huevo con aguacate",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Solomillo",
+        "quantity": 4,
+        "unit": "oz"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 3,
+        "unit": "huevos",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.25,
+        "unit": "en rodajas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 1,
+        "unit": "cucharada",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Pollo Picante",
+    "category": "almuerzo",
+    "description": "Pollo picante con muslos de pollo",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 6,
+        "unit": "muslos",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Salsa Picante",
+    "category": "cena",
+    "description": "Pollo a la plancha con una salsa picante y sabrosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Salsa picante",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Cazuela de Pollo con Queso",
+    "category": "cena",
+    "description": "Una deliciosa cazuela de pollo con queso y sabores.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tocino crujiente",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Parmesano rallado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa marinara",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Chiles a Mitad de Semana Carnosos",
+    "category": "cena",
+    "description": "Un plato sabroso de chiles rellenos de carne y queso.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Carne picada",
+        "quantity": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 375,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Queso Cheddar",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ajo triturado",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.94,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Cilantro molido",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Comino molido",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Chile en polvo",
+        "quantity": 7,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Chuletas Cremosas de Tocino y Champiñones",
+    "category": "cena",
+    "description": "Chuletas de cerdo con tocino y champiñones en una salsa cremosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Chuleta de Cerdo",
+        "quantity": 800,
+        "unit": "g",
+        "_matchScore": 0.82,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Tocino picado",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Ajo triturado",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Crema espesa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 160,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Dip de Pollo y Aguacate a la Parmesana",
+    "category": "snack",
+    "description": "Un dip cremoso de pollo y aguacate con parmesano.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 400,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Apio cocido",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.54,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Parmesano rallado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Harina de almendras",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Crema agria",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa ranch",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Condimento italiano",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Bolsas de Salmón Ardientes",
+    "category": "cena",
+    "description": "Filetes de salmón con una salsa picante y sabrosa.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 400,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Salsa de chile",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Manzana, jugo fresco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.52,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Ajo triturado",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 7,
+        "unit": "g",
+        "_matchScore": 0.59,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Ralladura de lima",
+        "quantity": 7,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 3,
+        "unit": "g",
+        "_matchScore": 0.55,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Menta fresca",
+        "quantity": 3,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Mezcla de Pollo y Pimienta",
+    "category": "cena",
+    "description": "Pechugas de pollo con una mezcla de pimienta y sabores.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 400,
+        "unit": "g",
+        "_matchScore": 0.65,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Pollo con Pimientos y Cebolla",
+    "category": "almuerzo",
+    "description": "Pollo a la parrilla con pimientos y cebolla.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Condimento italiano",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Pimientos Rellenos Súper Picantes",
+    "category": "almuerzo",
+    "description": "Pimientos rellenos con carne picada y especias.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne picada",
+        "quantity": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Chile en polvo",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 15,
+        "unit": "ml",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Comino",
+        "quantity": 5,
+        "unit": "ml"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 0.25,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Tomate y Hierbas",
+    "category": "cena",
+    "description": "Sopa de tomate y hierbas con queso crema.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Queso crema",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 480,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "ml",
+        "_matchScore": 0.5,
+        "_matchSource": "known-bigram"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 5,
+        "unit": "ml"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 5,
+        "unit": "ml"
+      },
+      {
+        "name": "Salmón",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  }
+]

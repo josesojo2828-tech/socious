@@ -1,0 +1,42 @@
+{
+    "lang": "es",
+    "tabs": {
+        "active": "Activos",
+        "archived": "Archivados"
+    },
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
+    "notifications": {
+        "archive_success": "Menú archivado",
+        "archive_message": "El menú \"{name}\" se archivó y ya no aparece en la lista activa.",
+        "unarchive_success": "Menú desarchivado",
+        "unarchive_message": "El menú \"{name}\" volvió a la lista activa.",
+        "delete_success": "Menú eliminado",
+        "delete_message": "El menú \"{name}\" se eliminó."
+    },
+    "form": {
+        "name": "Nombre",
+        "category": "Categoría",
+        "description": "Descripción",
+        "tags": "Etiquetas"
+    },
+    "placeholders": {
+        "name": "Ej: Tortilla de Avena",
+        "description": "Describe los beneficios o el momento de consumo...",
+        "tags": "vegano, sin-gluten, rápido"
+    },
+    "category": {
+        "breakfast": "Desayuno",
+        "morning_snack": "Media Mañana",
+        "lunch": "Almuerzo",
+        "snack": "Media Tarde",
+        "dinner": "Cena",
+        "pre_workout": "Pre-Entreno",
+        "post_workout": "Post-Entreno",
+        "other": "Otro"
+    },
+    "actions": {
+        "create_title": "Crear Menú",
+        "update_title": "Editar Menú"
+    }
+}

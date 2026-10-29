@@ -1,0 +1,8 @@
+{
+    "lang": "es",
+
+    "auth": {
+        "invalid_credentials": "Credenciales inválidas"
+    }
+
+}

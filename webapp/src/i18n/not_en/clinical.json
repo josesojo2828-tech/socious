@@ -1,0 +1,327 @@
+{
+    "lang": "en",
+    "goal": {
+        "title": "Goal Title",
+        "type": "Goal Type",
+        "deadline": "Deadline",
+        "start_value": "Initial Value",
+        "target_value": "Target Value",
+        "current_value": "Current Value",
+        "is_achieved": "Goal achieved?",
+        "start_value_habit": "Initial Frequency/Amount",
+        "target_value_habit": "Target Frequency/Amount",
+        "current_value_habit": "Current Frequency/Amount",
+        "start_value_measurement": "Initial Measurement (cm / %)",
+        "target_value_measurement": "Target Measurement (cm / %)",
+        "current_value_measurement": "Current Measurement (cm / %)",
+        "start_value_weight": "Initial Weight (kg)",
+        "target_value_weight": "Target Weight (kg)",
+        "current_value_weight": "Current Weight (kg)",
+        "description": "Description"
+    },
+    "history": {
+        "title": "Clinical History",
+        "sections": "Record Sections",
+        "personal": "Personal Data",
+        "heredofamiliares": "Family History",
+        "patologicos": "Medical History",
+        "no_patologicos": "Lifestyle & Habits",
+        "gineco": "Gynecological & Obstetric",
+        "gastro": "Gastrointestinal Disorders",
+        "habitos": "Eating Habits",
+        "frecuencia": "Food Frequency Questionnaire",
+        "recall24h": "24-Hour Recall",
+        "diagnostico": "Nutritional Diagnosis",
+        "personal_title": "Patient Personal Data",
+        "heredofamiliares_title": "Family Medical History",
+        "patologicos_title": "Personal Medical History",
+        "no_patologicos_title": "Lifestyle & Habits",
+        "gineco_title": "Gynecological & Obstetric History",
+        "gastro_title": "Gastrointestinal Disorders",
+        "habitos_title": "Eating Habits",
+        "frecuencia_title": "Food Frequency Questionnaire",
+        "recall24h_title": "24-Hour Recall",
+        "diagnostico_title": "Nutritional Diagnosis",
+        "fullname": "Full Name",
+        "gender": "Gender",
+        "birthdate": "Birthdate",
+        "marital_status": "Marital Status",
+        "occupation": "Occupation",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "address": "Address",
+        "select": "Select...",
+        "single": "Single",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "free_union": "Cohabitation",
+        "occupation_placeholder": "e.g., Engineer, Student...",
+        "address_placeholder": "Full patient address..."
+    },
+    "historia-deportiva": {
+        "title": "Sports History",
+        "subtitle": "Patient:",
+        "secciones": "Sections",
+        "sections": {
+            "antecedentes": "Background",
+            "entrenamiento": "Training",
+            "objetivos": "Goals",
+            "nivel": "Competitive Level",
+            "antropometria": "Sports Anthropometry"
+        },
+        "background": {
+            "title": "Background",
+            "gender": "Gender",
+            "birthdate": "Birthdate",
+            "label": "Relevant sports / clinical history",
+            "placeholder": "e.g., Athlete since age 8, history of knee injury..."
+        },
+        "training": {
+            "title": "Training",
+            "disciplines": "Sport disciplines",
+            "loading": "Loading disciplines...",
+            "met": "MET",
+            "minutes": "Minutes per session",
+            "days": "Days per week",
+            "sessions": "Sessions per day",
+            "search": "Search training...",
+            "selected_group": "Selected",
+            "no_results": "No results for your search."
+        },
+        "goals": {
+            "title": "Goals",
+            "custom_placeholder": "Write a custom goal...",
+            "add": "Add",
+            "remove": "Remove goal",
+            "options": {
+                "performance": "Improve sports performance",
+                "muscle": "Build muscle mass",
+                "fat_loss": "Reduce body fat",
+                "injury": "Injury prevention",
+                "recovery": "Recovery / rest",
+                "wellness": "Overall health and wellness"
+            }
+        },
+        "competition": {
+            "title": "Competitive Level",
+            "label": "Competition level",
+            "placeholder": "Select a level...",
+            "other": "Other",
+            "custom_label": "Custom level",
+            "custom_placeholder": "e.g., Semi-professional",
+            "options": {
+                "recreativo": "Recreational",
+                "amateur": "Amateur",
+                "competitivo": "Competitive",
+                "profesional": "Professional"
+            }
+        },
+        "anthropometry": {
+            "title": "Anthropometry",
+            "weight": "Weight (kg)",
+            "fat_percentage": "Body fat (%)",
+            "ffm": "Fat-free mass — FFM (kg)",
+            "suggest": "Suggest FFM",
+            "last_measurement": "Latest measurement",
+            "derived": "FFM derived from weight and body fat",
+            "derived_formula": "FFM = weight × (1 − fat/100)",
+            "suggest_hint": "Press “Suggest FFM” to use it.",
+            "missing": "Fill in weight and body fat to auto-suggest the FFM.",
+            "manual_notice": "The manually entered FFM will be used",
+            "manual_differs": "which differs from the derived one",
+            "suggest_toast": "Complete weight and body fat to suggest the FFM.",
+            "placeholders": {
+                "weight": "e.g., 70.5",
+                "fat": "e.g., 18.5",
+                "ffm": "e.g., 57.5"
+            }
+        },
+        "results": {
+            "title": "Estimated Energy Requirement",
+            "cunningham": "Cunningham RMR",
+            "mets": "Sports expenditure (METs)",
+            "total": "Daily total",
+            "kcal_per_day": "kcal/day"
+        },
+        "buttons": {
+            "save": "Save Changes",
+            "delete": "Delete"
+        },
+        "messages": {
+            "saved": "Sports history saved successfully.",
+            "saved_error": "Error saving the sports history.",
+            "deleted": "Sports history deleted.",
+            "delete_confirm": "Delete this sports history?",
+            "delete_error": "Error deleting.",
+            "need_weight_fat": "Enter weight and body fat (or the FFM manually) to calculate."
+        },
+        "validation": {
+            "discipline_required": "You must select at least one discipline",
+            "minutes_positive": "Minutes per session must be greater than 0",
+            "days_integer": "Days per week must be a whole number",
+            "days_min": "You must train at least 1 day per week",
+            "days_max": "Maximum 7 days per week",
+            "sessions_integer": "Sessions per day must be a whole number",
+            "sessions_min": "There must be at least 1 session per day",
+            "weight_positive": "Weight must be greater than 0",
+            "fat_negative": "Body fat percentage cannot be negative",
+            "fat_max": "Body fat percentage cannot exceed 100",
+            "ffm_negative": "Fat-free mass cannot be negative"
+        }
+    },
+    "historia-pediatrica": {
+        "title": "Pediatric History",
+        "subtitle": "Pediatric energy assessment, INN-SISVAN classification and infant formulas.",
+        "sections": {
+            "mediciones": "Measurements",
+            "valoracion": "Energy Assessment",
+            "zonas": "Zone Classification",
+            "lacteas": "Infant Formulas"
+        },
+        "gender": {
+            "label": "Gender",
+            "placeholder": "Select",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "measurements": {
+            "title": "Measurements",
+            "age": "Age (years)",
+            "weight": "Weight (kg)",
+            "height": "Height (cm)",
+            "sitting_height": "Sitting height (cm)",
+            "activity_factor": "Activity factor",
+            "placeholders": {
+                "age": "e.g., 6",
+                "weight": "e.g., 20.5",
+                "height": "e.g., 115",
+                "sitting_height": "e.g., 60"
+            }
+        },
+        "activity_levels": {
+            "sedentary": "Sedentary",
+            "low": "Low",
+            "active": "Moderate",
+            "very_active": "High"
+        },
+        "assessment": {
+            "title": "Energy Assessment",
+            "schofield": "Schofield BMR (kcal)",
+            "schofield_hint_missing": "Complete gender (not OTHER), age and weight.",
+            "schofield_female": "Female Schofield equation",
+            "schofield_male": "Male Schofield equation",
+            "harris_benedict": "Harris-Benedict BMR (kcal)",
+            "harris_benedict_female": "Equation specific for women",
+            "harris_benedict_female_only": "Only available for female patients.",
+            "rct": "RCT (kcal/day)",
+            "rct_with_cost": "BMR × AF + growth cost",
+            "rct_without_cost": "BMR × AF + no growth cost (≥2 years)",
+            "growth_cost": "growth cost",
+            "mirwald": "Mirwald — PHV",
+            "years": "years",
+            "mirwald_passed": "Peak surpassed",
+            "mirwald_upcoming": "Coming up in",
+            "mirwald_to_peak": "years until peak",
+            "mirwald_range_warning": "Age outside validated range (boys 13–15.6, girls 12–14.9 years)."
+        },
+        "zones": {
+            "title": "INN-SISVAN Zone Classification",
+            "chart": "Chart:",
+            "chart_acostado": "Recumbent (<2 years)",
+            "chart_de_pie": "Standing (≥2 years)",
+            "chart_pending": "Complete age to determine chart type",
+            "indicator": "Indicator",
+            "zone": "Classification zone",
+            "reference": "Reference chart",
+            "acostado": "recumbent",
+            "de_pie": "standing",
+            "chart_alt_prefix": "INN-SISVAN chart",
+            "charts": {
+                "PESO_TALLA": "Weight / Height",
+                "PESO_EDAD": "Weight / Age",
+                "TALLA_EDAD": "Height / Age",
+                "IMC_EDAD": "BMI / Age"
+            },
+            "zones": {
+                "DEFICIT_GRAVE": "Severe deficit",
+                "DEFICIT_MODERADO": "Moderate deficit",
+                "DEFICIT_LEVE": "Mild deficit",
+                "RIESGO_DEFICIT": "Deficit risk",
+                "NORMAL": "Normal",
+                "EXCESO_LEVE": "Mild excess",
+                "EXCESO": "Excess",
+                "EXCESO_SEVERO": "Severe excess"
+            }
+        },
+        "chart_types": {
+            "acostado": "Recumbent",
+            "de_pie": "Standing"
+        },
+        "formulas": {
+            "title": "Infant Formulas",
+            "subtitle": "Register and manage infant formulas. Save the pediatric history to enable the list.",
+            "add": "Add Formula",
+            "new": "New Infant Formula",
+            "edit": "Edit Infant Formula",
+            "name": "Name *",
+            "brand": "Brand",
+            "dilution": "Dilution (g / 100 ml)",
+            "kcal": "kcal / 100 ml",
+            "kcal_per_100ml": "kcal / 100 ml",
+            "g_per_100ml": "g / 100 ml",
+            "notes": "Preparation / Notes",
+            "save": "Save",
+            "cancel": "Cancel",
+            "empty": "No infant formulas registered.",
+            "brand_label": "Brand:",
+            "no_history_title": "No pediatric history registered",
+            "no_history_text": "Complete and save the pediatric history to manage infant formulas.",
+            "name_required": "Formula name is required.",
+            "save_first": "Save the pediatric history first.",
+            "updated": "Infant formula updated.",
+            "registered": "Infant formula registered.",
+            "deleted": "Infant formula deleted.",
+            "delete_confirm": "Delete the formula",
+            "load_error": "Could not load the infant formulas.",
+            "save_error": "Error saving the infant formula.",
+            "delete_error": "Error deleting the infant formula.",
+            "placeholders": {
+                "name": "e.g., S26 Gold 1",
+                "brand": "e.g., Sandoz"
+            }
+        },
+        "buttons": {
+            "update": "Update Pediatric History",
+            "save": "Save Pediatric History"
+        },
+        "representative": {
+            "subtitle": "Details of the patient's responsible party (optional).",
+            "name": "Representative name",
+            "name_placeholder": "e.g., María Pérez",
+            "relationship": "Relationship",
+            "relationship_placeholder": "e.g., Mother, Father, Guardian...",
+            "phone": "Phone",
+            "phone_placeholder": "e.g., +54 11 5555-1234",
+            "email": "Email",
+            "email_placeholder": "e.g., maria@example.com"
+        },
+        "messages": {
+            "saved": "Pediatric history saved successfully.",
+            "save_error": "An error occurred while saving the pediatric history."
+        },
+        "validation": {
+            "age_negative": "Age cannot be negative",
+            "age_range": "Age outside pediatric range",
+            "weight_positive": "Weight must be greater than 0",
+            "height_positive": "Height must be greater than 0",
+            "height_max": "Impossible height (maximum 250 cm)",
+            "sitting_height_positive": "Sitting height must be greater than 0",
+            "sitting_height_max": "Impossible height (maximum 250 cm)",
+            "activity_factor_min": "Minimum activity factor 1.2",
+            "activity_factor_max": "Maximum activity factor 2.0",
+            "sitting_vs_height": "Sitting height cannot exceed total height"
+        }
+    }
+}

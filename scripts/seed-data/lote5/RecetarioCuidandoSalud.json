@@ -1,0 +1,8613 @@
+[
+  {
+    "name": "Batido de Yogur y Frutas",
+    "category": "snack",
+    "description": "Un batido refrescante y saludable para cualquier momento del día.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Yogur light",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur bajo en grasa",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Jocoque",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Leche descremada o light",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Leche fácil digestión",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soya",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Frambuesa",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Uvas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Melón",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Fresa rebanadas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Gajos de mandarina",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Gajos de toronja",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pera",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Mango petacón",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Mango manila",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Toronja",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Durazno amarillo",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Higo",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Mandarina",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Tuna",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Tangerina",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Tejocote",
+        "quantity": 75,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salad de Verduras",
+    "category": "cena",
+    "description": "Una ensalada fresca y saludable para cualquier momento del día.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli cocido",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñón cocido entero",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca cocida",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Jícama picada",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Calabaza de castilla cocida",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla blanca rebanada",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ejotes cocidos y picados",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de chile",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria picada cruda",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de tomate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Berro crudo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento fresco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Nopal cocido",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca cruda",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Germen de alfalfa crudo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Flor de calabaza cocida",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Chayote",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate en bola",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Hongo portobello crudo",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Calabacita de castilla cruda",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahorias miniatura",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Espárragos crudos",
+        "quantity": 75,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de sandía con yogurt y almendras",
+    "category": "snack",
+    "description": "Ensalada fresca de sandía con yogurt y almendras.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Sandía",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Omelette de claras a la mexicana con champiñones",
+    "category": "almuerzo",
+    "description": "Omelette de claras de huevo con champiñones y especias.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Claras de huevo",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de plátano y almendras",
+    "category": "snack",
+    "description": "Licuado fresco de plátano y almendras.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Omelette de claras en salsa roja",
+    "category": "almuerzo",
+    "description": "Omelette de claras de huevo en salsa roja.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Claras de huevo",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Papaya con queso",
+    "category": "snack",
+    "description": "Papaya fresca con queso.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Gelatina de frambuesa",
+    "category": "snack",
+    "description": "Gelatina fresca de frambuesa.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Frambuesa",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Manzana con yogurt y nuez",
+    "category": "snack",
+    "description": "Manzana fresca con yogurt y nuez.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Claras de huevo con espinaca y queso panela",
+    "category": "almuerzo",
+    "description": "Claras de huevo con espinaca y queso panela.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Claras de huevo",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Espinaca y Queso",
+    "category": "desayuno",
+    "description": "Batido de espinaca y queso con pan y leche descremada.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Pan",
+        "quantity": 2,
+        "unit": "rebanadas"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Piña con Galletas Marías",
+    "category": "snack",
+    "description": "Piña picada con galletas marías.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Galletas marías",
+        "quantity": 5,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Verduras",
+    "category": "cena",
+    "description": "Sopa de verduras con jitomate, cebolla, ajo, zanahoria, col y calabacita.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Col",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Agua o caldo de pollo",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Consomé de pollo en polvo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo a la Mostaza con Papitas Cambray",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo a la mostaza con papitas cambray.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Papitas de cambray",
+        "quantity": 5,
+        "unit": "piezas"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Perejil",
+        "quantity": "al gusto",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Hierbas finas",
+        "quantity": "al gusto",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": "al gusto",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": "al gusto",
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Melón y Sandía con Queso Panela Asado",
+    "category": "desayuno",
+    "description": "Un delicioso y saludable desayuno con fruta fresca y queso panela asado.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tortilla de Maíz",
+    "category": "almuerzo",
+    "description": "Tortilla de maíz con queso y calabacita.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 105,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Granola con Almendras",
+    "category": "snack",
+    "description": "Granola con almendras y plátanos dominicos.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Granola",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Plátanos dominicos",
+        "quantity": 140,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Crema de Zanahoria",
+    "category": "cena",
+    "description": "Crema de zanahoria con cebolla y pan bolillo.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Pan bolillo",
+        "quantity": 70,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón",
+    "category": "almuerzo",
+    "description": "Salpicón de res con cebolla y aguacate.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Res",
+        "quantity": 105,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 70,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich Vegetariano",
+    "category": "almuerzo",
+    "description": "Un sándwich vegetariano con ingredientes saludables.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Pavo molido",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pera",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Hojuelas de trigo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Jugo de toronja",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Postre de Mango con Nuez y Queso Cottage",
+    "category": "cena",
+    "description": "Un postre saludable con mango, nuez y queso cottage.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ciruelas Pasa y Hojuelas de Trigo con Leche",
+    "category": "desayuno",
+    "description": "Un desayuno saludable con ciruelas pasa y hojuelas de trigo.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Ciruela pasa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Hojuelas de trigo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Colación de Naranja y Galletas",
+    "category": "snack",
+    "description": "Colación ligera con naranja y galletas marías.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Galletas marías",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Lentejas",
+    "category": "cena",
+    "description": "Sopa de lentejas con jitomate y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Lenteja",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua o caldo de pollo",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Consomé de pollo en polvo",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Milanesa de Ternera Empanizada",
+    "category": "almuerzo",
+    "description": "Milanesa de ternera empanizada con tortillas de maíz.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Milanesa de ternera",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 2,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Brócoli al Vapor",
+    "category": "cena",
+    "description": "Brócoli al vapor con chayote.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Chayote",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Brócoli y Pimiento",
+    "category": "cena",
+    "description": "Ensalada de brócoli y pimiento cocidos con aceite de oliva, sal y pimienta.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2.5,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua con Cítricos",
+    "category": "snack",
+    "description": "Agua mezclada con jugos de naranja, limón y toronja.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Agua",
+        "quantity": 400,
+        "unit": "ml"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Toronja",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Sandía y Papaya",
+    "category": "desayuno",
+    "description": "Un delicioso desayuno fresco y saludable.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Sandía",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Ciruelas pasa",
+        "quantity": 3,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Claras de Huevo a la Mexicana",
+    "category": "desayuno",
+    "description": "Un clásico desayuno mexicano con claras de huevo.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate saladet",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Claras de huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan 7 Granos con Crema de Cacahuate",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso con pan 7 granos y crema de cacahuate.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pan 7 granos",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Crema de cacahuate",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Arroz rojo con zanahoria",
+    "category": "cena",
+    "description": "Arroz rojo cocido con zanahoria y mantequilla.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Consomé de pollo en polvo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Hamburguesa de res",
+    "category": "almuerzo",
+    "description": "Hamburguesa de carne molida de res con cebolla y pan molido.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Carne molida de res",
+        "quantity": 105,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de flor de calabaza con verdolagas",
+    "category": "cena",
+    "description": "Ensalada de flor de calabaza con verdolagas y lechuga.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Flor de calabaza",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Verdolagas",
+        "quantity": 1.5,
+        "unit": "tazas"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Agua de limón con hojas de menta",
+    "category": "snack",
+    "description": "Agua de limón con hojas de menta.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "litro"
+      },
+      {
+        "name": "Hojas de menta",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Limón",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos de pollo y acelgas",
+    "category": "cena",
+    "description": "Taquitos de pollo y acelgas, una opción saludable para la cena.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "diente chico"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente chico"
+      },
+      {
+        "name": "Acelgas",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "piezas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Fresas con melón",
+    "category": "cena",
+    "description": "Un plato fresco y saludable para la cena.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Melón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Pasitas",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Mollete de frijol con rajas de poblano",
+    "category": "cena",
+    "description": "Un plato tradicional y saludable para la cena.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles",
+        "quantity": 208,
+        "unit": "g"
+      },
+      {
+        "name": "Poblano",
+        "quantity": 219,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de fresas con vainilla y nuez",
+    "category": "snack",
+    "description": "Licuado refrescante con fresas, vainilla y nuez.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Leche descremada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Fresas rebanadas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez picada",
+        "quantity": 7,
+        "unit": "g"
+      },
+      {
+        "name": "Vainilla",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Pan tostado con crema de cacahuate y mermelada",
+    "category": "snack",
+    "description": "Pan tostado con crema de cacahuate y mermelada.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan tostado blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Crema de cacahuate",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Mermelada reducida en azúcar",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pepinos y almendras",
+    "category": "snack",
+    "description": "Pepinos con limón y chile piquín, acompañados con almendras.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pepino sin cáscara",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Chile piquín",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Caldo de pollo con aguacate",
+    "category": "cena",
+    "description": "Caldo de pollo desgrasado con aguacate.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Caldo de pollo desgrasado",
+        "quantity": 375,
+        "unit": "ml"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Chile serrano picado",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de pescado al pastor",
+    "category": "cena",
+    "description": "Tacos de pescado al pastor con chile guajillo y cebolla.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Filete de mojarra tilapia",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Chile guajillo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado al Horno con Salsa Pastor",
+    "category": "almuerzo",
+    "description": "Pescado al horno con salsa pastor y guarnición de piña y cilantro.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa pastor",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Tortillas",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Calabacitas y Champiñones con Albahaca",
+    "category": "cena",
+    "description": "Calabacitas y champiñones salteados con albahaca y queso mozzarella.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Calabacita larga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 10,
+        "unit": "hojitas"
+      },
+      {
+        "name": "Queso mozzarella",
+        "quantity": 10,
+        "unit": "hojitas"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Jamaica con Rodajas de Limón",
+    "category": "snack",
+    "description": "Agua de jamaica con rodajas de limón.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Flor de jamaica",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 400,
+        "unit": "ml"
+      },
+      {
+        "name": "Rodajas de limón",
+        "quantity": 4,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Gajos de toronja",
+    "category": "snack",
+    "description": "Gajos de toronja con sandía y miel de abeja.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Toronja",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de calabacitas con flor de calabaza, ensalada de atún, verduras cocidas, manzana con canela, agua de jamaica con rodajas de naranja",
+    "category": "comida",
+    "description": "Sopa de calabacitas con flor de calabaza, ensalada de atún, verduras cocidas, manzana con canela y agua de jamaica con rodajas de naranja.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Calabacitas",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Flor de calabaza",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Atún",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras cocidas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Agua de jamaica",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Papa al horno, plátano con yogurt",
+    "category": "cena",
+    "description": "Papa al horno y plátano con yogurt.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de atún con verduras cocidas",
+    "category": "almuerzo",
+    "description": "Una ensalada fresca y saludable con atún y verduras cocidas.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": []
+  },
+  {
+    "name": "Quesadilla poblana",
+    "category": "almuerzo",
+    "description": "Una deliciosa quesadilla poblana con chile poblano y queso Oaxaca.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Chile poblano",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Oaxaca",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Papaya y galletas marías",
+    "category": "snack",
+    "description": "Una colación saludable con papaya y galletas marías.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Galletas marías",
+        "quantity": 5,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de calabacitas con flor de calabaza",
+    "category": "cena",
+    "description": "Una sopa saludable y deliciosa con calabacitas y flor de calabaza.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Calabacita larga",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Flor de calabaza",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Pasta cruda",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 2,
+        "unit": "ramitas"
+      },
+      {
+        "name": "Consomé de pollo en polvo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de atún",
+    "category": "almuerzo",
+    "description": "Ensalada de atún con verduras y mayonesa.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 85,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Verduras cocidas",
+    "category": "cena",
+    "description": "Verduras cocidas con chayote, zanahoria y chícharo.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Chayote",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Chícharo",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Manzana con canela",
+    "category": "snack",
+    "description": "Manzana con canela y hornear en el microondas.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Canela en polvo",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de jamaica con rodajas de naranja",
+    "category": "snack",
+    "description": "Agua de jamaica con rodajas de naranja y edulcorante no calórico.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Flor de jamaica seca",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Rodajas de naranja",
+        "quantity": 2,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Papa al horno",
+    "category": "cena",
+    "description": "Papa al horno con queso parmesano y aceite de oliva.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 3.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebollín",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Plátano con yogurt",
+    "category": "snack",
+    "description": "Plátano con yogurt light y miel de abeja.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Yogurt light",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Granola con almendras",
+        "quantity": 3,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Papaya y hot cakes con plátano",
+    "category": "desayuno",
+    "description": "Papaya y hot cakes con plátano.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Hot cakes",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Hot Cakes con Plátano",
+    "category": "desayuno",
+    "description": "Plato de hot cakes con plátano y miel.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Harina de hot cakes",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Clara de huevo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Colación de Fresas y Sandía",
+    "category": "snack",
+    "description": "Plato de fresas y sandía con pepino y limón.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Limón",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Espinacas",
+    "category": "cena",
+    "description": "Sopa de espinacas con cebolla y ajo.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Pasta de letras",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca cruda",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Carpaccio de betabel con germen de alfalfa",
+    "category": "cena",
+    "description": "Un plato fresco y saludable de betabel y germen de alfalfa.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Betabel",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Germen de alfalfa",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Granos de elote",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Vinagre de vino",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 2,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de pollo al cilantro con queso",
+    "category": "almuerzo",
+    "description": "Un plato sabroso y saludable de pechuga de pollo y queso.",
+    "tags": [
+      "proteico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Queso Oaxaca light",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 2,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Té verde con cítricos",
+    "category": "cena",
+    "description": "Un té refrescante y saludable para después de comer.",
+    "tags": [
+      "digestivo",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Té verde",
+        "quantity": 3,
+        "unit": "bolsitas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1000,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Té Verde con Limón",
+    "category": "cena",
+    "description": "Un refrescante té verde con un toque de limón.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Té verde",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos Dorados de Requesón",
+    "category": "cena",
+    "description": "Deliciosos taquitos rellenos de requesón y epazote, servidos con una salsa pico de gallo y guarnición de lechuga y zanahoria.",
+    "tags": [
+      "bajo-ig",
+      "sin-gluten"
+    ],
+    "foods": [
+      {
+        "name": "Requesón",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Epazote",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 4,
+        "unit": "piezas"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 6,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Salsa pico de gallo",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Gelatina de Naranja Light con Melón y Granola",
+    "category": "cena",
+    "description": "Una deliciosa gelatina de naranja light servida con melón y granola con almendras.",
+    "tags": [
+      "bajo-ig",
+      "sin-gluten"
+    ],
+    "foods": [
+      {
+        "name": "Gelatina de naranja",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Melón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Granola con almendras",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de manzana con queso cottage",
+    "category": "desayuno",
+    "description": "Sándwich saludable con manzana y queso cottage",
+    "tags": [
+      "bajo-grasa",
+      "bajo-colesterol"
+    ],
+    "foods": [
+      {
+        "name": "Queso cottage",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Naranjas con cacahuates",
+    "category": "snack",
+    "description": "Fruta fresca con cacahuates saludables",
+    "tags": [
+      "bajo-grasa",
+      "bajo-colesterol"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cacahuates",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti a las finas hierbas",
+    "category": "cena",
+    "description": "Espagueti saludable con hierbas finas",
+    "tags": [
+      "bajo-grasa",
+      "bajo-colesterol"
+    ],
+    "foods": [
+      {
+        "name": "Espagueti",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Hierbas finas",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 2,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Picadillo de pollo con verduras",
+    "category": "cena",
+    "description": "Picadillo saludable con pollo y verduras",
+    "tags": [
+      "bajo-grasa",
+      "bajo-colesterol"
+    ],
+    "foods": [
+      {
+        "name": "Pollo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Jitomate con Pollo",
+    "category": "cena",
+    "description": "Una sopa saludable y deliciosa hecha con jitomate y pollo.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Sal",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Carne molida de pollo",
+        "quantity": 45,
+        "unit": "g"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Pimientos Asados",
+    "category": "cena",
+    "description": "Pimientos asados con un toque de sal y pimienta.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pimiento verde",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Limón",
+    "category": "snack",
+    "description": "Un refresco saludable y refrescante hecho con jugo de limón y agua.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Edulcorante calórico",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Sandía con Yogur y Almendras",
+    "category": "cena",
+    "description": "Una ensalada saludable y deliciosa hecha con sandía, yogurt y almendras.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Sandía",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Yogurt natural",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Yogur con Amaranto y Frutas",
+    "category": "desayuno",
+    "description": "Batido saludable con yogurt, amaranto y frutas frescas.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Yogur griego",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 10,
+        "unit": "piezas"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de Jícama Rellenos de Verduras",
+    "category": "cena",
+    "description": "Tacos saludables rellenos de verduras frescas y jícama.",
+    "tags": [
+      "vegetariano",
+      "alto-fibra",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Acelgas",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Fresas con Naranja y Almendras",
+    "category": "snack",
+    "description": "Merienda saludable con fresas, naranja y almendras.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 10,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Poro y Zanahoria",
+    "category": "cena",
+    "description": "Sopa saludable y baja en grasa saturada y colesterol.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Cebolla",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Poro",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Caldo de pollo desgrasado",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Atún a la Mexicana",
+    "category": "almuerzo",
+    "description": "Atún fresco y saludable con una mezcla de sabores.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Atún de lata",
+        "quantity": 82,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Aceitunas negras",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Chiles serrano",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 57,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Puré de Papa",
+    "category": "cena",
+    "description": "Puré de papa saludable y cremoso.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Papa mediana",
+        "quantity": 57,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla sin sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Hierbabuena con Limón",
+    "category": "snack",
+    "description": "Agua fresca con hierbabuena y limón.",
+    "tags": [
+      "digestivo",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Hierbabuena",
+        "quantity": 10,
+        "unit": "piezas"
+      },
+      {
+        "name": "Limón",
+        "quantity": 10,
+        "unit": "piezas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Gelatina de Durazno",
+    "category": "snack",
+    "description": "Gelatina de durazno sin azúcar.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Gelatina de durazno sin azúcar",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Duraznos",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Manzana",
+    "category": "desayuno",
+    "description": "Licuado refrescante de manzana y amaranto.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Manzana roja",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar mascabado",
+        "quantity": 12,
+        "unit": "g"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Vainilla",
+        "quantity": 6,
+        "unit": "g"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Agua natural",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Toronja y Pepitas",
+    "category": "snack",
+    "description": "Plato fresco de toronja y pepitas.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Toronja",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Pepitas con cáscara",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Zanahoria",
+    "category": "cena",
+    "description": "Sopa cremosa de zanahoria y cilantro.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria cruda",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Agua o caldo de pollo",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Muslo de pollo en salsa verde con espinaca",
+    "category": "cena",
+    "description": "Pollo cocido en salsa verde con espinaca",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Muslo de pollo",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 113,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa verde",
+        "quantity": 113,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo integral",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Frijoles de la olla",
+    "category": "cena",
+    "description": "Frijoles cocidos con epazote",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Frijoles",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Hojas de epazote",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Chayotes rellenos de atún y queso panela",
+    "category": "cena",
+    "description": "Chayotes rellenos de atún y queso panela",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Chayote",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate saladet",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Tacos de lechuga con pollo y hongos",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso con lechuga, pollo y hongos.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Hongos",
+        "quantity": 66,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 256,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopes con frijoles",
+    "category": "almuerzo",
+    "description": "Un plato tradicional mexicano con sopes y frijoles.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Sopes",
+        "quantity": 2,
+        "unit": "piezas"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 199,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Coditos con Queso y Verduras",
+    "category": "cena",
+    "description": "Un plato de pasta con queso y verduras salteadas.",
+    "tags": [
+      "bajo-grasa",
+      "bajo-cholesterol"
+    ],
+    "foods": [
+      {
+        "name": "Coditos",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Queso parmesano",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado Empapelado",
+    "category": "cena",
+    "description": "Un plato de pescado con salsa inglesa y cilantro.",
+    "tags": [
+      "bajo-grasa",
+      "bajo-cholesterol"
+    ],
+    "foods": [
+      {
+        "name": "Filete de pescado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Salsa inglesa",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado al Horno con Tortillas",
+    "category": "cena",
+    "description": "Pescado marinado y horneado con tortillas.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Salsa inglesa",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Tortillas",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Jitomate con Aguacate",
+    "category": "cena",
+    "description": "Ensalada de jitomate, aguacate y lechuga.",
+    "tags": [
+      "alto-fibra",
+      "bajo-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga romana",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceitunas negras",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Manzana con Canela",
+    "category": "snack",
+    "description": "Agua de manzana con canela y edulcorante.",
+    "tags": [
+      "bajo-calor",
+      "bajo-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Canela en polvo",
+        "quantity": 4,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": 4,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Papaya",
+    "category": "desayuno",
+    "description": "Fruta fresca de papaya.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Pera y piña con pistaches",
+    "category": "snack",
+    "description": "Colación saludable con pera, piña y pistaches.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pera",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pistaches sin sal",
+        "quantity": 84,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de frijol",
+    "category": "cena",
+    "description": "Sopa nutritiva con frijoles, jitomate y cilantro.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijol cocido",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1200,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Sal de ajo",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro picado",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo al ajillo",
+    "category": "almuerzo",
+    "description": "Pollo a la plancha con ajo y orégano.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Chile guajillo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo integral",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Bolillo Integral",
+    "category": "cena",
+    "description": "Pollo a la plancha acompañado de bolillo integral.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo integral",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Toronja",
+    "category": "cena",
+    "description": "Ensalada de espinaca, cebolla y toronja.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla morada",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Gajos de toronja",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Vinagre de manzana",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Orégano seco",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Menta con Fresas",
+    "category": "snack",
+    "description": "Agua de menta con fresas.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Hojas de menta",
+        "quantity": 20,
+        "unit": "piezas"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 4,
+        "unit": "tazas"
+      }
+    ]
+  },
+  {
+    "name": "Rollitos de Col Rellenos de Queso",
+    "category": "cena",
+    "description": "Rollitos de col rellenos de queso.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Hojas de col",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Arroz cocido al vapor",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso panela picado",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Vinagre blanco",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Salsa inglesa",
+    "category": "cena",
+    "description": "Salsa para acompañar los rollos de col.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Apio",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Chile morrón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Puré de jitomate",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Hierbas aromáticas",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Fruta con yogurt y amaranto",
+    "category": "desayuno",
+    "description": "Combinación de fruta fresca con yogurt y amaranto.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Yogurt natural",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 0.75,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Manzana y Almendras",
+    "category": "snack",
+    "description": "Un delicioso batido de manzana y almendras.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arándanos deshidratados con almendras",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Ejotes con Elote",
+    "category": "cena",
+    "description": "Una sopa saludable y deliciosa de ejotes y elote.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes",
+        "quantity": 32,
+        "unit": "g"
+      },
+      {
+        "name": "Elote blanco",
+        "quantity": 32,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Caldo de pollo desgrasado",
+        "quantity": 500,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Carne de Cerdo al Chipotle",
+    "category": "almuerzo",
+    "description": "Una carne de cerdo deliciosa y picante.",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Chile chipotle",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Pierna de cerdo",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 20,
+        "unit": "ml"
+      },
+      {
+        "name": "Pimienta molida",
+        "quantity": 2,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Frijoles de la olla",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Salsa de Jitomate",
+    "category": "cena",
+    "description": "Pollo a la plancha con salsa de jitomate y acompañado de frijoles y tortillas.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Chile",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Calabacita Rellena",
+    "category": "cena",
+    "description": "Calabacita rellena con queso panela y brócoli.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Calabacita",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Té Verde con Jamaica",
+    "category": "snack",
+    "description": "Té verde con jamaica y edulcorante no calórico.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Té verde",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Flor de jamaica seca",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Limón",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": 2,
+        "unit": "bolsitas"
+      }
+    ]
+  },
+  {
+    "name": "Picadillo Vegetariano",
+    "category": "cena",
+    "description": "Picadillo vegetariano con jícama, zanahoria, papa y queso panela.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Papa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Vinagreta comercial baja en grasa",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Pan árabe",
+        "quantity": 0.5,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Papaya con queso, gelatina de frambuesa",
+    "category": "snack",
+    "description": "Papaya fresca con queso panela y gelatina de frambuesa.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Queso panela picado",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Galletas integrales",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Papaya picada",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Gelatina de frambuesa",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Sopa Poblana de Fideo",
+    "category": "cena",
+    "description": "Sopa cremosa de fideo y jitomate.",
+    "tags": [
+      "bajo-grasa",
+      "bajo-cholesterol"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Fideo delgado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Chile poblano",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 6,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 3,
+        "unit": "hojitas"
+      }
+    ]
+  },
+  {
+    "name": "Pescado Relleno de Verduras",
+    "category": "cena",
+    "description": "Pescado blanco relleno de brócoli y chayote.",
+    "tags": [
+      "bajo-grasa",
+      "bajo-cholesterol"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli cocido",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Chayote cocido",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Crema baja en grasa",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Filete de pescado blanco",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 6,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 6,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Pescado con Brócoli y Chayote",
+    "category": "cena",
+    "description": "Pescado con brócoli y chayote en una salsa cremosa.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Chayote",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Papitas Cambray",
+    "category": "snack",
+    "description": "Papitas rebanadas y doradas con perejil y pimienta.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Té de Frutos Rojos",
+    "category": "cena",
+    "description": "Té de frutos rojos con agua y azúcar",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Té de frutos rojos",
+        "quantity": 2,
+        "unit": "sobres"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Azúcar",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Flor de Calabaza Rellena de Champiñones",
+    "category": "cena",
+    "description": "Flor de calabaza rellena de champiñones en salsa guajillo.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Flor de calabaza",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Lasaña con queso y verduras",
+    "category": "cena",
+    "description": "Lasaña con queso y verduras",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Queso",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de apio con pollo",
+    "category": "cena",
+    "description": "Sopa ligera y saludable con pollo y apio.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Apio",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 0.125,
+        "unit": "pieza"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "pieza"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Lasaña de queso y verduras",
+    "category": "cena",
+    "description": "Lasaña saludable con queso y verduras.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pasta para lasaña",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo en polvo",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Puré de tomate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 0.25,
+        "unit": "pieza"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Oaxaca light",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de piña y aguacate",
+    "category": "snack",
+    "description": "Ensalada fresca y saludable con piña y aguacate.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Vinagre balsámico",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Orégano seco",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de plátano",
+    "category": "desayuno",
+    "description": "Licuado de plátano",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Piña y sandía con queso crema",
+    "category": "desayuno",
+    "description": "Piña y sandía con queso crema",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Sandía",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pizza con champiñones",
+    "category": "almuerzo",
+    "description": "Pizza con champiñones",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles en bola, cocidos",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela, en rebanadas",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate saladet picado",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Orégano, seco",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de berros",
+    "category": "cena",
+    "description": "Ensalada de berros",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Berros",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Claras de huevo con espinacas",
+    "category": "almuerzo",
+    "description": "Claras de huevo con espinacas",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Espinacas",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Caldo de pollo",
+    "category": "cena",
+    "description": "Caldo de pollo",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de mamey",
+    "category": "desayuno",
+    "description": "Licuado de mamey",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Mamey",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan con crema de cacahuate",
+    "category": "almuerzo",
+    "description": "Pan con crema de cacahuate",
+    "tags": [
+      "bajo-en-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Crema de cacahuate",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Batido de Naranja con Pan y Queso",
+    "category": "snack",
+    "description": "Batido saludable con naranja, pan y queso crema.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Jugo de naranja",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Berros con Nuez y Mango",
+    "category": "cena",
+    "description": "Ensalada fresca con berros, nuez y mango.",
+    "tags": [
+      "alto-fibra",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Berros",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Mango",
+        "quantity": 75,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pizza con Champiñones y Puré de Tomate",
+    "category": "cena",
+    "description": "Pizza saludable con champiñones y puré de tomate.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Paninas",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Puré de tomate",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Té Negro o Verde",
+    "category": "snack",
+    "description": "Bebida refrescante hecha con té negro o verde.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Té negro o verde",
+        "quantity": 2,
+        "unit": "bolsitas"
+      }
+    ]
+  },
+  {
+    "name": "Pan con Crema de Cacahuate y Mermelada",
+    "category": "desayuno",
+    "description": "Pan bajo en calorías untado con crema de cacahuate y mermelada reducida en azúcar.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Crema de cacahuate",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Mermelada",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Pepinos y Manzana con Granola",
+    "category": "snack",
+    "description": "Pepinos y manzana con granola y yogur light.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pepinos",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Granola",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Yogur light",
+        "quantity": 90,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón de Falda de Res",
+    "category": "cena",
+    "description": "Un salpicón fresco y saludable con falda de res, cebolla, cilantro y vinagre.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Falda de res cocida",
+        "quantity": 105,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Cilantro picado",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Jitomate saladet",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Rábano en rodajas",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Lechuga rebanada",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Rajas de chile jalapeño",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Pan blanco bajo en calorías",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Arroz al Vapor",
+    "category": "cena",
+    "description": "Un arroz al vapor saludable y delicioso.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Arroz crudo",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Salsa de soya",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Sandía",
+    "category": "snack",
+    "description": "Una sandía fresca y saludable.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Sandía picada",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Agua de limón con hierbabuena",
+    "category": "cena",
+    "description": "Un refrescante licuado de limón y hierbabuena.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Agua",
+        "quantity": 1000,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 4,
+        "unit": "piezas"
+      },
+      {
+        "name": "Hierbabuena",
+        "quantity": 2,
+        "unit": "ramitas"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de pera",
+    "category": "cena",
+    "description": "Un delicioso licuado de pera y miel.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Pera",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Quesadilla de flor de calabaza",
+    "category": "almuerzo",
+    "description": "Una deliciosa quesadilla de flor de calabaza y cebolla.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 2,
+        "unit": "piezas"
+      },
+      {
+        "name": "Flor de calabaza",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Media crema",
+    "category": "cena",
+    "description": "Una deliciosa crema para acompañar la quesadilla.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Media crema",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Licuado Verde",
+    "category": "desayuno",
+    "description": "Licuado verde con espinaca, limón y apio.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 5,
+        "unit": "ml"
+      },
+      {
+        "name": "Apio",
+        "quantity": 107,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Hojuelas de Trigo con Manzana",
+    "category": "desayuno",
+    "description": "Hojuelas de trigo con manzana y leche descremada.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Hojuelas de trigo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Galletas Marías con Cajeta",
+    "category": "snack",
+    "description": "Galletas marías con cajeta.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Galletas marías",
+        "quantity": 5,
+        "unit": "piezas"
+      },
+      {
+        "name": "Cajeta",
+        "quantity": 1.5,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Milanesa de Ternera",
+    "category": "almuerzo",
+    "description": "Milanesa de ternera.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Ternera",
+        "quantity": 107,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Milanesa de Ternera con Papitas",
+    "category": "almuerzo",
+    "description": "Milanesa de ternera con papitas cocidas y pan blanco.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Ternera",
+        "quantity": 105,
+        "unit": "g"
+      },
+      {
+        "name": "Papitas",
+        "quantity": 70,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Pepino",
+    "category": "cena",
+    "description": "Ensalada de pepino con aceitunas y jitomate.",
+    "tags": [
+      "digestivo",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pepino",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 7.5,
+        "unit": "ml"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 7.5,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Postre de Mango con Nuez",
+    "category": "postre",
+    "description": "Postre de mango con nuez y miel.",
+    "tags": [
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de piña",
+    "category": "cena",
+    "description": "Licuado refrescante de piña.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1000,
+        "unit": "ml"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado exótico",
+    "category": "desayuno",
+    "description": "Licuado refrescante.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1000,
+        "unit": "ml"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan tostado con mantequilla y mermelada",
+    "category": "desayuno",
+    "description": "Pan tostado con mantequilla y mermelada.",
+    "tags": [
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Mermelada",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Plátano con granola y almendras",
+    "category": "snack",
+    "description": "Plátano con granola y almendras.",
+    "tags": [
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Rollitos de pechuga de pavo con aguacate",
+    "category": "almuerzo",
+    "description": "Rollitos de pechuga de pavo con aguacate.",
+    "tags": [
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pavo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti con acelgas y queso",
+    "category": "cena",
+    "description": "Espagueti con acelgas y queso.",
+    "tags": [
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Espagueti",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Acelgas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Plátano y granola con almendras",
+    "category": "desayuno",
+    "description": "Plátano y granola con almendras y miel de abeja.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Granola con almendras",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Limón con Menta",
+    "category": "cena",
+    "description": "Un refrescante licuado de limón y menta.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Jugo de naranja",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 0.33,
+        "unit": "taza"
+      },
+      {
+        "name": "Menta",
+        "quantity": 1,
+        "unit": "sobre"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Fresas",
+    "category": "desayuno",
+    "description": "Un refrescante licuado de fresas.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 8,
+        "unit": "piezas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Pepinos y Mango",
+    "category": "snack",
+    "description": "Un snack saludable y refrescante de pepinos y mango.",
+    "tags": [
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pepinos",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Mango",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Caldo de Pollo con Arroz y Aguacate",
+    "category": "almuerzo",
+    "description": "Un plato sabroso y saludable de caldo de pollo con arroz y aguacate.",
+    "tags": [
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Caldo de pollo",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Arroz",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Pescado con Crema al Ajo Rostizado",
+    "category": "almuerzo",
+    "description": "Un plato sabroso y saludable de pescado con crema al ajo rostizado.",
+    "tags": [
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pescado",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Crema",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos de Champiñones y Flor de Calabaza",
+    "category": "cena",
+    "description": "Un plato sabroso y saludable de taquitos de champiñones y flor de calabaza.",
+    "tags": [
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Flor de calabaza",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Nieve de Limón",
+    "category": "cena",
+    "description": "Un refrescante licuado de limón.",
+    "tags": [
+      "hipocalorico",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Muffin bajo en azúcar y grasa con mermelada",
+    "category": "snack",
+    "description": "Muffin bajo en azúcar y grasa acompañado de mermelada",
+    "tags": [
+      "bajo-en-azúcar",
+      "bajo-en-grasa"
+    ],
+    "foods": [
+      {
+        "name": "Mermelada",
+        "quantity": 3,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Huevo tibio",
+    "category": "desayuno",
+    "description": "Huevo tibio sin cáscara",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Pescado al Horno con Crema de Ajo y Aceitunas",
+    "category": "cena",
+    "description": "Pescado al horno con crema de ajo y aceitunas",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 119,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 2,
+        "unit": "dientes"
+      },
+      {
+        "name": "Aceitunas",
+        "quantity": 4,
+        "unit": "piezas"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 4,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Lechuga con Pera",
+    "category": "cena",
+    "description": "Ensalada de lechuga con pera",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 1.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": "al gusto"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Mostaza",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pera",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Cacahuate",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Jitomate saladet",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Bolillo",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Jamaica con Rodajas de Limón y Sandía",
+    "category": "snack",
+    "description": "Agua de jamaica con rodajas de limón y sandía",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Flor de jamaica",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "taza"
+      },
+      {
+        "name": "Edulcorante",
+        "quantity": "al gusto"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Mamey, Hojuelas de Trigo con Leche",
+    "category": "desayuno",
+    "description": "Licuado de mamey con hojuelas de trigo y leche.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Mamey",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Hojuelas de trigo",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Leche",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Colación: Papaya, Galletas Marías",
+    "category": "snack",
+    "description": "Papaya y galletas marías.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Galletas marías",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Comida: Sopa de Flor de Calabaza, Tostadas de Sardinas, Zanahorias con Mantequilla y Perejil, Melón con Nieve de Limón, Agua de Té de Frutos Rojos",
+    "category": "almuerzo",
+    "description": "Sopa de flor de calabaza, tostadas de sardinas, zanahorias con mantequilla y perejil, melón con nieve de limón y agua de té de frutos rojos.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Flor de calabaza",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Sardinas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Zanahorias",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Melón",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Nieve de limón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua de té de frutos rojos",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Cena: Licuado de Plátano, Papa al Horno, Ensalada de Lechuga con Berro",
+    "category": "cena",
+    "description": "Licuado de plátano, papa al horno y ensalada de lechuga con berro.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Papa",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Berro",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Hojuelas de trigo con leche",
+    "category": "desayuno",
+    "description": "Hojuelas de trigo con leche descremada.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Hojuelas de trigo",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de flor de calabaza",
+    "category": "cena",
+    "description": "Sopa de flor de calabaza con aceite de canola y cebolla.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 0.5,
+        "unit": "diente"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Sardinas",
+    "category": "snack",
+    "description": "Tostadas saludables con sardinas y mayonesa",
+    "tags": [
+      "bajo-ig",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Sardinas en aceite",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Zanahorias con Mantequilla y Perejil",
+    "category": "cena",
+    "description": "Zanahorias rehogadas con mantequilla y perejil",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Consomé de pollo en polvo",
+        "quantity": 2.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Melón con Nieve de Limón",
+    "category": "snack",
+    "description": "Melón fresco con nieve de limón",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nieve de limón",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de lechuga, berro con nuez",
+    "category": "cena",
+    "description": "Plato fresco y saludable.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Berro",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de soya",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 0,
+        "unit": "g"
+      },
+      {
+        "name": "Nuez",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 0,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Papaya",
+    "category": "desayuno",
+    "description": "Licuado refrescante con papaya y néctar de mango.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papaya",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Néctar de mango",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 120,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Hot cakes con manzana",
+    "category": "desayuno",
+    "description": "Hot cakes crujientes con manzana rallada y miel de maple.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Harina de hot cakes",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Clara de huevo",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla sin sal",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Leche descremada",
+        "quantity": 60,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana rallada cocida",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de maple",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Hot Cakes de Manzana",
+    "category": "desayuno",
+    "description": "Hot cakes con manzana rallada y miel.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Harina de hot cakes",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sandía con Almendras",
+    "category": "snack",
+    "description": "Sandía picada con almendras.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Sandía",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Champiñones",
+    "category": "cena",
+    "description": "Sopa de champiñones con crema.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Tomillo",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Consomé de pollo",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Crema",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Fajitas de Pollo",
+    "category": "almuerzo",
+    "description": "Fajitas de pollo con pimiento rojo.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento rojo",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Orégano molido",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Tortillas",
+    "category": "almuerzo",
+    "description": "Pollo a la plancha con tortillas.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Tortillas",
+        "quantity": 2,
+        "unit": "piezas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Orégano molido",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Jitomate",
+    "category": "cena",
+    "description": "Ensalada de jitomate con berros.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Berros",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de jícama y zanahoria",
+    "category": "snack",
+    "description": "Una ensalada fresca y saludable con jícama, zanahoria y aguacate.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Jícama",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla morada",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Vinagre",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Mayonesa",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ralladura de limón",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de soya",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Coctel de frutas con queso cottage",
+    "category": "cena",
+    "description": "Un coctel fresco y saludable con frutas y queso cottage.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Frutas variadas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan francés con manzana",
+    "category": "desayuno",
+    "description": "Un pan francés relleno de manzana y espolvoreado con canela y azúcar.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Clara de huevo",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Azúcar mascabado",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Canela en polvo",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Vainilla",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Melón, gelatina de limón",
+    "category": "snack",
+    "description": "Un melón fresco acompañado de gelatina de limón.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Melón picado",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Gelatina de limón",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti a la albahaca",
+    "category": "almuerzo",
+    "description": "Un espagueti fresco con albahaca y queso panela.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo picado",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Espagueti cocido al dente",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca seca o fresca picada",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela rallado",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo con verduras en salsa de jitomate",
+    "category": "almuerzo",
+    "description": "Un pollo fresco con verduras y salsa de jitomate.",
+    "tags": [
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate saladet",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pechuga de pollo sin piel desehebrada",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro picado",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 0.25,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria picada",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate hass",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Calabacitas asadas",
+    "category": "cena",
+    "description": "Calabacitas asadas con cebolla y pimienta.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Calabacitas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Té verde con menta",
+    "category": "snack",
+    "description": "Té verde con menta y edulcorante no calórico.",
+    "tags": [
+      "digestivo",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Té verde",
+        "quantity": 2,
+        "unit": "bolsitas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Hojas de menta",
+        "quantity": 1,
+        "unit": "g"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": 1,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas con champiñones",
+    "category": "almuerzo",
+    "description": "Quesadillas con champiñones y tortilla de maíz",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 1.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Champiñones crudos",
+        "quantity": 1.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 0.75,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 0.75,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de naranja y ceviche de surimi con pepino",
+    "category": "cena",
+    "description": "Licuado de naranja con ceviche de surimi y pepino",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Surimi",
+        "quantity": 1,
+        "unit": "sobre"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Atún a la veracruzana, papa al horno",
+    "category": "almuerzo",
+    "description": "Atún a la veracruzana con papa al horno",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 1,
+        "unit": "sobre"
+      },
+      {
+        "name": "Papa",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Crema de apio y poro",
+    "category": "cena",
+    "description": "Sopa cremosa de apio y poro.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo picado",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Apio cortado",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Poro en rebanadas",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Agua o caldo de pollo",
+        "quantity": 10,
+        "unit": "ml"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Atún a la veracruzana",
+    "category": "almuerzo",
+    "description": "Atún con jitomate, cebolla y perejil.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla picada",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 10,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Atún de lata",
+    "category": "almuerzo",
+    "description": "Atún con aceitunas y chiles güeros.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Atún de lata",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceitunas verdes",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Chiles güeros",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Laurel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ceviche de surimi con pepino",
+    "category": "cena",
+    "description": "Un ceviche fresco y saludable con surimi y pepino.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Salsa de soya",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pico de gallo",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Surimi",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Tostadas",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de naranja",
+    "category": "cena",
+    "description": "Un licuado fresco y saludable con naranja y agua.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Jugo de naranja",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Agua con naranja y toronja",
+    "category": "snack",
+    "description": "Un refresco fresco y saludable con naranja y toronja.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico",
+      "rapido",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 4,
+        "unit": "rodajas"
+      },
+      {
+        "name": "Toronja",
+        "quantity": 4,
+        "unit": "rodajas"
+      }
+    ]
+  },
+  {
+    "name": "Pan tostado con mermelada de frambuesa",
+    "category": "desayuno",
+    "description": "Pan tostado con mermelada de frambuesa.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Margarina",
+        "quantity": 2.5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Mermelada de frambuesa",
+        "quantity": 5,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Gelatina de Naranja con Toronja",
+    "category": "snack",
+    "description": "Un refrescante plato de gelatina de naranja con toronja.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Gelatina de naranja light",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Toronja",
+        "quantity": 2,
+        "unit": "tazas"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Pimiento",
+    "category": "cena",
+    "description": "Una deliciosa sopa de pimiento con verduras frescas.",
+    "tags": [
+      "anti-inflamatorio",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Pimiento rojo",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Agua o caldo de pollo",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo con Verdolagas",
+    "category": "cena",
+    "description": "Un delicioso plato de pechuga de pollo con verdolagas frescas.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "diente"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Verdolagas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pollo a la Plancha con Verduras",
+    "category": "cena",
+    "description": "Pollo asado con verdolagas y acompañado de tortilla y chile.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Verdolagas",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Chile",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de Chayote",
+    "category": "cena",
+    "description": "Ensalada de chayote con aceite de oliva, cebolla, ajo, queso panela y salsa inglesa.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Chayote",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa inglesa",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pan árabe",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Kiwi y Pan con Queso",
+    "category": "desayuno",
+    "description": "Licuado de kiwi con pan y queso.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Kiwi",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pan",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Queso",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Melón con Gelatina de Fresa y Almendras",
+    "category": "snack",
+    "description": "Melón con gelatina de fresa y almendras.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Gelatina de fresa",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti con Verduras y Pescado a la Plancha",
+    "category": "almuerzo",
+    "description": "Espagueti con verduras y pescado a la plancha.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espagueti",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pescado",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Griega con Té Verde y Naranja",
+    "category": "almuerzo",
+    "description": "Ensalada griega con té verde y naranja.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Ensalada griega",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Té verde",
+        "quantity": 20,
+        "unit": "ml"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Piña con Pan Árabe y Aguacate y Champiñones",
+    "category": "cena",
+    "description": "Licuado de piña con pan árabe, aguacate y champiñones.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Piña",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pan árabe",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Kiwi",
+    "category": "desayuno",
+    "description": "Licuado refrescante con kiwi y agua.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Kiwi",
+        "quantity": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Néctar de mango",
+        "quantity": 60,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Pan con Queso",
+    "category": "almuerzo",
+    "description": "Pan tostado con queso panela y salsa verde.",
+    "tags": [
+      "bajo-ig",
+      "sin-gluten"
+    ],
+    "foods": [
+      {
+        "name": "Pan blanco",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa verde",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Espagueti con Verduras",
+    "category": "almuerzo",
+    "description": "Espagueti cocido con verduras y especias.",
+    "tags": [
+      "hipocalorico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Espagueti",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Calabacita",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 5,
+        "unit": "g"
+      },
+      {
+        "name": "Albahaca",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pescado a la plancha",
+    "category": "almuerzo",
+    "description": "Pescado a la plancha con jugo de limón y salsa inglesa",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Filete de mojarra tilapia",
+        "quantity": 75,
+        "unit": "g"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Salsa inglesa",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada griega",
+    "category": "almuerzo",
+    "description": "Ensalada griega con lechuga, jitomate y queso de cabra",
+    "tags": [
+      "alto-fibra",
+      "bajo-grasas"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga romana",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jitomate saladet",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceitunas negras",
+        "quantity": 4,
+        "unit": "piezas"
+      },
+      {
+        "name": "Cebolla morada",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Queso de cabra",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Vinagre balsámico",
+        "quantity": 1,
+        "unit": "cucharada"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Té verde con naranja",
+    "category": "snack",
+    "description": "Un refrescante té verde con rodajas de naranja.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Té verde",
+        "quantity": 2,
+        "unit": "bolsitas"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 4,
+        "unit": "rodajas"
+      }
+    ]
+  },
+  {
+    "name": "Pan árabe con aguacate y champiñones",
+    "category": "almuerzo",
+    "description": "Un saboroso pan árabe relleno de aguacate y champiñones.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Pan árabe",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Champiñones cocidos",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Claras de Huevo con Calabacitas y Pan Árabe",
+    "category": "almuerzo",
+    "description": "Plato saludable de claras de huevo con calabacitas y pan árabe.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Calabacita de castilla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Chile jalapeño",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Claras de huevo",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pan árabe",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Piña con Gelatina de Durazno y Pistaches",
+    "category": "snack",
+    "description": "Colación saludable de piña con gelatina de durazno y pistaches.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Gelatina de durazno",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 84,
+        "unit": "g"
+      },
+      {
+        "name": "Pistaches sin sal",
+        "quantity": 3,
+        "unit": "piezas"
+      }
+    ]
+  },
+  {
+    "name": "Pollo al pibil",
+    "category": "almuerzo",
+    "description": "Pollo marinado en una salsa de chile ancho y achiote.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Chile ancho",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Achiote",
+        "quantity": 3,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 1,
+        "unit": "mediana"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 5,
+        "unit": "gotitas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Orégano",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Agua",
+        "quantity": 120,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 3,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de cebolla morada y naranja",
+    "category": "cena",
+    "description": "Ensalada de cebolla morada y naranja con aceite de oliva.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla morada",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Gajos de naranja",
+        "quantity": 1,
+        "unit": "mediana"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de pimiento con queso",
+    "category": "cena",
+    "description": "Una ensalada fresca y saludable con queso panela, pepino y pimiento morrón.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Queso panela",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Pimiento morrón",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Orégano seco",
+        "quantity": 1.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Limón",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Bolillo integral",
+        "quantity": 0.5,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Agua de hierbabuena con pepino",
+    "category": "cena",
+    "description": "Un refresco fresco y saludable con hierbabuena y pepino.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Hierbabuena",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 4,
+        "unit": "rodajas"
+      },
+      {
+        "name": "Edulcorante no calórico",
+        "quantity": "al gusto"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada de lechuga con vinagre de manzana",
+    "category": "cena",
+    "description": "Una ensalada fresca y saludable con lechuga, vinagre de manzana y albahaca.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Vinagre de manzana",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Albahaca seca",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Enchiladas verdes",
+    "category": "desayuno",
+    "description": "Tortilla de maíz con queso cottage y salsa verde",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Queso cottage",
+        "quantity": 0.125,
+        "unit": "taza"
+      },
+      {
+        "name": "Salsa verde",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Durazno y gelatina de uva light",
+    "category": "snack",
+    "description": "Durazno con gelatina de uva light",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Durazno",
+        "quantity": 2,
+        "unit": "piezas"
+      },
+      {
+        "name": "Gelatina de uva light",
+        "quantity": "al gusto",
+        "unit": ""
+      }
+    ]
+  },
+  {
+    "name": "Carne de cerdo en salsa pasilla con verduras",
+    "category": "almuerzo",
+    "description": "Carne de cerdo en salsa pasilla con verduras",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne de cerdo",
+        "quantity": 43,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa pasilla",
+        "quantity": 34,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras",
+        "quantity": 49,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Brócoli y Ejotes con Pimienta y Sal",
+    "category": "cena",
+    "description": "Verduras cocidas con pimienta y sal.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Ejotes",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Jamaica con Cítricos",
+    "category": "snack",
+    "description": "Agua de jamaica con jugo de limón y rodajas de naranja.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Flor de jamaica",
+        "quantity": 166,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 2000,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 125,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Queso Asado a la Mexicana",
+    "category": "cena",
+    "description": "Queso asado con jitomate, cebolla y chile serrano.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "vegetariano"
+    ],
+    "foods": [
+      {
+        "name": "Queso panela",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Chile serrano",
+        "quantity": 0.5,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Entomatadas",
+    "category": "almuerzo",
+    "description": "Tortilla de maíz con queso panela y salsa de jitomate",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 0.5,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Queso panela rallado",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de jitomate casera",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Sandía*",
+    "category": "desayuno",
+    "description": "Sandía picada",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Sandía",
+        "quantity": 1,
+        "unit": "pieza"
+      }
+    ]
+  },
+  {
+    "name": "Melón y gelatina de limón light",
+    "category": "snack",
+    "description": "Un refrescante plato de melón y gelatina de limón light.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Melón",
+        "quantity": 1200,
+        "unit": "g"
+      },
+      {
+        "name": "Gelatina de limón light",
+        "quantity": 1600,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Fideo seco",
+    "category": "almuerzo",
+    "description": "Un plato de fideo seco con jitomate y especias.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Jitomate",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 0.5,
+        "unit": "diente"
+      },
+      {
+        "name": "Agua",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "Fideo delgado",
+        "quantity": 0.25,
+        "unit": "taza"
+      },
+      {
+        "name": "Chile guajillo",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 3,
+        "unit": "hojitas"
+      }
+    ]
+  },
+  {
+    "name": "Pescado en salsa de brócoli",
+    "category": "almuerzo",
+    "description": "Un plato de pescado en salsa de brócoli con crema y especias.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Brócoli cocido",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Crema baja en grasas",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Ajo picado",
+        "quantity": 2.5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Caldo de pollo desgrasado",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Filete de pescado blanco",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 2.5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 0.125,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Pescado al Horno con Brócoli",
+    "category": "cena",
+    "description": "Pescado al horno con brócoli y salsa de crema.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Crema",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Ajo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Caldo",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Betabel con Papitas al Perejil",
+    "category": "cena",
+    "description": "Betabel y papitas cocidas con perejil picado.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Betabel",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Papitas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Perejil",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Agua de Té Negro con Durazno",
+    "category": "cena",
+    "description": "Agua de té negro con durazno y endulzante.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Té negro",
+        "quantity": 2,
+        "unit": "sobres"
+      },
+      {
+        "name": "Agua",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Dulcorante",
+        "quantity": 1,
+        "unit": "cucharada"
+      }
+    ]
+  },
+  {
+    "name": "Néctar de Mango",
+    "category": "cena",
+    "description": "Néctar de mango con agua.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 0.5,
+        "unit": "pieza"
+      },
+      {
+        "name": "Agua",
+        "quantity": 1,
+        "unit": "taza"
+      }
+    ]
+  },
+  {
+    "name": "Tostadas de Champiñones y Aguacate",
+    "category": "snack",
+    "description": "Tostadas de champiñones y aguacate.",
+    "tags": [
+      "bajo-ig",
+      "bajo-grasas",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 1.5,
+        "unit": "tazas"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Pimienta negra",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Sal",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Omelette de Claras con Ejotes",
+    "category": "desayuno",
+    "description": "Omelette ligera con claras de huevo y ejotes picados.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Claras de huevo",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Pimienta negra molida",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite de canola",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Ejotes cocidos picados",
+        "quantity": 1,
+        "unit": "⅛ taza"
+      },
+      {
+        "name": "Pan blanco",
+        "quantity": 1,
+        "unit": "rebanada"
+      }
+    ]
+  },
+  {
+    "name": "Tornillos con Queso y Calabacitas",
+    "category": "cena",
+    "description": "Sopa ligera con tornillos, queso y calabacitas.",
+    "tags": [
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Tornillos",
+        "quantity": 1,
+        "unit": "pieza"
+      },
+      {
+        "name": "Queso",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Calabacitas",
+        "quantity": 1,
+        "unit": "⅛ taza"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de lima",
+    "category": "cena",
+    "description": "Sopa ligera y refrescante con lima y pollo.",
+    "tags": [
+      "hipocalorico",
+      "bajo-ig",
+      "digestivo"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Rodajas de lima",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Bolillo integral",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  }
+]

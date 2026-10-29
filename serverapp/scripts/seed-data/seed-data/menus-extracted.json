@@ -1,0 +1,2612 @@
+[
+  {
+    "imageFile": "06cea6e78adbcada3458f8f86d748b4a.jpg",
+    "name": "Sándwich de Huevo y Aguacate",
+    "category": "desayuno",
+    "description": "Sándwich saludable con pan integral, huevo entero y aguacate.",
+    "tags": [
+      "desayuno",
+      "sandwich",
+      "huevo",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "06cea6e78adbcada3458f8f86d748b4a.jpg",
+    "name": "Sándwich de Atún y Hummus",
+    "category": "almuerzo",
+    "description": "Sándwich de atún en agua con hummus, tomate y lechuga en pan integral.",
+    "tags": [
+      "almuerzo",
+      "sandwich",
+      "atun",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Hummus",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "06cea6e78adbcada3458f8f86d748b4a.jpg",
+    "name": "Sándwich de Pollo a la Plancha",
+    "category": "almuerzo",
+    "description": "Sándwich de pechuga de pollo a la plancha con espinaca y tomate.",
+    "tags": [
+      "almuerzo",
+      "sandwich",
+      "pollo",
+      "proteico"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "06cea6e78adbcada3458f8f86d748b4a.jpg",
+    "name": "Sándwich Caprese con Mozzarella",
+    "category": "cena",
+    "description": "Sándwich fresco de queso mozzarella, tomate y albahaca fresca.",
+    "tags": [
+      "cena",
+      "sandwich",
+      "queso",
+      "mediterraneo"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Chicken Rice Bowl",
+    "category": "almuerzo",
+    "description": "Bowl de pechuga de pollo, arroz blanco y brócoli al vapor.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "meal-prep",
+      "pollo"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Beef Potato Lunch Box",
+    "category": "almuerzo",
+    "description": "Carne magra de res con papas baby y vegetales verdes.",
+    "tags": [
+      "almuerzo",
+      "carne",
+      "papa",
+      "meal-prep"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Papas baby",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Buckwheat Chicken Box",
+    "category": "almuerzo",
+    "description": "Trigo sarraceno con pollo cocido y vegetales.",
+    "tags": [
+      "almuerzo",
+      "trigo-sarraceno",
+      "pollo"
+    ],
+    "foods": [
+      {
+        "name": "Trigo sarraceno",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Pasta Chicken Salad Box",
+    "category": "almuerzo",
+    "description": "Pasta cocida con pollo desmenuzado, pepino y tomates.",
+    "tags": [
+      "almuerzo",
+      "pasta",
+      "pollo",
+      "ensalada"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 130,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate cherry",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Beef Rice Meal",
+    "category": "almuerzo",
+    "description": "Carne magra salteada con arroz blanco y vegetales mixtos.",
+    "tags": [
+      "almuerzo",
+      "carne",
+      "arroz"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "4d2941a48a7d1f814a8f34204754da9f.jpg",
+    "name": "Chicken Potato Meal",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo a la plancha con papas sancochadas y ensalada verde.",
+    "tags": [
+      "almuerzo",
+      "pollo",
+      "papa"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Papa",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "6f9f2786140b805dbbb44289cc89fdfc.jpg",
+    "name": "Ensalada Mediterránea con Queso Feta",
+    "category": "almuerzo",
+    "description": "Ensalada de lechuga, tomate, pepino y queso feta con aceite de oliva.",
+    "tags": [
+      "ensalada",
+      "mediterranea",
+      "feta"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Feta",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "6f9f2786140b805dbbb44289cc89fdfc.jpg",
+    "name": "Ensalada de Quinoa y Garbanzos",
+    "category": "almuerzo",
+    "description": "Ensalada rica en fibra con quinoa cocida, garbanzos, maíz y aguacate.",
+    "tags": [
+      "ensalada",
+      "quinoa",
+      "garbanzos",
+      "vegetariana"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Garbanzos",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "6f9f2786140b805dbbb44289cc89fdfc.jpg",
+    "name": "Ensalada de Pollo y Espinacas",
+    "category": "almuerzo",
+    "description": "Pollo a la parrilla servido sobre espinacas frescas, tomate y palta.",
+    "tags": [
+      "ensalada",
+      "pollo",
+      "espinaca",
+      "proteica"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "6f9f2786140b805dbbb44289cc89fdfc.jpg",
+    "name": "Ensalada Nizoide con Atún y Huevo",
+    "category": "almuerzo",
+    "description": "Atún en agua con huevo duro, papas baby y verduras.",
+    "tags": [
+      "ensalada",
+      "atun",
+      "huevo"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Papas baby",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "6f9f2786140b805dbbb44289cc89fdfc.jpg",
+    "name": "Ensalada Caprese con Pesto",
+    "category": "cena",
+    "description": "Tomate, mozzarella fresca, albahaca y pesto de oliva.",
+    "tags": [
+      "ensalada",
+      "caprese",
+      "pesto"
+    ],
+    "foods": [
+      {
+        "name": "Tomate",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Mozzarella",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pesto",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Lunes: Huevos Cocidos y Naranja",
+    "category": "desayuno",
+    "description": "Huevos cocidos con naranja fresca.",
+    "tags": [
+      "plan-semanal",
+      "lunes",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Naranja",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Lunes: Pollo a la Plancha con Ensalada",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo a la plancha con ensalada mixta.",
+    "tags": [
+      "plan-semanal",
+      "lunes",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Lunes: Huevos Revueltos con Espinaca",
+    "category": "cena",
+    "description": "Huevos revueltos ligeros con espinacas frescas.",
+    "tags": [
+      "plan-semanal",
+      "lunes",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Martes: Omelette de Tomate",
+    "category": "desayuno",
+    "description": "Omelette de huevos con tomate picado.",
+    "tags": [
+      "plan-semanal",
+      "martes",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Martes: Carne Magra con Ensalada de Pepino",
+    "category": "almuerzo",
+    "description": "Carne magra a la plancha con refrescante ensalada de pepino.",
+    "tags": [
+      "plan-semanal",
+      "martes",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Martes: Atún con Huevo y Ensalada",
+    "category": "cena",
+    "description": "Atún en agua con 1 huevo duro y vegetales.",
+    "tags": [
+      "plan-semanal",
+      "martes",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Atún en agua",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Miércoles: Huevos con Papaya",
+    "category": "desayuno",
+    "description": "Huevos revueltos acompañados de papaya fresca.",
+    "tags": [
+      "plan-semanal",
+      "miercoles",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Miércoles: Pescado al Vapor con Brócoli",
+    "category": "almuerzo",
+    "description": "Pescado blanco al vapor con brócoli.",
+    "tags": [
+      "plan-semanal",
+      "miercoles",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Miércoles: Huevos Cocidos con Ensalada Verde",
+    "category": "cena",
+    "description": "Huevos cocidos con ensalada de hojas verdes.",
+    "tags": [
+      "plan-semanal",
+      "miercoles",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Jueves: Huevos con Camote",
+    "category": "desayuno",
+    "description": "Huevos cocidos servidos con camote / batata sancochada.",
+    "tags": [
+      "plan-semanal",
+      "jueves",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Camote / Batata",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Jueves: Pollo al Horno con Ensalada",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo al horno servida con ensalada fresca.",
+    "tags": [
+      "plan-semanal",
+      "jueves",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Jueves: Huevo con Aguacate y Ensalada",
+    "category": "cena",
+    "description": "Huevo cocido con aguacate y tomate.",
+    "tags": [
+      "plan-semanal",
+      "jueves",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Viernes: Omelette con Espinaca",
+    "category": "desayuno",
+    "description": "Omelette proteico de huevos con espinaca salteada.",
+    "tags": [
+      "plan-semanal",
+      "viernes",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Viernes: Carne Magra con Ensalada",
+    "category": "almuerzo",
+    "description": "Carne magra a la parrilla con abundante ensalada verde.",
+    "tags": [
+      "plan-semanal",
+      "viernes",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Viernes: Huevos y Ensalada Mixta",
+    "category": "cena",
+    "description": "Huevos duros cortados sobre ensalada mixta.",
+    "tags": [
+      "plan-semanal",
+      "viernes",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Sábado: Yogur Natural con Frutas y Chía",
+    "category": "desayuno",
+    "description": "Yogur natural cremoso con fruta de estación y semillas de chía.",
+    "tags": [
+      "plan-semanal",
+      "sabado",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Yogur natural",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Frutas variadas",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Sábado: Salmón con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Filete de salmón a la plancha con quinoa y verduras al vapor.",
+    "tags": [
+      "plan-semanal",
+      "sabado",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Sábado: Sopa de Lentejas Nutritiva",
+    "category": "cena",
+    "description": "Sopa casera de lentejas con verduras.",
+    "tags": [
+      "plan-semanal",
+      "sabado",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Lentejas cocidas",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Desayuno Domingo: Batido de Frutas con Avena",
+    "category": "desayuno",
+    "description": "Batido energizante de plátano, avena y chía.",
+    "tags": [
+      "plan-semanal",
+      "domingo",
+      "desayuno"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Avena",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Almuerzo Domingo: Albóndigas de Pavo con Ensalada",
+    "category": "almuerzo",
+    "description": "Albóndigas horneadas de pavo molido con ensalada.",
+    "tags": [
+      "plan-semanal",
+      "domingo",
+      "almuerzo"
+    ],
+    "foods": [
+      {
+        "name": "Pavo molido",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Menu saludable.jpg",
+    "name": "Cena Domingo: Queso Cottage con Pepino y Tomate",
+    "category": "cena",
+    "description": "Requesón / Queso cottage ligero con pepino y tomates cherry.",
+    "tags": [
+      "plan-semanal",
+      "domingo",
+      "cena"
+    ],
+    "foods": [
+      {
+        "name": "Queso cottage",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate cherry",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 1 - Desayuno: Avena con Chía y Frutos Rojos",
+    "category": "desayuno",
+    "description": "Avena cocida con semillas de chía y frutos rojos frescos.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-1"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 150,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 1 - Almuerzo: Pechuga de Pollo con Ensalada y Oliva",
+    "category": "almuerzo",
+    "description": "Pechuga a la parrilla con ensalada fresca aderezada con aceite de oliva.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-1"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 1 - Snack: Té Verde con Almendras",
+    "category": "snack",
+    "description": "Puñado de almendras tostadas con infusión de té verde.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-1"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 1 - Cena: Sopa de Verduras Casera",
+    "category": "cena",
+    "description": "Sopa reconfortante de verduras variadas.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-1"
+    ],
+    "foods": [
+      {
+        "name": "Sopa de verduras",
+        "quantity": 250,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 2 - Desayuno: 2 Huevos Cocidos con Aguacate",
+    "category": "desayuno",
+    "description": "Dos huevos cocidos acompañados de palta/aguacate.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-2"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 2 - Almuerzo: Pescado a la Parrilla con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Pescado blanco a la parrilla con quinoa y vegetales al vapor.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-2"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 2 - Snack: Té Verde con Nueces",
+    "category": "snack",
+    "description": "Té verde acompañado de un puñado de nueces.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-2"
+    ],
+    "foods": [
+      {
+        "name": "Nueces",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 2 - Cena: Ensalada Verde con Semillas",
+    "category": "cena",
+    "description": "Ensalada de lechuga, espinaca y pepino con semillas de chía.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-2"
+    ],
+    "foods": [
+      {
+        "name": "Lechuga",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 3 - Desayuno: Batido Verde Detox",
+    "category": "desayuno",
+    "description": "Batido de espinaca, pepino, manzana verde y limón.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-3"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 3 - Almuerzo: Pechuga de Pavo con Batata al Horno",
+    "category": "almuerzo",
+    "description": "Pavo a la plancha con camote/batata al horno y ensalada.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-3"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pavo",
+        "quantity": 140,
+        "unit": "g"
+      },
+      {
+        "name": "Camote / Batata",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 3 - Snack: Té Verde con Almendras",
+    "category": "snack",
+    "description": "Almendras naturales con infusión de té verde.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-3"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 3 - Cena: Sopa Cremosa de Verduras",
+    "category": "cena",
+    "description": "Sopa de verduras mixtas.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-3"
+    ],
+    "foods": [
+      {
+        "name": "Sopa de verduras",
+        "quantity": 250,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 4 - Desayuno: Yogur Griego con Chía",
+    "category": "desayuno",
+    "description": "Yogur griego rico en proteína con semillas de chía.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-4"
+    ],
+    "foods": [
+      {
+        "name": "Yogur griego",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 4 - Almuerzo: Salmón al Horno con Ensalada y Oliva",
+    "category": "almuerzo",
+    "description": "Filete de salmón al horno con ensalada verde y aceite de oliva.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-4"
+    ],
+    "foods": [
+      {
+        "name": "Salmón",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Ensalada mixta",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 4 - Snack: Manzana con Mantequilla de Maní",
+    "category": "snack",
+    "description": "Manzana crujiente untada con mantequilla de maní natural.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-4"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 4 - Cena: Verduras Salteadas",
+    "category": "cena",
+    "description": "Salteado de brócoli, zanahoria y espinacas con aceite de oliva.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-4"
+    ],
+    "foods": [
+      {
+        "name": "Verduras mixtas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 5 - Desayuno: Avena con Plátano y Nueces",
+    "category": "desayuno",
+    "description": "Avena tibia con rodajas de plátano y nueces picadas.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-5"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 150,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 5 - Almuerzo: Pollo a la Parrilla con Ensalada",
+    "category": "almuerzo",
+    "description": "Pollo a la parrilla con ensalada fresca de tomate y pepino.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-5"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 5 - Snack: Té Verde con Almendras",
+    "category": "snack",
+    "description": "Almendras saludables acompañadas de té verde.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-5"
+    ],
+    "foods": [
+      {
+        "name": "Almendras",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 5 - Cena: Sopa de Verduras",
+    "category": "cena",
+    "description": "Sopa liviana de vegetal para la cena.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-5"
+    ],
+    "foods": [
+      {
+        "name": "Sopa de verduras",
+        "quantity": 250,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 6 - Desayuno: 2 Huevos Cocidos con Aguacate",
+    "category": "desayuno",
+    "description": "Huevos hervidos con palta fresca.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-6"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 6 - Almuerzo: Pescado a la Parrilla con Ensalada",
+    "category": "almuerzo",
+    "description": "Pescado fresco a la parrilla con vegetales salteados o ensalada.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-6"
+    ],
+    "foods": [
+      {
+        "name": "Pescado blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 6 - Snack: Té Verde con Nueces",
+    "category": "snack",
+    "description": "Nueces con infusión de té verde.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-6"
+    ],
+    "foods": [
+      {
+        "name": "Nueces",
+        "quantity": 25,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 6 - Cena: Ensalada con Garbanzos y Vegetales",
+    "category": "cena",
+    "description": "Ensalada proteica vegetal con garbanzos, tomate y lechuga.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-6"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 7 - Desayuno: Batido Verde con Chía",
+    "category": "desayuno",
+    "description": "Batido de espinaca, manzana y semillas de chía.",
+    "tags": [
+      "plan-7-dias",
+      "desayuno",
+      "dia-7"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 7 - Almuerzo: Pechuga de Pollo con Quinoa y Verduras",
+    "category": "almuerzo",
+    "description": "Pechuga a la plancha con quinoa cocida y vegetales.",
+    "tags": [
+      "plan-7-dias",
+      "almuerzo",
+      "dia-7"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 7 - Snack: Manzana con Almendras",
+    "category": "snack",
+    "description": "Manzana fresca con almendras.",
+    "tags": [
+      "plan-7-dias",
+      "snack",
+      "dia-7"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 20,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "Plan 7 dias - saludable.jpg",
+    "name": "Día 7 - Cena: Sopa de Calabaza y Verduras",
+    "category": "cena",
+    "description": "Sopa caliente de calabaza y vegetal.",
+    "tags": [
+      "plan-7-dias",
+      "cena",
+      "dia-7"
+    ],
+    "foods": [
+      {
+        "name": "Sopa de verduras",
+        "quantity": 250,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "batidos para el desayuno.jpg",
+    "name": "Batido de Plátano y Durazno",
+    "category": "desayuno",
+    "description": "Batido cremoso de plátano, durazno, yogur griego y miel.",
+    "tags": [
+      "batido",
+      "desayuno",
+      "frutas",
+      "yogur-griego"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur griego",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "batidos para el desayuno.jpg",
+    "name": "Batido de Fresa y Plátano",
+    "category": "desayuno",
+    "description": "Batido clásico de fresas frescas, plátano y yogur natural.",
+    "tags": [
+      "batido",
+      "desayuno",
+      "fresa",
+      "platano"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "batidos para el desayuno.jpg",
+    "name": "Batido Tropical de Mango y Piña",
+    "category": "desayuno",
+    "description": "Batido refrescante de mango, piña y yogur griego.",
+    "tags": [
+      "batido",
+      "desayuno",
+      "mango",
+      "pina",
+      "tropical"
+    ],
+    "foods": [
+      {
+        "name": "Mango",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Piña",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur griego",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "batidos para el desayuno.jpg",
+    "name": "Batido de Plátano, Café y Cacao",
+    "category": "desayuno",
+    "description": "Batido proteico y estimulante con plátano, leche, café y cacao en polvo.",
+    "tags": [
+      "batido",
+      "desayuno",
+      "cafe",
+      "cacao",
+      "energia"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "cenas ligeras.jpg",
+    "name": "Nordic Bowl de Salmón y Aguacate",
+    "category": "cena",
+    "description": "Bowl nórdico ligero con salmón ahumado, aguacate, pepino y queso feta.",
+    "tags": [
+      "cena",
+      "salmon",
+      "bowl",
+      "nordico"
+    ],
+    "foods": [
+      {
+        "name": "Salmón ahumado",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Feta",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "cenas ligeras.jpg",
+    "name": "Wrap Ligero de Pavo y Vegetales",
+    "category": "cena",
+    "description": "Wrap de pechuga de pavo con lechuga, tomate y palta.",
+    "tags": [
+      "cena",
+      "wrap",
+      "pavo",
+      "ligero"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pechuga de pavo",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "cenas ligeras.jpg",
+    "name": "Ensalada Express de Garbanzos y Tomate",
+    "category": "cena",
+    "description": "Ensalada rápida de garbanzos con tomate, pepino y queso feta.",
+    "tags": [
+      "cena",
+      "ensalada",
+      "garbanzos",
+      "express"
+    ],
+    "foods": [
+      {
+        "name": "Garbanzos",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Queso Feta",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 1.jpg",
+    "name": "Avena Trasnochada de Banano y Mantequilla de Maní",
+    "category": "desayuno",
+    "description": "Avena reposada en leche con banano triturado y mantequilla de maní.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "overnight-oats",
+      "mani"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Banano",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 1.jpg",
+    "name": "Avena Trasnochada de Fresa y Yogur",
+    "category": "desayuno",
+    "description": "Avena con leche, yogur natural, fresas picadas y miel.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "fresa",
+      "yogur"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 150,
+        "unit": "ml"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 1.jpg",
+    "name": "Avena Trasnochada de Cacao y Chía",
+    "category": "desayuno",
+    "description": "Avena con cacao en polvo, semillas de chía, leche y miel.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "cacao",
+      "chia"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Strawberry Cheesecake",
+    "category": "desayuno",
+    "description": "Avena con leche, fresas, queso crema y chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "fresa",
+      "cheesecake"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Apple Cinnamon",
+    "category": "desayuno",
+    "description": "Avena con leche, manzana picada, miel y semillas de chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "manzana",
+      "canela"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Peanut Butter Banana",
+    "category": "desayuno",
+    "description": "Avena con mantequilla de maní, banana, leche y chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "banana",
+      "mani"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Banano",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Banana Nut",
+    "category": "desayuno",
+    "description": "Avena con leche, banana en rodajas, nueces picadas y chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "banana",
+      "nueces"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Banano",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Blueberry Almond",
+    "category": "desayuno",
+    "description": "Avena con arándanos frescos, almendras laminadas y chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "arandanos",
+      "almendras"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Arándanos",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Almendras",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Mango Coconut",
+    "category": "desayuno",
+    "description": "Avena con mango en cubos, leche y chía.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "mango",
+      "tropical"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Mango",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de chía",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Chocolate Peanut Butter",
+    "category": "desayuno",
+    "description": "Avena sabor chocolate con mantequilla de maní y cacao en polvo.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "chocolate",
+      "mani"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "recetas avenas 2.jpg",
+    "name": "Overnight Oats - Mocha Coffee & Chocolate",
+    "category": "desayuno",
+    "description": "Avena con toques de café, cacao en polvo y leche.",
+    "tags": [
+      "desayuno",
+      "avena",
+      "mocha",
+      "cafe"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Cacao en polvo",
+        "quantity": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "f9899d6f01d8d157f815b3dd7b1cfb46.jpg",
+    "name": "Avocado Toast con Huevo Duro",
+    "category": "desayuno",
+    "description": "Tostada de pan integral con palta y 1 huevo duro.",
+    "tags": [
+      "desayuno",
+      "tostada",
+      "aguacate",
+      "huevo"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "f9899d6f01d8d157f815b3dd7b1cfb46.jpg",
+    "name": "Berry Parfait con Yogur Griego y Granola",
+    "category": "desayuno",
+    "description": "Yogur griego con bayas/frutos rojos y granola crujiente.",
+    "tags": [
+      "desayuno",
+      "parfait",
+      "yogur-griego",
+      "granola"
+    ],
+    "foods": [
+      {
+        "name": "Yogur griego",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "quantity": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "f9899d6f01d8d157f815b3dd7b1cfb46.jpg",
+    "name": "Omelette Proteico con Espinacas y Tomate",
+    "category": "desayuno",
+    "description": "Omelette de 2 huevos con espinacas y tomates cherry.",
+    "tags": [
+      "desayuno",
+      "omelette",
+      "huevo",
+      "espinaca"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Espinaca",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate cherry",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "f9899d6f01d8d157f815b3dd7b1cfb46.jpg",
+    "name": "Salmon Bagel con Queso Crema",
+    "category": "desayuno",
+    "description": "Bagel con queso crema y salmón ahumado de alta proteína.",
+    "tags": [
+      "desayuno",
+      "bagel",
+      "salmon",
+      "queso-crema"
+    ],
+    "foods": [
+      {
+        "name": "Bagel",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Queso crema",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Salmón ahumado",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "Teriyaki Chicken Rice Bowl",
+    "category": "almuerzo",
+    "description": "Bowl de pollo con salsa teriyaki, arroz y vegetales.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "pollo",
+      "teriyaki"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 80,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "Garlic Butter Chicken Bowl",
+    "category": "almuerzo",
+    "description": "Pechuga de pollo a la mantequilla y ajo con brócoli.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "pollo",
+      "ajo"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Brócoli",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "Lemon Herb Chicken Bowl con Quinoa",
+    "category": "almuerzo",
+    "description": "Pollo al limón con hierbas y quinoa cocida.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "pollo",
+      "quinoa"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "Chicken Burrito Bowl",
+    "category": "almuerzo",
+    "description": "Bowl estilo burrito con pollo, arroz, frijoles negros y maíz.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "burrito",
+      "frijoles"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Maíz dulce",
+        "quantity": 40,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "BBQ Chicken Bowl",
+    "category": "almuerzo",
+    "description": "Pollo desmenuzado en salsa BBQ con arroz y vegetal.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "pollo",
+      "bbq"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz blanco",
+        "quantity": 150,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "imageFile": "comidas.jpg",
+    "name": "Spicy Chicken Noodle Bowl",
+    "category": "almuerzo",
+    "description": "Bowl de fideos con pollo salteado especiado.",
+    "tags": [
+      "almuerzo",
+      "bowl",
+      "fideos",
+      "pollo"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Fideos",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  }
+]

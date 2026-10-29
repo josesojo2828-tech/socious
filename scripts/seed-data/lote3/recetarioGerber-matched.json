@@ -1,0 +1,431 @@
+[
+  {
+    "name": "Guayabitas con ciruela",
+    "category": "snack",
+    "description": "Guayabas rellenas con ciruela y chayote.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Guayaba brasilera",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 0.91,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Ciruela pasa",
+        "quantity": 56.5,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "db-inclusion"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Manzanita rellena",
+    "category": "snack",
+    "description": "Manzana rellena con durazno y avena.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 1,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Durazno",
+        "quantity": 56.5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Avena",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Molletito de pollo con verduras",
+    "category": "cena",
+    "description": "Pan blanco relleno con pollo, aguacate y verduras.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 10,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 1,
+        "unit": "hojita",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Veggie Fruit",
+        "quantity": 2,
+        "unit": "cucharaditas"
+      }
+    ]
+  },
+  {
+    "name": "Pop bowl de frutas",
+    "category": "snack",
+    "description": "Frutas con Papilla GERBER y cereal.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Fresas",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pera",
+        "quantity": 0.25,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 133,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Cereal GERBER",
+        "quantity": 2,
+        "unit": "cucharadas"
+      }
+    ]
+  },
+  {
+    "name": "Platanito con quinoa, pollo y chayote",
+    "category": "cena",
+    "description": "Plátano relleno con quinoa, pollo y chayote.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 0.5,
+        "unit": "",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Quinoa cocida",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 40,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 2,
+        "unit": "cucharadas",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Tazoncito de fruta con yogurt",
+    "category": "snack",
+    "description": "Yogur con mango, pera y amaranto.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Yogur griego",
+        "quantity": 115,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Mango",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Pera",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 1,
+        "_matchSource": "db-exact"
+      },
+      {
+        "name": "Amaranto",
+        "quantity": 0.25,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Cevichito de pescado con frutas",
+    "category": "snack",
+    "description": "Un ceviche fresco y saludable para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Mango",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Bebida GERBER Toque de fruta Agua y Pera",
+        "quantity": 87.5,
+        "unit": "ml"
+      },
+      {
+        "name": "Pescado blanco",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Papilla GERBER Cosecha Natural Chayote",
+        "quantity": 56.5,
+        "unit": "g"
+      },
+      {
+        "name": "Pan integral",
+        "quantity": 30,
+        "unit": "g",
+        "_matchScore": 0.58,
+        "_matchSource": "known-bigram"
+      }
+    ]
+  },
+  {
+    "name": "Chayotito relleno",
+    "category": "snack",
+    "description": "Un relleno saludable y delicioso para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Chayota",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Papilla GERBER Cosecha Natural Zanahoria",
+        "quantity": 113,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 20,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Huevito relleno",
+    "category": "snack",
+    "description": "Un relleno saludable y delicioso para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Huevo entero",
+        "quantity": 23,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Papilla GERBER Cosecha Natural Zanahoria",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Puré de verduras y pollo",
+    "category": "snack",
+    "description": "Un puré saludable y delicioso para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papilla GERBER Comidita Casera Res con Verduras y Arroz",
+        "quantity": 133,
+        "unit": "g"
+      },
+      {
+        "name": "Cereal GERBER 4 Cereales",
+        "quantity": 20,
+        "unit": "g"
+      },
+      {
+        "name": "Chayota",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.71,
+        "_matchSource": "db-bigram"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Sopita de letras con aguacate",
+    "category": "snack",
+    "description": "Un sopita saludable y delicioso para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Sopita del Día GERBER Sopa de Pasta y Verduras",
+        "quantity": 66.5,
+        "unit": "g"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Zucchini / Calabacín",
+        "quantity": 5,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      }
+    ]
+  },
+  {
+    "name": "Ciruela con cereal de arroz y avena",
+    "category": "snack",
+    "description": "Un cereal saludable y delicioso para bebés.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Cereal GERBER Arroz y Avena",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Papilla GERBER Cosecha Natural Ciruela Pasa",
+        "quantity": 113,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 15,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  }
+]

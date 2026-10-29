@@ -1,0 +1,262 @@
+[
+  {
+    "name": "Hot Cakes de Almendra con Frutas",
+    "category": "desayuno",
+    "description": "Un desayuno rápido y ligero con hot cakes de almendra y frutas frescas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Alimento a Base de Almendra CARNATION",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Plátanos",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Harina de trigo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Avena",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Polvo para hornear",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Aceite en aerosol",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Zarzamoras congeladas",
+        "quantity": 4,
+        "unit": "tazas"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 6,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Frutos rojos",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Fresas y Frambuesas",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con fresas y frambuesas.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Fresas congeladas",
+        "quantity": 3,
+        "unit": "tazas"
+      },
+      {
+        "name": "Frambuesas congeladas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Alimento a Base de Coco CARNATION",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de agave",
+        "quantity": 5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Fresas",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Frambuesas",
+        "quantity": 0.5,
+        "unit": "taza"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Coco y Plátano",
+    "category": "desayuno",
+    "description": "Un smoothie cremoso y delicioso con coco y plátano.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Alimento a Base de Coco CARNATION",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Té instantáneo sabor a chai",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Plátanos",
+        "quantity": 4,
+        "unit": "unidad"
+      },
+      {
+        "name": "Miel de agave",
+        "quantity": 5,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Coco",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Chispas de chocolate amargo",
+        "quantity": 2,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Menta",
+        "quantity": 8,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Aguacate y Piña",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con aguacate y piña.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Aguacate",
+        "quantity": 1,
+        "unit": "unidad"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Jugo de limón",
+        "quantity": 3,
+        "unit": "limones"
+      },
+      {
+        "name": "Alimento a Base de Avena CARNATION",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Miel de agave",
+        "quantity": 3,
+        "unit": "cucharadas"
+      },
+      {
+        "name": "Piña",
+        "quantity": 1,
+        "unit": "taza"
+      },
+      {
+        "name": "Menta",
+        "quantity": 4,
+        "unit": "hojas"
+      }
+    ]
+  },
+  {
+    "name": "Smoothie de Manzana",
+    "category": "desayuno",
+    "description": "Un smoothie fresco y delicioso con manzana.",
+    "tags": [
+      "rapido",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Hielo",
+        "quantity": 2.5,
+        "unit": "tazas"
+      },
+      {
+        "name": "Puré de manzana",
+        "quantity": 4,
+        "unit": "manzanas"
+      },
+      {
+        "name": "Alimento a Base de Almendra CARNATION",
+        "quantity": 375,
+        "unit": "g"
+      },
+      {
+        "name": "Semillas de linaza",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 1,
+        "unit": "cucharadita"
+      },
+      {
+        "name": "Miel de abeja",
+        "quantity": 0.25,
+        "unit": "taza"
+      }
+    ]
+  }
+]

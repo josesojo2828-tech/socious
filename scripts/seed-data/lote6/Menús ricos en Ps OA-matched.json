@@ -1,0 +1,569 @@
+[
+  {
+    "name": "Chilaquiles con Huevo y Frijoles",
+    "category": "desayuno",
+    "description": "Chilaquiles con huevo y frijoles, un desayuno saludable y delicioso.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas horneadas",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Huevo entero",
+        "quantity": 50,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 100,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela rallado",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Plátano con Nuez",
+    "category": "snack",
+    "description": "Un licuado saludable y delicioso para cualquier momento del día.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Leche entera",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 14,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Fruta con Yogur y Nuez",
+    "category": "snack",
+    "description": "Una mezcla saludable y deliciosa de fruta, yogur y nueces.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 200,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Yogur natural",
+        "quantity": 125,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 7,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Fideo",
+    "category": "cena",
+    "description": "Una sopa saludable y deliciosa para cualquier momento del día.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 2,
+        "unit": "cucharaditas",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con Verduras",
+    "category": "cena",
+    "description": "Un plato saludable y delicioso para cualquier momento del día.",
+    "tags": [
+      "hipocalorico",
+      "facil",
+      "economico"
+    ],
+    "foods": [
+      {
+        "name": "Arroz blanco",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aguacate",
+        "quantity": 500,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 1,
+        "unit": "cucharadita",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Espinacas",
+    "category": "cena",
+    "description": "Sopa ligera y saludable con espinacas y caldo de pollo.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Espinaca",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.9,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Aceite de oliva",
+        "quantity": 5,
+        "unit": "ml",
+        "_matchScore": 0.92,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Ejotes con Cacahuate",
+    "category": "cena",
+    "description": "Plato saludable con ejotes al vapor y cacahuate.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes / Judías verdes",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 0.91,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mantequilla de maní",
+        "quantity": 28,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-alias-incl"
+      }
+    ]
+  },
+  {
+    "name": "Bisteces en Salsa de Chile Pasilla con Ensalada de Nopales",
+    "category": "cena",
+    "description": "Plato sabroso con bisteces de res y salsa de chile pasilla.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Chile pasilla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.9,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo Asada con Nopales y Ensalada de Pepinos",
+    "category": "cena",
+    "description": "Plato saludable con pechuga de pollo asada y nopales.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pollo pechuga",
+        "quantity": 90,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas con Ensalada de Zanahoria y Manzana",
+    "category": "cena",
+    "description": "Plato sabroso con albóndigas y ensalada de zanahoria y manzana.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Carne de res magra",
+        "quantity": 180,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.93,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pollo",
+    "category": "almuerzo",
+    "description": "Un sándwich simple con pollo deshebrado y mayonesa light.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo pechuga",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pavo",
+    "category": "almuerzo",
+    "description": "Un sándwich con jamón de pavo, queso panela y mayonesa light.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos de Frijoles",
+    "category": "snack",
+    "description": "Taquitos con frijoles y queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sincronizada",
+    "category": "snack",
+    "description": "Taquitos con jamón de pavo y queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pavo molido",
+        "quantity": 60,
+        "unit": "g",
+        "_matchScore": 0.89,
+        "_matchSource": "known-alias-incl"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas",
+    "category": "snack",
+    "description": "Quesadillas con queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadilla de Picadillo",
+    "category": "snack",
+    "description": "Quesadillas con picadillo.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Picadillo",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Picadillo",
+    "category": "snack",
+    "description": "Un picadillo con zanahorias, papa y carne molida.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 0.98,
+        "_matchSource": "known-inclusion"
+      },
+      {
+        "name": "Papa",
+        "quantity": 120,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-exact"
+      },
+      {
+        "name": "Carne de res magra",
+        "quantity": 240,
+        "unit": "g",
+        "_matchScore": 1,
+        "_matchSource": "known-alias"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 240,
+        "unit": "ml",
+        "_matchScore": 0.89,
+        "_matchSource": "known-inclusion"
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+-- S2 (patient-onboarding) / C1: marca explícita de paciente MENOR.
+--
+-- Los datos del representante NO viven aquí: se guardan en el
+-- "PediatricHistory" que ya existe (representativeName / representativePhone /
+-- representativeEmail / representativeRelationship). Este flag sólo marca que
+-- el paciente es menor y lo consume la resolución del destinatario de la
+-- invitación por correo (el correo del representante).
+--
+-- SQL generado con:
+--   npx prisma migrate diff --from-migrations prisma/migrations \
+--     --to-schema-datamodel prisma/schema.prisma --script
+-- para que la carpeta y el datamodel no puedan divergir.
+ALTER TABLE "Patient" ADD COLUMN     "isPediatric" BOOLEAN NOT NULL DEFAULT false;

@@ -1,0 +1,89 @@
+    # ==========================================
+# ENTORNOS Y CREDENCIALES
+# ==========================================
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# SISTEMA OPERATIVO
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# LOGS
+# ==========================================
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# ==========================================
+# BASE DE DATOS (Docker volumes)
+# ==========================================
+docker/data/
+docker/pgadmin-data/
+
+# ==========================================
+# ASSETS ESTÁTICOS (subidos vía rsync)
+# ==========================================
+webapp/public/pdf/
+
+# ==========================================
+# UPLOADS (archivos subidos por usuarios)
+# ==========================================
+docker/data/uploads/*
+!docker/data/uploads/.gitkeep
+
+# ==========================================
+# SERVER APP (NestJS)
+# ==========================================
+serverapp/node_modules/
+serverapp/dist/
+serverapp/.tsbuildinfo
+
+# ==========================================
+# WEBAPP (Next.js)
+# ==========================================
+webapp/node_modules/
+webapp/dist/
+webapp/.next/
+webapp/out/
+webapp/.vercel/
+sub-webapp/node_modules/
+sub-webapp/dist/
+sub-webapp/.next/
+sub-webapp/out/
+
+# ==========================================
+# MOBILE (Flutter)
+# ==========================================
+nutringest_mobile/.dart_tool/
+nutringest_mobile/build/
+nutringest_mobile/.flutter-plugins
+nutringest_mobile/.flutter-plugins-dependencies
+nutringest_mobile/coverage/
+nutringest_mobile/.pub-cache/
+nutringest_mobile/.pub/
+nutringest_mobile/*.g.dart
+nutringest_mobile/*.freezed.dart
+
+# Certificados y claves (iOS / Android)
+nutringest_mobile/*.jks
+nutringest_mobile/*.p8
+nutringest_mobile/*.p12
+nutringest_mobile/*.key
+nutringest_mobile/*.mobileprovision
+nutringest_mobile/*.pem
+
+# ==========================================
+# TYPESCRIPT (general)
+# ==========================================
+*.tsbuildinfo
+/data/
+!**/src/**/data/
+snapshots/
+
+# Skill registry cache (generated)
+.atl/.skill-registry.cache.json

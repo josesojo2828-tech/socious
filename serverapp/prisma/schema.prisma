@@ -1,0 +1,2208 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Permit {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  list        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  users       User[]
+}
+
+/// ======================================
+/// MODELOS FEEDBACK
+/// ======================================
+model Feedback {
+  id        String    @id @default(uuid())
+  userId    String?
+  message   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  metadata  Json?
+  user      User?     @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id                            String                 @id @default(uuid())
+  firstName                     String?                @default("")
+  lastName                      String?                @default("")
+  email                         String                 @unique
+  username                      String?                @unique
+  password                      String?
+  fullName                      String?
+  avatarUrl                     String?
+  status                        UserStatus             @default(ACTIVE)
+  createdAt                     DateTime               @default(now())
+  updatedAt                     DateTime               @updatedAt
+  deletedAt                     DateTime?
+  hashedRefreshToken            String?
+  token                         String?
+  permitId                      String
+  profileId                     String?                @unique
+  referralCode                  String?                @unique
+  referredById                  String?
+  emailVerificationToken        String?
+  emailVerifiedAt               DateTime?
+  resetPasswordExpiresAt        DateTime?
+  resetPasswordToken            String?
+  failedLoginAttempts           Int                    @default(0)
+  lockedUntil                   DateTime?
+  emailVerificationExpiresAt    DateTime?
+  // S1 (legal-compliance): prueba de aceptación de Términos + Aviso de Privacidad.
+  // La IP se guarda SOLO como hash sha256(ip+PII_HASH_SALT) (shared/event/pii.ts).
+  termsAcceptedAt               DateTime?
+  termsVersion                  String?
+  termsAcceptedIpHash           String?
+  // S7 (legal-compliance): fecha de nacimiento capturada por el gate de edad del registro.
+  birthDate                     DateTime?
+  isDemo                        Boolean                @default(false)
+  mustChangePassword            Boolean                @default(false)
+  createdAnamnesis              Anamnesis[]            @relation("CreatedAnamnesisRecords")
+  createdAnthropometries        Anthropometry[]        @relation("CreatedAnthropometryRecords")
+  createdAssignedExchangeLists  AssignedExchangeList[] @relation("CreatedAssignedExchangeListRecords")
+  createdAssignedMenus          AssignedMenu[]         @relation("CreatedAssignedMenuRecords")
+  createdAssignedSupplements    AssignedSupplement[]   @relation("CreatedAssignedSupplementRecords")
+  calculatorUsages              CalculatorUsage[]
+  campusCoupon                  CampusCoupon?          @relation("UserCoupon")
+  createdConsultations          Consultation[]         @relation("CreatedConsultationRecords")
+  createdDietPlanTemplates      DietPlanTemplate[]     @relation("CreatedDietPlanTemplateRecords")
+  createdExchangeLists          ExchangeList[]         @relation("CreatedExchangeListRecords")
+  feedback                      Feedback[]
+  files                         File[]                 @relation("UploadedFiles")
+  File                          File[]
+  customFoods                   FoodItem[]
+  createdGoals                  Goal[]                 @relation("CreatedGoalRecords")
+  createdInfantFormulaHistories InfantFormulaHistory[] @relation("CreatedInfantFormulaHistoryRecords")
+  createdLabResults             LabResult[]            @relation("CreatedLabResultRecords")
+  createdMenus                  Menu[]                 @relation("CreatedMenuRecords")
+  notifications                 Notification[]
+  createdNutritionalPlans       NutritionalPlan[]      @relation("CreatedNutritionalPlanRecords")
+  nutritionistProfile           Nutritionist?
+  organizationMembers           OrganizationMember[]
+  createdPatients               Patient[]              @relation("CreatedPatientRecords")
+  patientProfiles               Patient[]
+  createdPediatricHistories     PediatricHistory[]     @relation("CreatedPediatricHistoryRecords")
+  createdShoppingLists          ShoppingList[]         @relation("CreatedShoppingListRecords")
+  createdSportsHistories        SportsHistory[]        @relation("CreatedSportsHistoryRecords")
+  subscriptions                 Subscription[]
+  transactions                  Transaction[]
+  permits                       Permit                 @relation(fields: [permitId], references: [id])
+  profile                       File?                  @relation("UserProfile", fields: [profileId], references: [id])
+  referredBy                    User?                  @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals                     User[]                 @relation("UserReferrals")
+  activityLogs                  UserActivityLog[]
+  addresses                     UserAddress[]
+  paymentMethods                UserPaymentMethod[]
+  sessions                      UserSession[]
+  wallet                        UserWallet?
+  communityMetadata             CommunityMetadata[]
+  postBookmarks                 PostBookmark[]
+  postComments                  PostComment[]
+  postLikes                     PostLike[]
+  socialPosts                   SocialPost[]
+  following                     UserFollow[]           @relation("UserFollowers")
+  followers                     UserFollow[]           @relation("UserFollowing")
+  userPermissions               UserPermission[]
+  entitlements                  Entitlement[]          @relation("UserEntitlements")
+  patientInvitations            PatientInvitation[]   @relation("PatientInvitationUser")
+  createdPatientInvitations     PatientInvitation[]   @relation("PatientInvitationCreator")
+  invoices                      Invoice[]              @relation("UserInvoices")
+  moduleGrants                  ModuleGrant[]
+
+  // Marketplace
+  marketProducts  MarketProduct[]
+  marketReviews   MarketReview[]
+  marketCampaigns MarketCampaign[]
+  walletPayments  WalletPayment[]
+
+  @@index([isDemo])
+}
+
+model UserAddress {
+  id         String      @id @default(uuid())
+  userId     String
+  label      String?
+  address1   String
+  address2   String?
+  city       String
+  state      String?
+  country    String
+  postalCode String?
+  latitude   Float?
+  longitude  Float?
+  type       AddressType @default(HOME)
+  isDefault  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  user       User        @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model SubscriptionPlan {
+  id            String         @id @default(uuid())
+  name          String
+  description   String?
+  price         Decimal
+  currency      String         @default("USD")
+  selected      Boolean        @default(true)
+  content       Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  /// Texto del badge (null = sin badge). Ej: "POPULAR", "RECOMENDADO"
+  badge         String?
+  /// Colores del plan en formato JSON: { bg, text, accent, badge }
+  colorTheme    Json?
+  /// Si es true, se muestra como plan destacado (featured card)
+  featured      Boolean        @default(false)
+  subscriptions Subscription[]
+}
+
+model AddOn {
+  id            String        @id @default(uuid())
+  key           String        @unique // ATTENDANCE_CONTROL (STABLE MACHINE KEY)
+  name          String
+  description   String?
+  price         Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
+  billingPeriod String        @default("MONTHLY")
+  grants        String[]      @default([]) // permission keys unlocked
+  modules       String[]      @default([]) // module keys for sidebar/route registry
+  fieldPolicies Json? // default role policy for the pilot module
+  active        Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+  entitlements  Entitlement[]
+  invoiceLines  InvoiceLine[]
+  moduleLinks   AddOnModule[]
+
+  @@index([active])
+}
+
+model Entitlement {
+  id              String            @id @default(uuid())
+  organizationId  String? // null = personal (mirrors Subscription)
+  userId          String? // owner for personal entitlements
+  addOnId         String
+  status          EntitlementStatus @default(ACTIVE)
+  startDate       DateTime          @default(now())
+  endDate         DateTime?
+  quantity        Int               @default(1)
+  priceAtPurchase Decimal           @db.Decimal(10, 2)
+  currency        String            @default("USD")
+  createdById     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  organization    Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user            User?             @relation("UserEntitlements", fields: [userId], references: [id], onDelete: Cascade)
+  addOn           AddOn             @relation(fields: [addOnId], references: [id])
+
+  /// Polymorphic-owner uniqueness is enforced with PARTIAL UNIQUE INDEXES in the
+  /// migration (raw SQL). Prisma cannot model partial indexes, and a composite
+  /// @@unique does NOT dedupe rows where a column is NULL (Postgres NULL != NULL).
+  /// See migration 20260930_add_module_entitlements.
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Module {
+  id             String        @id @default(uuid())
+  key            String        @unique // ATTENDANCE_CONTROL (STABLE MACHINE KEY)
+  name           String
+  description    String?
+  icon           String?
+  category       String?
+  scopes         ModuleScope[]
+  operatorPermit String?
+  dashboardKind  String? // ANALYTICS | CONFIG | PROVISIONING
+  active         Boolean       @default(true)
+  sortOrder      Int           @default(0)
+  addOnLinks     AddOnModule[]
+  grants         ModuleGrant[]
+
+  @@index([active])
+}
+
+model AddOnModule {
+  addOnId  String
+  moduleId String
+  addOn    AddOn  @relation(fields: [addOnId], references: [id], onDelete: Cascade)
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@id([addOnId, moduleId])
+}
+
+model ModuleGrant {
+  id             String            @id @default(uuid())
+  moduleId       String
+  userId         String?
+  organizationId String?
+  source         ModuleGrantSource
+  entitlementId  String?
+  status         ModuleGrantStatus @default(ACTIVE)
+  grantedAt      DateTime          @default(now())
+  expiresAt      DateTime?
+  grantedById    String?
+  module         Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user           User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  /// Polymorphic-owner uniqueness is enforced with PARTIAL UNIQUE INDEXES in the
+  /// migration (raw SQL). Prisma cannot model partial indexes, and a composite
+  /// @@unique does NOT dedupe rows where a column is NULL (Postgres NULL != NULL).
+  /// See migration 20261003_add_module_framework.
+  @@index([moduleId, status])
+  @@index([userId, status])
+  @@index([organizationId, status])
+}
+
+model Invoice {
+  id             String        @id @default(uuid())
+  organizationId String? // null = personal invoice (mirrors Entitlement)
+  userId         String? // owner for personal invoices
+  periodStart    DateTime
+  periodEnd      DateTime
+  status         InvoiceStatus @default(ISSUED)
+  subtotal       Decimal       @db.Decimal(10, 2)
+  total          Decimal       @db.Decimal(10, 2)
+  currency       String        @default("USD")
+  dueDate        DateTime
+  issuedAt       DateTime?
+  paidAt         DateTime?
+  payerUserId    String? // A1: CLINIC_ADMIN wallet (org) / owner wallet (personal)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  user           User?         @relation("UserInvoices", fields: [userId], references: [id])
+  lines          InvoiceLine[]
+
+  /// Polymorphic-owner idempotency is enforced with PARTIAL UNIQUE INDEXES in the
+  /// migration (raw SQL), mirroring Entitlement: a composite @@unique does NOT
+  /// dedupe rows where a column is NULL (Postgres NULL != NULL).
+  /// See migration 20261001_add_personal_invoices.
+  @@index([organizationId, status])
+  @@index([userId, status])
+}
+
+model InvoiceLine {
+  id          String          @id @default(uuid())
+  invoiceId   String
+  type        InvoiceLineType
+  refId       String?
+  description String
+  quantity    Int             @default(1)
+  unitPrice   Decimal         @db.Decimal(10, 2)
+  amount      Decimal         @db.Decimal(10, 2)
+  addOnId     String?
+  invoice     Invoice         @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  addOn       AddOn?          @relation(fields: [addOnId], references: [id])
+
+  @@index([invoiceId])
+}
+
+model FieldPolicy {
+  id        String           @id @default(uuid())
+  moduleKey String // ATTENDANCE_CONTROL
+  role      OrganizationRole
+  formKey   String // attendance.schedule, attendance.record
+  fieldKey  String
+  access    FieldAccess      @default(EDITABLE)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([moduleKey, role, formKey, fieldKey])
+  @@index([moduleKey, role])
+}
+
+model Subscription {
+  id                String             @id @default(uuid())
+  userId            String
+  planId            String
+  startDate         DateTime           @default(now())
+  endDate           DateTime?
+  status            SubscriptionStatus @default(ACTIVE)
+  autoRenew         Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  organizationId    String?
+  gracePeriodEndsAt DateTime?
+  readOnlyEndsAt    DateTime?
+  canceledAt        DateTime?
+  lastPlanChangeAt  DateTime?
+  organization      Organization?      @relation(fields: [organizationId], references: [id])
+  plan              SubscriptionPlan   @relation(fields: [planId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model SubscriptionRenewalJobLog {
+  id                 String    @id @default(uuid())
+  startedAt          DateTime  @default(now())
+  finishedAt         DateTime?
+  totalProcessed     Int       @default(0)
+  totalRenewed       Int       @default(0)
+  totalFailedNoFunds Int       @default(0)
+  totalExpired       Int       @default(0)
+  status             String    @default("RUNNING")
+  details            Json?
+  createdAt          DateTime  @default(now())
+}
+
+/// Observability run-log for the telemetry retention job (Phase 0 dry-run).
+/// Mirrors the SubscriptionRenewalJobLog pattern.
+model TelemetryRetentionJobLog {
+  id             String    @id @default(uuid())
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+  dryRun         Boolean   @default(true)
+  status         String    @default("RUNNING")
+  totalEvaluated Int       @default(0)
+  totalPurged    Int       @default(0)
+  details        Json?
+  createdAt      DateTime  @default(now())
+}
+
+model UserWallet {
+  id         String    @id @default(uuid())
+  userId     String    @unique
+  balance    Decimal   @default(0.0)
+  currency   String    @default("USD")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  balanceVES Decimal   @default(0.0)
+  user       User      @relation(fields: [userId], references: [id])
+}
+
+model PaymentMethod {
+  id          String              @id @default(uuid())
+  name        String
+  code        String              @unique
+  description String?
+  active      Boolean             @default(true)
+  imagePath   String?
+  colorStart  String?
+  colorEnd    String?
+  colorText   String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  deletedAt   DateTime?
+  fields      Json?
+  userMethods UserPaymentMethod[]
+}
+
+model CorporateContent {
+  id          String    @id @default(uuid())
+  key         String    @unique
+  title       String
+  content     String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model UserPaymentMethod {
+  id              String        @id @default(uuid())
+  userId          String
+  paymentMethodId String
+  details         Json?
+  isDefault       Boolean       @default(false)
+  active          Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  transactions    Transaction[]
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Transaction {
+  id               String            @id @default(uuid())
+  userId           String
+  paymentMethodId  String
+  type             TransactionType   @default(PAYMENT)
+  amount           Decimal
+  description      String?
+  status           TransactionStatus @default(PENDING)
+  referenceCode    String?           @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  currency         String            @default("USD")
+  originalAmount   Decimal?
+  originalCurrency String?
+  exchangeRateUsed Decimal?
+  /// Org scope for analytics. Additive + nullable on purpose: a transaction is
+  /// linked to a USER, not to an org/subscription, so HISTORICAL rows cannot be
+  /// reliably backfilled and stay null (they are excluded from tenant-scoped
+  /// analytics). New rows are populated at creation from the related
+  /// subscription's organization.
+  organizationId   String?
+  organization     Organization?     @relation(fields: [organizationId], references: [id])
+  paymentMethod    UserPaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
+
+  @@index([organizationId])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  title      String
+  message    String
+  type       NotificationType @default(INFO)
+  read       Boolean          @default(false)
+  entityId   String?
+  entityType String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  deleteddAt DateTime?
+  userId     String
+  user       User             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+}
+
+model UserSession {
+  id             String    @id @default(uuid())
+  userId         String
+  ipAddress      String?
+  userAgent      String?
+  device         String?
+  location       String?
+  startedAt      DateTime  @default(now()) @db.Timestamptz(3)
+  endedAt        DateTime? @db.Timestamptz(3)
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  organizationId String?
+  user           User      @relation(fields: [userId], references: [id])
+
+  @@index([organizationId, startedAt])
+}
+
+model UserActivityLog {
+  id             String    @id @default(uuid())
+  userId         String
+  action         String
+  description    String?
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  metadata       Json?     @default("{}")
+  eventName      String?
+  category       String?
+  organizationId String?
+  source         String?
+  eventVersion   String?
+  moduleKey      String?
+  user           User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+  @@index([action])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([organizationId, eventName])
+  @@index([moduleKey])
+}
+
+model File {
+  id            String         @id @default(uuid())
+  name          String
+  originalName  String?
+  type          String?
+  mimeType      String?
+  size          Int?
+  path          String
+  storage       FileStorage    @default(LOCAL)
+  visibility    FileVisibility @default(PRIVATE)
+  description   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  uploadedById  String?
+  entityId      String?
+  entityType    String?
+  userId        String?
+  campusRequest CampusRequest?
+  uploadedBy    User?          @relation("UploadedFiles", fields: [uploadedById], references: [id])
+  User          User?          @relation(fields: [userId], references: [id])
+  userAsProfile User?          @relation("UserProfile")
+
+  @@index([entityType, entityId])
+}
+
+model FoodExchangeList {
+  id       String             @id @default(uuid())
+  name     String             @unique
+  category String?
+  sub      String?
+  unity    String?
+  // Practical-measure grams (or cc for liquids) per single serving, transcribed from
+  // the authoritative exchange-list PDF. Nullable: legacy rows without a transcribed
+  // value keep rendering their raw `unity` instead of a fabricated number.
+  grams    Decimal?
+  calories Decimal?
+  // Denormalized name + category + sub with accents folded and lowercased, so the
+  // Prisma `contains` search matches a query typed without accents ("Kefir" ->
+  // "Kéfir"). Maintained by normalizeSearchText() on every write.
+  searchText String?
+  exchange ExchangeListItem[]
+}
+
+enum FoodSource {
+  GLOBAL_BASE
+  SMAE_MEXICO
+  USDA_FOOD_DATA
+  ARGENFOOD
+  CUSTOM
+}
+
+model FoodAlias {
+  id          String   @id @default(uuid())
+  foodItemId  String
+  foodItem    FoodItem @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+  countryCode String
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([countryCode, name])
+}
+
+model FoodItem {
+  id               String                  @id @default(uuid())
+  createdById      String?
+  code             Int?                    @unique @default(autoincrement())
+  name             String                  @unique
+  brand            String?
+  countryCode      String?                 @default("GLOBAL")
+  source           FoodSource              @default(CUSTOM)
+  externalSourceId String?
+  baseQuantity     Decimal                 @default(100)
+  calories         Decimal                 @default(0)
+  proteins         Decimal                 @default(0)
+  carbohydrates    Decimal                 @default(0)
+  fats             Decimal                 @default(0)
+  humidity         Decimal                 @default(0)
+  fiberTotal       Decimal                 @default(0)
+  fiberInsoluble   Decimal                 @default(0)
+  sugar            Decimal                 @default(0)
+  calcium          Decimal                 @default(0)
+  iron             Decimal                 @default(0)
+  magnesium        Decimal                 @default(0)
+  zinc             Decimal                 @default(0)
+  copper           Decimal                 @default(0)
+  sodium           Decimal                 @default(0)
+  phosphorus       Decimal                 @default(0)
+  potassium        Decimal                 @default(0)
+  vitaminA         Decimal                 @default(0)
+  thiamin          Decimal                 @default(0)
+  riboflavin       Decimal                 @default(0)
+  niacin           Decimal                 @default(0)
+  vitaminB6        Decimal                 @default(0)
+  ascorbicAcid     Decimal                 @default(0)
+  isActive         Boolean                 @default(true)
+  currentPrice     Decimal?                @db.Decimal(10, 2)
+  lastPriceSync    DateTime?
+  priceUnit        PriceUnit               @default(KG)
+  wasteFactor      Decimal                 @default(1) @db.Decimal(10, 2)
+  DietFood         DietFood[]
+  createdBy        User?                   @relation(fields: [createdById], references: [id])
+  priceHistory     FoodPriceHistory[]
+  menuItemCosts    InstitutionalMenuItem[]
+  menuItems        MenuItem[]
+  aliases          FoodAlias[]
+
+  @@index([createdById])
+  @@index([name])
+}
+
+model Nutritionist {
+  id                                  String                                 @id @default(uuid())
+  userId                              String                                 @unique
+  licenseCode                         String?
+  specialty                           String?
+  lat                                 Float?
+  lng                                 Float?
+  about                               String?
+  bio                                 String?
+  config                              Json?
+  isPublic                            Boolean                                @default(true)
+  photoUrl                            String?
+  services                            Json?
+  socialLinks                         Json?
+  template                            String?                                @default("default")
+  universityDegree                    String?
+  graduationYear                      Int?
+  mppsCode                            String?
+  cndvCode                            String?
+  cndvState                           String?
+  identityCard                        String?
+  degreeFileUrl                       String?
+  licenseFileUrl                      String?
+  verificationStatus                  VerificationStatus                     @default(UNVERIFIED)
+  verifiedAt                          DateTime?
+  rejectionReason                     String?
+  consultations                       Consultation[]
+  dietTemplates                       DietPlanTemplate[]
+  exchangeLists                       ExchangeList[]
+  institutionalCalculations           InstitutionalCalculation[]
+  assignedInstitutionalCollaborations InstitutionalCalculationCollaborator[] @relation("AssignedCalculationCollaborator")
+  institutionalCollaborations         InstitutionalCalculationCollaborator[] @relation("CollaboratorOfCalculation")
+  menus                               Menu[]
+  user                                User                                   @relation(fields: [userId], references: [id])
+  assignedMemberships                 PatientNutritionist[]                  @relation("AssignedMembership")
+  patientNutritionists                PatientNutritionist[]                  @relation("MemberOfPatient")
+  sentReferrals                       PatientReferral[]                      @relation("SentReferrals")
+  respondedReferrals                  PatientReferral[]                      @relation("RespondedReferrals")
+  receivedReferrals                   PatientReferral[]                      @relation("ReceivedReferrals")
+  portfolioEvents                     PortfolioEvent[]
+}
+
+model PortfolioEvent {
+  id             String             @id @default(uuid())
+  nutritionistId String
+  eventType      PortfolioEventType
+  referrer       String?
+  metadata       Json?
+  createdAt      DateTime           @default(now())
+  nutritionist   Nutritionist       @relation(fields: [nutritionistId], references: [id], onDelete: Cascade)
+
+  @@index([nutritionistId, eventType])
+  @@index([createdAt])
+}
+
+model Patient {
+  id                 String                @id @default(uuid())
+  firstName          String
+  lastName           String
+  email              String?
+  phone              String?
+  gender             Gender
+  birthDate          DateTime
+  occupation         String?
+  activityLevel      ActivityLevel         @default(SEDENTARY)
+  medicalHistory     Json?
+  createdAt          DateTime              @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime              @updatedAt
+  deletedAt          DateTime?
+  isActive           Boolean               @default(true)
+  userId             String?
+  address            String?
+  maritalStatus      String?
+  /// S2 (patient-onboarding): el paciente es un MENOR. Los datos de su
+  /// representante se guardan en el `PediatricHistory` que ya existe (no se
+  /// crea un modelo nuevo). Este flag marca de forma explícita que el paciente
+  /// es menor y lo consume la resolución del destinatario de la invitación
+  /// (el correo del representante).
+  isPediatric        Boolean               @default(false)
+  createdById        String?               @map("created_by_id")
+  organizationId     String?
+  anamnesis          Anamnesis?
+  anthropometrics    Anthropometry[]
+  consultations      Consultation[]
+  dietPlans          DietPlan[]
+  goals              Goal[]
+  labResults         LabResult[]
+  plans              NutritionalPlan[]
+  createdBy          User?                 @relation("CreatedPatientRecords", fields: [createdById], references: [id])
+  organization       Organization?         @relation(fields: [organizationId], references: [id])
+  user               User?                 @relation(fields: [userId], references: [id])
+  nutritionists      PatientNutritionist[]
+  referrals          PatientReferral[]
+  pediatricHistories PediatricHistory[]
+  shoppingLists      ShoppingList[]
+  sportsHistories    SportsHistory[]
+
+  privacyNoticeAcceptedAt DateTime? @map("privacy_notice_accepted_at")
+  privacyNoticeVersion    String?    @map("privacy_notice_version")
+  privacyNoticeAcceptedById String?  @map("privacy_notice_accepted_by_id")
+
+  patientInvitations PatientInvitation[]
+
+  @@index([createdById])
+  @@index([organizationId])
+}
+
+/// S1 (patient-onboarding): invitación de un solo uso para que el paciente (o
+/// el representante de un menor) defina su propia contraseña.
+///
+/// El token NUNCA se persiste en claro: sólo se guarda su hash sha256, de
+/// modo que un volcado de la base de datos no permite completar la
+/// invitación. `acceptedAt` y `revokedAt` dan la semántica de un solo uso.
+model PatientInvitation {
+  id          String    @id @default(uuid())
+  patientId   String
+  userId      String
+  email       String
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  user      User    @relation("PatientInvitationUser", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("PatientInvitationCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PatientNutritionist {
+  id             String                  @id @default(uuid())
+  patientId      String
+  nutritionistId String
+  role           PatientNutritionistRole @default(PRIMARY)
+  isActive       Boolean                 @default(true)
+  assignedById   String?
+  assignedAt     DateTime                @default(now())
+  assignedBy     Nutritionist?           @relation("AssignedMembership", fields: [assignedById], references: [id])
+  nutritionist   Nutritionist            @relation("MemberOfPatient", fields: [nutritionistId], references: [id])
+  patient        Patient                 @relation(fields: [patientId], references: [id])
+
+  @@unique([patientId, nutritionistId])
+  @@index([nutritionistId, isActive])
+  @@index([patientId, isActive])
+}
+
+model PatientReferral {
+  id                 String                @id @default(uuid())
+  patientId          String
+  fromNutritionistId String
+  toNutritionistId   String
+  status             PatientReferralStatus @default(PENDING)
+  message            String?
+  responseMessage    String?
+  respondedById      String?
+  createdAt          DateTime              @default(now())
+  respondedAt        DateTime?
+  type               ReferralType          @default(TRANSFER)
+  fromNutritionist   Nutritionist          @relation("SentReferrals", fields: [fromNutritionistId], references: [id])
+  patient            Patient               @relation(fields: [patientId], references: [id])
+  respondedBy        Nutritionist?         @relation("RespondedReferrals", fields: [respondedById], references: [id])
+  toNutritionist     Nutritionist          @relation("ReceivedReferrals", fields: [toNutritionistId], references: [id])
+
+  @@index([patientId, status])
+  @@index([toNutritionistId, status])
+}
+
+model Menu {
+  id               String          @id @default(uuid())
+  nutritionistId   String
+  name             String
+  description      String?
+  totalKcal        Decimal?        @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  category         MenuCategory?   @default(OTHER)
+  tags             String?
+  totalCarbs       Decimal?        @default(0)
+  totalFats        Decimal?        @default(0)
+  totalProtein     Decimal?        @default(0)
+  archivedAt       DateTime?
+  deletedAt        DateTime?
+  createdById      String?         @map("created_by_id")
+  importedFromId   String?         @map("imported_from_id")
+  importedFromType String?         @map("imported_from_type")
+  isCommunity      Boolean         @default(false)
+  imageUrl         String?
+  prepTime         Int?
+  difficulty       String?
+  organizationId   String?
+  assignedToPlans  AssignedMenu[]
+  createdBy        User?           @relation("CreatedMenuRecords", fields: [createdById], references: [id])
+  importedFrom     Menu?           @relation("MenuImport", fields: [importedFromId], references: [id])
+  importedCopies   Menu[]          @relation("MenuImport")
+  nutritionist     Nutritionist    @relation(fields: [nutritionistId], references: [id])
+  organization     Organization?   @relation(fields: [organizationId], references: [id])
+  condiments       MenuCondiment[]
+  items            MenuItem[]
+
+  @@index([archivedAt])
+  @@index([createdById])
+  @@index([isCommunity])
+  @@index([importedFromId])
+  @@index([organizationId])
+}
+
+model MenuItem {
+  id           String   @id @default(uuid())
+  menuId       String
+  foodId       String
+  quantity     Decimal
+  portionLabel String?
+  unit         String?
+  food         FoodItem @relation(fields: [foodId], references: [id])
+  menu         Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+}
+
+model Condiment {
+  id        String          @id @default(uuid())
+  name      String          @unique
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  menuItems MenuCondiment[]
+}
+
+model MenuCondiment {
+  id          String    @id @default(uuid())
+  menuId      String
+  condimentId String
+  quantity    Decimal?
+  unit        String?
+  condiment   Condiment @relation(fields: [condimentId], references: [id])
+  menu        Menu      @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@unique([menuId, condimentId])
+}
+
+model ExchangeList {
+  id               String                 @id @default(uuid())
+  nutritionistId   String?
+  name             String
+  baseCarbs        Decimal?               @default(0)
+  baseFat          Decimal?               @default(0)
+  baseKcal         Int                    @default(0)
+  baseProtein      Decimal?               @default(0)
+  description      String?
+  createdAt        DateTime               @default(now())
+  archivedAt       DateTime?
+  deletedAt        DateTime?
+  updatedAt        DateTime               @updatedAt
+  createdById      String?                @map("created_by_id")
+  importedFromId   String?                @map("imported_from_id")
+  importedFromType String?                @map("imported_from_type")
+  isCommunity      Boolean                @default(false)
+  organizationId   String?
+  assignedToPlans  AssignedExchangeList[]
+  createdBy        User?                  @relation("CreatedExchangeListRecords", fields: [createdById], references: [id])
+  importedFrom     ExchangeList?          @relation("ExchangeListImport", fields: [importedFromId], references: [id])
+  importedCopies   ExchangeList[]         @relation("ExchangeListImport")
+  nutritionist     Nutritionist?          @relation(fields: [nutritionistId], references: [id])
+  organization     Organization?          @relation(fields: [organizationId], references: [id])
+  items            ExchangeListItem[]
+
+  @@index([archivedAt])
+  @@index([createdById])
+  @@index([isCommunity])
+  @@index([importedFromId])
+  @@index([organizationId])
+}
+
+model ExchangeListItem {
+  id                 String            @id @default(uuid())
+  exchangeListId     String
+  amount             Decimal
+  foodExchangeListId String?
+  servingLabel       String?
+  groupLabel         String?
+  cookingState       String?
+  exchangeList       ExchangeList      @relation(fields: [exchangeListId], references: [id], onDelete: Cascade)
+  foodExchangeList   FoodExchangeList? @relation(fields: [foodExchangeListId], references: [id])
+}
+
+model CommunityMetadata {
+  id          String   @id @default(uuid())
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  authorId    String   @map("author_id")
+  tags        String[]
+  importCount Int      @default(0) @map("import_count")
+  publishedAt DateTime @default(now()) @map("published_at")
+  author      User     @relation(fields: [authorId], references: [id])
+
+  @@unique([entityType, entityId])
+  @@index([entityType])
+  @@index([authorId])
+  @@index([entityType, publishedAt])
+  @@map("community_metadata")
+}
+
+model UserPermission {
+  id             String        @id @default(uuid())
+  userId         String        @map("user_id")
+  organizationId String?       @map("organization_id") // NEW: null = personal/global
+  permission     String
+  grantedAt      DateTime      @default(now()) @map("granted_at")
+  expiresAt      DateTime?     @map("expires_at")
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId, permission]) // widened (B1)
+  @@index([userId])
+  @@index([organizationId])
+  @@map("user_permission")
+}
+
+model DietPlanTemplate {
+  id             String        @id @default(uuid())
+  nutritionistId String
+  name           String
+  description    String?
+  data           Json
+  createdById    String?       @map("created_by_id")
+  organizationId String?
+  createdBy      User?         @relation("CreatedDietPlanTemplateRecords", fields: [createdById], references: [id])
+  nutritionist   Nutritionist  @relation(fields: [nutritionistId], references: [id])
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  @@index([createdById])
+  @@index([organizationId])
+}
+
+model Consultation {
+  id              String             @id @default(uuid())
+  patientId       String?
+  reason          String?
+  notes           String?
+  status          ConsultationStatus @default(SCHEDULED)
+  createdAt       DateTime           @default(now()) @db.Timestamptz(3)
+  anthropometryId String?            @unique
+  nutritionistId  String
+  planId          String?            @unique
+  scheduledAt     DateTime           @db.Timestamptz(3)
+  type            ConsultationType   @default(FOLLOW_UP)
+  createdById     String?            @map("created_by_id")
+  organizationId  String?
+  anthropometry   Anthropometry?     @relation(fields: [anthropometryId], references: [id])
+  createdBy       User?              @relation("CreatedConsultationRecords", fields: [createdById], references: [id])
+  nutritionist    Nutritionist       @relation(fields: [nutritionistId], references: [id])
+  organization    Organization?      @relation(fields: [organizationId], references: [id])
+  patient         Patient?           @relation(fields: [patientId], references: [id])
+  plan            NutritionalPlan?   @relation(fields: [planId], references: [id])
+
+  @@index([createdById])
+  @@index([organizationId])
+}
+
+model Anamnesis {
+  id                        String   @id @default(uuid())
+  patientId                 String   @unique
+  familyHistory             Json?
+  personalHistory           Json?
+  physicalActivity          String?
+  sleepHours                Int?
+  smoking                   Boolean  @default(false)
+  alcohol                   String?
+  allergies                 String[]
+  dislikes                  String[]
+  intolerances              String[]
+  updatedAt                 DateTime @updatedAt @db.Timestamptz(3)
+  alcoholFrequency          String?
+  eatingHabits              Json?
+  exerciseFrequency         String?
+  foodFrequency             Json?
+  gastrointestinalDisorders Json?
+  gynecoObstetric           Json?
+  nutritionalDiagnosis      String?
+  preferredFoods            String[]
+  previousDiets             String?
+  recall24h                 Json?
+  smokingFrequency          String?
+  supplements               String?
+  weightLossMeds            String?
+  createdById               String?  @map("created_by_id")
+  createdBy                 User?    @relation("CreatedAnamnesisRecords", fields: [createdById], references: [id])
+  patient                   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+}
+
+model Anthropometry {
+  id                   String        @id @default(uuid())
+  patientId            String
+  date                 DateTime      @default(now()) @db.Timestamptz(3)
+  weight               Decimal
+  height               Decimal
+  bmi                  Decimal?
+  tricipital           Decimal?
+  bicipital            Decimal?
+  subscapular          Decimal?
+  suprailiac           Decimal?
+  abdominal            Decimal?
+  thigh                Decimal?
+  calf                 Decimal?
+  waist                Decimal?
+  hip                  Decimal?
+  arm                  Decimal?
+  fatPercentage        Decimal?
+  muscleMass           Decimal?
+  visceralFat          Decimal?
+  boneMass             Decimal?
+  metabolicAge         Int?
+  waterPercentage      Decimal?
+  adjustedWeight       Decimal?
+  c_abdomen            Decimal?
+  c_arm_flexed         Decimal?
+  c_arm_relaxed        Decimal?
+  c_calf               Decimal?
+  c_chest              Decimal?
+  c_wrist              Decimal?
+  idealWeight          Decimal?
+  sittingHeight        Decimal?
+  usualWeight          Decimal?
+  adiposeMass          Decimal?
+  adiposeMuscleIndex   Decimal?
+  armSpan              Decimal?
+  conicityIndex        Decimal?
+  cormicIndex          Decimal?
+  diameterBiestiloid   Decimal?
+  diameterFemoral      Decimal?
+  diameterHumeral      Decimal?
+  ectomorphy           Decimal?
+  endomorphy           Decimal?
+  girthThighMid        Decimal?
+  heatLossIndex        Decimal?
+  manouvrierIndex      Decimal?
+  mesomorphy           Decimal?
+  muscleBoneIndex      Decimal?
+  relativeArmSpan      Decimal?
+  residualMass         Decimal?
+  skinfoldSupraspinale Decimal?
+  createdById          String?       @map("created_by_id")
+  createdBy            User?         @relation("CreatedAnthropometryRecords", fields: [createdById], references: [id])
+  patient              Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  consultation         Consultation?
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model LabResult {
+  id          String   @id @default(uuid())
+  patientId   String
+  date        DateTime
+  name        String
+  fileUrl     String?
+  data        Json?
+  createdById String?  @map("created_by_id")
+  createdBy   User?    @relation("CreatedLabResultRecords", fields: [createdById], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model Goal {
+  id           String    @id @default(uuid())
+  patientId    String
+  title        String
+  type         GoalType
+  startValue   Decimal?
+  targetValue  Decimal?
+  currentValue Decimal?
+  deadline     DateTime?
+  isAchieved   Boolean   @default(false)
+  description  String?
+  createdById  String?   @map("created_by_id")
+  createdBy    User?     @relation("CreatedGoalRecords", fields: [createdById], references: [id])
+  patient      Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model SportsHistory {
+  id                        String                    @id @default(uuid())
+  patientId                 String
+  background                Json?
+  goals                     Json?
+  competitionLevel          String?
+  trainingMinutesPerSession Float?
+  trainingDaysPerWeek       Int?
+  trainingSessionsPerDay    Int?
+  ffmKg                     Float?
+  cunninghamRmr             Float?
+  metsExpenditure           Float?
+  assessment                Json?
+  isActive                  Boolean                   @default(true)
+  createdAt                 DateTime                  @default(now())
+  updatedAt                 DateTime                  @updatedAt
+  deletedAt                 DateTime?
+  createdById               String?                   @map("created_by_id")
+  createdBy                 User?                     @relation("CreatedSportsHistoryRecords", fields: [createdById], references: [id])
+  patient                   Patient                   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  disciplines               SportsHistoryDiscipline[]
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model SportsHistoryDiscipline {
+  id                String          @id @default(uuid())
+  sportsHistoryId   String
+  sportDisciplineId String
+  sportDiscipline   SportDiscipline @relation(fields: [sportDisciplineId], references: [id])
+  sportsHistory     SportsHistory   @relation(fields: [sportsHistoryId], references: [id], onDelete: Cascade)
+
+  @@unique([sportsHistoryId, sportDisciplineId])
+  @@index([sportDisciplineId])
+}
+
+model PediatricHistory {
+  id                         String                 @id @default(uuid())
+  patientId                  String
+  weightKg                   Decimal?
+  heightCm                   Decimal?
+  sittingHeightCm            Decimal?
+  activityFactor             Float?
+  growthCost                 Float?
+  schofieldTmb               Float?
+  harrisBenedictWoman        Float?
+  rct                        Float?
+  mirwaldPhv                 Float?
+  growthClassification       String?
+  growthChartType            String?
+  isActive                   Boolean                @default(true)
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @updatedAt
+  deletedAt                  DateTime?
+  createdById                String?                @map("created_by_id")
+  representativeName         String?
+  representativePhone        String?
+  representativeEmail        String?
+  representativeRelationship String?
+  headCircumferenceCm            Float?
+  midUpperArmCircumferenceCm     Float?
+  tricepsSkinfoldMm              Float?
+  subscapularSkinfoldMm          Float?
+  totalArmAreaCm2                Float?
+  armMuscleAreaCm2               Float?
+  correctedArmMuscleAreaCm2      Float?
+  armFatAreaCm2                  Float?
+  armFatIndexPercent             Float?
+  frisanchoMuscleClassification  String?
+  frisanchoFatClassification     String?
+  infantFormulas             InfantFormulaHistory[]
+  createdBy                  User?                  @relation("CreatedPediatricHistoryRecords", fields: [createdById], references: [id])
+  patient                    Patient                @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model InfantFormulaHistory {
+  id                 String           @id @default(uuid())
+  pediatricHistoryId String
+  capacityMl         Decimal?
+  dailyVolumeMl      Decimal?
+  densityKcalPerMl   Decimal?
+  feedingFrequency   Int?
+  formulaType        String?
+  date               DateTime         @default(now())
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  deletedAt          DateTime?
+  createdById        String?          @map("created_by_id")
+  createdBy          User?            @relation("CreatedInfantFormulaHistoryRecords", fields: [createdById], references: [id])
+  pediatricHistory   PediatricHistory @relation(fields: [pediatricHistoryId], references: [id], onDelete: Cascade)
+
+  @@index([pediatricHistoryId])
+  @@index([createdById])
+}
+
+model NutritionalPlan {
+  id                     String                 @id @default(uuid())
+  patientId              String
+  status                 PlanStatus             @default(ACTIVE)
+  name                   String
+  startDate              DateTime               @default(now())
+  endDate                DateTime?
+  kcalTarget             Int
+  proteinTarget          Int
+  carbsTarget            Int
+  fatsTarget             Int
+  recommendations        String?
+  waterIntake            Int?
+  createdAt              DateTime               @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime               @updatedAt
+  isShared               Boolean                @default(false)
+  shareToken             String?                @unique
+  // S2 (legal-compliance): expiración y revocación de enlaces compartidos.
+  shareTokenExpiresAt    DateTime?
+  shareTokenRevokedAt    DateTime?
+  activityRecommendation String?
+  sleepRecommendation    String?
+  waterRecommendation    String?
+  createdById            String?                @map("created_by_id")
+  organizationId         String?
+  assignedLists          AssignedExchangeList[]
+  assignedMenus          AssignedMenu[]
+  supplements            AssignedSupplement[]
+  consultation           Consultation?
+  days                   DietDay[]
+  createdBy              User?                  @relation("CreatedNutritionalPlanRecords", fields: [createdById], references: [id])
+  organization           Organization?          @relation(fields: [organizationId], references: [id])
+  patient                Patient                @relation(fields: [patientId], references: [id])
+  sharedLinkAccesses     SharedLinkAccess[]
+
+  @@index([patientId])
+  @@index([organizationId])
+  @@index([createdById])
+}
+
+// S2 (legal-compliance): registro de accesos a enlaces compartidos con token.
+model SharedLinkAccess {
+  id                String           @id @default(uuid())
+  nutritionalPlanId String           @map("nutritional_plan_id")
+  accessedAt        DateTime         @default(now()) @map("accessed_at")
+  nutritionalPlan   NutritionalPlan  @relation(fields: [nutritionalPlanId], references: [id], onDelete: Cascade)
+
+  @@index([nutritionalPlanId])
+  @@map("shared_link_access")
+}
+
+model AssignedMenu {
+  id           String          @id @default(uuid())
+  planId       String
+  menuId       String
+  eatingMoment String?
+  notes        String?
+  createdById  String?         @map("created_by_id")
+  createdBy    User?           @relation("CreatedAssignedMenuRecords", fields: [createdById], references: [id])
+  menu         Menu            @relation(fields: [menuId], references: [id])
+  plan         NutritionalPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+}
+
+model AssignedExchangeList {
+  id             String          @id @default(uuid())
+  planId         String
+  exchangeListId String
+  portions       Decimal
+  eatingMoment   String?
+  createdById    String?         @map("created_by_id")
+  createdBy      User?           @relation("CreatedAssignedExchangeListRecords", fields: [createdById], references: [id])
+  exchangeList   ExchangeList    @relation(fields: [exchangeListId], references: [id])
+  plan           NutritionalPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+}
+
+model AssignedSupplement {
+  id          String          @id @default(uuid())
+  planId      String
+  name        String
+  dose        String
+  frequency   String
+  brand       String?
+  createdById String?         @map("created_by_id")
+  createdBy   User?           @relation("CreatedAssignedSupplementRecords", fields: [createdById], references: [id])
+  plan        NutritionalPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+}
+
+model ShoppingList {
+  id          String   @id @default(uuid())
+  patientId   String
+  name        String
+  items       Json
+  createdAt   DateTime @default(now())
+  createdById String?  @map("created_by_id")
+  createdBy   User?    @relation("CreatedShoppingListRecords", fields: [createdById], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([createdById])
+}
+
+model DietPlan {
+  id         String     @id @default(uuid())
+  patientId  String
+  name       String
+  startDate  DateTime
+  endDate    DateTime?
+  status     DietStatus @default(ACTIVE)
+  totalKcal  Decimal?
+  macroSplit Json?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  days       DietDay[]
+  patient    Patient    @relation(fields: [patientId], references: [id])
+
+  @@index([patientId])
+}
+
+model DietDay {
+  id                String           @id @default(uuid())
+  dietPlanId        String?
+  name              String
+  order             Int              @default(0)
+  nutritionalPlanId String?
+  dietPlan          DietPlan?        @relation(fields: [dietPlanId], references: [id], onDelete: Cascade)
+  nutritionalPlan   NutritionalPlan? @relation(fields: [nutritionalPlanId], references: [id])
+  meals             DietMeal[]
+}
+
+model DietMeal {
+  id        String     @id @default(uuid())
+  dietDayId String
+  name      String
+  time      String?
+  order     Int        @default(0)
+  foods     DietFood[]
+  dietDay   DietDay    @relation(fields: [dietDayId], references: [id], onDelete: Cascade)
+}
+
+model DietFood {
+  id              String   @id @default(uuid())
+  dietMealId      String
+  foodId          String
+  quantity        Decimal
+  portionName     String
+  calculatedGrams Decimal
+  dietMeal        DietMeal @relation(fields: [dietMealId], references: [id], onDelete: Cascade)
+  food            FoodItem @relation(fields: [foodId], references: [id])
+}
+
+model PriorityLead {
+  id                 String   @id @default(uuid())
+  firstName          String
+  lastName           String?
+  email              String   @unique
+  password           String?
+  phone              String?
+  city               String?
+  status             String   @default("PENDING")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  featureRequest     String?
+  priceRange         String?
+  wantsNotifications Boolean  @default(true)
+}
+
+model University {
+  id             String          @id @default(uuid())
+  name           String          @unique
+  shortName      String?         @unique
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  campusRequests CampusRequest[]
+}
+
+model CampusRequest {
+  id             String      @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String      @unique
+  university     String
+  graduationDate DateTime
+  documentFileId String      @unique
+  status         String      @default("PENDING")
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  universityId   String?
+  documentFile   File        @relation(fields: [documentFileId], references: [id])
+  universityRel  University? @relation(fields: [universityId], references: [id])
+}
+
+model CampusCoupon {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  email     String
+  isUsed    Boolean   @default(false)
+  usedAt    DateTime?
+  usedById  String?   @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  usedBy    User?     @relation("UserCoupon", fields: [usedById], references: [id])
+}
+
+model FoodPriceHistory {
+  id        String    @id @default(uuid())
+  foodId    String
+  price     Decimal   @db.Decimal(10, 2)
+  unit      PriceUnit
+  source    String
+  createdAt DateTime  @default(now())
+  food      FoodItem  @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@index([foodId, createdAt(sort: Desc)])
+}
+
+model InstitutionalCalculation {
+  id                        String                                 @id @default(uuid())
+  title                     String
+  description               String?
+  nutritionistId            String
+  createdAt                 DateTime                               @default(now())
+  updatedAt                 DateTime                               @updatedAt
+  totalPeople               Int
+  maleCount                 Int
+  femaleCount               Int
+  sampleWeights             Float[]
+  averageWeight             Float
+  activityLevel             InstitutionalActivityLevel
+  activityFactor            Float
+  vct                       Float
+  metsExpenditure           Float?
+  sportDisciplineId         String?
+  trainingMinutesPerSession Float?
+  trainingDaysPerWeek       Int?
+  trainingSessionsPerDay    Int?
+  organizationId            String?
+  nutritionist              Nutritionist                           @relation(fields: [nutritionistId], references: [id], onDelete: Cascade)
+  organization              Organization?                          @relation(fields: [organizationId], references: [id])
+  sportDiscipline           SportDiscipline?                       @relation(fields: [sportDisciplineId], references: [id])
+  collaborators             InstitutionalCalculationCollaborator[]
+  meals                     InstitutionalMealConfig[]
+  menus                     InstitutionalMenu[]
+
+  @@index([organizationId])
+}
+
+model InstitutionalCalculationCollaborator {
+  id             String                          @id @default(uuid())
+  calculationId  String
+  nutritionistId String
+  role           InstitutionalCollaboratorRole   @default(EDITOR)
+  assignedById   String?
+  assignedAt     DateTime                        @default(now())
+  status         InstitutionalCollaboratorStatus @default(PENDING)
+  assignedBy     Nutritionist?                   @relation("AssignedCalculationCollaborator", fields: [assignedById], references: [id])
+  calculation    InstitutionalCalculation        @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  nutritionist   Nutritionist                    @relation("CollaboratorOfCalculation", fields: [nutritionistId], references: [id], onDelete: Cascade)
+
+  @@unique([calculationId, nutritionistId])
+  @@unique([calculationId, nutritionistId], map: "InstitutionalCalculationCollaborator_calculationId_nutritionist")
+  @@index([nutritionistId])
+  @@index([calculationId])
+}
+
+model SportDiscipline {
+  id              String                     @id @default(uuid())
+  name            String                     @unique
+  code            String?
+  metValue        Decimal                    @db.Decimal(5, 2)
+  category        String?
+  description     String?
+  isActive        Boolean                    @default(true)
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  calculations    InstitutionalCalculation[]
+  sportsHistories SportsHistoryDiscipline[]
+}
+
+model InstitutionalMealConfig {
+  id                String                   @id @default(uuid())
+  calculationId     String
+  mealType          String
+  percentage        Float
+  targetKcal        Float
+  proteinPercentage Float
+  fatPercentage     Float
+  carbsPercentage   Float
+  proteinGrams      Float
+  fatGrams          Float
+  carbsGrams        Float
+  calculation       InstitutionalCalculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model InstitutionalMenu {
+  id            String                   @id @default(uuid())
+  calculationId String
+  name          String
+  totalCost     Float
+  costPerCapita Float
+  calculation   InstitutionalCalculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  items         InstitutionalMenuItem[]
+}
+
+model InstitutionalMenuItem {
+  id            String            @id @default(uuid())
+  menuId        String
+  foodId        String
+  mealType      String
+  portionGrams  Float
+  unitPrice     Float
+  perCapitaCost Float
+  totalQuantity Float
+  totalCost     Float
+  food          FoodItem          @relation(fields: [foodId], references: [id])
+  menu          InstitutionalMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+}
+
+model CalculatorUsage {
+  id             String   @id @default(uuid())
+  userId         String?
+  calculatorType String
+  inputSnapshot  Json?
+  resultSnapshot Json?
+  source         String   @default("dashboard")
+  createdAt      DateTime @default(now())
+  user           User?    @relation(fields: [userId], references: [id])
+
+  @@index([calculatorType, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+}
+
+model SocialPost {
+  id                String             @id @default(uuid())
+  authorId          String             @map("author_id")
+  postType          PostType           @default(GENERAL) @map("post_type")
+  content           String
+  sharedPostId      String?            @map("shared_post_id")
+  articleId         String?            @unique @map("article_id")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  bookmarks         PostBookmark[]
+  comments          PostComment[]
+  likes             PostLike[]
+  scientificArticle ScientificArticle? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  author            User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  sharedPost        SocialPost?        @relation("PostShares", fields: [sharedPostId], references: [id])
+  shares            SocialPost[]       @relation("PostShares")
+
+  @@index([authorId])
+  @@index([postType])
+  @@index([createdAt])
+  @@map("social_post")
+}
+
+model ScientificArticle {
+  id                String      @id @default(uuid())
+  title             String
+  authors           String
+  journal           String
+  publicationYear   Int         @map("publication_year")
+  doi               String?
+  pdfUrl            String?     @map("pdf_url")
+  category          String
+  tags              String[]
+  abstract          String
+  clinicalTakeaways String[]    @map("clinical_takeaways")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  post              SocialPost?
+
+  @@index([category])
+  @@map("scientific_article")
+}
+
+model PostComment {
+  id        String        @id @default(uuid())
+  postId    String        @map("post_id")
+  authorId  String        @map("author_id")
+  content   String
+  parentId  String?       @map("parent_id")
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    PostComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PostComment[] @relation("CommentReplies")
+  post      SocialPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+  @@index([parentId])
+  @@map("post_comment")
+}
+
+model PostLike {
+  id        String     @id @default(uuid())
+  postId    String     @map("post_id")
+  userId    String     @map("user_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("post_like")
+}
+
+model UserFollow {
+  id          String   @id @default(uuid())
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  follower    User     @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("user_follow")
+}
+
+model PostBookmark {
+  id        String     @id @default(uuid())
+  postId    String     @map("post_id")
+  userId    String     @map("user_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("post_bookmark")
+}
+
+model Organization {
+  id                        String                     @id @default(uuid())
+  name                      String
+  taxId                     String?
+  logoUrl                   String?
+  maxSeats                  Int                        @default(5)
+  status                    String                     @default("ACTIVE")
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+  deletedAt                 DateTime?
+  appointments              Appointment[]
+  consultations             Consultation[]
+  dietPlanTemplates         DietPlanTemplate[]
+  exchangeLists             ExchangeList[]
+  institutionalCalculations InstitutionalCalculation[]
+  menus                     Menu[]
+  nutritionalPlans          NutritionalPlan[]
+  members                   OrganizationMember[]
+  patients                  Patient[]
+  subscriptions             Subscription[]
+  transactions              Transaction[]
+  entitlements              Entitlement[]
+  invoices                  Invoice[]
+  userPermissions           UserPermission[]
+  moduleGrants              ModuleGrant[]
+}
+
+model OrganizationMember {
+  id                  String                   @id @default(uuid())
+  organizationId      String
+  userId              String
+  colorHex            String                   @default("#4F46E5")
+  assignedAt          DateTime                 @default(now())
+  invitationToken     String?                  @unique
+  invitationExpiresAt DateTime?
+  role                OrganizationRole         @default(NUTRITIONIST)
+  status              OrganizationMemberStatus @default(ACTIVE)
+  organization        Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user                User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Appointment {
+  id             String             @id @default(uuid())
+  organizationId String?
+  nutritionistId String
+  patientId      String?
+  scheduledAt    DateTime
+  duration       Int                @default(30)
+  status         ConsultationStatus @default(SCHEDULED)
+  reason         String?
+  notes          String?
+  boxName        String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  organization   Organization?      @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([nutritionistId])
+  @@index([scheduledAt])
+}
+
+enum UserRole {
+  ADMIN
+  NUTRITIONIST
+  PATIENT
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum AddressType {
+  HOME
+  OFFICE
+  BILLING
+  SHIPPING
+  OTHER
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+  NEXT
+  DECLINED
+  GRACE_PERIOD
+}
+
+enum AddOnStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  CANCELED
+}
+
+enum ModuleScope {
+  TENANT
+  USER
+  OPERATOR
+  ADMIN
+}
+
+enum ModuleGrantSource {
+  PLAN
+  ADDON
+  MANUAL
+}
+
+enum ModuleGrantStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  FAILED
+  VOID
+}
+
+enum InvoiceLineType {
+  BASE_PLAN
+  SEAT
+  ADDON
+}
+
+enum FieldAccess {
+  HIDDEN
+  READONLY
+  EDITABLE
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  PAYMENT
+  REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELED
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+enum FileType {
+  IMAGE
+  DOCUMENT
+  REPORT
+  RECEIPT
+  OTHER
+}
+
+enum FileStorage {
+  LOCAL
+  S3
+  SUPABASE
+  GCS
+}
+
+enum FileVisibility {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}
+
+enum PriceUnit {
+  KG
+  LITER
+  UNIT
+  PORTION
+}
+
+enum PatientNutritionistRole {
+  PRIMARY
+  SUPPORT
+}
+
+enum PatientReferralStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum ReferralType {
+  TRANSFER
+  COLLABORATOR
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTRA_ACTIVE
+}
+
+enum MenuCategory {
+  BREAKFAST
+  MORNING_SNACK
+  LUNCH
+  SNACK
+  DINNER
+  PRE_WORKOUT
+  POST_WORKOUT
+  OTHER
+}
+
+enum ConsultationStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+  NO_SHOW
+  PENDING_APPROVAL
+}
+
+enum PortfolioEventType {
+  PAGE_VIEW
+  CLICK_WHATSAPP
+  CLICK_INSTAGRAM
+  CLICK_LINKEDIN
+  CLICK_FACEBOOK
+  CLICK_TIKTOK
+  CLICK_X
+  CLICK_WEBSITE
+  APPOINTMENT_REQUESTED
+}
+
+enum ConsultationType {
+  FIRST_TIME
+  FOLLOW_UP
+  EMERGENCY
+}
+
+enum GoalType {
+  WEIGHT
+  MEASUREMENT
+  HABIT
+  OTHER
+}
+
+enum PlanStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum DietStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum InstitutionalCollaboratorRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+enum InstitutionalCollaboratorStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum InstitutionalActivityLevel {
+  SEDENTARY
+  MODERATE
+  ACTIVE
+  CUSTOM
+}
+
+enum PostType {
+  ARTICLE
+  CASE_STUDY
+  MENU
+  GENERAL
+}
+
+enum OrganizationRole {
+  CLINIC_ADMIN
+  CLINIC_MANAGER
+  NUTRITIONIST
+  RECEPTIONIST
+}
+
+enum OrganizationMemberStatus {
+  INVITED
+  ACTIVE
+  INACTIVE
+}
+
+// ======================================
+// MODELOS MARKETPLACE
+// ======================================
+
+model MarketCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products MarketProduct[]
+}
+
+model MarketProduct {
+  id          String        @id @default(uuid())
+  title       String
+  description String        @db.Text
+  type        ProductType
+  price       Decimal       @db.Decimal(10, 2)
+  currency    String        @default("USD")
+  status      ProductStatus @default(DRAFT)
+  isFeatured  Boolean       @default(false)
+
+  sellerId   String
+  seller     User            @relation(fields: [sellerId], references: [id])
+  categoryId String?
+  category   MarketCategory? @relation(fields: [categoryId], references: [id])
+
+  coverUrl   String?
+  previewUrl String?
+
+  salesCount  Int     @default(0)
+  ratingAvg   Decimal @default(0) @db.Decimal(3, 2)
+  ratingCount Int     @default(0)
+
+  tags String[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  reviews   MarketReview[]
+  campaigns MarketCampaign[]
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([status])
+}
+
+// ======================================
+// MODELOS MARKETPLACE — CAMPAÑAS PUBLICITARIAS
+// ======================================
+
+model CampaignPlan {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  currency    String   @default("USD")
+  duration    Int // días de duración
+  designs     Int      @default(0) // cantidad de diseños incluidos
+  videos      Int      @default(0) // cantidad de videos incluidos
+  posts       Int      @default(0) // publicaciones en redes incluidas
+  socialMedia Boolean  @default(false) // publicidad en redes sociales
+  features    Json? // features adicionales en JSON
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campaigns MarketCampaign[]
+}
+
+model MarketCampaign {
+  id          String         @id @default(uuid())
+  sellerId    String
+  seller      User           @relation(fields: [sellerId], references: [id])
+  productId   String
+  product     MarketProduct  @relation(fields: [productId], references: [id])
+  planId      String
+  plan        CampaignPlan   @relation(fields: [planId], references: [id])
+  amount      Decimal        @db.Decimal(10, 2) // monto descontado del wallet
+  status      CampaignStatus @default(ACTIVE)
+  startDate   DateTime       @default(now())
+  endDate     DateTime
+  impressions Int            @default(0)
+  clicks      Int            @default(0)
+  conversions Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([sellerId])
+  @@index([productId])
+  @@index([status])
+}
+
+model WalletPayment {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
+  paymentMethod String // "transferencia", "pago_movil", "zelle", etc.
+  reference     String? // referencia del pago
+  proofUrl      String? // URL del comprobante
+  note          String? // nota adicional del usuario
+  status        PaymentStatus @default(PENDING)
+  reviewedBy    String? // ID del admin que revisó
+  reviewedAt    DateTime?
+  reviewNote    String? // nota del admin al aprobar/rechazar
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model MarketReview {
+  id        String        @id @default(uuid())
+  productId String
+  product   MarketProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyerId   String
+  buyer     User          @relation(fields: [buyerId], references: [id])
+  rating    Int
+  comment   String?       @db.Text
+  response  String?       @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([productId, buyerId])
+  @@index([productId])
+}
+
+enum ProductType {
+  COURSE
+  EBOOK
+  TEMPLATE
+  WEBINAR
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CampaignStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PAUSED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model FinancialAuditLog {
+  id         String   @id @default(uuid())
+  action     String
+  entityType String
+  entityId   String
+  actorId    String?
+  amount     Decimal?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EnabledCountry {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  name         String
+  phoneCode    String
+  flagEmoji    String
+  currency     String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+

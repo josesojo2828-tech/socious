@@ -1,0 +1,277 @@
+[
+  {
+    "name": "Albóndigas Integrales",
+    "category": "almuerzo",
+    "description": "Albóndigas saludables hechas con pan integral, avena, nueces y hierbas.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Hojuelas de avena molida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces molidas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soya",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Papas Escalfadas",
+    "category": "cena",
+    "description": "Papas escalfadas con un toque de sal y un poco de cebolla.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Papas",
+        "quantity": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Leche de soya",
+        "quantity": 375,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebolla en polvo",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Panqueques de Avena y Manzana",
+    "category": "desayuno",
+    "description": "Panqueques saludables hechos con avena, manzana y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Avena",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo",
+        "quantity": 50,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Burritos de Quinoa",
+    "category": "almuerzo",
+    "description": "Burritos saludables hechos con quinoa, frijoles y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Quinoa",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles negros",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pilaf de Champiñones y Nueces",
+    "category": "almuerzo",
+    "description": "Pilaf saludable hecho con champiñones, nueces y un poco de apio.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Arroz integral",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Champiñones",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ceviche de Champiñones",
+    "category": "cena",
+    "description": "Ceviche saludable hecho con champiñones, tomate y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Champiñones",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Barritas de Nuez y Coco",
+    "category": "snack",
+    "description": "Barritas saludables hechas con nueces, coco y un poco de miel.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nueces",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Coco rallado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Miel",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Galletas de Plátano y Dátiles",
+    "category": "snack",
+    "description": "Galletas saludables hechas con plátano, dátiles y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Dátiles",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Ensalada Reyna",
+    "category": "cena",
+    "description": "Ensalada saludable hecha con repollo, zanahoria y un poco de cilantro.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Repollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pan de Plátano",
+    "category": "desayuno",
+    "description": "Pan saludable hecho con plátano, harina integral y un poco de canela.",
+    "tags": [
+      "diabetes",
+      "hipocalorico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Harina integral",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "quantity": 5,
+        "unit": "g"
+      }
+    ]
+  }
+]

@@ -1,0 +1,508 @@
+[
+  {
+    "name": "Chilaquiles con Huevo y Frijoles",
+    "category": "desayuno",
+    "description": "Chilaquiles con huevo y frijoles, un desayuno saludable y delicioso.",
+    "tags": [
+      "desayuno",
+      "saludable",
+      "delicioso"
+    ],
+    "foods": [
+      {
+        "name": "Tostadas horneadas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de tomate",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Huevos",
+        "quantity": 2,
+        "unit": "unidad"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Queso panela rallado",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Licuado de Plátano con Nuez",
+    "category": "desayuno",
+    "description": "Un licuado saludable y delicioso para el desayuno.",
+    "tags": [
+      "desayuno",
+      "saludable",
+      "delicioso"
+    ],
+    "foods": [
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Leche light",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 14,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Fruta con Yogur y Nuez",
+    "category": "desayuno",
+    "description": "Un plato saludable y delicioso para el desayuno.",
+    "tags": [
+      "desayuno",
+      "saludable",
+      "delicioso"
+    ],
+    "foods": [
+      {
+        "name": "Manzana",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Papaya",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Plátano",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Yogur natural sin azúcar",
+        "quantity": 125,
+        "unit": "g"
+      },
+      {
+        "name": "Nueces",
+        "quantity": 7,
+        "unit": "unidad"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Fideo",
+    "category": "cena",
+    "description": "Una sopa saludable y deliciosa para la cena.",
+    "tags": [
+      "cena",
+      "saludable",
+      "deliciosa"
+    ],
+    "foods": [
+      {
+        "name": "Pasta cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Caldillo de jitomate",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 2,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Arroz con Verduras",
+    "category": "cena",
+    "description": "Un plato saludable y delicioso para la cena.",
+    "tags": [
+      "cena",
+      "saludable",
+      "delicioso"
+    ],
+    "foods": [
+      {
+        "name": "Arroz cocido",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras congeladas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Agua",
+        "quantity": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Espinacas",
+    "category": "cena",
+    "description": "Sopa ligera y saludable hecha con espinacas cocidas y caldo de pollo.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas cocidas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Caldo de pollo",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 5,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Fideo con Espinacas",
+    "category": "cena",
+    "description": "Sopa cremosa y saludable hecha con fideos cocidos, espinacas cocidas y caldo de pollo.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Fideos cocidos",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Espinacas cocidas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Caldo de pollo",
+        "quantity": 240,
+        "unit": "ml"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 5,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Ejotes con Cacahuete",
+    "category": "snack",
+    "description": "Merienda saludable hecha con ejotes al vapor y cacahuete.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "hipocalorico"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes al vapor",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cacahuete",
+        "quantity": 28,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Bisteces en Salsa de Chile Pasilla con Ensalada de Nopales",
+    "category": "almuerzo",
+    "description": "Plato principal saludable hecha con bistec de res, salsa de chile pasilla y ensalada de nopales.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa de chile pasilla",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo Asada con Nopales y Ensalada de Pepinos",
+    "category": "almuerzo",
+    "description": "Plato principal saludable hecha con pechuga de pollo, nopales y ensalada de pepinos.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 90,
+        "unit": "g"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Pepinos",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas con Ensalada de Zanahoria y Manzana",
+    "category": "almuerzo",
+    "description": "Plato principal saludable hecha con albóndigas, ensalada de zanahoria y manzana.",
+    "tags": [
+      "proteico",
+      "alto-fibra"
+    ],
+    "foods": [
+      {
+        "name": "Albóndigas",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Manzana",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pollo",
+    "category": "almuerzo",
+    "description": "Un sándwich simple con pollo deshebrado y mayonesa light.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pollo deshebrado",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de Pavo",
+    "category": "almuerzo",
+    "description": "Un sándwich con jamón de pavo y queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Taquitos de Frijoles",
+    "category": "snack",
+    "description": "Un snack ligero con frijoles y queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sincronizada",
+    "category": "almuerzo",
+    "description": "Un plato con jamón de pavo y queso panela.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas",
+    "category": "snack",
+    "description": "Un snack ligero con queso panela y tortillas de maíz.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Quesadilla de Picadillo",
+    "category": "snack",
+    "description": "Un snack ligero con picadillo y tortillas de maíz.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Picadillo",
+        "quantity": 120,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Picadillo",
+    "category": "almuerzo",
+    "description": "Un plato con carne molida y verduras.",
+    "tags": [
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne molida",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahorias cocidas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Papa cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Caldillo de jitomate",
+        "quantity": 240,
+        "unit": "ml"
+      }
+    ]
+  }
+]

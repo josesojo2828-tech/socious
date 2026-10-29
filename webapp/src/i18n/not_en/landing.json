@@ -1,0 +1,261 @@
+{
+    "lang": "en",
+    "navbar": {
+        "login": "Sign In",
+        "try_free": "Free Trial"
+    },
+    "hero": {
+        "badge_text_p1": "Software by ",
+        "badge_text_highlight": "nutritionists",
+        "badge_text_p2": ", for nutritionists",
+        "title_p1": "Tired of",
+        "title_highlight": "transcribing",
+        "title_p2": ", everything by hand?",
+        "subtitle": "Nutringest is the ultimate software for nutritionists that automates the boring stuff so you can focus on transforming lives.",
+        "cta": "Start Free Trial",
+        "greeting": "Hello, Dr. Ramirez",
+        "specialty": "Sports Nutritionist",
+        "stat_patients": "Today's patients",
+        "stat_growth": "Monthly growth",
+        "stat_appointments": "Upcoming Appointments",
+        "stat_view_all": "View all",
+        "notification_menu": "Menu Sent",
+        "notification_time": "2 min ago"
+    },
+    "features": {
+        "badge": "Features",
+        "title_p1": "Everything you need to ",
+        "title_highlight": "succeed",
+        "subtitle": "We designed every tool with your daily workflow in mind, removing administrative friction.",
+        "items": {
+            "menus": {
+                "title": "Menus in Seconds",
+                "description": "Create meal plans with automatic macro calculation and a searchable food database."
+            },
+            "food_db": {
+                "title": "Food Database",
+                "description": "Thousands of validated foods with complete macro and micronutrient breakdown for accurate prescription."
+            },
+            "exchanges": {
+                "title": "Exchange Lists",
+                "description": "Give your patients freedom with pre-loaded equivalent food options."
+            },
+            "monitoring": {
+                "title": "Continuous Monitoring",
+                "description": "Weight, body fat, and anthropometric measurement evolution charts."
+            },
+            "new_features": {
+                "title": "New Features",
+                "description": "New functionalities added to improve user experience for both nutritionists and patients."
+            }
+        },
+        "app_view": "Patient App View",
+        "connected_patients": "Your patients always connected",
+        "benefits": [
+            "Real-time meal plan viewing",
+            "Auto-generated shopping lists"
+        ]
+    },
+    "pricing": {
+        "title": "Plans that fit you",
+        "subtitle": "Transparent pricing to boost your practice. No strings attached.",
+        "plans": {
+            "pro": {
+                "name": "PRO",
+                "price": "10.00",
+                "presale_price": "4.00",
+                "cta": "Get PRO",
+                "period": "Billed monthly",
+                "badge": "Presale",
+                "description": "Everything you need for your individual practice",
+                "features": {
+                    "patients_unlimited": "Unlimited Patients",
+                    "menus": "Meal Plans & Diet Creation",
+                    "exchanges": "Exchange Lists",
+                    "consultations": "Consultations & Follow-up",
+                    "portal": "Patient App/Portal",
+                    "shopping_list": "Auto Shopping Lists",
+                    "anthropometry": "Anthropometric Calculation",
+                    "food_db": "Complete Food Database"
+                }
+            },
+            "premium": {
+                "name": "PREMIUM",
+                "price": "25.00",
+                "presale_price": "20.00",
+                "cta": "Get PREMIUM",
+                "period": "Billed monthly",
+                "badge": "Most Popular",
+                "description": "The favorite choice among nutritionists, with everything in PRO plus specialized tools",
+                "features": {
+                    "patients_unlimited": "Unlimited Patients",
+                    "menus": "Meal Plans & Diet Creation",
+                    "exchanges": "Exchange Lists",
+                    "consultations": "Consultations & Follow-up",
+                    "portal": "Patient App/Portal",
+                    "shopping_list": "Auto Shopping Lists",
+                    "anthropometry": "Anthropometric Calculation",
+                    "food_db": "Complete Food Database",
+                    "diet_templates": "Diet Templates",
+                    "portfolios": "Digital Portfolios",
+                    "custom_templates": "Custom Template Personalization",
+                    "sports_nutrition": "Sports Nutrition",
+                    "pediatric_nutrition": "Pediatric Nutrition",
+                    "referrals": "Referral System",
+                    "group_care": "Group Care"
+                }
+            },
+            "clinica": {
+                "name": "Clinic",
+                "price": "99.99",
+                "price_per_nutritionist": "9.99",
+                "cta": "Contact Sales",
+                "period": "Billed monthly",
+                "badge": "Teams",
+                "description": "For clinics and nutritionist teams",
+                "price_note": "or $9.99/nutritionist",
+                "features": {
+                    "everything_pro": "Everything in PREMIUM",
+                    "team_management": "Team Management",
+                    "clinic_branding": "Custom Branding",
+                    "priority_support": "VIP Priority Support",
+                    "multi_nutritionist": "Multi-nutritionist",
+                    "analytics": "Advanced Analytics"
+                }
+            }
+        }
+    },
+    "ceo": {
+        "quote": "\"Good nutrition is the bridge to your best self.\"",
+        "badge": "Leadership & Vision",
+        "name_p1": "Lcdo. Winder ",
+        "name_highlight": "Gonzalez",
+        "role": "CEO & Founder of Nutringest",
+        "bio_p1": "Nutritionist specialized in ",
+        "bio_highlight1": "Psychonutrition, Sports and Clinical Nutrition",
+        "bio_p2": ". His vision with ",
+        "bio_highlight2": "NUTRINGEST",
+        "bio_p3": " is to project comprehensive solutions into the digital space, connecting those who wish to ",
+        "bio_highlight3": "IMPROVE",
+        "bio_p4": " their lifestyle through nutrition.",
+        "specialties": {
+            "psycho": {
+                "title": "Psychonutrition",
+                "desc": "Mind and body balance"
+            },
+            "sports": {
+                "title": "Sports Nutrition",
+                "desc": "Maximum performance"
+            }
+        }
+    },
+    "cta": {
+        "title": "Ready to digitize your practice?",
+        "subtitle": "Join the community of nutritionists already using Nutringest to grow their practice.",
+        "btn_primary": "Get my free month",
+        "btn_secondary": "Schedule a demo",
+        "note": "30-day trial, no commitment. No credit card required."
+    },
+    "footer": {
+        "description": "Platform for comprehensive nutritional practice management. Technology at the service of health.",
+        "cols": {
+            "product": "Product",
+            "resources": "Resources",
+            "legal": "Legal"
+        },
+        "links": {
+            "features": "Features",
+            "pricing": "Pricing",
+            "app": "Patient App",
+            "calc": "Macro Calculator",
+            "blog": "Nutrition Blog",
+            "webinars": "Free Webinars",
+            "help": "Help Center",
+            "community": "Community",
+            "privacy": "Privacy",
+            "terms": "Terms",
+            "security": "Security"
+        },
+        "rights": "© 2026 Nutringest Inc. All rights reserved.",
+        "made_with": "Made with",
+        "for_nutritionists": "for nutritionists"
+    },
+    "blog": {
+        "header": {
+            "kicker": "Blog & Updates",
+            "title": "What's new at Nutringest",
+            "desc": "Discover the latest features, improvements, and news about the platform for nutritionists."
+        },
+        "categories": {
+            "all": "All",
+            "major": "Major Update",
+            "features": "Features",
+            "security": "Security",
+            "integration": "Integration",
+            "news": "News"
+        },
+        "empty": {
+            "message": "No posts in this category.",
+            "view_all": "View all"
+        },
+        "card": {
+            "by": "By",
+            "read_more": "Read more"
+        },
+        "newsletter": {
+            "title": "Want to stay updated?",
+            "desc": "Subscribe to our newsletter to receive the latest Nutringest updates directly in your inbox.",
+            "placeholder": "Your email address",
+            "btn": "Subscribe"
+        }
+    },
+    "feedback": {
+        "header": {
+            "title": "Help us improve",
+            "desc": "Have an idea for a new feature? Found a bug? We want to hear from you to make Nutringest the best platform for you."
+        },
+        "success": {
+            "title": "Message Sent!",
+            "message": "We truly appreciate your time. We will review your request and consider it for future updates.",
+            "btn_another": "Send another message",
+            "toast_title": "Received!",
+            "toast_message": "Thank you for your feedback. We have received it correctly."
+        },
+        "form": {
+            "types": {
+                "feature": "New Feature",
+                "bug": "Report Bug",
+                "general": "Other Comment",
+                "error": "Select a request type"
+            },
+            "labels": {
+                "name": "Your Name (Optional)",
+                "email": "Your Email",
+                "subject": "Subject",
+                "desc": "Detailed description"
+            },
+            "placeholders": {
+                "name": "e.g. Dr. John Doe",
+                "email": "example@email.com",
+                "subject_feature": "e.g. Google Calendar integration",
+                "subject_bug": "e.g. Error saving patient",
+                "desc": "Tell us more details. If it's a bug, how can we reproduce it? If it's an idea, how would it help you?"
+            },
+            "validation": {
+                "email": "Please enter a valid email",
+                "subject_min": "Subject must be at least 5 characters",
+                "desc_min": "Description must be at least 20 characters"
+            },
+            "submit": "Send Request"
+        }
+    },
+    "register_branding": {
+        "title": "Join the most innovative nutritionist community.",
+        "subtitle": "Manage your patients, plan diets, and grow your business with our advanced tools.",
+        "copyright": "© 2025 Nutringest Platform.",
+        "legal_notice_p1": "By registering, you agree to our",
+        "legal_notice_terms": "Terms of Service",
+        "legal_notice_p2": "and",
+        "legal_notice_privacy": "Privacy Policy"
+    }
+}

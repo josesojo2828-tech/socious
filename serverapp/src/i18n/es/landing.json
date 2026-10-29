@@ -1,0 +1,100 @@
+{
+    "lang": "es",
+    "hero": {
+        "title": "La Plataforma Todo-en-Uno para Lanzar tu Negocio de Suscripción",
+        "subtitle": "De la gestión de usuarios y pagos recurrentes a un sistema de wallet integrado. Te damos el backend robusto que necesitas para escalar.",
+        "cta": "Comienza tu Prueba Gratuita",
+        "note": "Sin tarjeta de crédito. Cancela en cualquier momento.",
+        "support": "Soporte 24/7"
+    },
+    "problem": {
+        "badge": "Ten tu propio software por subscripciones",
+        "title": "Construir un",
+        "dest": "sistema de pagos",
+        "title2": "recurrentes es complicado",
+        "text": "Necesitas gestionar la autenticación segura, autorizar quién puede hacer qué, integrar pasarelas de pago, manejar facturas recurrentes y proteger los fondos de tus usuarios. Es un dolor de cabeza técnico que te distrae de lo que realmente importa: hacer crecer tu producto.",
+        "industry": "En el sector de la",
+        "safe_clients": "Clientes satisfechos"
+    },
+    "logos": {
+        "title": "Cuenta con la confianza de instituciones líderes"
+    },
+    "service": {
+        "badge": "Servicios",
+        "title": "Soluciones Robustas",
+        "dest": "para tu Negocio",
+        "text": "Servicios de backend listos para usar, diseñados para lanzar tu plataforma de suscripción rápidamente."
+    },
+    "solution": {
+        "title": "Nosotros lo hacemos por ti",
+        "text": "Creamos la infraestructura de backend robusta, segura y lista para escalar que tu negocio necesita. Olvídate de la complejidad y lanza tu servicio de suscripción en días, no en meses."
+    },
+    "features": {
+        "title": "Todo lo que necesitas en un solo lugar"
+    },
+    "pricing": {
+        "title": "Elige el plan que se adapta a tu crecimiento"
+    },
+    "cta_final": {
+        "title": "¿Listo para lanzar tu negocio de suscripción?",
+        "text": "Deja de perder el tiempo configurando la infraestructura. Enfócate en tu producto y deja que nosotros manejemos el backend.",
+        "button": "Regístrate Gratis Hoy Mismo"
+    },
+    "stats": {
+        "title": "Resultados en los que puedes confiar"
+    },
+    "about": {
+        "badge": "Por qué Subkit",
+        "title": "Tu Negocio  <span class=\"gradient-text\">de Suscripción</span>",
+        "text": "Subkit es más que un simple backend; somos tu socio estratégico. Construido sobre NestJS, Prisma y una arquitectura robusta, te damos las herramientas para lanzar y escalar tu negocio de suscripción de forma segura, permitiéndote enfocarte en tu producto, no en la infraestructura.",
+        "expertise_title": "Nuestra Experiencia Central",
+        "cta_primary": "Comenzar Ahora",
+        "cta_secondary": "Leer la Documentación"
+    },
+    "testimonials": {
+        "badge": "Testimonios",
+        "title": "Historias de <span class=\"gradient-text\">Éxito</span> de Nuestros Clientes",
+        "subtitle": "Escucha a los desarrolladores y empresas que han transformado sus ideas en negocios rentables con Subkit."
+    },
+    "footer": {
+        "about_text": "Proporcionando la infraestructura de backend robusta para negocios de suscripción, con integridad y rendimiento.",
+        "services_title": "Servicios",
+        "quick_links_title": "Enlaces Rápidos",
+        "newsletter_title": "Newsletter",
+        "newsletter_text": "Suscríbete para recibir insights técnicos y actualizaciones de la plataforma.",
+        "newsletter_placeholder": "Tu correo electrónico",
+        "copyright": "© 2025 Subkit. Todos los derechos reservados."
+    },
+    "service_items": {
+        "subscription": {
+            "title": "Gestión de Suscripciones",
+            "description": "Maneja planes de pago recurrentes, ciclos de facturación y suscripciones de usuarios sin esfuerzo."
+        },
+        "wallet": {
+            "title": "Sistema de Wallet Integrado",
+            "description": "Permite a tus usuarios depositar fondos y gestionar saldos internos para pagos y servicios en tu plataforma."
+        },
+        "auth": {
+            "title": "Autenticación y Seguridad",
+            "description": "Un sistema robusto de registro, login (API y MVC) y gestión de roles listo para proteger a tus usuarios y tu aplicación."
+        }
+    },
+    "logos_item": {
+        "techcorp": "Logo de TechCorp",
+        "saasify": "Logo de SaaSify",
+        "elearn": "Logo de E-Learn Platform",
+        "fintech": "Logo de Fintech Solutions"
+    },
+    "stats_item": {
+        "uptime": "Disponibilidad Garantizada",
+        "subscriptions": "Suscripciones Activas",
+        "apiCalls": "API Calls Procesadas",
+        "avgResponse": "Respuesta API (prom.)"
+    },
+    "experience_item": {
+        "secure": "Arquitectura Segura",
+        "payments": "Gestión de Pagos",
+        "wallets": "Sistemas de Wallet",
+        "apis": "APIs Escalables"
+    }
+}

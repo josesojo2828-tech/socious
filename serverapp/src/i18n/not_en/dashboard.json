@@ -1,0 +1,164 @@
+{
+    "lang": "en",
+    "sidebar": {
+        "dashboard_group": "DASHBOARD",
+        "dashboard": "Dashboard",
+        "users_group": "USERS",
+        "users": "Users",
+        "wallets": "Wallets",
+        "files": "Files",
+        "application_group": "APPLICATION",
+        "transactions": "Transactions",
+        "payment_methods": "Payment Methods",
+        "subscriptions": "Subscriptions"
+    },
+    "header": {
+        "welcome_back": "Welcome back, "
+    },
+    "tabs": {
+        "overview": "Overview",
+        "analytics": "Analytics",
+        "reports": "Reports",
+        "alerts": "Alerts",
+        "export": "Export",
+        "settings": "Settings",
+        "website": "Website"
+    },
+    "main": {
+        "today_is": "Today is, ",
+        "export_report_button": "Export Report",
+        "filters_button": "Filters"
+    },
+    "stats": {
+        "total_revenue": "Total Revenue",
+        "active_users": "Active Users",
+        "conversion_rate": "Conversion Rate",
+        "avg_session": "Average Session",
+        "from_last_month": "from last month"
+    },
+    "charts": {
+        "revenue_overview_title": "Revenue Overview (Last 12 Months)",
+        "last_12_months": "Last 12 Months",
+        "traffic_sources_title": "Traffic Sources ({monthYear})",
+        "view_all": "View all"
+    },
+    "sections": {
+        "analytics": {
+            "sumary": "Analytics section"
+        },
+        "reports": {
+            "sumary": "Reports section"
+        },
+        "alerts": {
+            "sumary": "Alerts section"
+        },
+        "export": {
+            "sumary": "Export information section"
+        },
+        "settings": {
+            "sumary": "Settings section"
+        },
+        "website": {
+            "sumary": "Website section"
+        }
+    },
+    "modals": {
+        "add_ingredient": {
+            "title": "Add Ingredient",
+            "search_placeholder": "Search ingredient (e.g., Oatmeal, Egg...)",
+            "quantity_label": "Quantity",
+            "unit_label": "Unit",
+            "portion_label": "Portion Label",
+            "portion_label_optional": "(Optional)",
+            "portion_label_help": "Friendly text visible to the patient in the menu.",
+            "placeholder_quantity": "e.g., 100",
+            "placeholder_portion": "e.g., 1 medium chopped cup",
+            "no_results": "No ingredients found.",
+            "db_search_prompt": "Search in the food database",
+            "change_selection": "Change",
+            "back": "Back",
+            "add_btn": "Add to Menu",
+            "ingredient_label": "Ingredient"
+        },
+        "add_food": {
+            "title": "Add Food",
+            "search_placeholder": "Search food (e.g., Apple, Chicken...)",
+            "amount_label": "Net Weight (g)",
+            "serving_label": "Household Measure",
+            "placeholder_amount": "e.g., 100",
+            "placeholder_serving": "e.g., 1 cup, 1 unit...",
+            "no_results": "No foods found with that name.",
+            "db_search_prompt": "Type to search in the master database",
+            "selected_label": "Selected Food",
+            "amount_help": "Amount for 1 exchange",
+            "serving_help": "Text visible to the patient",
+            "change_selection": "Change",
+            "back": "Back",
+            "add_btn": "Add to List"
+        },
+        "assign_exchange": {
+            "title": "Assign Exchange",
+            "group_label": "Food Group",
+            "portions_label": "Portions",
+            "moment_label": "Moment",
+            "search_placeholder": "Search (e.g., Fruits)...",
+            "no_results": "No results.",
+            "cancel": "Cancel",
+            "assign": "Assign"
+        },
+        "assign_menu": {
+            "title": "Assign Menu",
+            "search_label": "Search Recipe / Menu",
+            "moment_label": "Consumption Moment",
+            "notes_label": "Notes (Optional)",
+            "search_placeholder": "Type to filter...",
+            "notes_placeholder": "e.g., Only training days...",
+            "loading": "Loading...",
+            "no_results": "No menus found.",
+            "cancel": "Cancel",
+            "assign": "Assign Menu"
+        },
+        "add_lab_result": {
+            "title": "Record Manual Results",
+            "exam_name_label": "Exam Name",
+            "date_label": "Collection Date",
+            "exam_placeholder": "e.g., Lipid Profile",
+            "sections_label": "Parameters",
+            "col_param": "Parameter",
+            "col_value": "Value",
+            "col_unit": "Unit",
+            "param_placeholder": "e.g., Glucose",
+            "unit_placeholder": "Unit",
+            "add_param": "Add another parameter",
+            "cancel": "Cancel",
+            "save_btn": "Save Results",
+            "saving_btn": "Saving..."
+        },
+        "create_consultation": {
+            "title": "Schedule New Consultation",
+            "patient_label": "Patient",
+            "date_label": "Date",
+            "time_label": "Time",
+            "type_label": "Consultation Type",
+            "reason_label": "Reason (Optional)",
+            "patient_placeholder": "Select a patient...",
+            "reason_placeholder": "e.g., Review of exams...",
+            "types": {
+                "first_time": "First Time",
+                "follow_up": "Control / Follow-up",
+                "emergency": "Emergency"
+            },
+            "status": {
+                "scheduled": "Scheduled",
+                "completed": "Completed",
+                "canceled": "Canceled",
+                "no_show": "No Show"
+            },
+            "form_sections": {
+                "data": "Appointment Data"
+            },
+            "cancel": "Cancel",
+            "schedule_btn": "Schedule Appointment"
+        }
+    }
+}

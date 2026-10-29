@@ -1,0 +1,445 @@
+[
+  {
+    "name": "Consomé de Pollo con Verduras",
+    "category": "cena",
+    "description": "Un caldo ligero y refrescante para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Verduras congeladas",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz cocido",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Caldo de pollo",
+        "quantity": 480,
+        "unit": "ml"
+      },
+      {
+        "name": "Limón",
+        "quantity": 60,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Sopa de Espinacas",
+    "category": "cena",
+    "description": "Una sopa rica y nutritiva para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Espinacas cocidas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      },
+      {
+        "name": "Caldo de pollo",
+        "quantity": 480,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Ejotes con Cacahuate",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Ejotes al vapor",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Cacahuates",
+        "quantity": 14,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Brochetas de Pollo",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pimientos",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Cebolla",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilla de maíz",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Fajita de pollo cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Aplastaditas con Ensalada Rusa",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Zanahoria cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Papa cocida",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Carne molida",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo batido",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Nopales Cocidos",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "vegetariano",
+      "bajo-ig",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Nopales",
+        "quantity": 480,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Pechuga de Pollo Asada con Nopales y Ensalada de Pepinos",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pechuga de pollo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Nopales",
+        "quantity": 480,
+        "unit": "g"
+      },
+      {
+        "name": "Pepino",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Albóndigas con Ensalada de Zanahoria y Verduras",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne molida",
+        "quantity": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Huevo batido",
+        "quantity": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz cocido",
+        "quantity": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Zanahoria rallada",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Verduras mixtas",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Salpicón de Pollo",
+    "category": "snack",
+    "description": "Un snack saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Pollo deshebrado",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga en tiras",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pimientos",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Crema light",
+        "quantity": 30,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Bisteces a la Mexicana con Frijoles",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Bistec de res",
+        "quantity": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Frijoles",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Jitomate, cebolla y chile serrano",
+        "quantity": 240,
+        "unit": "g"
+      }
+    ]
+  },
+  {
+    "name": "Empañadas de Pollo",
+    "category": "almuerzo",
+    "description": "Un plato saludable y delicioso para cualquier ocasión.",
+    "tags": [
+      "proteico",
+      "facil"
+    ],
+    "foods": [
+      {
+        "name": "Carne molida de pollo",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Lechuga",
+        "quantity": 240,
+        "unit": "g"
+      },
+      {
+        "name": "Espinacas",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Pan molido",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Aceite",
+        "quantity": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  {
+    "name": "Sincronizadas",
+    "category": "almuerzo",
+    "description": "Tortillas de maíz con jamón y queso.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "tortillas"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 4,
+        "unit": "rebanadas"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 2,
+        "unit": "rebanadas"
+      }
+    ]
+  },
+  {
+    "name": "Sándwich de pavo",
+    "category": "almuerzo",
+    "description": "Pan de caja con jamón de pavo y queso.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Pan de caja",
+        "quantity": 2,
+        "unit": "rebanadas"
+      },
+      {
+        "name": "Jamón de pavo",
+        "quantity": 2,
+        "unit": "rebanadas"
+      },
+      {
+        "name": "Queso panela",
+        "quantity": 1,
+        "unit": "rebanada"
+      },
+      {
+        "name": "Mayonesa light",
+        "quantity": 1,
+        "unit": "cucharadita"
+      }
+    ]
+  },
+  {
+    "name": "Quesadillas de picadillo",
+    "category": "almuerzo",
+    "description": "Tortillas de maíz con picadillo y pepino rallado.",
+    "tags": [
+      "sin-gluten",
+      "bajo-ig"
+    ],
+    "foods": [
+      {
+        "name": "Tortillas de maíz",
+        "quantity": 3,
+        "unit": "tortillas"
+      },
+      {
+        "name": "Pepino rallado",
+        "quantity": 2,
+        "unit": "tazas"
+      },
+      {
+        "name": "Picadillo",
+        "quantity": 0.75,
+        "unit": "taza"
+      }
+    ]
+  }
+]

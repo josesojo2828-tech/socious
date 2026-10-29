@@ -1,0 +1,37 @@
+FROM node:20-alpine
+
+# OpenSSL es requerido por Prisma en Alpine
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+# Entrypoint que aplica las migraciones de Prisma antes de arrancar la app.
+# Se copia y da permisos de ejecución ANTES de cambiar al usuario node
+# (el chmod sobre /usr/local/bin requiere root).
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Instalar @nestjs/cli como root (requiere permisos de escritura global)
+RUN npm install -g @nestjs/cli
+
+# Asignamos la propiedad de la carpeta al usuario node ANTES de cambiar de usuario
+RUN mkdir -p /app/dist/i18n && chown -R node:node /app
+
+# Cambiamos al usuario sin privilegios
+USER node
+
+# Copiamos archivos estratégicamente con los permisos correctos
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node prisma ./prisma/
+
+RUN npm install
+
+# Copiamos el resto del código
+COPY --chown=node:node . .
+
+RUN npx prisma generate
+
+# El entrypoint corre las migraciones de Prisma y luego ejecuta el CMD (npm run dev)
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+CMD ["npm", "run", "dev"]
