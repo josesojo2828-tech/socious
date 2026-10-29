@@ -48,7 +48,7 @@ export class CreateClientDto {
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber({ message: "El límite de crédito debe ser numérico." })
+  @IsNumber({}, { message: "El límite de crédito debe ser numérico." })
   @Min(0, { message: "El límite de crédito no puede ser negativo." })
   creditLimitUSD?: number;
 
