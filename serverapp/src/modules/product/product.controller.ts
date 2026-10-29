@@ -1,0 +1,193 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common";
+import { PrismaService } from "nestjs-prisma";
+import { ProductService, ProductScope } from "./product.service";
+import {
+  AdjustStockDto,
+  CreateProductDto,
+  ListProductsQueryDto,
+  ListStockMovementsQueryDto,
+  UpdateProductDto,
+} from "./dto/product.dto";
+import { Public } from "src/shared/decorators/public.decorator";
+import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
+import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
+import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import type { RequestWithUser } from "src/shared/types/server.type";
+
+/**
+ * Product catalog (S6): states, stock control through the Kardex and the
+ * public storefront listing (`isPublic`).
+ */
+@Controller("api/products")
+export class ProductController {
+  private readonly organizationScope: OrganizationScopeService;
+
+  constructor(
+    private readonly productService: ProductService,
+    private readonly workspaceContext: WorkspaceContextService,
+    private readonly prisma: PrismaService,
+  ) {
+    this.organizationScope = new OrganizationScopeService(this.prisma);
+  }
+
+  private async resolveScope(
+    request: RequestWithUser,
+  ): Promise<ProductScope> {
+    if (!request.user) {
+      throw new UnauthorizedException("No autorizado");
+    }
+
+    const resolved = await this.organizationScope.resolveOrganizationScope({
+      user: request.user as any,
+      requestedOrganizationId: this.workspaceContext.getWorkspaceId(),
+      unauthorizedFallback: "personal",
+      missingFallback: "personal",
+    });
+
+    return {
+      organizationId: resolved.organizationId,
+      createdById: request.user.id,
+    };
+  }
+
+  /**
+   * Public storefront catalog (S6/S9): only products the merchant published,
+   * resolved by the shop slug so a visitor never needs an account.
+   */
+  @Public()
+  @Get("public")
+  async listPublicCatalog(
+    @Query("organization") organizationSlug?: string,
+    @Query("q") q?: string,
+  ) {
+    const organization = organizationSlug
+      ? await this.prisma.organization.findUnique({
+          where: { slug: organizationSlug },
+          select: { id: true },
+        })
+      : null;
+
+    if (!organization) {
+      return { list: [], total: 0 };
+    }
+
+    const [list, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where: {
+          organizationId: organization.id,
+          deletedAt: null,
+          isPublic: true,
+          status: "ACTIVE",
+          ...(q?.trim()
+            ? { name: { contains: q.trim(), mode: "insensitive" } }
+            : {}),
+        },
+        orderBy: { name: "asc" },
+        take: 100,
+        select: {
+          id: true,
+          sku: true,
+          barcode: true,
+          name: true,
+          description: true,
+          salePriceUSD: true,
+          wholesalePriceUSD: true,
+          unit: true,
+          taxRate: true,
+          imageUrl: true,
+          stock: true,
+          categoryId: true,
+        },
+      }),
+      this.prisma.product.count({
+        where: {
+          organizationId: organization.id,
+          deletedAt: null,
+          isPublic: true,
+          status: "ACTIVE",
+        },
+      }),
+    ]);
+
+    return { list, total };
+  }
+
+  @Get()
+  @UseGuards(SessionAuthGuard)
+  async list(
+    @Req() request: RequestWithUser,
+    @Query() query: ListProductsQueryDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productService.list(scope, query);
+  }
+
+  @Get(":id/stock-movements")
+  @UseGuards(SessionAuthGuard)
+  async listStockMovements(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Query() query: ListStockMovementsQueryDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productService.listStockMovements(scope, id, query);
+  }
+
+  @Get(":id")
+  @UseGuards(SessionAuthGuard)
+  async getOne(@Req() request: RequestWithUser, @Param("id") id: string) {
+    const scope = await this.resolveScope(request);
+    return this.productService.getOne(scope, id);
+  }
+
+  @Post()
+  @UseGuards(SessionAuthGuard)
+  async create(
+    @Req() request: RequestWithUser,
+    @Body() body: CreateProductDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productService.create(scope, body);
+  }
+
+  @Post(":id/stock")
+  @UseGuards(SessionAuthGuard)
+  async adjustStock(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: AdjustStockDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productService.adjustStock(scope, id, body);
+  }
+
+  @Patch(":id")
+  @UseGuards(SessionAuthGuard)
+  async update(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: UpdateProductDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productService.update(scope, id, body);
+  }
+
+  @Delete(":id")
+  @UseGuards(SessionAuthGuard)
+  async remove(@Req() request: RequestWithUser, @Param("id") id: string) {
+    const scope = await this.resolveScope(request);
+    return this.productService.remove(scope, id);
+  }
+}
