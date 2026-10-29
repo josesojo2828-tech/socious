@@ -237,54 +237,11 @@ export class UserService {
         termsAcceptedIpHash: data.termsAcceptedIpHash,
       };
 
-      if (data.permitId === "USER") {
-        dataCreate.nutritionistProfile = { create: {} };
-      }
-
-      let isPromo = false;
-      let couponRecord: any = null;
-
-      if (data.referredByCode) {
-        const upperCode = data.referredByCode.toUpperCase();
-        if (upperCode === "CAMPUS") {
-          throw new ForbiddenException(
-            "El cupón genérico 'CAMPUS' ya no es válido. Por favor, solicita un cupón de acceso exclusivo en nutringest.com/campus."
-          );
-        }
-
-        if (upperCode.startsWith("CAMPUS-")) {
-          couponRecord = await this.prisma.campusCoupon.findUnique({
-            where: { code: upperCode }
-          });
-          if (!couponRecord) {
-            throw new ForbiddenException("El cupón de Campus ingresado no existe.");
-          }
-          if (couponRecord.isUsed) {
-            throw new ForbiddenException("El cupón de Campus ingresado ya fue utilizado.");
-          }
-          if (couponRecord.expiresAt < new Date()) {
-            throw new ForbiddenException("El cupón de Campus ingresado ha expirado.");
-          }
-          isPromo = true;
-        }
-      }
-
       const entity = await this.userRepository.create({
         data: dataCreate,
       });
 
       if (!entity) throw new ForbiddenException("Usuario no creado");
-
-      if (isPromo && couponRecord) {
-        await this.prisma.campusCoupon.update({
-          where: { id: couponRecord.id },
-          data: {
-            isUsed: true,
-            usedAt: new Date(),
-            usedById: entity.id
-          }
-        });
-      }
 
       const success = new DomainEvent({
         action: this.userRepository.EVENT_CREATED_SUSSCESS,
@@ -792,7 +749,7 @@ export class UserService {
 
     // Filtrar usuarios demo por defecto (excluir demo del listado principal) solo a usuarios normales
     if (isDemo !== undefined && isDemo !== null) {
-      where.push({ isDemo: isDemo === true || isDemo === "true" });
+      where.push({ isDemo: isDemo === true });
     } else if (!isGlobalRole) {
       where.push({ isDemo: false }); // Por defecto excluir demo
     }
@@ -833,55 +790,16 @@ export class UserService {
     }
 
     if (!isGlobalRole) {
-      if (orgId && nutritionistId) {
+      if (orgId) {
         where.push({
-          patientProfiles: {
-            some: {
-              organizationId: orgId,
-              nutritionists: {
-                some: { nutritionistId: nutritionistId, isActive: true },
-              },
-            },
-          },
+          organizationMembers: { some: { organizationId: orgId } },
         });
-      } else if (orgId) {
-        where.push({
-          patientProfiles: {
-            some: {
-              organizationId: orgId,
-            },
-          },
-        });
-      } else if (nutritionistId) {
-        // Personal workspace: only return patients with null organizationId
-        where.push({
-          patientProfiles: {
-            some: {
-              organizationId: null,
-              nutritionists: {
-                some: { nutritionistId: nutritionistId, isActive: true },
-              },
-            },
-          },
-        });
-      } else if (isPatientOnly) {
-        where.push({ patientProfiles: { some: {} } });
+      } else if (sessionUser?.id) {
+        // Personal context: a tenant never lists users from another workspace.
+        where.push({ id: sessionUser.id });
       }
     } else if (isPatientOnly) {
-      where.push({ patientProfiles: { some: {} } });
-    }
-
-    // Patient archive filter
-    // When includeArchived=true → show ONLY archived (inactive) patients.
-    // When false/undefined → show only active patients (default behavior).
-    if (query.includeArchived === true) {
-      where.push({
-        patientProfiles: {
-          some: {
-            isActive: false,
-          },
-        },
-      });
+      where.push({ organizationMembers: { some: {} } });
     }
 
     const currentPage = page > 0 ? page : 1;
@@ -894,24 +812,7 @@ export class UserService {
         skip,
         take: limit,
         orderBy: { [sortBy]: sortOrder },
-        include: {
-          ...DEFAULT_INCLUDE,
-          patientProfiles: {
-            include: {
-              nutritionists: {
-                include: {
-                  nutritionist: {
-                    include: {
-                      user: {
-                        select: { username: true },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
+        include: DEFAULT_INCLUDE,
       }),
       this.userRepository.count({ where: whereClause }),
     ]);

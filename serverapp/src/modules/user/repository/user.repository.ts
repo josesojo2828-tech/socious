@@ -70,9 +70,6 @@ export default class UserRepository extends UserModel {
       referredById: entity.referredById,
       referralCode: entity.referralCode,
 
-      nutritionistProfile: entity.nutritionistProfile,
-      patientProfiles: entity.patientProfiles,
-
       emailVerifiedAt: entity.emailVerifiedAt,
       hashedRefreshToken: entity.hashedRefreshToken,
       emailVerificationToken: entity.emailVerificationToken,
@@ -181,7 +178,6 @@ export default class UserRepository extends UserModel {
       include: {
         permits: true,
         subscriptions: SUBSCRIPTION_SELECT,
-        nutritionistProfile: true,
       },
     });
 
@@ -199,7 +195,6 @@ export default class UserRepository extends UserModel {
         permits: true,
         userPermissions: true,
         subscriptions: SUBSCRIPTION_SELECT,
-        nutritionistProfile: true,
       },
     });
 

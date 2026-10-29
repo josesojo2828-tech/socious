@@ -67,30 +67,6 @@ export const DEFAULT_INCLUDE: USER_INCLUDE = {
       name: true,
     },
   },
-  nutritionistProfile: {
-    include: {
-      _count: {
-        select: {
-          consultations: true,
-        },
-      },
-    },
-  },
-  patientProfiles: {
-    include: {
-      nutritionists: {
-        include: {
-          nutritionist: {
-            include: {
-              user: {
-                select: { username: true },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   userPermissions: true,
   organizationMembers: true,
 };

@@ -45,7 +45,7 @@ import {
 } from "./dto/user.types";
 import { FilterParamsDto } from "src/shared/types/server.type";
 import type { RequestWithUser } from "src/shared/types/server.type";
-import { UserStatus } from "src/shared/types/schema.types";
+import { AddressType, UserStatus } from "src/shared/types/schema.types";
 import { SUBSCRIPTION_WHERE } from "./dto/subscription.type";
 import { FeedbackService } from "./services/feedback.service";
 import { CreateFeedbackDto } from "./dto/feedback.type";
@@ -486,7 +486,7 @@ export class UserController {
     return await this.userAddressService.create({
       ...body,
       userId: param.id,
-      type: body.type ?? "HOME",
+      type: body.type ?? AddressType.HOME,
     });
   }
 
@@ -536,8 +536,12 @@ export class UserController {
         sessionUser?.permits?.name === "ADMIN";
       const isEditingSelf = sessionUser?.id === query.id;
 
-      let statusOptions = undefined;
-      let permitOptions = undefined;
+      let statusOptions:
+        | { label: string; value: UserStatus }[]
+        | undefined = undefined;
+      let permitOptions:
+        | { label: string; value: string }[]
+        | undefined = undefined;
 
       if (isAdmin && !isEditingSelf) {
         statusOptions = Object.values(UserStatus).map((status) => ({

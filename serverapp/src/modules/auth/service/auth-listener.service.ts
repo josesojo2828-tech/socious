@@ -60,7 +60,7 @@ export class AuthListenerService {
 
   private logError(
     action: string,
-    envelope: EventEnvelope,
+    envelope: EventEnvelope<any>,
     error: unknown,
   ): void {
     const message = error instanceof Error ? error.message : String(error);

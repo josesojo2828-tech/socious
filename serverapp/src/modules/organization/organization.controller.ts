@@ -148,19 +148,6 @@ export class OrganizationController {
     return this.organizationService.getTodayClinicAppointments(orgId);
   }
 
-  @Get(':id/agenda/history')
-  @FieldPolicy("ATTENDANCE_CONTROL", {
-    formKey: "attendance.agenda",
-    organizationParam: "id",
-  })
-  async getAgendaHistory(
-    @Param('id') orgId: string,
-    @Query('year') year?: string,
-    @Query('month') month?: string,
-  ) {
-    return this.organizationService.getAgendaHistory(orgId, year, month);
-  }
-
   @Post(':id/seats/purchase')
   @UseGuards(OrgAdminGuard)
   async purchaseSeats(

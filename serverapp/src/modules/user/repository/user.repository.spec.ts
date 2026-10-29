@@ -93,42 +93,47 @@ describe("UserRepository.findOne — R1 payload contract (task 8.3)", () => {
   });
 
   describe("findForAuthById & findForAuthByEmail", () => {
-    it("preserves nutritionistProfile in findForAuthById", async () => {
+    it("includes permits and subscriptions in findForAuthById", async () => {
       const { repository, prisma } = makeRepository();
       const entity = {
         ...makeEntity(),
-        nutritionistProfile: { id: "nut-auth-id", userId: USER_ID },
+        permits: { id: "USER", name: "USER" },
+        subscriptions: [{ id: "sub-1", status: "ACTIVE" }],
       };
       prisma.user.findUnique.mockResolvedValue(entity);
 
       const user = await repository.findForAuthById(USER_ID);
 
       expect(user).not.toBeNull();
-      expect(user!.nutritionistProfile).toEqual({ id: "nut-auth-id", userId: USER_ID });
+      expect(user!.permits).toEqual({ id: "USER", name: "USER" });
+      expect(user!.subscriptions).toHaveLength(1);
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: USER_ID },
         include: expect.objectContaining({
-          nutritionistProfile: true,
+          permits: true,
+          subscriptions: expect.anything(),
         }),
       });
     });
 
-    it("preserves nutritionistProfile in findForAuthByEmail", async () => {
+    it("includes permits and subscriptions in findForAuthByEmail", async () => {
       const { repository, prisma } = makeRepository();
       const entity = {
         ...makeEntity(),
-        nutritionistProfile: { id: "nut-auth-id", userId: USER_ID },
+        permits: { id: "USER", name: "USER" },
+        subscriptions: [{ id: "sub-1", status: "ACTIVE" }],
       };
       prisma.user.findUnique.mockResolvedValue(entity);
 
-      const user = await repository.findForAuthByEmail("ana@nutringest.test");
+      const user = await repository.findForAuthByEmail("ana@socius.test");
 
       expect(user).not.toBeNull();
-      expect(user!.nutritionistProfile).toEqual({ id: "nut-auth-id", userId: USER_ID });
+      expect(user!.permits).toEqual({ id: "USER", name: "USER" });
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { email: "ana@nutringest.test" },
+        where: { email: "ana@socius.test" },
         include: expect.objectContaining({
-          nutritionistProfile: true,
+          permits: true,
+          subscriptions: expect.anything(),
         }),
       });
     });

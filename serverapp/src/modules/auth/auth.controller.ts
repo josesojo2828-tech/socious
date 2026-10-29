@@ -84,7 +84,7 @@ export class AuthController {
     @Req() req: RequestWithUser,
   ) {
     return this.authService.changePassword(
-      req.user.sub,
+      (req.user as unknown as { sub: string }).sub,
       dto.oldPassword,
       dto.newPassword,
     );

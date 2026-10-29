@@ -1,35 +1,36 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
-import {
-  SubscriptionStatus,
-  TransactionStatus,
-  TransactionType,
-} from "@prisma/client";
+import { SubscriptionStatus, TransactionStatus, TransactionType } from "@prisma/client";
 import { startOfMonth, subMonths, format } from "date-fns";
 import { es } from "date-fns/locale";
 import { AdminDashboardStats } from "../dto/dashboard.type";
-import { Logger } from "@nestjs/common";
-const logger = new Logger("admin-analytics.service");
 
+const logger = new Logger("admin-analytics.service");
 
 @Injectable()
 export class AdminAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Obtiene las estadísticas del dashboard admin.
-   * Si se proporciona organizationId, filtra datos solo de esa organización.
+   * Admin dashboard stats.
+   *
+   * The JSON contract (`AdminDashboardStats`) is kept stable so existing
+   * consumers keep working, but every nutrition-era metric now reads from the
+   * Socius ERP data:
+   *  - `totalPatients`  → clients (`Client`)
+   *  - `totalConsultations` → sales (`Sale`)
+   *  - `totalDietPlans` → products (`Product`)
+   *  - clinical activity chart → sales vs. web orders per month
    */
-  async getDashboardStats(organizationId?: string | null): Promise<AdminDashboardStats> {
+  async getDashboardStats(
+    organizationId?: string | null,
+  ): Promise<AdminDashboardStats> {
     logger.log(`[AdminAnalytics] organizationId: ${organizationId}`);
 
-    // Filtro base para组织
     const orgFilter = organizationId ? { organizationId } : {};
-    logger.log(`[AdminAnalytics] orgFilter:`, orgFilter);
 
     // --- 1. KPIs ---
 
-    // MRR: Suma de precios de planes activos (filtrado por organización)
     const activeSubs = await this.prisma.subscription.findMany({
       where: {
         status: SubscriptionStatus.ACTIVE,
@@ -37,53 +38,24 @@ export class AdminAnalyticsService {
       },
       include: { plan: true },
     });
-    const mrr = activeSubs.reduce(
-      (acc, sub) => acc + Number(sub.plan.price),
-      0,
-    );
+    const mrr = activeSubs.reduce((acc, sub) => acc + Number(sub.plan.price), 0);
 
-    // Nutricionistas: Solo los que pertenecen a la organización
-    let totalNutritionists: number;
+    // Team members: ACTIVE organization memberships (or platform users).
+    let totalMembers: number;
     if (organizationId) {
-      // Contar nutricionistas que son miembros de la organización
-      const orgMembers = await this.prisma.organizationMember.findMany({
-        where: {
-          organizationId,
-          status: "ACTIVE",
-          user: {
-            permits: { name: "USER" },
-            deletedAt: null,
-            isDemo: false,
-          },
-        },
+      totalMembers = await this.prisma.organizationMember.count({
+        where: { organizationId, status: "ACTIVE" },
       });
-      totalNutritionists = orgMembers.length;
     } else {
-      totalNutritionists = await this.prisma.user.count({
-        where: {
-          permits: { name: "USER" },
-          deletedAt: null,
-          isDemo: false,
-        },
+      totalMembers = await this.prisma.user.count({
+        where: { deletedAt: null, isDemo: false },
       });
     }
 
-    // Pacientes filtrados por organización
-    const totalPatients = await this.prisma.patient.count({
-      where: orgFilter,
-    });
+    const totalClients = await this.prisma.client.count({ where: orgFilter });
+    const totalSales = await this.prisma.sale.count({ where: orgFilter });
+    const totalProducts = await this.prisma.product.count({ where: orgFilter });
 
-    // Consultas filtradas por organización
-    const totalConsultations = await this.prisma.consultation.count({
-      where: orgFilter,
-    });
-
-    // Planes nutricionales filtrados por organización
-    const totalDietPlans = await this.prisma.nutritionalPlan.count({
-      where: orgFilter,
-    });
-
-    // Pagos pendientes filtrados por organización
     const pendingPaymentsCount = await this.prisma.transaction.count({
       where: {
         status: TransactionStatus.PENDING,
@@ -91,7 +63,6 @@ export class AdminAnalyticsService {
       },
     });
 
-    // Churn Rate filtrado por organización
     const totalSubs = await this.prisma.subscription.count({
       where: orgFilter,
     });
@@ -105,12 +76,11 @@ export class AdminAnalyticsService {
     });
     const churnRate = totalSubs > 0 ? (canceledSubs / totalSubs) * 100 : 0;
 
-    // --- 2. CHARTS ---
+    // --- 2. CHARTS (last 6 months) ---
 
-    // A. Ingresos, Crecimiento de Usuarios y Actividad Clínica en últimos 6 meses
-    const revenueChart: any = [];
-    const userGrowthChart: any = [];
-    const clinicalActivityChart: any = [];
+    const revenueChart: AdminDashboardStats["charts"]["revenueByMonth"] = [];
+    const userGrowthChart: AdminDashboardStats["charts"]["userGrowth"] = [];
+    const activityChart: AdminDashboardStats["charts"]["clinicalActivity"] = [];
 
     for (let i = 5; i >= 0; i--) {
       const date = subMonths(new Date(), i);
@@ -118,7 +88,6 @@ export class AdminAnalyticsService {
       const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
       const monthLabel = format(date, "MMMM", { locale: es });
 
-      // Ingresos filtrados por organización
       const income = await this.prisma.transaction.aggregate({
         _sum: { amount: true },
         where: {
@@ -129,22 +98,15 @@ export class AdminAnalyticsService {
         },
       });
 
-      // Crecimiento de usuarios filtrado por organización
       let newUsersCount: number;
       if (organizationId) {
-        // Contar usuarios nuevos en la organización
-        const newOrgMembers = await this.prisma.organizationMember.findMany({
+        newUsersCount = await this.prisma.organizationMember.count({
           where: {
             organizationId,
             assignedAt: { gte: start, lte: end },
             status: "ACTIVE",
-            user: {
-              deletedAt: null,
-              isDemo: false,
-            },
           },
         });
-        newUsersCount = newOrgMembers.length;
       } else {
         newUsersCount = await this.prisma.user.count({
           where: {
@@ -155,21 +117,15 @@ export class AdminAnalyticsService {
         });
       }
 
-      // Consultas filtradas por organización
-      const consultationsCount = await this.prisma.consultation.count({
-        where: {
-          createdAt: { gte: start, lte: end },
-          ...orgFilter,
-        },
-      });
-
-      // Planes nutricionales filtrados por organización
-      const plansCount = await this.prisma.nutritionalPlan.count({
-        where: {
-          createdAt: { gte: start, lte: end },
-          ...orgFilter,
-        },
-      });
+      // Business activity: sales issued and web orders received that month.
+      const [salesCount, ordersCount] = await Promise.all([
+        this.prisma.sale.count({
+          where: { createdAt: { gte: start, lte: end }, ...orgFilter },
+        }),
+        this.prisma.order.count({
+          where: { createdAt: { gte: start, lte: end }, ...orgFilter },
+        }),
+      ]);
 
       revenueChart.push({
         month: monthLabel,
@@ -177,19 +133,15 @@ export class AdminAnalyticsService {
         failed: 0,
       });
 
-      userGrowthChart.push({
-        month: monthLabel,
-        count: newUsersCount,
-      });
+      userGrowthChart.push({ month: monthLabel, count: newUsersCount });
 
-      clinicalActivityChart.push({
+      activityChart.push({
         month: monthLabel,
-        consultations: consultationsCount,
-        plans: plansCount,
+        consultations: salesCount,
+        plans: ordersCount,
       });
     }
 
-    // B. Planes filtrados por organización
     const plansGroup = await this.prisma.subscription.groupBy({
       by: ["planId"],
       _count: { id: true },
@@ -199,7 +151,6 @@ export class AdminAnalyticsService {
       },
     });
 
-    // Necesitamos los nombres de los planes
     const plansDetails = await this.prisma.subscriptionPlan.findMany();
     const pieChart = plansGroup.map((item) => {
       const plan = plansDetails.find((p) => p.id === item.planId);
@@ -210,69 +161,39 @@ export class AdminAnalyticsService {
       };
     });
 
-    // --- 3. TABLAS ---
+    // --- 3. TABLES ---
 
-    // Top Nutricionistas (Más pacientes) filtrados por organización
-    let topUsers: any[];
-    if (organizationId) {
-      // Obtener nutricionistas de la organización ordenados por número de pacientes
-      const orgNutritionists = await this.prisma.organizationMember.findMany({
-        where: {
-          organizationId,
-          status: "ACTIVE",
-          user: {
-            permits: { name: "USER" },
-            deletedAt: null,
-            isDemo: false,
-          },
-        },
-        include: {
-          user: {
-            select: {
-              username: true,
-              email: true,
-              subscriptions: {
-                where: { status: "ACTIVE" },
-                include: { plan: true },
-              },
-              nutritionistProfile: {
-                select: {
-                  patientNutritionists: {
-                    where: { isActive: true },
-                    select: { id: true },
-                  },
-                },
-              },
-            },
-          },
-        },
-        take: 5,
-      });
+    // Top sellers: members ranked by the number of sales they created.
+    let topUsers: {
+      username: string | null;
+      email: string;
+      sales: number;
+      planName: string;
+    }[];
 
-      topUsers = orgNutritionists
-        .map((member) => ({
-          user: {
-            username: member.user.username,
-            email: member.user.email,
-            subscriptions: member.user.subscriptions,
-          },
-          _count: {
-            patientNutritionists: member.user.nutritionistProfile?.patientNutritionists?.length || 0,
-          },
-        }))
-        .sort((a, b) => b._count.patientNutritionists - a._count.patientNutritionists);
-    } else {
-      topUsers = await this.prisma.nutritionist.findMany({
-        take: 5,
-        orderBy: {
-          patientNutritionists: { _count: "desc" },
-        },
-        include: {
-          _count: {
-            select: { patientNutritionists: true },
-          },
-          user: {
+    const topSalesQuery = this.prisma.sale.groupBy({
+      by: ["createdById"],
+      _count: { id: true },
+      where: {
+        createdById: { not: null },
+        deletedAt: null,
+        ...orgFilter,
+      },
+      orderBy: { _count: { id: "desc" } },
+      take: 5,
+    });
+
+    const topSales = await topSalesQuery;
+    const topUserIds = topSales
+      .map((row) => row.createdById)
+      .filter((id): id is string => !!id);
+
+    const topMembers =
+      topUserIds.length > 0
+        ? await this.prisma.user.findMany({
+            where: { id: { in: topUserIds } },
             select: {
+              id: true,
               username: true,
               email: true,
               subscriptions: {
@@ -280,37 +201,32 @@ export class AdminAnalyticsService {
                 include: { plan: true },
               },
             },
-          },
-        },
-      });
-    }
+          })
+        : [];
 
-    // Transacciones recientes filtradas por organización
-    const recentTransactionsWhere: any = {
-      createdAt: { not: undefined },
-    };
-    if (organizationId) {
-      recentTransactionsWhere.organizationId = organizationId;
-    }
+    topUsers = topSales.map((row) => {
+      const user = topMembers.find((u) => u.id === row.createdById);
+      return {
+        username: user?.username ?? null,
+        email: user?.email ?? "",
+        sales: row._count.id,
+        planName: user?.subscriptions?.[0]?.plan?.name || "Sin plan",
+      };
+    });
 
     const recentTransactions = await this.prisma.transaction.findMany({
       take: 10,
       orderBy: { createdAt: "desc" },
-      where: recentTransactionsWhere,
+      where: organizationId ? { organizationId } : {},
       include: { user: true, paymentMethod: true },
     });
 
-    // Transacciones pendientes filtradas por organización
-    const pendingTransactionsWhere: any = {
-      status: TransactionStatus.PENDING,
-    };
-    if (organizationId) {
-      pendingTransactionsWhere.organizationId = organizationId;
-    }
-
     const pendingTransactions = await this.prisma.transaction.findMany({
       take: 10,
-      where: pendingTransactionsWhere,
+      where: {
+        status: TransactionStatus.PENDING,
+        ...(organizationId ? { organizationId } : {}),
+      },
       orderBy: { createdAt: "desc" },
       include: { user: true, paymentMethod: true },
     });
@@ -318,24 +234,24 @@ export class AdminAnalyticsService {
     return {
       kpi: {
         mrr,
-        totalNutritionists,
-        totalPatients,
+        totalNutritionists: totalMembers,
+        totalPatients: totalClients,
         churnRate,
-        totalConsultations,
-        totalDietPlans,
+        totalConsultations: totalSales,
+        totalDietPlans: totalProducts,
         pendingPaymentsCount,
       },
       charts: {
         revenueByMonth: revenueChart,
         subscriptionsByPlan: pieChart,
         userGrowth: userGrowthChart,
-        clinicalActivity: clinicalActivityChart,
+        clinicalActivity: activityChart,
       },
       tables: {
-        topUsers: topUsers.map((n) => ({
-          name: n.user.username || n.user.email,
-          patients: n._count.patientNutritionists,
-          plan: n.user.subscriptions[0]?.plan?.name || "Sin plan",
+        topUsers: topUsers.map((row) => ({
+          name: row.username || row.email,
+          patients: row.sales,
+          plan: row.planName,
         })),
         recentTransactions,
         pendingTransactions,
@@ -343,29 +259,46 @@ export class AdminAnalyticsService {
     };
   }
 
+  /** Users that registered work coordinates (now stored on `UserAddress`). */
   async getOfficeLocations() {
-    const users = await this.prisma.user.findMany({
+    const addresses = await this.prisma.userAddress.findMany({
       where: {
-        nutritionistProfile: { is: { lat: { not: null }, lng: { not: null } } },
+        deletedAt: null,
+        latitude: { not: null },
+        longitude: { not: null },
       },
       select: {
-        id: true,
-        fullName: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        nutritionistProfile: { select: { lat: true, lng: true } },
+        latitude: true,
+        longitude: true,
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
       },
+      take: 200,
     });
+
     return {
-      list: users
-        .filter((u) => u.nutritionistProfile?.lat != null && u.nutritionistProfile?.lng != null)
-        .map((u) => ({
-          id: u.id,
-          fullName: u.fullName || [u.firstName, u.lastName].filter(Boolean).join(" "),
-          email: u.email,
-          lat: u.nutritionistProfile!.lat,
-          lng: u.nutritionistProfile!.lng,
+      list: addresses
+        .filter(
+          (address) =>
+            address.latitude !== null && address.longitude !== null,
+        )
+        .map((address) => ({
+          id: address.user.id,
+          fullName:
+            address.user.fullName ||
+            [address.user.firstName, address.user.lastName]
+              .filter(Boolean)
+              .join(" "),
+          email: address.user.email,
+          lat: address.latitude as number,
+          lng: address.longitude as number,
         })),
     };
   }

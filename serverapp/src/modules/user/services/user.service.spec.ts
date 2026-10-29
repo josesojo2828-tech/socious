@@ -88,6 +88,8 @@ describe("UserService — getPaginate (SUPERADMIN vs normal user)", () => {
       regularUserSession,
     );
 
+    // Without an organization context a tenant only ever lists its own row:
+    // the personal workspace must never become a platform-wide user listing.
     expect(userRepositoryMock.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: {
@@ -95,6 +97,36 @@ describe("UserService — getPaginate (SUPERADMIN vs normal user)", () => {
             { deletedAt: null },
             { permits: { id: { not: "SUPERADMIN" } } },
             { isDemo: false },
+            { id: "user-1" },
+          ],
+        },
+      }),
+    );
+  });
+
+  it("scopes a member to their organization instead of listing platform users", async () => {
+    const regularUserSession = {
+      id: "user-1",
+      email: "regular@example.com",
+      permits: { name: "USER" },
+    };
+
+    await service.getPaginate(
+      { page: 1, limit: 10 },
+      undefined,
+      false,
+      "org-42",
+      regularUserSession,
+    );
+
+    expect(userRepositoryMock.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          AND: [
+            { deletedAt: null },
+            { permits: { id: { not: "SUPERADMIN" } } },
+            { isDemo: false },
+            { organizationMembers: { some: { organizationId: "org-42" } } },
           ],
         },
       }),

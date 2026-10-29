@@ -748,10 +748,15 @@ export class AuthService {
       throw new ForbiddenException("Contraseña actual incorrecta");
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await this.userService.update(userId, {
-      password: hashedPassword,
-      mustChangePassword: false,
+    // `updateUser` intentionally refuses to touch passwords (it drops the
+    // field), so the credential goes through the dedicated hashed path.
+    await this.userService.passwordUser({
+      where: { id: userId },
+      data: newPassword,
+    });
+    await this.userService.updateUser({
+      where: { id: userId },
+      data: { mustChangePassword: false },
     });
 
     return { message: "Contraseña actualizada correctamente" };

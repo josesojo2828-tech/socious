@@ -19,7 +19,7 @@ export class OrgAdminGuard implements CanActivate {
       return true;
     }
 
-    const orgId = request.params?.id;
+    const orgId = (request.params as { id?: string } | undefined)?.id;
     if (!orgId) {
       throw new ForbiddenException('ID de organización no proporcionado');
     }

@@ -171,10 +171,8 @@ export function resolveEntitlements(
   });
   const planContent = normalizeSubscriptionPlanContent(
     subscription?.plan?.content,
-    subscription?.plan,
+    subscription?.plan as { id?: string | null; name?: string | null } | null,
   );
-
-  console.log('[ENTITLEMENT DEBUG] Resolving for user:', user?.email, 'Active subscription:', subscription?.planId, 'Plan Content:', JSON.stringify(subscription?.plan?.content));
 
   // 4. Active add-on entitlements: org-owned for an org workspace, plus the
   //    caller's own personal entitlements (mirrors the polymorphic model).

@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { PrismaService } from "nestjs-prisma";
+import type { Prisma } from "@prisma/client";
 
 import {
   EventCategory,
@@ -90,7 +91,7 @@ export class RetentionJobService {
           status: "SUCCESS",
           totalEvaluated,
           totalPurged: 0,
-          details: reports,
+          details: reports as unknown as Prisma.InputJsonValue,
         },
       });
 

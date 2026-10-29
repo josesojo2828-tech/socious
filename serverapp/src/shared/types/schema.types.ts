@@ -119,6 +119,9 @@ export interface User {
   permits: Permit; // Corrected to single object based on relation
   emailVerifiedAt?: Date | null;
   hashedRefreshToken?: string | null;
+  token?: string | null;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiresAt?: Date | null;
   emailVerificationToken?: string | null;
   emailVerificationExpiresAt?: Date | null;
   failedLoginAttempts?: number;
@@ -147,11 +150,6 @@ export interface User {
   // Organization membership
   organizationMembers?: any[];
 
-  // Perfil Profesional (Si es Nutricionista)
-  nutritionistProfile?: Nutritionist | null;
-
-  // Perfil de Paciente (Si es Paciente)
-  patientProfiles?: Patient[];
 }
 
 export interface IPaymentMethod {

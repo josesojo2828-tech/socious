@@ -10,35 +10,40 @@ export class AppController {
     private readonly dataFixtureService: DataFixtureService,
     private readonly fakerInitService: FakerInitService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
+  /**
+   * Public landing-page counters. Replaces the old nutritionist stats with the
+   * numbers the Socius marketing site actually needs: businesses on the
+   * platform and documents processed.
+   */
   @Public()
   @Get("api/public/stats")
   async getPublicStats() {
-    const count = await this.prisma.nutritionist.count();
+    const [businessCount, saleCount] = await Promise.all([
+      this.prisma.organization.count({
+        where: { deletedAt: null, status: "ACTIVE" },
+      }),
+      this.prisma.sale.count({ where: { deletedAt: null } }),
+    ]);
 
-    // Obtener los avatares de los últimos 3 nutricionistas registrados y activos
     const recentUsers = await this.prisma.user.findMany({
       where: {
         deletedAt: null,
         status: "ACTIVE",
         avatarUrl: { not: null },
-        nutritionistProfile: { isNot: null },
       },
       take: 3,
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        avatarUrl: true,
-      },
+      orderBy: { createdAt: "desc" },
+      select: { avatarUrl: true },
     });
 
-    const avatars = recentUsers.map(u => u.avatarUrl).filter((url): url is string => !!url);
-
     return {
-      nutritionistCount: count,
-      avatars: avatars
+      businessCount,
+      saleCount,
+      avatars: recentUsers
+        .map((user) => user.avatarUrl)
+        .filter((url): url is string => !!url),
     };
   }
 

@@ -50,7 +50,6 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { CmsModule } from "./modules/cms/cms.module";
 import CmsRepository from "./modules/cms/repository/cms.repository";
 import { ActivityModule } from "./modules/activity/activity.module";
-import { UsageModule } from "./modules/usage/usage.module";
 import { ReferenceDataSeedModule } from "./shared/seed/reference-data-seed.module";
 import { OrganizationModule } from "./modules/organization/organization.module";
 import { EntitlementModule } from "./modules/organization/entitlement.module";
@@ -198,7 +197,6 @@ imports: [
     MailModule,
     CmsModule,
     ActivityModule,
-    UsageModule,
     ReferenceDataSeedModule,
     OrganizationModule,
     EntitlementModule,

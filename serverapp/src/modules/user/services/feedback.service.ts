@@ -275,22 +275,4 @@ export class FeedbackService {
     return actions;
   }
 
-  async setLocation(userSession: User, data: CreateLocationDto) {
-    const nutritionist = await this.prisma.nutritionist.findFirst({
-      where: { userId: userSession.id },
-    });
-
-    if (!nutritionist)
-      throw new EntityNotFoundException("Nutricionista no encontrado");
-
-    return await this.prisma.nutritionist.update({
-      data: {
-        lat: data.lat,
-        lng: data.lng,
-      },
-      where: {
-        id: nutritionist.id,
-      },
-    });
-  }
 }

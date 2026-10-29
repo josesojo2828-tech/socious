@@ -8,8 +8,9 @@ import * as path from "path";
  * (Category A: `user.role` → `permits.name`). These REAL role fields are
  * Category B and MUST remain untouched and correctly typed:
  *   - `OrganizationMember.role`      → OrganizationRole
- *   - `PatientNutritionist.role`     → PatientNutritionistRole
- *   - `InstitutionalCalculationCollaborator.role` → InstitutionalCollaboratorRole
+ *
+ * (Socius ERP: `PatientNutritionist` and `InstitutionalCalculationCollaborator`
+ * left with the nutrition domain, so their role fields are gone with them.)
  * This spec guards the Prisma schema contract (the FE `activeWorkspace.role`,
  * `WorkspaceItem.role` and portfolio `role` are covered by the documented grep
  * check in the apply-progress artifact).
@@ -42,22 +43,4 @@ describe("Category B real role fields — non-regression (task 8.4)", () => {
     }
   });
 
-  it("PatientNutritionist keeps its PatientNutritionistRole role field", () => {
-    expect(block("model", "PatientNutritionist")).toMatch(
-      /role\s+PatientNutritionistRole/,
-    );
-    const roleEnum = block("enum", "PatientNutritionistRole");
-    expect(roleEnum).toContain("PRIMARY");
-    expect(roleEnum).toContain("SUPPORT");
-  });
-
-  it("InstitutionalCalculationCollaborator keeps its InstitutionalCollaboratorRole role field", () => {
-    expect(block("model", "InstitutionalCalculationCollaborator")).toMatch(
-      /role\s+InstitutionalCollaboratorRole/,
-    );
-    const collaboratorRole = block("enum", "InstitutionalCollaboratorRole");
-    for (const value of ["OWNER", "EDITOR", "VIEWER"]) {
-      expect(collaboratorRole).toContain(value);
-    }
-  });
 });

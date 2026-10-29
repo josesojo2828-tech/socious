@@ -9,7 +9,6 @@ import { LoggerService } from "src/shared/logger/logger.service";
 import { JwtService } from "@nestjs/jwt";
 import { AdminAnalyticsService } from "./service/admin-analytics.service";
 import { UserDetailService } from "./service/user-detail.service";
-import { AdoptionAnalyticsService } from "./service/adoption-analytics.service";
 import { ActivityModule } from "../activity/activity.module";
 import { ModuleFrameworkModule } from "../module-framework/module-framework.module";
 
@@ -29,7 +28,6 @@ import { ModuleFrameworkModule } from "../module-framework/module-framework.modu
     PermitReporitory,
     AdminAnalyticsService,
     UserDetailService,
-    AdoptionAnalyticsService,
     LoggerService,
     JwtService,
   ],

@@ -42,11 +42,6 @@ export class DashboardService {
             link: "/dashboard",
           },
           {
-            title: "common.sidebar.adoption",
-            icon: "activity",
-            link: "/dashboard/adoption",
-          },
-          {
             title: "common.sidebar.activity_feed",
             icon: "activity",
             link: "/dashboard/activity",
@@ -84,11 +79,6 @@ export class DashboardService {
             link: "/dashboard/users",
           },
           {
-            title: "common.sidebar.campus_audit",
-            icon: "file-earmark-text",
-            link: "/dashboard/campus",
-          },
-          {
             title: "common.sidebar.feedback",
             icon: "message",
             link: "/dashboard/users/feedback",
@@ -115,11 +105,6 @@ export class DashboardService {
             title: "common.sidebar.permits",
             icon: "permit",
             link: "/dashboard/permits",
-          },
-          {
-            title: "common.sidebar.universities",
-            icon: "building",
-            link: "/dashboard/universities",
           },
           {
             title: "common.sidebar.subscription_plans",
@@ -189,16 +174,16 @@ export class DashboardService {
         ],
       });
 
-      // 2. Mi Web & Analíticas
-      if (!isPatient && hasModule("PORTFOLIO")) {
+      // 2. Tienda pública (catálogo que ven los clientes finales)
+      if (hasModule("INVENTORY") || hasModule("POS")) {
         sections.push({
-          title: "common.sidebar.web_analytics",
+          title: "common.sidebar.online_store",
           icon: "globe",
           items: [
             {
-              title: "common.sidebar.portfolio",
+              title: "common.sidebar.shop",
               icon: "globe",
-              link: "/dashboard/portfolio",
+              link: "/shop",
             },
           ],
         });
@@ -279,14 +264,6 @@ export class DashboardService {
         icon: "users",
         items: clientItems,
       });
-      if (communityItems.length > 0) {
-        sections.push({
-          title: "common.sidebar.community_network",
-          icon: "people",
-          items: communityItems,
-        });
-      }
-
       // 6. Mi Clínica (si aplica)
       if (
         permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||
@@ -353,7 +330,8 @@ export class DashboardService {
       });
     if (
       permits.includes(this.permitRepository.PERMIT_DASHBOARD_TAB_WEBSITE) ||
-      hasModule("PORTFOLIO") ||
+      hasModule("INVENTORY") ||
+      hasModule("POS") ||
       isGlobalRole
     )
       tabs.push({
@@ -368,19 +346,6 @@ export class DashboardService {
         icon: "activity",
         link: "/dashboard/activity",
       });
-
-    // Panel de adopción: same audience as the sidebar entry (dashboard permit
-    // for org members, role for global admins).
-    if (
-      permits.includes(this.permitRepository.PERMIT_DASHBOARD) ||
-      isGlobalRole
-    )
-      tabs.push({
-        title: "dashboard.tabs.adoption",
-        icon: "activity",
-        link: "/dashboard/adoption",
-      });
-
 
     // if(permits.includes(this.permitRepository.MY_CURRENT_ACTION_ADMINISTRATION)) tabs.push({ title: 'dashboard.tabs.user_action.administration', icon: 'administration', link: '/dashboard/' });
     // if(permits.includes(this.permitRepository.MY_CURRENT_ACTION_PAYMENT_METHOD)) tabs.push({ title: 'dashboard.tabs.user_action.payment_method', icon: 'payment-method', link: '/dashboard/payment-method' });

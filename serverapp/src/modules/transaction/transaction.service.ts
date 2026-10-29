@@ -100,7 +100,11 @@ export class TransactionService {
           });
           if (claim.count === 0) return false;
 
-          const walletId = current.user?.wallet?.id;
+          const wallet = await tx.userWallet.findFirst({
+            where: { userId: current.userId },
+            select: { id: true },
+          });
+          const walletId = wallet?.id;
           if (walletId) {
             // Determine which balance to increment based on original currency
             if (current.originalCurrency === "VES" && current.originalAmount) {
@@ -137,7 +141,7 @@ export class TransactionService {
           entityType: "Transaction",
           entityId: id,
           actorId: userSession?.id ?? null,
-          amount: current.amount,
+          amount: Number(current.amount),
           metadata: { previousStatus: current.status },
         });
       } else {

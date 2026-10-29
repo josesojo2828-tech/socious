@@ -26,18 +26,6 @@ const makeController = (members: Member[]) => {
     getOfficeLocations: jest.fn().mockResolvedValue([]),
   };
   const userDetailService = { getUserDetail: jest.fn() };
-  const adoptionAnalyticsService = {
-    getActiveUsers: jest.fn(),
-    getActiveUsersGlobal: jest.fn(),
-    getDormantUsers: jest.fn(),
-    getDormantUsersGlobal: jest.fn(),
-    getCohortRetention: jest.fn(),
-    getCohortRetentionGlobal: jest.fn(),
-    getClinicalFunnel: jest.fn(),
-    getClinicalFunnelGlobal: jest.fn(),
-    getFeatureDepth: jest.fn(),
-    getFeatureDepthGlobal: jest.fn(),
-  };
   const entitlementService = {
     resolve: jest.fn().mockResolvedValue({ permissions: [], modules: [] }),
   };
@@ -62,7 +50,6 @@ const makeController = (members: Member[]) => {
     dashboardService as any,
     adminAnalyticsService as any,
     userDetailService as any,
-    adoptionAnalyticsService as any,
     prisma as any,
     entitlementService as any,
   );

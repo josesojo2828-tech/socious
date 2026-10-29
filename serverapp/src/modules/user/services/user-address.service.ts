@@ -269,21 +269,37 @@ export class UserAddressService {
     return actions;
   }
 
+  /**
+   * Stores the professional/work location on the user's HOME address.
+   *
+   * The old nutrition build kept `lat`/`lng` on the deleted nutritionist
+   * profile; `UserAddress` already carries `latitude`/`longitude`, so the
+   * coordinates land on the user's own address instead of disappearing.
+   */
   async setLocation(userSession: User, data: CreateLocationDto) {
-    const nutritionist = await this.prisma.nutritionist.findFirst({
-      where: { userId: userSession.id },
+    const existing = await this.prisma.userAddress.findFirst({
+      where: { userId: userSession.id, deletedAt: null },
+      orderBy: { isDefault: "desc", createdAt: "asc" },
     });
 
-    if (!nutritionist)
-      throw new EntityNotFoundException("Nutricionista no encontrado");
+    if (existing) {
+      return this.prisma.userAddress.update({
+        where: { id: existing.id },
+        data: { latitude: data.lat, longitude: data.lng },
+      });
+    }
 
-    return await this.prisma.nutritionist.update({
+    return this.prisma.userAddress.create({
       data: {
-        lat: data.lat,
-        lng: data.lng,
-      },
-      where: {
-        id: nutritionist.id,
+        userId: userSession.id,
+        label: "Ubicación de trabajo",
+        address1: "Ubicación de trabajo",
+        city: "-",
+        country: "-",
+        type: "HOME",
+        isDefault: true,
+        latitude: data.lat,
+        longitude: data.lng,
       },
     });
   }
