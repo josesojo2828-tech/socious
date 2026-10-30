@@ -77,8 +77,8 @@ landing servida por `next dev` y verificada por HTTP, sin referencias a
 | ID | Specs | Route | Status | Commit |
 | --- | --- | --- | --- | --- |
 | T1 | — | inline | pending | rama `feat/socius-brand` |
-| T2 | S1 | inline | pending | — |
-| T3 | S2, S3 | inline | pending | — |
+| T2 | S1 | inline | done | `188c0a6` (fixture PRO fuera del boot, BASE_PLAN_GRANTS vaciado, planes legacy borrados) |
+| T3 | S2, S3 | inline | done | paleta indigo/slate + Inter + radio compacto, tokens clínicos borrados |
 | T4 | S5 | inline | pending | — (Stitch: proyecto + design system + pantallas) |
 | T5 | S4 | inline | pending | — (landing nueva consumiendo el backend) |
 | T6 | S6 | inline | pending | cierre |

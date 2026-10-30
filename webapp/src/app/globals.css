@@ -5,50 +5,22 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
-  --font-sans: var(--font-montserrat), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-montserrat), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --color-brand-blue: #0d0ea0;
-  --color-brand-purple: #2b0c4f;
-  --color-brand-black: #000000;
+  --font-sans: var(--font-inter), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* ---- SOCIUS BRAND ---- */
+  --color-brand-ink: #0f172a;
+  --color-brand-indigo: #4f46e5;
+  --color-brand-steel: #334155;
 
-  /* ---- NUTRINGEST CUSTOM TEMPLATE ALIASES ---- */
+  /* ---- SOCIUS TEMPLATE ALIASES (semantic layer used by shared components) */
   --ng-bg: var(--color-base-100);
   --ng-surface: var(--color-base-200);
-  --ng-primary: #5b21b6;
-  --ng-accent: #7c3aed;
-  --ng-secondary: #0ea5e9;
+  --ng-primary: var(--color-primary);
+  --ng-accent: var(--color-accent);
+  --ng-secondary: var(--color-secondary);
   --ng-text: var(--color-base-content);
   --ng-muted: color-mix(in oklab, var(--color-base-content) 60%, transparent);
 
-  /* ---- AGENDA TOKENS ---- */
-  --color-agenda-surface: var(--color-base-100);
-  --color-agenda-page: var(--color-base-200);
-  --color-agenda-panel: var(--color-base-200);
-  --color-agenda-border: var(--color-base-300);
-  --color-agenda-ink: var(--color-base-content);
-  --color-agenda-muted: color-mix(in oklab, var(--color-base-content) 60%, transparent);
-  --color-agenda-weekend: color-mix(in oklab, var(--color-base-200) 80%, var(--color-base-100));
-  --color-agenda-rail: var(--color-base-300);
-  --color-agenda-primary: var(--color-primary);
-  --color-agenda-primary-hover: var(--color-accent);
-  --color-agenda-primary-soft: color-mix(in oklab, var(--color-primary) 15%, transparent);
-  --color-agenda-today: var(--color-primary);
-  --color-agenda-today-soft: color-mix(in oklab, var(--color-primary) 15%, transparent);
-
-
-  /* ---- STATUS TOKENS ---- */
-  --color-status-scheduled: #3B82F6;
-  --color-status-scheduled-soft: #EFF6FF;
-  --color-status-scheduled-border: #BFDBFE;
-  --color-status-completed: #10B981;
-  --color-status-completed-soft: #ECFDF5;
-  --color-status-completed-border: #A7F3D0;
-  --color-status-canceled: #EF4444;
-  --color-status-canceled-soft: #FEF2F2;
-  --color-status-canceled-border: #FECACA;
-  --color-status-noshow: #F97316;
-  --color-status-noshow-soft: #FFF7ED;
-  --color-status-noshow-border: #FED7AA;
 }
 
 @plugin "daisyui/theme" {
@@ -58,17 +30,17 @@
   --color-base-200: oklch(93% 0.010 252.894);
   --color-base-300: oklch(88% 0.012 257.417);
   --color-base-content: oklch(27% 0.041 260.031);
-  --color-primary: #5b21b6; /* Marca: Purpura Nutringest */
+  --color-primary: #4f46e5; /* Socius: indigo administrativo */
   --color-primary-content: #ffffff;
-  --color-secondary: #0ea5e9;
+  --color-secondary: #334155;
   --color-secondary-content: #ffffff;
-  --color-accent: #7c3aed; /* Acento: Violeta Nutringest */
-  --color-accent-content: #0f172a;
-  --color-neutral: oklch(60% 0.118 184.704);
-  --color-neutral-content: oklch(98% 0.014 180.72);
+  --color-accent: #4338ca;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1e293b;
+  --color-neutral-content: #f8fafc;
   --color-info: oklch(54% 0.245 262.881);
   --color-info-content: oklch(97% 0.014 254.604);
-  --color-success: #10b981;
+  --color-success: #059669;
   --color-success-content: #ffffff;
   --color-warning: oklch(64% 0.222 41.116);
   --color-warning-content: oklch(98% 0.016 73.684);
@@ -87,15 +59,15 @@
 @plugin "daisyui/theme" {
   name: "dark";
   color-scheme: "dark";
-  --color-base-100: oklch(20% 0.03 265);
-  --color-base-200: oklch(16% 0.03 265);
-  --color-base-300: oklch(28% 0.04 265);
-  --color-base-content: oklch(96% 0.01 265);
-  --color-primary: #7c3aed; /* lighter purple for dark contrast */
+  --color-base-100: oklch(17% 0.012 260);
+  --color-base-200: oklch(13% 0.012 260);
+  --color-base-300: oklch(24% 0.012 260);
+  --color-base-content: oklch(97% 0.004 260);
+  --color-primary: #818cf8; /* Socius indigo, lifted for dark contrast */
   --color-primary-content: #ffffff;
-  --color-secondary: #38bdf8;
+  --color-secondary: #94a3b8;
   --color-secondary-content: #0f172a;
-  --color-accent: #a78bfa;
+  --color-accent: #a5b4fc;
   --color-accent-content: #0f172a;
   --color-neutral: oklch(30% 0.03 265);
   --color-neutral-content: oklch(96% 0.01 265);
@@ -104,42 +76,13 @@
   --color-success: #34d399;
   --color-warning: oklch(78% 0.17 60);
   --color-error: oklch(66% 0.22 25);
-  --radius-selector: 2rem;
-  --radius-field: 1rem;
+  /* Compact, administrative geometry */
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
   --radius-box: 0.5rem;
-  --border: 1.5px;
+  --border: 1px;
   --depth: 0;
   --noise: 0;
-}
-
-/* ---- DARK MODE AGENDA/STATUS TOKENS (UNLAYERED) ---- */
-/* Regla sin capa: le gana a @layer theme (@theme / daisyui theme plugins). */
-[data-theme="dark"] {
-  --color-agenda-surface: var(--color-base-100);
-  --color-agenda-page: var(--color-base-200);
-  --color-agenda-panel: var(--color-base-200);
-  --color-agenda-border: var(--color-base-300);
-  --color-agenda-ink: var(--color-base-content);
-  --color-agenda-muted: color-mix(in oklab, var(--color-base-content) 60%, transparent);
-  --color-agenda-weekend: color-mix(in oklab, var(--color-base-200) 80%, var(--color-base-100));
-  --color-agenda-rail: var(--color-base-300);
-  --color-agenda-primary: var(--color-primary);
-  --color-agenda-primary-hover: var(--color-accent);
-  --color-agenda-primary-soft: color-mix(in oklab, var(--color-primary) 15%, transparent);
-  --color-agenda-today: var(--color-primary);
-  --color-agenda-today-soft: color-mix(in oklab, var(--color-primary) 15%, transparent);
-  --color-status-scheduled: #60a5fa;
-  --color-status-scheduled-soft: #1e3a5f;
-  --color-status-scheduled-border: #1d4ed8;
-  --color-status-completed: #34d399;
-  --color-status-completed-soft: #064e3b;
-  --color-status-completed-border: #059669;
-  --color-status-canceled: #f87171;
-  --color-status-canceled-soft: #7f1d1d;
-  --color-status-canceled-border: #dc2626;
-  --color-status-noshow: #fb923c;
-  --color-status-noshow-soft: #7c2d12;
-  --color-status-noshow-border: #ea580c;
 }
 
 button, 

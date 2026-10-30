@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { ModalRoot } from "@/shared/components/organisms/Modal";
@@ -19,65 +19,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nutringest.com"),
   title: {
-    default: "Software para Nutricionistas y Clínicas | Nutringest",
-    template: "%s | Nutringest",
+    default: "Socius ERP — Gestión de negocio",
+    template: "%s | Socius ERP",
   },
   description:
-    "Nutringest es el software para nutricionistas y clínicas líder. Automatizá fichas clínicas, antropometría ISAK, cálculo de mermas, planes de alimentación y gestión de consultorios.",
-  keywords: [
-    "software para nutricionistas",
-    "herramienta para nutricionistas",
-    "herramienta para nutricionistas y clinicas",
-    "software para clinicas de nutricion",
-    "programa para nutricionistas",
-    "plataforma para nutricionistas",
-    "antropometria ISAK",
-    "calculadora nutricional",
-    "gestion de consultorios nutricionales",
-  ],
-  alternates: {
-    canonical: "https://nutringest.com",
-  },
-  authors: [{ name: "Nutringest Team" }],
-  openGraph: {
-    type: "website",
-    locale: "es_ES",
-    url: "https://nutringest.com",
-    siteName: "Nutringest",
-    title: "Software para Nutricionistas y Clínicas | Nutringest",
-    description:
-      "Nutringest es el software para nutricionistas y clínicas líder. Automatizá fichas clínicas, antropometría ISAK, cálculo de mermas, planes de alimentación y gestión de consultorios.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Nutringest - Plataforma para nutricionistas y clínicas",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Software para Nutricionistas y Clínicas | Nutringest",
-    description:
-      "Nutringest es el software para nutricionistas y clínicas líder. Automatizá fichas clínicas, antropometría ISAK, cálculo de mermas, planes de alimentación y gestión de consultorios.",
-    images: ["/og-image.jpg"],
-  },
-  icons: {
-    icon: "/source/logo.jpg",
-    apple: "/apple-touch-icon.png",
-  },
-  other: {
-    google: "notranslate",
-  },
+    "Socius ERP administra inventario, clientes, ventas, caja, pedidos, envíos y rutas desde un solo lugar, con multi-moneda y control por sucursales.",
 };
 
 export default function RootLayout({
@@ -91,7 +45,7 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider
