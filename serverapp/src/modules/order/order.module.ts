@@ -13,7 +13,10 @@ import { ShippingAgencyModule } from "../shipping/shipping-agency.module";
   imports: [
     forwardRef(() => PermitModule),
     forwardRef(() => UserModule),
-SaleModule, ExchangeModule],
+SaleModule,
+    ExchangeModule,
+    ShippingAgencyModule,
+  ],
   controllers: [OrderController],
   providers: [OrderService,
     JwtService,

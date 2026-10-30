@@ -219,7 +219,11 @@ export class OrderService {
 
       return tx.order.findUnique({
         where: { id: order.id },
-        include: { items: true },
+        include: {
+          items: true,
+          agency: { select: { id: true, key: true, name: true } },
+          client: { select: { id: true, name: true } },
+        },
       });
     });
   }
@@ -275,6 +279,7 @@ export class OrderService {
         include: {
           items: true,
           client: { select: { id: true, name: true } },
+          agency: { select: { id: true, key: true, name: true } },
         },
       }),
       this.prisma.order.count({ where }),

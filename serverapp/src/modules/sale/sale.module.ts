@@ -17,7 +17,9 @@ import { ExchangeModule } from "../exchange/exchange.module";
     forwardRef(() => UserModule),
 ExchangeModule],
   controllers: [SaleController],
-  providers: [SaleService,
+  providers: [
+    SaleService,
+    SaleReturnService,
     JwtService,
   ],
   exports: [SaleService, SaleReturnService],
