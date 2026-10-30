@@ -14,6 +14,7 @@ import { OrderService, OrderScope } from "./order.service";
 import {
   CreateOrderDto,
   ListOrdersQueryDto,
+  ShipOrderDto,
   UpdateOrderStatusDto,
 } from "./dto/order.dto";
 import { Public } from "src/shared/decorators/public.decorator";
@@ -89,6 +90,22 @@ export class OrderController {
   ) {
     const scope = await this.resolveScope(request);
     return this.orderService.updateStatus(scope, id, body);
+  }
+
+  /**
+   * Dispatches an order to its agency / delivery courier (S7).
+   * Only an order that is already confirmed, that actually needs shipping and
+   * that has not gone out yet can be stamped here.
+   */
+  @Post(":id/ship")
+  @UseGuards(SessionAuthGuard)
+  async shipOrder(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: ShipOrderDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.orderService.shipOrder(scope, id, body);
   }
 
   @Post(":id/convert")

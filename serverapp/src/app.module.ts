@@ -63,6 +63,7 @@ import { SaleModule } from "./modules/sale/sale.module";
 import { PurchaseModule } from "./modules/purchase/purchase.module";
 import { OrderModule } from "./modules/order/order.module";
 import { SettingsModule } from "./modules/settings/settings.module";
+import { ShippingAgencyModule } from "./modules/shipping/shipping-agency.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -220,6 +221,7 @@ imports: [
     PurchaseModule,
     OrderModule,
     SettingsModule,
+    ShippingAgencyModule,
   ],
   controllers: [AppController, SelectController],
   providers: [

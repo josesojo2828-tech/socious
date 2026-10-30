@@ -24,7 +24,8 @@
     "seed:legal": "ts-node -r tsconfig-paths/register src/database/seeds/cms-legal.seed.ts",
     "seed:entitlements": "ts-node -r tsconfig-paths/register src/database/seeds/module-entitlements.seed.ts",
     "seed:modules": "ts-node -r tsconfig-paths/register src/database/seeds/module-catalog.seed.ts",
-    "seed:categories": "ts-node -r tsconfig-paths/register src/database/seeds/categories.seed.ts"
+    "seed:categories": "ts-node -r tsconfig-paths/register src/database/seeds/categories.seed.ts",
+    "seed:agencies": "ts-node -r tsconfig-paths/register src/database/seeds/shipping-agencies.seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",

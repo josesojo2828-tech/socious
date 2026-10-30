@@ -224,6 +224,11 @@ export const EVENT_TAXONOMY = {
     version: TAXONOMY_VERSION,
     retentionDays: RETENTION_DAYS[EventCategory.ERP],
   },
+  "erp.order.shipped": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
   "erp.order.converted": {
     category: EventCategory.ERP,
     version: TAXONOMY_VERSION,

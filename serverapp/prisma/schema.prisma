@@ -953,6 +953,29 @@ model CashMovement {
 // PEDIDOS WEB / CARRITO
 // ======================================
 
+// ======================================
+// AGENCIAS DE ENVÍO (S4) — catálogo global de la plataforma
+// ======================================
+
+model ShippingAgency {
+  id        String   @id @default(uuid())
+  key       String   @unique // ZOOM, MRW...
+  name      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([active])
+}
+
+enum FulfillmentType {
+  PICKUP
+  DELIVERY
+  SHIPPING
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -975,6 +998,15 @@ model Order {
   totalUSD        Decimal       @default(0.00) @db.Decimal(14, 2)
   totalVES        Decimal       @default(0.00) @db.Decimal(14, 2)
   totalUSDT       Decimal       @default(0.00) @db.Decimal(14, 2)
+
+  // Fulfillment (S4/S6): how the customer gets it and what the store owes.
+  fulfillmentType FulfillmentType @default(PICKUP)
+  agencyId        String?
+  coordination    String          @default("WHATSAPP") // WHATSAPP | PHONE | EMAIL
+  deliveryFeeUSD  Decimal?        @db.Decimal(14, 2)   // congelado al confirmar
+  trackingNumber  String?
+  shippedAt       DateTime?       // salió por agencia / delivery
+
   status          OrderStatus   @default(PENDING)
   notes           String?
   saleId          String?       @unique
@@ -986,11 +1018,14 @@ model Order {
   client          Client?       @relation(fields: [clientId], references: [id])
   createdBy       User?         @relation("CreatedOrderRecords", fields: [createdById], references: [id])
   sale            Sale?         @relation("OrderSale", fields: [saleId], references: [id])
+  agency          ShippingAgency? @relation(fields: [agencyId], references: [id])
   items           OrderItem[]
 
   @@index([organizationId])
   @@index([status])
   @@index([createdAt])
+  @@index([organizationId, fulfillmentType])
+  @@index([agencyId])
 }
 
 model OrderItem {
