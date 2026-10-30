@@ -342,11 +342,16 @@ describeDb(
       });
 
       it("documents the backfill + partial index in the migration SQL", () => {
+        // The historical SQL lives in the archive: it was moved out of
+        // `prisma/migrations` when the history was regenerated as a single
+        // `init` (2026-10-29), because Prisma would re-apply a folder it has
+        // no `_prisma_migrations` row for. The constraints themselves are
+        // restored by `20261030134459_restore_partial_constraints`.
         const sql = readFileSync(
           join(
             process.cwd(),
             "prisma",
-            "migrations",
+            "migrations_nutringest_backup",
             "20260930_add_module_entitlements",
             "migration.sql",
           ),
