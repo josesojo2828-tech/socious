@@ -46,6 +46,7 @@ export interface Category {
   name: string;
   slug: string;
   icon?: string | null;
+  description?: string | null;
   parentId?: string | null;
   isSystem: boolean;
   subCategories?: Category[];

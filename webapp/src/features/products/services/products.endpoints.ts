@@ -6,5 +6,6 @@ export const ProductEndpoints = {
   stockMovements: (productId: string) =>
     `/api/products/${productId}/stock-movements`,
   publicCatalog: "/api/products/public",
-  categories: "/api/categories",
+  // `/mine` = system catalog + this tenant's own categories (S5).
+  categories: "/api/categories/mine",
 };
