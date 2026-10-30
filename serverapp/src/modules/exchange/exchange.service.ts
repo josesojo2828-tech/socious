@@ -13,6 +13,7 @@ const EXCHANGE_API_URL =
   'https://backend-cambiofrito.ramirezicode.com.ve/api/rates/all';
 
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const PERSIST_MINUTES = 30;
 
 /** Persisted rate row (Decimal columns already normalized to numbers). */
 export interface PersistedRateView {
@@ -23,8 +24,20 @@ export interface PersistedRateView {
   rateParallel: number | null;
   date: string;
   source: string;
+  /** Official EUR rate in VES, when the upstream reported one. */
+  rateEur?: number | null;
+  /** Tomorrow's official rate, when the upstream reports it. */
+  rateBcvNext?: number | null;
   /** False when the values came from the live API and were not stored. */
   persisted: boolean;
+}
+
+/** The upstream sends `2026-10-30 08:51:02`; the API contract wants ISO. */
+function toIso(value: string | undefined | null): string {
+  if (!value) return new Date().toISOString();
+  const normalized = value.trim().replace(" ", "T");
+  const parsed = new Date(normalized);
+  return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
 }
 
 export interface RecordRatesInput {
@@ -72,6 +85,8 @@ export class ExchangeService {
         this.logger.log(
           `Exchange rates updated — BCV USD: ${data.bcv.usd}, Binance: ${data.binance.rate}`,
         );
+        // Fire-and-forget: the API is an upstream, not a runtime dependency.
+        void this.persistIfStale(data);
         return data;
       }
 
@@ -193,15 +208,20 @@ export class ExchangeService {
       };
     }
 
+    // No row at all yet: ask the upstream once so the first document of the
+    // day still freezes a real rate instead of the legacy fallback.
     const live = await this.getRates();
+    await this.persistIfStale(live);
     return {
       id: null,
       organizationId: null,
       rateBcv: live.bcv.usd,
       rateUsdt: live.binance.rate,
       rateParallel: null,
-      date: live.timestamp,
-      source: live.success ? 'BCV_API' : 'FALLBACK',
+      date: toIso(live.timestamp),
+      source: live.success ? "BCV_API" : "FALLBACK",
+      rateEur: live.bcv?.eur ?? null,
+      rateBcvNext: live.bcv_next?.usd ?? null,
       persisted: false,
     };
   }
@@ -285,6 +305,37 @@ export class ExchangeService {
       source: row.source,
       persisted: true,
     }));
+  }
+
+  /**
+   * Writes the upstream rates as a platform-global row when the last one is
+   * older than `PERSIST_MINUTES`. Sales then freeze a persisted snapshot and a
+   * dead API can no longer invent a rate.
+   */
+  private async persistIfStale(data: ExchangeRateResponse): Promise<void> {
+    try {
+      const latest = await this.prisma.exchangeRate.findFirst({
+        where: { organizationId: null },
+        orderBy: { date: "desc" },
+        select: { date: true },
+      });
+
+      const age = latest ? Date.now() - latest.date.getTime() : Infinity;
+      if (age < PERSIST_MINUTES * 60 * 1000) return;
+
+      await this.prisma.exchangeRate.create({
+        data: {
+          organizationId: null,
+          rateBcv: data.bcv.usd,
+          rateUsdt: data.binance.rate,
+          rateParallel: null,
+          source: "BCV_API",
+          createdById: null,
+        },
+      });
+    } catch (error: any) {
+      this.logger.warn(`No se pudo persistir la tasa del día: ${error?.message}`);
+    }
   }
 
   /**
