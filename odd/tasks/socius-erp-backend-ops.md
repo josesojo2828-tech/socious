@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Configuración de tenant, envíos, rutas y planes
 
-**Status:** IN PROGRESS
+**Status:** IN PROGRESS — T1-T3 y T9 cerrados (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
 **Type:** Feature / Backend
 **Area:** `serverapp`
 **Branch:** `feat/tenant-ops` (desde `main`)
@@ -140,14 +140,14 @@ registra como `EXPENSE` en la caja del turno. Los pedidos nunca se devuelven
 
 | ID | Specs | Route | Status | Commit |
 | --- | --- | --- | --- | --- |
-| T1 | — | inline | pending | rama `feat/tenant-ops` |
-| T2 | S1, S3 | inline | pending | — |
-| T3 | S2 | inline | pending | — |
+| T1 | — | inline | done | `7fd034e` (rama + doc del plan) |
+| T2 | S1, S3 | inline | done | `4a487f6` (settings del tenant) |
+| T3 | S2 | inline | done | `958c836` (caja opcional + cuadre diario) |
 | T4 | S4, S5, S6, S7 | inline | pending | — |
 | T5 | S8 | inline | pending | — |
 | T6 | S9, S11 | inline | pending | — |
 | T7 | S10 | inline | pending | — |
-| T9 | S13 | inline | pending | — |
+| T9 | S13 | inline | done | `e2f1b21` (devoluciones de venta) |
 | T8 | Todos | inline | pending | cierre y verificación |
 
 > Ruta: todo inline. Cada unidad es de ~200-400 líneas autorizadas con el patrón ya
