@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Configuración de tenant, envíos, rutas y planes
 
-**Status:** IN PROGRESS — T1-T5 y T9 cerrados (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
+**Status:** IN PROGRESS — T1-T6 y T9 cerrados (queda T7 = subcursales, T8 = cierre) (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
 **Type:** Feature / Backend
 **Area:** `serverapp`
 **Branch:** `feat/tenant-ops` (desde `main`)
@@ -145,7 +145,7 @@ registra como `EXPENSE` en la caja del turno. Los pedidos nunca se devuelven
 | T3 | S2 | inline | done | `958c836` (caja opcional + cuadre diario) |
 | T4 | S4, S5, S6, S7 | inline | done | `3e5264a` (agencias, delivery, vínculo cliente) |
 | T5 | S8 | inline | done | `b74ee7f` (rutas de entrega + sidebar por check) |
-| T6 | S9, S11 | inline | pending | — |
+| T6 | S9, S11 | inline | done | `3f4acc8` (planes, add-ons, capacidad y módulos) |
 | T7 | S10 | inline | pending | — |
 | T9 | S13 | inline | done | `e2f1b21` (devoluciones de venta) |
 | T8 | Todos | inline | pending | cierre y verificación |
@@ -234,3 +234,21 @@ backfill a la sucursal por defecto; catálogo de productos/clientes compartido e
 - Coordinación por defecto en envíos: `WHATSAPP`.
 - Config del tenant como `Organization.settings Json` + merge con defaults (patrón de
   `currencyVisibility`), no una tabla nueva.
+
+
+### L8 — Lectura de capacidad por plan (supuesto, 2026-10-30)
+
+La frase "Premium: extender subcursales (2), agregar empleados (2 * subcursal)" se leyó así:
+
+| Plan | Sucursales | Empleados incluidos |
+| --- | --- | --- |
+| Básico | 1 (la oculta por defecto) | 1 (el dueño) |
+| Avanzado | 1 | 1 |
+| Premium | 3 (1 por defecto + 2) | 2 × 3 = 6 |
+
+Empleados/sucursales adicionales: add-ons `EXTRA_EMPLOYEE` (4.99) y
+`EXTRA_BRANCH` (9.99), habilitables desde el dashboard administrativo.
+Además: la organización nace con **slug** público, con la **sucursal por
+defecto** y suscrita al plan **Básico**; el rol fundador se mantiene
+`CLINIC_ADMIN` hasta auditar los roles heredados (lo aceptan
+`module-framework` y la superficie de configuración).
