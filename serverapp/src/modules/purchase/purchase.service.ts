@@ -17,6 +17,9 @@ import {
   round2,
   type RateSnapshot,
 } from "src/shared/utils/money";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { emitEvent } from "src/shared/event/event-envelope";
+import type { EventName } from "src/shared/event/event-taxonomy";
 import {
   AddPurchasePaymentDto,
   CreatePurchaseDto,
@@ -54,6 +57,7 @@ export class PurchaseService {
     private readonly prisma: PrismaService,
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
+    private readonly eventEmitter?: EventEmitter2,
   ) {}
 
   private scopeWhere(organizationId: string | null): Prisma.PurchaseWhereInput {
@@ -145,10 +149,25 @@ export class PurchaseService {
         );
       }
 
-      return tx.purchase.findUnique({
+      const created = await tx.purchase.findUnique({
         where: { id: purchase.id },
         include: { items: true, payments: true, supplier: true },
       });
+
+      this.emitBusinessEvent(
+        "erp.purchase.created",
+        scope.createdById,
+        scope.organizationId,
+        {
+          purchaseId: purchase.id,
+          purchaseNumber: purchase.purchaseNumber,
+          totalUSD: totals.totalUSD,
+          supplierId: data.supplierId ?? null,
+          count: items.length,
+        },
+      );
+
+      return created;
     });
   }
 
@@ -207,11 +226,24 @@ export class PurchaseService {
         });
       }
 
-      return tx.purchase.update({
+      const received = await tx.purchase.update({
         where: { id: purchase.id },
         data: { status: PurchaseStatus.RECEIVED },
         include: { items: true },
       });
+
+      this.emitBusinessEvent(
+        "erp.purchase.received",
+        scope.createdById,
+        scope.organizationId,
+        {
+          purchaseId: purchase.id,
+          purchaseNumber: purchase.purchaseNumber,
+          count: purchase.items.length,
+        },
+      );
+
+      return received;
     });
   }
 
@@ -268,6 +300,19 @@ export class PurchaseService {
           -Number(payment.amountUSD),
         );
       }
+
+      this.emitBusinessEvent(
+        "erp.purchase.payment_made",
+        scope.createdById,
+        scope.organizationId,
+        {
+          purchaseId: purchase.id,
+          purchaseNumber: purchase.purchaseNumber,
+          amount: Number(payment.amountUSD),
+          currency: payment.currency,
+          paymentMethod: payment.paymentMethod,
+        },
+      );
 
       return { payment, paymentStatus, paidUSD };
     });
@@ -603,4 +648,26 @@ export class PurchaseService {
       data: { currentBalanceUSD: { increment: deltaUSD } },
     });
   }
+
+  /**
+   * Fire-and-forget business telemetry (S11). A public cart submission has no
+   * actor, so it is intentionally not logged here.
+   */
+  private emitBusinessEvent(
+    eventName: EventName,
+    actorId: string | null | undefined,
+    organizationId: string | null,
+    payload: Record<string, unknown>,
+  ): void {
+    if (!this.eventEmitter || !actorId) return;
+
+    emitEvent(this.eventEmitter, {
+      eventName,
+      actorId,
+      orgId: organizationId,
+      source: "api",
+      payload,
+    });
+  }
+
 }

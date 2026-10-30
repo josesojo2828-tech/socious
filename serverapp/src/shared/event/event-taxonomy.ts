@@ -15,6 +15,7 @@ export enum EventCategory {
   BILLING = "billing",
   ADMIN = "admin",
   ORG = "org.tenant",
+  ERP = "erp.business",
 }
 
 /** Retention windows per category (spec: auth 12m, clinical 24m, library 12m, billing 7y, admin 24m, org 12m). */
@@ -25,6 +26,7 @@ export const RETENTION_DAYS: Record<EventCategory, number> = {
   [EventCategory.BILLING]: 2555,
   [EventCategory.ADMIN]: 730,
   [EventCategory.ORG]: 365,
+  [EventCategory.ERP]: 730,
 };
 
 export interface EventDefinition {
@@ -174,6 +176,73 @@ export const EVENT_TAXONOMY = {
     category: EventCategory.ORG,
     version: TAXONOMY_VERSION,
     retentionDays: RETENTION_DAYS[EventCategory.ORG],
+  },
+
+  // erp.business (Socius ERP)
+  "erp.sale.created": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.sale.payment_received": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.sale.cancelled": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.purchase.created": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.purchase.received": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.purchase.payment_made": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.order.received": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.order.status_changed": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.order.converted": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.product.stock_adjusted": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.cash.shift_opened": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.cash.shift_closed": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.cash.movement_recorded": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
   },
 } as const satisfies Record<string, EventDefinition>;
 

@@ -14,6 +14,9 @@ import {
   UpdateProductDto,
 } from "./dto/product.dto";
 
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { emitEvent } from "src/shared/event/event-envelope";
+import type { EventName } from "src/shared/event/event-taxonomy";
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
@@ -51,7 +54,10 @@ const emptyPage = (limit: number, page: number) => ({
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter?: EventEmitter2,
+  ) {}
 
   private scopeWhere(organizationId: string | null): Prisma.ProductWhereInput {
     return { organizationId, deletedAt: null };
@@ -296,6 +302,17 @@ export class ProductService {
         },
       });
 
+      this.emitBusinessEvent(
+        "erp.product.stock_adjusted",
+        scope.createdById,
+        scope.organizationId,
+        {
+          productId: product.id,
+          type: data.type,
+          quantity: Number(movement.quantity ?? 0),
+        },
+      );
+
       return { product: updated, movement };
     });
   }
@@ -385,4 +402,23 @@ export class ProductService {
       throw new ConflictException(`Ya existe un producto con el SKU "${normalized}".`);
     }
   }
+
+  /** Fire-and-forget business telemetry (S11). */
+  private emitBusinessEvent(
+    eventName: EventName,
+    actorId: string | null | undefined,
+    organizationId: string | null,
+    payload: Record<string, unknown>,
+  ): void {
+    if (!this.eventEmitter || !actorId) return;
+
+    emitEvent(this.eventEmitter, {
+      eventName,
+      actorId,
+      orgId: organizationId,
+      source: "api",
+      payload,
+    });
+  }
+
 }

@@ -2,6 +2,8 @@ import { BadRequestException } from "@nestjs/common";
 import { SaleService } from "./sale.service";
 
 const ORG_A = "org-a";
+const ORG_UUID = "11111111-1111-4111-8111-111111111111";
+const ACTOR_UUID = "22222222-2222-4222-8222-222222222222";
 
 const RATES = { rateBcv: 795, rateUsdt: 938 };
 
@@ -53,12 +55,14 @@ const makeService = () => {
   const sequenceService = {
     nextFormatted: jest.fn().mockResolvedValue("VTA-00001"),
   };
+  const emitter = { emit: jest.fn() };
   const service = new SaleService(
     prisma as any,
     exchangeService as any,
     sequenceService as any,
+    emitter as any,
   );
-  return { service, prisma, tx, exchangeService, sequenceService };
+  return { service, prisma, tx, exchangeService, sequenceService, emitter };
 };
 
 const productOnShelf = (stock: number, overrides: any = {}) => ({
@@ -273,6 +277,67 @@ describe("SaleService", () => {
         5,
         expect.anything(),
       );
+    });
+  });
+
+  describe("activity telemetry (S11)", () => {
+    it("emits erp.sale.created for the admin history", async () => {
+      const { service, tx, emitter } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      // The telemetry envelope validates UUID-shaped ids, so the fixture uses
+      // real ones: `actorId` and `orgId` are stored as foreign keys.
+      await service.create(
+        {
+          organizationId: ORG_UUID,
+          createdById: ACTOR_UUID,
+        },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 2,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(emitter.emit).toHaveBeenCalledWith(
+        "erp.sale.created",
+        expect.objectContaining({
+          eventName: "erp.sale.created",
+          actorId: ACTOR_UUID,
+          orgId: ORG_UUID,
+          source: "api",
+          payload: expect.objectContaining({
+            saleNumber: "VTA-00001",
+            totalUSD: 4,
+          }),
+        }),
+      );
+    });
+
+    it("stays silent when the caller has no actor (public submission)", async () => {
+      const { service, tx, emitter } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_UUID },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 1,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(emitter.emit).not.toHaveBeenCalled();
     });
   });
 

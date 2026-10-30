@@ -17,6 +17,9 @@ import {
   UpdateOrderStatusDto,
 } from "./dto/order.dto";
 
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { emitEvent } from "src/shared/event/event-envelope";
+import type { EventName } from "src/shared/event/event-taxonomy";
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
@@ -49,6 +52,7 @@ export class OrderService {
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
     private readonly saleService: SaleService,
+    private readonly eventEmitter?: EventEmitter2,
   ) {}
 
   private scopeWhere(organizationId: string | null): Prisma.OrderWhereInput {
@@ -245,11 +249,25 @@ export class OrderService {
       );
     }
 
-    return this.prisma.order.update({
+    const updated = await this.prisma.order.update({
       where: { id },
       data: { status: data.status },
       include: { items: true },
     });
+
+    this.emitBusinessEvent(
+      "erp.order.status_changed",
+      scope.createdById,
+      scope.organizationId,
+      {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        previousStatus: order.status,
+        status: data.status,
+      },
+    );
+
+    return updated;
   }
 
   /**
@@ -271,7 +289,7 @@ export class OrderService {
       where: { orderId: order.id },
     });
 
-    return this.saleService.create(scope, {
+    const sale = await this.saleService.create(scope, {
       clientId: order.clientId ?? undefined,
       orderId: order.id,
       notes: order.notes ?? undefined,
@@ -282,5 +300,39 @@ export class OrderService {
         unitPriceUSD: Number(item.priceUSD),
       })),
     });
+
+    this.emitBusinessEvent(
+      "erp.order.converted",
+      scope.createdById,
+      scope.organizationId,
+      {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        saleId: (sale as any)?.id ?? null,
+        saleNumber: (sale as any)?.saleNumber ?? null,
+        count: items.length,
+      },
+    );
+
+    return sale;
   }
+
+  /** Fire-and-forget business telemetry (S11). */
+  private emitBusinessEvent(
+    eventName: EventName,
+    actorId: string | null | undefined,
+    organizationId: string | null,
+    payload: Record<string, unknown>,
+  ): void {
+    if (!this.eventEmitter || !actorId) return;
+
+    emitEvent(this.eventEmitter, {
+      eventName,
+      actorId,
+      orgId: organizationId,
+      source: "api",
+      payload,
+    });
+  }
+
 }

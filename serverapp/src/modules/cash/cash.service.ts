@@ -15,6 +15,9 @@ import {
   UpdateCashRegisterDto,
 } from "./dto/cash.dto";
 
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { emitEvent } from "src/shared/event/event-envelope";
+import type { EventName } from "src/shared/event/event-taxonomy";
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
@@ -33,7 +36,10 @@ export interface CashScope {
  */
 @Injectable()
 export class CashService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter?: EventEmitter2,
+  ) {}
 
   private registerWhere(
     organizationId: string | null,
@@ -175,7 +181,7 @@ export class CashService {
       );
     }
 
-    return this.prisma.cashShift.create({
+    const shift = await this.prisma.cashShift.create({
       data: {
         cashRegisterId: registerId,
         openedById: scope.userId ?? "",
@@ -186,6 +192,19 @@ export class CashService {
       },
       include: { cashRegister: true },
     });
+
+    this.emitBusinessEvent(
+      "erp.cash.shift_opened",
+      scope.userId,
+      scope.organizationId,
+      {
+        shiftId: shift.id,
+        cashRegisterId: registerId,
+        totalUSD: Number(data.initialAmountUSD ?? 0),
+      },
+    );
+
+    return shift;
   }
 
   async getShift(scope: CashScope, id: string) {
@@ -269,6 +288,19 @@ export class CashService {
         data: { expectedAmountUSD: expected },
       });
 
+      this.emitBusinessEvent(
+        "erp.cash.movement_recorded",
+        scope.userId,
+        scope.organizationId,
+        {
+          shiftId,
+          type: data.type,
+          amount: data.amount,
+          currency: data.currency ?? "USD",
+          paymentMethod: data.paymentMethod ?? "CASH_USD",
+        },
+      );
+
       return created;
     });
 
@@ -295,7 +327,7 @@ export class CashService {
 
       const expectedAmountUSD = await this.computeExpected(shift, tx);
 
-      return tx.cashShift.update({
+      const closed = await tx.cashShift.update({
         where: { id: shiftId },
         data: {
           status: "CLOSED",
@@ -308,6 +340,20 @@ export class CashService {
         },
         include: { cashRegister: true },
       });
+
+      this.emitBusinessEvent(
+        "erp.cash.shift_closed",
+        scope.userId,
+        scope.organizationId,
+        {
+          shiftId,
+          expectedAmountUSD,
+          actualAmountUSD: data.actualAmountUSD,
+          differenceUSD: closed.differenceUSD,
+        },
+      );
+
+      return closed;
     });
   }
 
@@ -349,4 +395,23 @@ export class CashService {
       Number(purchasePayments._sum.amountUSD ?? 0)
     );
   }
+
+  /** Fire-and-forget business telemetry (S11). */
+  private emitBusinessEvent(
+    eventName: EventName,
+    actorId: string | null | undefined,
+    organizationId: string | null,
+    payload: Record<string, unknown>,
+  ): void {
+    if (!this.eventEmitter || !actorId) return;
+
+    emitEvent(this.eventEmitter, {
+      eventName,
+      actorId,
+      orgId: organizationId,
+      source: "api",
+      payload,
+    });
+  }
+
 }

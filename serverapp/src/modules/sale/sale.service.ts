@@ -18,6 +18,9 @@ import {
   round2,
   type RateSnapshot,
 } from "src/shared/utils/money";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { emitEvent } from "src/shared/event/event-envelope";
+import type { EventName } from "src/shared/event/event-taxonomy";
 import {
   AddSalePaymentDto,
   CreateSaleDto,
@@ -60,6 +63,7 @@ export class SaleService {
     private readonly prisma: PrismaService,
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
+    private readonly eventEmitter?: EventEmitter2,
   ) {}
 
   private scopeWhere(organizationId: string | null): Prisma.SaleWhereInput {
@@ -158,10 +162,25 @@ export class SaleService {
         await this.addToClientBalance(tx, data.clientId, remainingBalance(totals.totalUSD, paidUSD));
       }
 
-      return tx.sale.findUnique({
+      const created = await tx.sale.findUnique({
         where: { id: sale.id },
         include: { items: true, payments: true, client: true },
       });
+
+      this.emitBusinessEvent(
+        "erp.sale.created",
+        scope.createdById,
+        scope.organizationId,
+        {
+          saleId: sale.id,
+          saleNumber: sale.saleNumber,
+          totalUSD: totals.totalUSD,
+          clientId: data.clientId ?? null,
+          count: items.length,
+        },
+      );
+
+      return created;
     });
   }
 
@@ -218,6 +237,19 @@ export class SaleService {
           -Number(payment.amountUSD),
         );
       }
+
+      this.emitBusinessEvent(
+        "erp.sale.payment_received",
+        scope.createdById,
+        scope.organizationId,
+        {
+          saleId: sale.id,
+          saleNumber: sale.saleNumber,
+          amount: Number(payment.amountUSD),
+          currency: payment.currency,
+          paymentMethod: payment.paymentMethod,
+        },
+      );
 
       return { payment, paymentStatus, paidUSD };
     });
@@ -493,11 +525,20 @@ export class SaleService {
         );
       }
 
-      return tx.sale.update({
+      const cancelled = await tx.sale.update({
         where: { id: sale.id },
         data: { status: SaleStatus.CANCELLED },
         include: { items: true, payments: true },
       });
+
+      this.emitBusinessEvent(
+        "erp.sale.cancelled",
+        scope.createdById,
+        scope.organizationId,
+        { saleId: sale.id, saleNumber: sale.saleNumber },
+      );
+
+      return cancelled;
     });
   }
 
@@ -697,4 +738,26 @@ export class SaleService {
       data: { currentBalanceUSD: { increment: deltaUSD } },
     });
   }
+
+  /**
+   * Fire-and-forget business telemetry (S11). A public cart submission has no
+   * actor, so it is intentionally not logged here.
+   */
+  private emitBusinessEvent(
+    eventName: EventName,
+    actorId: string | null | undefined,
+    organizationId: string | null,
+    payload: Record<string, unknown>,
+  ): void {
+    if (!this.eventEmitter || !actorId) return;
+
+    emitEvent(this.eventEmitter, {
+      eventName,
+      actorId,
+      orgId: organizationId,
+      source: "api",
+      payload,
+    });
+  }
+
 }

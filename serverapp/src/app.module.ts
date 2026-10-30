@@ -60,6 +60,8 @@ import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
 import { CashModule } from "./modules/cash/cash.module";
 import { SaleModule } from "./modules/sale/sale.module";
+import { PurchaseModule } from "./modules/purchase/purchase.module";
+import { OrderModule } from "./modules/order/order.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -214,6 +216,8 @@ imports: [
     ProductModule,
     CashModule,
     SaleModule,
+    PurchaseModule,
+    OrderModule,
   ],
   controllers: [AppController, SelectController],
   providers: [
