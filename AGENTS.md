@@ -33,25 +33,35 @@ npm test                                    # vitest run
 npm run typecheck                           # tsc --noEmit
 ```
 
-### Baseline debt (measured, not assumed)
+### Baseline (measured, not assumed) — updated 2026-10-30
 
-Two different typecheck commands give two different baselines. Use the matching pair:
+Two different typecheck commands, two different numbers. Use the matching pair:
 
-| Command | Errors at baseline `37172e8` |
-| --- | --- |
-| `npm run typecheck` (`tsc --noEmit -p tsconfig.build.json`, excludes specs) | **67** |
-| `npx tsc --noEmit` (includes `**/*spec.ts`) | **90** |
+| Command | Errors today | History |
+| --- | --- | --- |
+| `npm run typecheck` (`tsc --noEmit -p tsconfig.build.json`, excludes specs) | **0** | was 67 at `37172e8` and 119 right after the nutrition purge; closed by `b48e330` |
+| `npx tsc --noEmit` (includes `**/*spec.ts`) | **6** | was 90; the 6 are pre-existing legacy, see below |
 
-Same error count as the baseline means no regression; anything above it is yours.
+Anything above those numbers is yours. The 6 legacy errors are all in files this
+project has not adopted: `test/app.e2e-spec.ts` (3 — imports `@fastify/cookie`,
+`@fastify/session`, `@fastify/flash`, which package.json never had),
+`test/module-framework.e2e-spec.ts` (1 — argument count),
+`src/modules/user/dto/user.types.spec.ts` (1 — `plainToInstance` overload) and
+`src/modules/activity/services/telemetry-integration.spec.ts` (1 — mock typing).
 
-- `webapp` typecheck: **0 errors**. Keep it at 0.
-- Full serverapp suite: 78 suites / 644 tests, **0 failures** (the last 12 pre-existing
-  failures were closed on 2026-10-20 by fixing the test fixtures, not by weakening any
-  assertion — see `odd/tasks/security-hardening-followups.md`).
+- `webapp` typecheck: **0 errors** (verified after the nutrition imports were
+  repaired in `ed9bce5`). Keep it at 0. Its vitest suite: **26 suites / 248 tests**.
+- Full serverapp suite: **75 suites / 657 tests, 0 failures** (was 78/644 before the
+  nutrition purge; the difference is deleted nutrition suites, not weakened ones —
+  the 12 historical failures were closed on 2026-10-20 by fixing fixtures, see
+  `odd/tasks/security-hardening-followups.md`).
 - **The DB-backed suites need the local database up** (`docker compose -f docker-compose.dev.yml up -d`).
   Without it they fail with connection errors. With it up, they also need the entitlement seed:
   `cd serverapp && npm run seed:entitlements` (idempotent, `upsert`-based) — otherwise they fail
   with "Integration fixtures missing: need at least one Organization, User and active AddOn".
+  (Since `8632280` the catalog seeds run from `DataFixtureService` on every backend boot:
+  categories, shipping agencies, plans, module catalog and entitlements. A brand-new
+  database only needs one backend boot — or the `seed:*` scripts — to get them.)
 - **A DB-backed suite must create its own fixtures.** Picking "the first row in the database"
   inherits that database's state: the first user has no ACTIVE organization membership, so the
   requested organization degrades to the personal context and the assertion fails for a reason

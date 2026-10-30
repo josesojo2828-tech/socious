@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Port del backend al frontend (webapp)
 
-**Status:** IN PROGRESS — T1-T12 cerrados (12/14)
+**Status:** **FASE FRONTEND CERRADA** — T1-T14 completados (14/14).
 **Type:** Feature / Frontend
 **Area:** `webapp` (Next.js 16 App Router + React 19 + Tailwind 4 + Zustand + TanStack Query)
 **Branch:** `feat/webapp-erp` (desde `main`, ya sincronizado con `origin/main`)
@@ -113,8 +113,8 @@ baseline de `AGENTS.md` corregido a 0 una vez logrado.
 | T10 | S9 | inline | done | `b0c3adc` (entrada sidebar backend) + pedidos (este commit) |
 | T11 | S10 | inline | done | rutas de entrega (este commit) |
 | T12 | S11 | inline | done | planes + sucursales en Configuración (este commit) |
-| T13 | S12 | inline | pending | — |
-| T14 | S13 | inline | pending | cierre |
+| T13 | S12 | inline | done | `26a5c6f` (endpoint público de checkout) + `998aa55` (tienda /shop/[slug]) |
+| T14 | S13 | inline | done | cierre: `c67ec75` + `0688c33` (specs/tsc de specs) |
 
 > Ruta: todo inline. Cada pantalla es una unidad de ~200-400 líneas siguiendo el patrón
 > existente (`[entity]/page.tsx` + apiClient + useState), con su spec junto al código.
@@ -137,3 +137,30 @@ baseline de `AGENTS.md` corregido a 0 una vez logrado.
 - Hallazgos del mapa (explore `ses_e721802b2ffeVYImwwnYg4ALDK`): sidebar ya backend-driven,
   `sidebarGroups.ts` sin importadores, `api.client.ts` ya manda `X-Workspace-Id`, patrón CRUD a
   copiar en `[entity]/page.tsx` + `useAdminCrud.ts`, `src/app/api/*` no es proxy del backend.
+
+
+### Verificación de cierre (2026-10-30)
+
+| Check | serverapp | webapp |
+| --- | --- | --- |
+| `npm run typecheck` | **0 errores** | **0 errores** |
+| `npx tsc --noEmit` (con specs) | **6** (deuda previa no adoptada, ver `AGENTS.md`) | n/a |
+| Suite | **75/75 · 657 tests** | **26/26 · 248 tests** |
+| Lint en superficies nuevas | n/a | **0 problemas** (303 restantes son legacy no tocado; el lint no es gate del repo) |
+
+**Recorrido por HTTP (`next dev`, sin `npm run build`):** `/dashboard/configuracion`,
+`/dashboard/caja`, `/dashboard/pos`, `/dashboard/ventas`, `/dashboard/productos`,
+`/dashboard/categorias`, `/dashboard/inventario`, `/dashboard/clientes`,
+`/dashboard/proveedores`, `/dashboard/pedidos`, `/dashboard/rutas` y `/shop/socius-demo`
+responden **200** y compilan sin errores.
+
+**Backend en vivo (Docker, :3005)** verificado además con el nuevo
+`GET /api/settings/public/:slug` (slug activo → opciones del negocio; inexistente → 404).
+
+### Números de la fase
+
+- Arranque: typecheck **62 → 0** en webapp; suites **16/161 → 26/248**.
+- 14 tareas, ~19 commits en `feat/tenant-ops` + 3 commits de backend (`c73fccb`, `b0c3adc`, `26a5c6f`).
+- Specs puras nuevas: `settings-form` (8), `cash-form` (10), `pos-form` (13),
+  `sales-list` (10), `product-form` (10), `client-form` (9), `supplier-form` (4),
+  `order-actions` (9), `route-actions` (8), `branch-form` (4), `order-checkout` (10).
