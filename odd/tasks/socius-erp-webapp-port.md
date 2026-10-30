@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Port del backend al frontend (webapp)
 
-**Status:** IN PROGRESS — T1-T3 cerrados
+**Status:** IN PROGRESS — T1-T6 cerrados
 **Type:** Feature / Frontend
 **Area:** `webapp` (Next.js 16 App Router + React 19 + Tailwind 4 + Zustand + TanStack Query)
 **Branch:** `feat/webapp-erp` (desde `main`, ya sincronizado con `origin/main`)
@@ -104,9 +104,9 @@ baseline de `AGENTS.md` corregido a 0 una vez logrado.
 | T1 | — | inline | done | `49a5514` (rama + doc) |
 | T2 | S1 | inline | done | `ed9bce5` (62 → 0 errores) |
 | T3 | S2 | inline | done | `ed9bce5` (13 rutas + 6 archivos muertos borrados) |
-| T4 | S3 | inline | pending | — |
-| T5 | S4 | inline | pending | — |
-| T6 | S5 | inline | pending | — |
+| T4 | S3 | inline | done | `e284fbd` (sidebarGroups borrado + features/settings) + `c73fccb` (entrada Configuración en el sidebar backend) |
+| T5 | S4 | inline | done | `0cedbf6` (pantalla de configuración, 8 tests) |
+| T6 | S5 | inline | done | caja (esta unidad) |
 | T7 | S6 | inline | pending | — |
 | T8 | S7 | inline | pending | — |
 | T9 | S8 | inline | pending | — |

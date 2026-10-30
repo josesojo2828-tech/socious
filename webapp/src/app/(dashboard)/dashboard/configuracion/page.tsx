@@ -7,6 +7,10 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { Checkbox } from "@/shared/components/atoms/Checkbox";
 import {
+  SectionCard,
+  SectionRow,
+} from "@/shared/components/molecules/SectionCard";
+import {
   getTenantSettings,
   updateTenantSettings,
 } from "@/features/settings/services/settings.service";
@@ -37,55 +41,6 @@ interface ShippingAgency {
   id: string;
   key: string;
   name: string;
-}
-
-function SectionCard({
-  icon,
-  title,
-  description,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
-      <header className="flex items-start gap-3 mb-4">
-        <span className="mt-0.5 text-indigo-600 dark:text-indigo-400">{icon}</span>
-        <div>
-          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
-            {title}
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{description}</p>
-        </div>
-      </header>
-      {children}
-    </section>
-  );
-}
-
-function Row({
-  label,
-  hint,
-  children,
-}: {
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-2">
-      <div>
-        <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{label}</p>
-        {hint ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400">{hint}</p>
-        ) : null}
-      </div>
-      {children}
-    </div>
-  );
 }
 
 /**
@@ -217,7 +172,7 @@ export default function SettingsPage() {
         title="Caja"
         description="Con el control activo cada turno se abre y se cierra; apagado, la caja queda siempre activa y el cuadre es diario."
       >
-        <Row
+        <SectionRow
           label="Control de apertura y cierre de caja"
           hint="Recomendado para comercios establecidos con arqueo por turno."
         >
@@ -225,7 +180,7 @@ export default function SettingsPage() {
             checked={settings.cash.shiftControl}
             onChange={() => void save(patchCashShiftControl)}
           />
-        </Row>
+        </SectionRow>
       </SectionCard>
 
       <SectionCard
@@ -235,7 +190,7 @@ export default function SettingsPage() {
       >
         <div className="grid sm:grid-cols-2 gap-x-6">
           {currencyKeys.map((key) => (
-            <Row key={key} label={CURRENCY_LABELS[key]}>
+            <SectionRow key={key} label={CURRENCY_LABELS[key]}>
               <Checkbox
                 checked={settings.currencies[key]}
                 onChange={(event) =>
@@ -244,7 +199,7 @@ export default function SettingsPage() {
                   )
                 }
               />
-            </Row>
+            </SectionRow>
           ))}
         </div>
       </SectionCard>
@@ -259,7 +214,7 @@ export default function SettingsPage() {
             const enabled = settings.fulfillment.enabledTypes.includes(type);
             const isLast = enabled && settings.fulfillment.enabledTypes.length === 1;
             return (
-              <Row key={type} label={FULFILLMENT_TYPE_LABELS[type]}>
+              <SectionRow key={type} label={FULFILLMENT_TYPE_LABELS[type]}>
                 <Checkbox
                   checked={enabled}
                   disabled={isLast}
@@ -270,7 +225,7 @@ export default function SettingsPage() {
                     )
                   }
                 />
-              </Row>
+              </SectionRow>
             );
           })}
         </div>
@@ -311,7 +266,7 @@ export default function SettingsPage() {
         ) : (
           <div className="grid sm:grid-cols-2 gap-x-6">
             {agencies.map((agency) => (
-              <Row key={agency.id} label={agency.name}>
+              <SectionRow key={agency.id} label={agency.name}>
                 <Checkbox
                   checked={settings.shipping.enabledAgencies.includes(
                     agency.key,
@@ -322,7 +277,7 @@ export default function SettingsPage() {
                     )
                   }
                 />
-              </Row>
+              </SectionRow>
             ))}
           </div>
         )}
@@ -333,7 +288,7 @@ export default function SettingsPage() {
         title="Delivery"
         description="Cobro de envío a domicilio; el monto se congela en cada pedido."
       >
-        <Row label="Habilitar delivery">
+        <SectionRow label="Habilitar delivery">
           <Toggle
             checked={settings.delivery.enabled}
             onChange={(event) =>
@@ -342,8 +297,8 @@ export default function SettingsPage() {
               )
             }
           />
-        </Row>
-        <Row label="Costo del delivery (USD)" hint="Se aplica a los pedidos de tipo delivery.">
+        </SectionRow>
+        <SectionRow label="Costo del delivery (USD)" hint="Se aplica a los pedidos de tipo delivery.">
           <input
             type="number"
             min={0}
@@ -355,7 +310,7 @@ export default function SettingsPage() {
             }
             className="w-28 rounded-lg border border-slate-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800"
           />
-        </Row>
+        </SectionRow>
       </SectionCard>
 
       <SectionCard
@@ -363,7 +318,7 @@ export default function SettingsPage() {
         title="Rutas de entrega"
         description="Agrupa los pedidos de un día en una ruta. Al habilitarlo aparece la opción en el menú lateral."
       >
-        <Row label="Trabajar por rutas">
+        <SectionRow label="Trabajar por rutas">
           <Toggle
             checked={settings.routes.enabled}
             onChange={(event) =>
@@ -372,7 +327,7 @@ export default function SettingsPage() {
               )
             }
           />
-        </Row>
+        </SectionRow>
       </SectionCard>
     </div>
   );
