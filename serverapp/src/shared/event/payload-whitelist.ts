@@ -55,6 +55,8 @@ export const PAYLOAD_WHITELIST: Record<EventCategory, readonly string[]> = {
     "agencyId",
     "trackingNumber",
     "fulfillmentType",
+    "routeId",
+    "routeNumber",
     "status",
     "previousStatus",
     "quantity",

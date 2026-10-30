@@ -11,9 +11,12 @@ import type { SidebarSection } from "src/shared/types/dashboard.type";
  */
 const makeService = (
   activeModules: { key: string; name: string; icon: string | null }[] = [],
+  settings: { routes?: { enabled?: boolean } } = { routes: { enabled: false } },
 ) =>
   new DashboardService({} as any, new PermitModel() as any, {
     listActive: async () => activeModules,
+  } as any, {
+    get: jest.fn().mockResolvedValue({ ...settings, routes: settings.routes ?? { enabled: false } }),
   } as any);
 
 const linksOf = (sections: SidebarSection[]): string[] =>
@@ -157,6 +160,28 @@ describe("DashboardService — entitlement-driven sidebar", () => {
         .getTabs({ id: "u1", permits: [], modules: [] })
         .map((tab) => tab.link),
     ).not.toContain("/dashboard/portfolio");
+  });
+
+  it("shows the delivery routes entry only when the tenant enabled the check (S8)", async () => {
+    const withoutCheck = linksOf(
+      await makeService([], { routes: { enabled: false } }).getSidebarSections({
+        id: "u1",
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: "org-1",
+      }),
+    );
+    expect(withoutCheck).not.toContain("/dashboard/rutas");
+
+    const withCheck = linksOf(
+      await makeService([], { routes: { enabled: true } }).getSidebarSections({
+        id: "u1",
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: "org-1",
+      }),
+    );
+    expect(withCheck).toContain("/dashboard/rutas");
   });
 
   it("returns ONLY the general panel when isPatient is true", async () => {

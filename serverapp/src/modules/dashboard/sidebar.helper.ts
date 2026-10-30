@@ -30,6 +30,8 @@ export function buildSidebarSections(
   dashboardService: DashboardService,
   user: SidebarUser,
   resolved?: SidebarEntitlements | null,
+  /** Resolved workspace of the caller: gates tenant-only entries (S8). */
+  organizationId?: string | null,
 ): Promise<SidebarSection[]> {
   const permits = resolved?.permissions ?? [
     ...(user.permits?.list ?? []),
@@ -49,5 +51,6 @@ export function buildSidebarSections(
     modules,
     isPatient,
     isGlobalRole,
+    organizationId,
   });
 }

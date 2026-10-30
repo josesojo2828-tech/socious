@@ -224,6 +224,21 @@ export const EVENT_TAXONOMY = {
     version: TAXONOMY_VERSION,
     retentionDays: RETENTION_DAYS[EventCategory.ERP],
   },
+  "erp.route.created": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.route.status_changed": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
+  "erp.route.item_updated": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
   "erp.order.shipped": {
     category: EventCategory.ERP,
     version: TAXONOMY_VERSION,

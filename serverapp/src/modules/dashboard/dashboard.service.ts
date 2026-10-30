@@ -3,6 +3,7 @@ import UserReporitory from "../user/repository/user.repository";
 import PermitReporitory from "../permit/repository/permit.repository";
 import { ModuleService } from "../module-framework/services/module.service";
 import { isModuleFrameworkEnabled } from "../module-framework/util/module-framework.flag";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import {
   SidebarItem,
   SidebarSection,
@@ -16,9 +17,10 @@ export class DashboardService {
     private userRepository: UserReporitory,
     private permitRepository: PermitReporitory,
     private moduleService: ModuleService,
+    private readonly tenantSettings: TenantSettingsService,
   ) { }
 
-  async getSidebarSections({ id, permits, modules = [], isPremium = false, isPatient = false, isGlobalRole = false }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isPatient?: boolean; isGlobalRole?: boolean }): Promise<SidebarSection[]> {
+  async getSidebarSections({ id, permits, modules = [], isPremium = false, isPatient = false, isGlobalRole = false, organizationId }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isPatient?: boolean; isGlobalRole?: boolean; organizationId?: string | null }): Promise<SidebarSection[]> {
     if (!isPatient && (!permits || permits.length === 0)) return [];
 
     const moduleKeys = new Set(modules);
@@ -264,6 +266,24 @@ export class DashboardService {
         icon: "users",
         items: clientItems,
       });
+
+      // 5b. Rutas de entrega (S8): el check de configuración es el único que
+      // decide si la opción existe — sin él la API también devuelve 409.
+      const settings = await this.tenantSettings.get(organizationId ?? null);
+      if (settings.routes.enabled) {
+        sections.push({
+          title: "Rutas de entrega",
+          icon: "route",
+          items: [
+            {
+              title: "Rutas de entrega",
+              icon: "route",
+              link: "/dashboard/rutas",
+            },
+          ],
+        });
+      }
+
       // 6. Mi Clínica (si aplica)
       if (
         permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||

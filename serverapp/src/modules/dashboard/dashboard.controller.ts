@@ -135,11 +135,14 @@ export class DashboardController {
     console.log('[SIDEBAR DEBUG] Resolved Entitlements:', JSON.stringify(entitlements));
 
     // Shared with `InjectUserInterceptor` so both sidebar build sites cannot
-    // drift (task 3.4).
+    // drift (task 3.4). The resolved workspace drives tenant-only entries
+    // like the delivery routes (S8).
+    const organizationId = await this.getOrganizationId(request);
     const sections = await buildSidebarSections(
       this.dashboardService,
       user,
       entitlements,
+      organizationId,
     );
     return { sections };
   }

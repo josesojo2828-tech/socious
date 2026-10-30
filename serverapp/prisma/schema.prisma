@@ -91,6 +91,7 @@ model User {
   // ERP Socius Relations
   createdClients                Client[]               @relation("CreatedClientRecords")
   createdSaleReturns            SaleReturn[]           @relation("CreatedSaleReturnRecords")
+  createdDeliveryRouteRecords   DeliveryRoute[]         @relation("CreatedDeliveryRouteRecords")
   openedCashShifts              CashShift[]            @relation("OpenedCashShifts")
   closedCashShifts              CashShift[]            @relation("ClosedCashShifts")
   createdCashMovements          CashMovement[]         @relation("CreatedCashMovements")
@@ -568,6 +569,7 @@ model Organization {
   stockMovements     StockMovement[]
   exchangeRates      ExchangeRate[]
   saleReturns        SaleReturn[]
+  deliveryRoutes     DeliveryRoute[]
 }
 
 model OrganizationMember {
@@ -628,6 +630,62 @@ model Counter {
   @@index([scope])
 }
 
+
+// ======================================
+// RUTAS DE ENTREGA (S8)
+// ======================================
+
+enum DeliveryRouteStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum RouteItemStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
+model DeliveryRoute {
+  id             String              @id @default(uuid())
+  routeNumber    String              // RUT-00001
+  organizationId String
+  date           DateTime            @db.Date // el día de las entregas (sábado, ...)
+  name           String?
+  vehicle        String?
+  status         DeliveryRouteStatus @default(OPEN)
+  notes          String?
+  createdById    String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  deletedAt      DateTime?
+
+  organization   Organization?       @relation(fields: [organizationId], references: [id])
+  createdBy      User?               @relation("CreatedDeliveryRouteRecords", fields: [createdById], references: [id])
+  items          DeliveryRouteItem[]
+
+  @@index([organizationId, date])
+  @@index([status])
+}
+
+model DeliveryRouteItem {
+  id            String          @id @default(uuid())
+  routeId       String
+  orderId       String
+  sortOrder     Int             @default(0)
+  status        RouteItemStatus @default(PENDING)
+  deliveredAt   DateTime?
+  failureReason String?
+  createdAt     DateTime        @default(now())
+
+  route         DeliveryRoute   @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([routeId, orderId])
+  @@index([orderId])
+}
 
 // ======================================
 // DEVOLUCIONES DE VENTA (S13)
@@ -1020,6 +1078,7 @@ model Order {
   sale            Sale?         @relation("OrderSale", fields: [saleId], references: [id])
   agency          ShippingAgency? @relation(fields: [agencyId], references: [id])
   items           OrderItem[]
+  routeItems      DeliveryRouteItem[]
 
   @@index([organizationId])
   @@index([status])
