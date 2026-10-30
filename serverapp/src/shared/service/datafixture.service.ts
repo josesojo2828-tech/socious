@@ -1,6 +1,5 @@
 import { Injectable, OnApplicationBootstrap, Logger } from "@nestjs/common";
 import PermitReporitory from "src/modules/permit/repository/permit.repository";
-import SubscriptionPlanReporitory from "src/modules/subscription/repository/subscription-plan.repository";
 import UserReporitory from "src/modules/user/repository/user.repository";
 import * as bcrypt from "bcrypt";
 import PaymentMethodReporitory from "src/modules/payment-method/repository/payment-method.repository";
@@ -18,7 +17,6 @@ export class DataFixtureService implements OnApplicationBootstrap {
 
   constructor(
     private readonly userRepository: UserReporitory,
-    private readonly subscriptionRepository: SubscriptionPlanReporitory,
     private readonly permitRepository: PermitReporitory,
     private readonly paymentMethodRepository: PaymentMethodReporitory,
     private readonly cmsRepository: CmsRepository,
@@ -38,7 +36,6 @@ export class DataFixtureService implements OnApplicationBootstrap {
     const { superadmin, admin, user, patient } =
       (await this.loadPermitsFixtures()) as any;
     const fixUser = await this.loadUsersFixtures(superadmin.id);
-    const fixSubscriptionPlans = await this.loadSubscriptionPlansFixtures();
     const fixPaymentMethods = await this.loadPaymentMethodsFixtures();
     const fixCms = await this.loadCorporateContentFixtures();
     const fixOrganization = fixUser
@@ -59,7 +56,6 @@ export class DataFixtureService implements OnApplicationBootstrap {
     return {
       subscription: { superadmin, admin, user, patient },
       fixUser,
-      fixSubscriptionPlans,
       fixPaymentMethods,
       fixCms,
       fixOrganization,
@@ -222,236 +218,6 @@ export class DataFixtureService implements OnApplicationBootstrap {
     });
 
     return user;
-  }
-
-  async loadSubscriptionPlansFixtures() {
-    // Plan PRO — Individual para nutricionistas ($10.00/mes normal, preventa $4.00/mes)
-    const pro = await this.subscriptionRepository.upsert({
-      where: { id: "PRO" },
-      create: {
-        id: "PRO",
-        name: "PRO",
-        description: "Plan profesional individual con acceso completo a todas las herramientas de Nutringest para potenciar tu consulta nutricional.",
-        price: 4.00,
-        selected: true,
-        badge: "PREVENTA",
-        featured: false,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#10b981", badge: "#10b981" },
-        content: {
-          features: [
-            "Pacientes ilimitados con historial clínico completo",
-            "Creación y personalización de menús y planes dietéticos",
-            "Base de datos de alimentos y listas de intercambio",
-            "Seguimiento de consultas y evolución de pacientes",
-            "Módulo de antropometría con indicadores y gráficos",
-            "Lista de compras para cada paciente",
-            "Portal del paciente para compartir planes y comunicarte"
-          ],
-          grants: [
-            "PRO_ACCESS",
-            "COMMUNITY_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY"]
-        },
-      },
-      update: {
-        name: "PRO",
-        description: "Plan profesional individual con acceso completo a todas las herramientas de Nutringest para potenciar tu consulta nutricional.",
-        price: 4.00,
-        selected: true,
-        badge: "PREVENTA",
-        featured: false,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#10b981", badge: "#10b981" },
-        content: {
-          features: [
-            "Pacientes ilimitados con historial clínico completo",
-            "Creación y personalización de menús y planes dietéticos",
-            "Base de datos de alimentos y listas de intercambio",
-            "Seguimiento de consultas y evolución de pacientes",
-            "Módulo de antropometría con indicadores y gráficos",
-            "Lista de compras para cada paciente",
-            "Portal del paciente para compartir planes y comunicarte"
-          ],
-          grants: [
-            "PRO_ACCESS",
-            "COMMUNITY_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY"]
-        },
-      },
-    });
-
-    // Plan Clínica — Para clínicas y equipos ($99.99/mes)
-    const clinica = await this.subscriptionRepository.upsert({
-      where: { id: "Clinica" },
-      create: {
-        id: "Clinica",
-        name: "Clínica",
-        description: "Solución integral para clínicas y equipos de nutricionistas con herramientas colaborativas y gestión centralizada de pacientes.",
-        price: 99.99,
-        selected: false,
-        badge: null,
-        featured: false,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#7c3aed", badge: "#7c3aed" },
-        content: {
-          features: [
-            "Todo lo del plan PREMIUM para cada nutricionista del equipo",
-            "Gestión de múltiples nutricionistas bajo una misma clínica",
-            "Panel de control centralizado con métricas y analytics",
-            "Personalización de marca (logo, colores, dominio)",
-            "Gestión centralizada del equipo",
-            "Soporte prioritario con tiempo de respuesta garantizado",
-            "Reportes avanzados y exportación de datos del equipo"
-          ],
-          grants: [
-            "PREMIUM_ACCESS",
-            "COMMUNITY_ACCESS",
-            "COMMUNITY_BROWSE",
-            "COMMUNITY_IMPORT",
-            "COMMUNITY_PUBLISH",
-            "PORTFOLIO_MANAGE",
-            "INSTITUTIONAL_FOOD_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY", "PORTFOLIO", "INSTITUTIONAL_FOOD"]
-        },
-      },
-      update: {
-        name: "Clínica",
-        description: "Solución integral para clínicas y equipos de nutricionistas con herramientas colaborativas y gestión centralizada de pacientes.",
-        price: 99.99,
-        selected: false,
-        badge: null,
-        featured: false,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#7c3aed", badge: "#7c3aed" },
-        content: {
-          features: [
-            "Todo lo del plan PREMIUM para cada nutricionista del equipo",
-            "Gestión de múltiples nutricionistas bajo una misma clínica",
-            "Panel de control centralizado con métricas y analytics",
-            "Personalización de marca (logo, colores, dominio)",
-            "Gestión centralizada del equipo",
-            "Soporte prioritario con tiempo de respuesta garantizado",
-            "Reportes avanzados y exportación de datos del equipo"
-          ],
-          grants: [
-            "PREMIUM_ACCESS",
-            "COMMUNITY_ACCESS",
-            "COMMUNITY_BROWSE",
-            "COMMUNITY_IMPORT",
-            "COMMUNITY_PUBLISH",
-            "PORTFOLIO_MANAGE",
-            "INSTITUTIONAL_FOOD_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY", "PORTFOLIO", "INSTITUTIONAL_FOOD"]
-        },
-      },
-    });
-
-    // Plan PREMIUM — El plan más completo con herramientas avanzadas ($25.00/mes normal, $20.00/mes preventa)
-    const premium = await this.subscriptionRepository.upsert({
-      where: { id: "Premium" },
-      create: {
-        id: "Premium",
-        name: "PREMIUM",
-        description: "El plan más completo para nutricionistas que buscan llevar su práctica al siguiente nivel con herramientas avanzadas.",
-        price: 20.00,
-        selected: true,
-        badge: "MÁS ADQUIRIDO",
-        featured: true,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#f59e0b", badge: "#f59e0b" },
-        content: {
-          features: [
-            "Pacientes ilimitados con historial clínico completo",
-            "Creación y personalización de menús y planes dietéticos",
-            "Base de datos de alimentos y listas de intercambio",
-            "Seguimiento de consultas y evolución de pacientes",
-            "Módulo de antropometría con indicadores y gráficos",
-            "Plantillas de dietas reutilizables para agilizar tu trabajo",
-            "Lista de compras para cada paciente",
-            "Portal del paciente para compartir planes y comunicarte",
-            "Portafolios digitales para mostrar tu trabajo",
-            "Personalización avanzada de plantillas",
-            "Servicio de alimentación especializado",
-            "Nutrición deportiva especializada",
-            "Nutrición pediátrica especializada",
-            "Sistema de referidos entre profesionales",
-            "Atención y consultas en grupos"
-          ],
-          grants: [
-            "PREMIUM_ACCESS",
-            "COMMUNITY_ACCESS",
-            "COMMUNITY_BROWSE",
-            "COMMUNITY_IMPORT",
-            "COMMUNITY_PUBLISH",
-            "PORTFOLIO_MANAGE",
-            "INSTITUTIONAL_FOOD_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY", "PORTFOLIO", "INSTITUTIONAL_FOOD"]
-        },
-      },
-      update: {
-        name: "PREMIUM",
-        description: "El plan más completo para nutricionistas que buscan llevar su práctica al siguiente nivel con herramientas avanzadas.",
-        price: 20.00,
-        selected: true,
-        badge: "MÁS ADQUIRIDO",
-        featured: true,
-        colorTheme: { bg: "#ffffff", text: "#1e293b", accent: "#f59e0b", badge: "#f59e0b" },
-        content: {
-          features: [
-            "Pacientes ilimitados con historial clínico completo",
-            "Creación y personalización de menús y planes dietéticos",
-            "Base de datos de alimentos y listas de intercambio",
-            "Seguimiento de consultas y evolución de pacientes",
-            "Módulo de antropometría con indicadores y gráficos",
-            "Plantillas de dietas reutilizables para agilizar tu trabajo",
-            "Lista de compras para cada paciente",
-            "Portal del paciente para compartir planes y comunicarte",
-            "Portafolios digitales para mostrar tu trabajo",
-            "Personalización avanzada de plantillas",
-            "Servicio de alimentación especializado",
-            "Nutrición deportiva especializada",
-            "Nutrición pediátrica especializada",
-            "Sistema de referidos entre profesionales",
-            "Atención y consultas en grupos"
-          ],
-          grants: [
-            "PREMIUM_ACCESS",
-            "COMMUNITY_ACCESS",
-            "COMMUNITY_BROWSE",
-            "COMMUNITY_IMPORT",
-            "COMMUNITY_PUBLISH",
-            "PORTFOLIO_MANAGE",
-            "INSTITUTIONAL_FOOD_ACCESS",
-            "CALCULADORA_PREMIUM_ACCESS"
-          ],
-          modules: ["COMMUNITY", "PORTFOLIO", "INSTITUTIONAL_FOOD"]
-        },
-      },
-    });
-
-    // Limpieza de planes legacy (Basic)
-    for (const legacyId of ["Basic"]) {
-      try {
-        const legacyPlans = await this.subscriptionRepository.findMany({
-          where: { id: legacyId },
-          take: 1,
-          skip: 0,
-        });
-        if (legacyPlans && legacyPlans.length > 0 && !legacyPlans[0].deletedAt) {
-          await this.subscriptionRepository.delete({ where: { id: legacyId } });
-        }
-      } catch (e) {
-        // Ignorar si no existe o ya está borrado
-      }
-    }
-
-    return { pro, clinica, premium };
   }
 
   async loadPaymentMethodsFixtures() {

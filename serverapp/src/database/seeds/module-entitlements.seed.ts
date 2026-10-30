@@ -68,43 +68,17 @@ const FIELD_POLICY_SEED: Prisma.FieldPolicyCreateManyInput[] = [
  * entitlement resolution preserves behavior. Keys are matched on the
  * accent-stripped, uppercased plan name (e.g. "Clínica" -> "CLINICA").
  */
+/**
+ * Legacy plan → grants map used by `normalizePlans` to backfill OLD
+ * nutrition-era plans (PRO / Premium-viejo / Clinica). Those plans are gone
+ * from Socius, and the PREMIUM key collided with the new Premium plan: every
+ * boot re-injected nutrition grants into it. Kept empty on purpose — if a
+ * legacy migration ever needs it again, add the entry back here.
+ */
 const BASE_PLAN_GRANTS: Record<
   string,
   { grants: string[]; modules: string[] }
-> = {
-  PREMIUM: {
-    grants: [
-      "PREMIUM_ACCESS",
-      "INVENTORY_ACCESS",
-      "POS_ACCESS",
-      "BILLING_ACCESS",
-      "CLIENTS_ACCESS",
-      "ATTENDANCE_ACCESS",
-    ],
-    modules: ["INVENTORY", "POS", "BILLING_SALES", "CLIENTS", "ATTENDANCE_CONTROL"],
-  },
-  BUSINESS: {
-    grants: [
-      "BUSINESS_ACCESS",
-      "INVENTORY_ACCESS",
-      "POS_ACCESS",
-      "BILLING_ACCESS",
-      "CLIENTS_ACCESS",
-      "ATTENDANCE_ACCESS",
-    ],
-    modules: ["INVENTORY", "POS", "BILLING_SALES", "CLIENTS", "ATTENDANCE_CONTROL"],
-  },
-  PRO: {
-    grants: [
-      "PRO_ACCESS",
-      "INVENTORY_ACCESS",
-      "POS_ACCESS",
-      "BILLING_ACCESS",
-      "CLIENTS_ACCESS",
-    ],
-    modules: ["INVENTORY", "POS", "BILLING_SALES", "CLIENTS"],
-  },
-};
+> = {};
 
 function planKey(name: string): string {
   return name
