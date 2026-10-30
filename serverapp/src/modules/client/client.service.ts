@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import type { Prisma } from "@prisma/client";
+import { round2 } from "src/shared/utils/money";
 import {
   CreateClientDto,
   ListClientsQueryDto,
@@ -177,7 +178,7 @@ export class ClientService {
 
     const totalUSD = Number(dueAgg._sum.totalUSD ?? 0);
     const paidUSD = Number(paidAgg._sum.amountUSD ?? 0);
-    const currentBalanceUSD = Math.max(0, totalUSD - paidUSD);
+    const currentBalanceUSD = round2(Math.max(0, totalUSD - paidUSD));
     const creditLimitUSD = Number(client.creditLimitUSD ?? 0);
 
     return {

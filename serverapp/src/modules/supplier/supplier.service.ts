@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import type { Prisma } from "@prisma/client";
+import { round2 } from "src/shared/utils/money";
 import {
   CreateSupplierDto,
   ListSuppliersQueryDto,
@@ -180,7 +181,7 @@ export class SupplierService {
       supplierId: id,
       totalUSD,
       paidUSD,
-      currentBalanceUSD: Math.max(0, totalUSD - paidUSD),
+      currentBalanceUSD: round2(Math.max(0, totalUSD - paidUSD)),
     };
   }
 

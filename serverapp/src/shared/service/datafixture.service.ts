@@ -5,6 +5,7 @@ import UserReporitory from "src/modules/user/repository/user.repository";
 import * as bcrypt from "bcrypt";
 import PaymentMethodReporitory from "src/modules/payment-method/repository/payment-method.repository";
 import CmsRepository from "src/modules/cms/repository/cms.repository";
+import { PrismaService } from "nestjs-prisma";
 
 @Injectable()
 export class DataFixtureService implements OnApplicationBootstrap {
@@ -16,6 +17,7 @@ export class DataFixtureService implements OnApplicationBootstrap {
     private readonly permitRepository: PermitReporitory,
     private readonly paymentMethodRepository: PaymentMethodReporitory,
     private readonly cmsRepository: CmsRepository,
+    private readonly prisma: PrismaService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -34,6 +36,9 @@ export class DataFixtureService implements OnApplicationBootstrap {
     const fixSubscriptionPlans = await this.loadSubscriptionPlansFixtures();
     const fixPaymentMethods = await this.loadPaymentMethodsFixtures();
     const fixCms = await this.loadCorporateContentFixtures();
+    const fixOrganization = fixUser
+      ? await this.loadOrganizationFixture(fixUser.id)
+      : null;
 
     return {
       subscription: { superadmin, admin, user, patient },
@@ -41,7 +46,54 @@ export class DataFixtureService implements OnApplicationBootstrap {
       fixSubscriptionPlans,
       fixPaymentMethods,
       fixCms,
+      fixOrganization,
     };
+  }
+
+  /**
+   * Bootstrap tenant (Socius ERP).
+   *
+   * Every tenant-scoped surface needs an organization to resolve, and the DB
+   * integration suites need at least one Organization + User + active AddOn to
+   * run. Upsert-based and idempotent, like the rest of this loader, so a boot
+   * never duplicates or clobbers it.
+   */
+  async loadOrganizationFixture(superadminId: string) {
+    const organization = await this.prisma.organization.upsert({
+      where: { slug: "socius-demo" },
+      create: {
+        name: "Socius Demo",
+        slug: "socius-demo",
+        status: "ACTIVE",
+        defaultCurrency: "USD",
+        currencyVisibility: { showUSD: true, showVES: true, showUSDT: true },
+      },
+      update: {
+        name: "Socius Demo",
+        status: "ACTIVE",
+      },
+    });
+
+    const member = await this.prisma.organizationMember.upsert({
+      where: {
+        organizationId_userId: {
+          organizationId: organization.id,
+          userId: superadminId,
+        },
+      },
+      create: {
+        organizationId: organization.id,
+        userId: superadminId,
+        role: "OWNER",
+        status: "ACTIVE",
+      },
+      update: {
+        role: "OWNER",
+        status: "ACTIVE",
+      },
+    });
+
+    return { organization, member };
   }
 
   async loadPermitsFixtures() {

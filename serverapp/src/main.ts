@@ -20,6 +20,7 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
 
+
   const defaultOrigins = [
     "https://nutringest.com",
     "https://www.nutringest.com",
@@ -91,6 +92,40 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
     }),
+  );
+
+  // Fastify rejects `POST` with `Content-Type: application/json` and an empty
+  // body ("Body cannot be empty"), which any client that sets the JSON header
+  // by default would hit on our body-less mutations
+  // (`POST /api/orders/:id/convert`, `POST /api/sales/:id/cancel`, ...).
+  // Nest registers its own JSON parser while initializing, so the tolerant
+  // parser can only be installed after that: swap it for one that reads an
+  // empty payload as `{}` (validation still owns the decision) and keeps
+  // rejecting malformed JSON.
+  await app.init();
+  const fastify = app.getHttpAdapter().getInstance();
+  if (fastify.hasContentTypeParser("application/json")) {
+    fastify.removeContentTypeParser("application/json");
+  }
+  fastify.addContentTypeParser(
+    "application/json",
+    { parseAs: "string" },
+    (
+      _req: unknown,
+      body: string,
+      done: (err: Error | null, value?: unknown) => void,
+    ) => {
+      const raw = typeof body === "string" ? body.trim() : "";
+      if (raw === "") {
+        done(null, {});
+        return;
+      }
+      try {
+        done(null, JSON.parse(raw));
+      } catch (error) {
+        done(error as Error);
+      }
+    },
   );
 
   await app.listen(process.env.PORT ?? 3001, "0.0.0.0");
