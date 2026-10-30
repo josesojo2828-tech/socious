@@ -6,6 +6,7 @@ import * as bcrypt from "bcrypt";
 import PaymentMethodReporitory from "src/modules/payment-method/repository/payment-method.repository";
 import CmsRepository from "src/modules/cms/repository/cms.repository";
 import { PrismaService } from "nestjs-prisma";
+import { seedPlans } from "src/database/seeds/plans.seed";
 
 @Injectable()
 export class DataFixtureService implements OnApplicationBootstrap {
@@ -39,6 +40,12 @@ export class DataFixtureService implements OnApplicationBootstrap {
     const fixOrganization = fixUser
       ? await this.loadOrganizationFixture(fixUser.id)
       : null;
+
+    // Plans (S9): must exist before any organization is created, because
+    // organization creation subscribes the owner to the default plan.
+    await seedPlans(this.prisma, {
+      log: (message) => this.logger.log(message.trim()),
+    });
 
     return {
       subscription: { superadmin, admin, user, patient },

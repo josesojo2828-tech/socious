@@ -17,7 +17,9 @@ import { isAdmin } from "../permit/authz";
 import { UpdateTenantSettingsDto } from "./dto/settings.dto";
 import type { RequestWithUser } from "src/shared/types/server.type";
 
-const EDITABLE_ROLES = ["OWNER", "ADMIN"] as const;
+// CLINIC_ADMIN is the legacy org-admin role: `module-framework` still
+// checks it, so it keeps editing settings until roles are audited.
+const EDITABLE_ROLES = ["OWNER", "ADMIN", "CLINIC_ADMIN"] as const;
 
 /**
  * Tenant configuration surface (S1).

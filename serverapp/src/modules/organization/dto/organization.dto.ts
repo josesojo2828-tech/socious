@@ -1,4 +1,13 @@
-import { IsString, IsOptional, IsInt, Min, IsEnum, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsInt,
+  IsEnum,
+  IsBoolean,
+  Matches,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export enum OrganizationRoleDto {
   CLINIC_ADMIN = 'CLINIC_ADMIN',
@@ -23,6 +32,14 @@ export class CreateWorkspaceSubscriptionDto {
 export class CreateOrganizationDto {
   @IsString()
   name: string;
+
+  /** Public storefront handle (`socius.com/shop/[slug]`). Auto-derived. */
+  @IsOptional()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message: "El slug solo puede contener minúsculas, números y guiones.",
+  })
+  @MaxLength(80, { message: "El slug no puede exceder 80 caracteres." })
+  slug?: string;
 
   @IsOptional()
   @IsString()

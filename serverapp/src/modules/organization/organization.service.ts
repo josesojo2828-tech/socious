@@ -27,12 +27,75 @@ export class OrganizationService {
     private readonly notificationRepo: NotificationRepository,
   ) {}
 
+  /**
+   * Default plan a new business lands on (S9). Seeded by `seedPlans` on boot,
+   * so its capacity — not the historical `maxSeats = 5` — defines how many
+   * seats the owner starts with.
+   */
+  private static readonly DEFAULT_PLAN_ID = "BASICO";
+
+  /**
+   * Reads `{ capacity: { maxBranches, includedSeats } }` out of a plan's
+   * content without trusting its shape.
+   */
+  private readCapacity(content: unknown): {
+    maxBranches: number;
+    includedSeats: number;
+  } | null {
+    const capacity = (content as { capacity?: Record<string, unknown> } | null)
+      ?.capacity;
+    if (!capacity || typeof capacity !== "object") return null;
+
+    const maxBranches = Number(capacity.maxBranches);
+    const includedSeats = Number(capacity.includedSeats);
+    if (!Number.isFinite(maxBranches) || !Number.isFinite(includedSeats)) {
+      return null;
+    }
+
+    return { maxBranches, includedSeats };
+  }
+
+  /** Slug for the public store, unique across organizations. */
+  private async generateSlug(value: string): Promise<string> {
+    const base =
+      value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "negocio";
+
+    let candidate = base;
+    let attempt = 1;
+    while (await this.prisma.organization.findUnique({ where: { slug: candidate }, select: { id: true } })) {
+      attempt += 1;
+      candidate = `${base}-${attempt}`;
+    }
+
+    return candidate.slice(0, 80);
+  }
+
   async createOrganization(dto: CreateOrganizationDto, adminUserId: string) {
-    const maxSeats = dto.maxSeats || 5;
+    const plan = await this.prisma.subscriptionPlan.findUnique({
+      where: { id: OrganizationService.DEFAULT_PLAN_ID },
+      select: { id: true, content: true },
+    });
+    const capacity = this.readCapacity(plan?.content ?? null);
+
+    // Explicit maxSeats never shrinks below what the plan includes.
+    const maxSeats = Math.max(
+      dto.maxSeats ?? 0,
+      capacity?.includedSeats ?? 5,
+    );
+
+    const slug = dto.slug
+      ? await this.generateSlug(dto.slug)
+      : await this.generateSlug(dto.name);
 
     const org = await this.prisma.organization.create({
       data: {
         name: dto.name,
+        slug,
         taxId: dto.taxId,
         logoUrl: dto.logoUrl,
         maxSeats,
@@ -53,6 +116,26 @@ export class OrganizationService {
         },
       },
     });
+
+    if (plan) {
+      await this.prisma.subscription.create({
+        data: {
+          userId: adminUserId,
+          organizationId: org.id,
+          planId: plan.id,
+          status: "ACTIVE",
+          startDate: new Date(),
+          endDate: null,
+          autoRenew: true,
+        },
+      });
+    } else {
+      // The plans seed runs on every boot; without it the org would ship
+      // unlocked, so the warning must be loud instead of silent.
+      console.error(
+        `[Organization] WARNING: plan ${OrganizationService.DEFAULT_PLAN_ID} missing — organization ${org.id} has no subscription.`,
+      );
+    }
 
     return org;
   }
