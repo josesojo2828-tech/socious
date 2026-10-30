@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Configuración de tenant, envíos, rutas y planes
 
-**Status:** IN PROGRESS — T1-T6 y T9 cerrados (queda T7 = subcursales, T8 = cierre) (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
+**Status:** FASE BACKEND EN CIERRE — T1-T7 y T9 cerrados; falta T8 (verificación HTTP completa) (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
 **Type:** Feature / Backend
 **Area:** `serverapp`
 **Branch:** `feat/tenant-ops` (desde `main`)
@@ -146,7 +146,7 @@ registra como `EXPENSE` en la caja del turno. Los pedidos nunca se devuelven
 | T4 | S4, S5, S6, S7 | inline | done | `3e5264a` (agencias, delivery, vínculo cliente) |
 | T5 | S8 | inline | done | `b74ee7f` (rutas de entrega + sidebar por check) |
 | T6 | S9, S11 | inline | done | `3f4acc8` (planes, add-ons, capacidad y módulos) |
-| T7 | S10 | inline | pending | — |
+| T7 | S10 | inline | done | `3220cce` (Branch + branchId + backfill + capacidad) |
 | T9 | S13 | inline | done | `e2f1b21` (devoluciones de venta) |
 | T8 | Todos | inline | pending | cierre y verificación |
 
