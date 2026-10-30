@@ -45,10 +45,16 @@ const makeTx = () => ({
   },
 });
 
-const makeService = () => {
+const makeService = (settings: any = { cash: { shiftControl: true } }) => {
   const tx = makeTx();
   const prisma = { ...tx, $transaction: jest.fn(async (fn: any) => fn(tx)) };
-  return { service: new CashService(prisma as any), prisma, tx };
+  const tenantSettings = { get: jest.fn().mockResolvedValue(settings) };
+  return {
+    service: new CashService(prisma as any, tenantSettings as any),
+    prisma,
+    tx,
+    tenantSettings,
+  };
 };
 
 /**
@@ -137,6 +143,74 @@ describe("CashService", () => {
     await expect(
       service.getShift({ organizationId: ORG_A }, "sh-x"),
     ).rejects.toThrow(NotFoundException);
+  });
+
+  describe("getDailySummary (S2 — cuadre sin turnos)", () => {
+    const makeDailyService = () => {
+      const ctx = makeService();
+      ctx.tx.salePayment.findMany.mockResolvedValue([
+        { paymentMethod: "CASH_USD", currency: "USD", amountUSD: "10.00" },
+        { paymentMethod: "CASH_USD", currency: "USD", amountUSD: "5.00" },
+        { paymentMethod: "PAGO_MOVIL", currency: "VES", amountUSD: "2.50" },
+      ]);
+      ctx.tx.purchasePayment.findMany.mockResolvedValue([
+        { amountUSD: "3.00" },
+      ]);
+      ctx.tx.cashMovement.aggregate
+        .mockResolvedValueOnce({ _sum: { amount: "7.00" } })
+        .mockResolvedValueOnce({ _sum: { amount: "2.00" } });
+      return ctx;
+    };
+
+    it("collects, pays and nets the money of the day without shifts", async () => {
+      const { service } = makeDailyService();
+
+      const daily = await service.getDailySummary(
+        { organizationId: ORG_A },
+        { date: "2026-10-30" },
+      );
+
+      expect(daily.collectedUSD).toBe(17.5);
+      expect(daily.paidToSuppliersUSD).toBe(3);
+      expect(daily.movementsIncomeUSD).toBe(7);
+      expect(daily.movementsExpenseUSD).toBe(2);
+      expect(daily.netUSD).toBe(19.5); // 17.5 + 7 - 2 - 3
+      expect(daily.from).toBe("2026-10-30T00:00:00.000Z");
+      expect(daily.to).toBe("2026-10-31T00:00:00.000Z");
+    });
+
+    it("groups the collections by payment method", async () => {
+      const { service } = makeDailyService();
+
+      const daily = await service.getDailySummary(
+        { organizationId: ORG_A },
+        { date: "2026-10-30" },
+      );
+
+      expect(daily.collectedByMethod).toEqual([
+        { paymentMethod: "CASH_USD", count: 2, amountUSD: 15 },
+        { paymentMethod: "PAGO_MOVIL", count: 1, amountUSD: 2.5 },
+      ]);
+    });
+
+    it("rejects a malformed date", async () => {
+      const { service } = makeService();
+
+      await expect(
+        service.getDailySummary({ organizationId: ORG_A }, { date: "ayer" }),
+      ).rejects.toThrow(/YYYY-MM-DD/);
+    });
+
+    it("rejects an inverted range", async () => {
+      const { service } = makeService();
+
+      await expect(
+        service.getDailySummary(
+          { organizationId: ORG_A },
+          { from: "2026-10-31T00:00:00.000Z", to: "2026-10-30T00:00:00.000Z" },
+        ),
+      ).rejects.toThrow(/posterior/);
+    });
   });
 
   it("scopes a register list to the organization", async () => {

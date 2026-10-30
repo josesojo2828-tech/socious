@@ -56,13 +56,25 @@ const makeService = () => {
     nextFormatted: jest.fn().mockResolvedValue("VTA-00001"),
   };
   const emitter = { emit: jest.fn() };
+  const tenantSettings = {
+    get: jest.fn().mockResolvedValue({ cash: { shiftControl: true } }),
+  };
   const service = new SaleService(
     prisma as any,
     exchangeService as any,
     sequenceService as any,
+    tenantSettings as any,
     emitter as any,
   );
-  return { service, prisma, tx, exchangeService, sequenceService, emitter };
+  return {
+    service,
+    prisma,
+    tx,
+    exchangeService,
+    sequenceService,
+    emitter,
+    tenantSettings,
+  };
 };
 
 const productOnShelf = (stock: number, overrides: any = {}) => ({
@@ -277,6 +289,61 @@ describe("SaleService", () => {
         5,
         expect.anything(),
       );
+    });
+  });
+
+  describe("cash shift gate (S2)", () => {
+    const item = [
+      {
+        productId: "prod-1",
+        productName: "Arroz 1kg",
+        quantity: 1,
+        unitPriceUSD: 2,
+      },
+    ];
+
+    it("refuses a sale tied to a shift when the tenant disabled shift control", async () => {
+      const { service, tenantSettings } = makeService();
+      tenantSettings.get.mockResolvedValue({ cash: { shiftControl: false } });
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A },
+          { cashShiftId: "shift-1", items: item },
+        ),
+      ).rejects.toThrow(/control de caja está desactivado/);
+    });
+
+    it("accepts the same sale when shift control is on", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      const sale = await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          cashShiftId: "shift-1",
+          items: item,
+          payments: [
+            { amountOriginal: 2, currency: "USD", paymentMethod: "CASH_USD" },
+          ],
+        },
+      );
+
+      expect(sale).toBeTruthy();
+      // The shift association lives on the collection, not on the document
+      // (Sale has no cashShiftId column).
+      expect(tx.salePayment.create.mock.calls[0][0].data.cashShiftId).toBe(
+        "shift-1",
+      );
+    });
+
+    it("does not consult the setting at all when no shift is sent", async () => {
+      const { service, tx, tenantSettings } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create({ organizationId: ORG_A }, { items: item });
+
+      expect(tenantSettings.get).not.toHaveBeenCalled();
     });
   });
 

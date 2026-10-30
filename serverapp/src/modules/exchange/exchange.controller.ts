@@ -48,6 +48,7 @@ const CURRENCY_LABELS: Record<string, string> = {
   USD: 'Dólar (USD)',
   VES: 'Bolívar (VES)',
   USDT: 'Tether (USDT)',
+  EUR: 'Euro (EUR)',
 };
 
 @Controller('api/exchange')
@@ -111,14 +112,24 @@ export class ExchangeController {
     return { rate, currency: 'USD/VES' };
   }
 
-  /** Currencies supported by the ERP documents. */
+  /**
+   * Quotes the UI can show (S3).
+   *
+   * `storage: true` means the amount is also persisted in that currency;
+   * `EUR` is display-only for now — the upstream reports `bcv.eur`, but
+   * documents are always stored in USD/VES/USDT.
+   */
   @Public()
   @Get('currencies')
   getCurrencies() {
-    return CURRENCY_CODES.map((code) => ({
-      code,
-      label: CURRENCY_LABELS[code] ?? code,
-    }));
+    return [
+      ...CURRENCY_CODES.map((code) => ({
+        code,
+        label: CURRENCY_LABELS[code] ?? code,
+        storage: true,
+      })),
+      { code: 'EUR', label: CURRENCY_LABELS.EUR, storage: false },
+    ];
   }
 
   // ---------------------------------------------------------------

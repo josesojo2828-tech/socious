@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -6,6 +7,8 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import type { Prisma } from "@prisma/client";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
+import { round2 } from "src/shared/utils/money";
 import {
   CreateCashMovementDto,
   CreateCashRegisterDto,
@@ -38,8 +41,121 @@ export interface CashScope {
 export class CashService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly tenantSettings: TenantSettingsService,
     private readonly eventEmitter?: EventEmitter2,
   ) {}
+
+  /**
+   * Shift control is a tenant choice (S2): an entrepreneur keeps the cash
+   * register always active and never opens or closes turns. Opening while the
+   * check is off is refused with an actionable message; closing an existing
+   * shift stays allowed so a tenant can turn the check off and still close the
+   * turn that was left open.
+   */
+  private async assertShiftControlEnabled(
+    organizationId: string | null,
+  ): Promise<void> {
+    const settings = await this.tenantSettings.get(organizationId);
+    if (settings.cash.shiftControl) return;
+
+    throw new ConflictException(
+      "El control de apertura/cierre de caja está desactivado: la caja está siempre activa. Habilítalo en Configuración.",
+    );
+  }
+
+  /**
+   * Cash flow of a single day WITHOUT shift machinery (S2).
+   *
+   * `date` is a `YYYY-MM-DD` interpreted as a UTC day; `from`/`to` are full
+   * timestamps for callers that know the business timezone (the frontend
+   * computes the local day). Sales and purchases are filtered by the tenant,
+   * movements by their shift's register.
+   */
+  async getDailySummary(
+    scope: CashScope,
+    query: { date?: string; from?: string; to?: string },
+  ) {
+    const { start, end } = resolveDayRange(query);
+
+    const saleWhere = {
+      paidAt: { gte: start, lt: end },
+      sale: { organizationId: scope.organizationId, deletedAt: null },
+    };
+    const purchaseWhere = {
+      paidAt: { gte: start, lt: end },
+      purchase: { organizationId: scope.organizationId, deletedAt: null },
+    };
+    const movementWhere = {
+      createdAt: { gte: start, lt: end },
+      cashShift: { cashRegister: { organizationId: scope.organizationId } },
+    };
+
+    const [salePayments, purchasePayments, income, expense] =
+      await Promise.all([
+        this.prisma.salePayment.findMany({
+          where: saleWhere,
+          select: { paymentMethod: true, currency: true, amountUSD: true },
+        }),
+        this.prisma.purchasePayment.findMany({
+          where: purchaseWhere,
+          select: { amountUSD: true },
+        }),
+        this.prisma.cashMovement.aggregate({
+          where: { ...movementWhere, type: "INCOME" },
+          _sum: { amount: true },
+        }),
+        this.prisma.cashMovement.aggregate({
+          where: { ...movementWhere, type: "EXPENSE" },
+          _sum: { amount: true },
+        }),
+      ]);
+
+    const byMethod = new Map<string, { count: number; amountUSD: number }>();
+    let collectedUSD = 0;
+
+    for (const payment of salePayments) {
+      const amount = round2(Number(payment.amountUSD ?? 0));
+      collectedUSD = round2(collectedUSD + amount);
+
+      const bucket = byMethod.get(payment.paymentMethod) ?? {
+        count: 0,
+        amountUSD: 0,
+      };
+      bucket.count += 1;
+      bucket.amountUSD = round2(bucket.amountUSD + amount);
+      byMethod.set(payment.paymentMethod, bucket);
+    }
+
+    const paidToSuppliersUSD = round2(
+      purchasePayments.reduce(
+        (sum, payment) => sum + Number(payment.amountUSD ?? 0),
+        0,
+      ),
+    );
+    const incomeUSD = round2(Number(income._sum.amount ?? 0));
+    const expenseUSD = round2(Number(expense._sum.amount ?? 0));
+
+    return {
+      from: start.toISOString(),
+      to: end.toISOString(),
+      shiftControl: (await this.tenantSettings.get(scope.organizationId)).cash
+        .shiftControl,
+      collectedUSD,
+      collectedByMethod: [...byMethod.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([paymentMethod, value]) => ({
+          paymentMethod,
+          ...value,
+        })),
+      paidToSuppliersUSD,
+      movementsIncomeUSD: incomeUSD,
+      movementsExpenseUSD: expenseUSD,
+      // What entered the business that day, whatever the source.
+      netUSD: round2(
+        collectedUSD + incomeUSD - expenseUSD - paidToSuppliersUSD,
+      ),
+    };
+  }
 
   private registerWhere(
     organizationId: string | null,
@@ -169,6 +285,7 @@ export class CashService {
   }
 
   async openShift(scope: CashScope, registerId: string, data: OpenShiftDto) {
+    await this.assertShiftControlEnabled(scope.organizationId);
     await this.getRegister(scope, registerId);
 
     const open = await this.prisma.cashShift.findFirst({
@@ -414,4 +531,41 @@ export class CashService {
     });
   }
 
+}
+
+/** Resolves the day window for `GET /api/cash/daily`. */
+function resolveDayRange(query: {
+  date?: string;
+  from?: string;
+  to?: string;
+}): { start: Date; end: Date } {
+  const parse = (value: string, label: string): Date => {
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new BadRequestException(`${label} no es una fecha válida.`);
+    }
+    return parsed;
+  };
+
+  if (query.date) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(query.date)) {
+      throw new BadRequestException("date debe tener el formato YYYY-MM-DD.");
+    }
+    const start = new Date(`${query.date}T00:00:00.000Z`);
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+    return { start, end };
+  }
+
+  const start = query.from
+    ? parse(query.from, "from")
+    : new Date(new Date().toISOString().slice(0, 10));
+  const end = query.to
+    ? parse(query.to, "to")
+    : new Date(start.getTime() + 24 * 60 * 60 * 1000);
+
+  if (end.getTime() <= start.getTime()) {
+    throw new BadRequestException("to debe ser posterior a from.");
+  }
+
+  return { start, end };
 }

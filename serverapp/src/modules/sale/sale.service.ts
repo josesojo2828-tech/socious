@@ -9,6 +9,7 @@ import { PaymentStatus, ProductStatus, SaleStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { ExchangeService } from "../exchange/exchange.service";
 import { deriveProductStatus } from "../product/product.service";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import { SequenceService, SequenceDb } from "src/shared/services/sequence.service";
 import {
   buildDocumentTotals,
@@ -63,8 +64,28 @@ export class SaleService {
     private readonly prisma: PrismaService,
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
+    private readonly tenantSettings: TenantSettingsService,
     private readonly eventEmitter?: EventEmitter2,
   ) {}
+
+  /**
+   * S2: a tenant with `cash.shiftControl` off never attaches a sale to a shift
+   * (the cash register is always active). Passing one explicitly is a config
+   * mismatch, not a silent no-op.
+   */
+  private async assertCashShiftAllowed(
+    scope: SaleScope,
+    cashShiftId: string | null | undefined,
+  ): Promise<void> {
+    if (!cashShiftId) return;
+
+    const settings = await this.tenantSettings.get(scope.organizationId);
+    if (settings.cash.shiftControl) return;
+
+    throw new ConflictException(
+      "El control de caja está desactivado: registra la venta sin turno de caja o habilita el control en Configuración.",
+    );
+  }
 
   private scopeWhere(organizationId: string | null): Prisma.SaleWhereInput {
     return { organizationId, deletedAt: null };
@@ -78,6 +99,8 @@ export class SaleService {
     if (!data.items?.length) {
       throw new BadRequestException("La venta necesita al menos un artículo.");
     }
+
+    await this.assertCashShiftAllowed(scope, data.cashShiftId);
 
     const rates = await this.exchangeService.resolveRates(
       scope.organizationId,

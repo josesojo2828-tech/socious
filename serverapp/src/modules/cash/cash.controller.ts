@@ -100,6 +100,21 @@ export class CashController {
   // Shifts
   // ---------------------------------------------------------------
 
+  /**
+   * Cash flow of a day without shift machinery (S2): what was collected, from
+   * which method, what went to suppliers and what moved in/out of the drawer.
+   */
+  @Get("daily")
+  async getDailySummary(
+    @Req() request: RequestWithUser,
+    @Query("date") date?: string,
+    @Query("from") from?: string,
+    @Query("to") to?: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.cashService.getDailySummary(scope, { date, from, to });
+  }
+
   @Get("shifts/current")
   async getCurrentShift(@Req() request: RequestWithUser) {
     const scope = await this.resolveScope(request);
