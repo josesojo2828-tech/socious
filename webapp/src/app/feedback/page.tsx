@@ -1,7 +1,5 @@
 'use client';
 
-import { Navbar } from "@/features/public/components/Navbar";
-import { Footer } from "@/features/public/components/Footer";
 import { useTranslation } from "@/context/i18n.context";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +7,7 @@ import { z } from "zod";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { MessageSquare, Send, Bug, Lightbulb, HelpCircle, Mail, User } from "lucide-react";
 import { useState } from "react";
+import { PublicFooter, PublicHeader } from "@/shared/components/molecules/PublicShell";
 
 // Schema de validación
 const feedbackSchema = z.object({
@@ -67,7 +66,7 @@ export default function FeedbackPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-base-200">
-            <Navbar />
+            <PublicHeader />
 
             <main className="grow pt-28 pb-16 px-4">
                 <div className="max-w-2xl mx-auto">
@@ -210,7 +209,7 @@ export default function FeedbackPage() {
                 </div>
             </main>
 
-            <Footer />
+            <PublicFooter />
         </div>
     );
 }

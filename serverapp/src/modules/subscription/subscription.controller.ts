@@ -14,10 +14,12 @@ import {
 
 import { SubscriptionPlanService } from "./service/subscription.service";
 import SubscriptionPlanReporitory from "./repository/subscription-plan.repository";
+import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { AutorenewSubscriptionService } from "./service/renew.service";
 import { normalizeSubscriptionPlanContent } from "./util/subscription-plan-content.util";
 import { Prisma } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 import type { SubscriptionPlanCreate } from "./dto/subscription-plan.type";
 import { FilterParamsDto } from "src/shared/types/server.type";
@@ -29,6 +31,7 @@ export class SubscriptionPlanController {
     private readonly subscriptionPlanService: SubscriptionPlanService,
     private readonly subscriptionRepository: SubscriptionPlanReporitory,
     private readonly autoRenewSubscriptionService: AutorenewSubscriptionService,
+    private readonly prisma: PrismaService,
   ) {}
 
   @Post("/create")
@@ -132,6 +135,29 @@ export class SubscriptionPlanController {
     }
 
     return { success: true, entity };
+  }
+
+  /**
+   * Public pricing (S4 of the brand/landing phase): the landing shows the real
+   * plans without a session. Only the plans the platform publishes
+   * (`selected: true`) and the fields a visitor needs — never internal grants.
+   */
+  @Public()
+  @Get("public")
+  async listPublicPlans() {
+    return this.prisma.subscriptionPlan.findMany({
+      where: { selected: true, deletedAt: null },
+      orderBy: { price: "asc" },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        currency: true,
+        badge: true,
+        description: true,
+        content: true,
+      },
+    });
   }
 
   // --- VISTAS Y FORMULARIOS ---

@@ -1,12 +1,11 @@
 'use client';
 
-import { Navbar } from "@/features/public/components/Navbar";
-import { Footer } from "@/features/public/components/Footer";
 import { ArrowLeft, Compass, Eye, Target } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { apiClient } from "@/shared/api/api.client";
 import { parseMarkdown } from "@/shared/components/organisms/DynamicForm/MarkdownEditor";
+import { PublicFooter, PublicHeader } from "@/shared/components/molecules/PublicShell";
 
 interface CmsContent {
   title: string;
@@ -41,7 +40,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-base-200 font-sans text-base-content">
-      <Navbar />
+      <PublicHeader />
 
       <main className="flex-grow pt-24 pb-16 relative">
         {/* Decorative Background Blobs */}
@@ -145,7 +144,7 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <Footer />
+      <PublicFooter />
     </div>
   );
 }

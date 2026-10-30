@@ -1,12 +1,11 @@
 'use client';
 
-import { Navbar } from "@/features/public/components/Navbar";
-import { Footer } from "@/features/public/components/Footer";
 import { Badge } from "@/shared/components/atoms/Badge"; // Assuming a Badge component exists or we'll make a simple one inline if not
 import { Calendar, Tag, ArrowRight, Star, Zap, Info } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/context/i18n.context";
+import { PublicFooter, PublicHeader } from "@/shared/components/molecules/PublicShell";
 
 // Publicaciones reales cuando existan un CMS/backend de blog.
 // Mientras tanto la página muestra el estado vacío ("No hay publicaciones").
@@ -56,7 +55,7 @@ export default function BlogPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-base-200">
-            <Navbar />
+            <PublicHeader />
 
             <main className="flex-grow pt-28 pb-16 px-4">
                 {/* Header */}
@@ -159,7 +158,7 @@ export default function BlogPage() {
 
             </main>
 
-            <Footer />
+            <PublicFooter />
         </div>
     );
 }
