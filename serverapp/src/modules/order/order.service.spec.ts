@@ -28,7 +28,10 @@ const DEFAULT_SETTINGS = {
 
 const makeTx = () => ({
   organization: { findUnique: jest.fn() },
-  product: { findMany: jest.fn().mockResolvedValue([]) },
+  product: {
+    findMany: jest.fn().mockResolvedValue([]),
+    update: jest.fn(),
+  },
   client: {
     findFirst: jest.fn().mockResolvedValue(null),
     create: jest.fn((args: any) => Promise.resolve({ id: "client-new", ...args.data })),
@@ -50,6 +53,7 @@ const makeTx = () => ({
     findMany: jest.fn().mockResolvedValue([]),
   },
   saleService: { create: jest.fn() },
+  stockMovement: { create: jest.fn() },
 });
 
 const makeService = (settings: any = DEFAULT_SETTINGS) => {
@@ -100,6 +104,7 @@ describe("OrderService", () => {
         service.createPublicOrder({
           organizationSlug: "no-existe",
           customerName: "Ana",
+          customerEmail: "ana@cliente.test",
           items: [{ productId: "prod-1", quantity: 1 }],
         }),
       ).rejects.toThrow(NotFoundException);

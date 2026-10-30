@@ -2,7 +2,9 @@ import { GLOBAL_TENANT_KEY, SequenceService } from "./sequence.service";
 
 const makeDb = (values: number[]) => {
   let i = 0;
-  const upsert = jest.fn(async () => ({ value: values[i++] ?? values[values.length - 1] }));
+  const upsert = jest.fn(async (_args: any) => ({
+    value: values[i++] ?? values[values.length - 1],
+  }));
   return { db: { counter: { upsert } } as any, upsert };
 };
 
@@ -26,7 +28,7 @@ describe("SequenceService", () => {
 
     await service.next("ORDER", null, db);
 
-    expect(upsert.mock.calls[0][0].where.tenantKey_scope.tenantKey).toBe(
+    expect(upsert.mock.calls[0]?.[0].where.tenantKey_scope.tenantKey).toBe(
       GLOBAL_TENANT_KEY,
     );
   });
@@ -38,8 +40,8 @@ describe("SequenceService", () => {
     await service.next("SALE", "org-1", db);
     await service.next("PURCHASE", "org-1", db);
 
-    expect(upsert.mock.calls[0][0].where.tenantKey_scope.scope).toBe("SALE");
-    expect(upsert.mock.calls[1][0].where.tenantKey_scope.scope).toBe("PURCHASE");
+    expect(upsert.mock.calls[0]?.[0].where.tenantKey_scope.scope).toBe("SALE");
+    expect(upsert.mock.calls[1]?.[0].where.tenantKey_scope.scope).toBe("PURCHASE");
   });
 
   it("formats a zero-padded document number", async () => {
