@@ -224,6 +224,21 @@ export class DashboardService {
         items: salesItems,
       });
 
+      // 3b. Pedidos (S7/S9 del port): la bandeja donde el comercio confirma,
+      //   coordina y despacha lo que llega de la tienda online.
+      const orderItems: SidebarItem[] = [
+        {
+          title: "Bandeja de pedidos",
+          icon: "shopping-bag",
+          link: "/dashboard/pedidos",
+        },
+      ];
+      sections.push({
+        title: "Pedidos",
+        icon: "shopping-bag",
+        items: orderItems,
+      });
+
       // 4. Inventario & Catálogo
       const inventoryItems: SidebarItem[] = [
         {
