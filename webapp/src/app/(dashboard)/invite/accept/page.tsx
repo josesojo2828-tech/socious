@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { organizationService } from '@/features/nutringest/clinic/services/organization.service';
+import { organizationService } from '@/features/organization/services/organization.service';
 import { Building2, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 

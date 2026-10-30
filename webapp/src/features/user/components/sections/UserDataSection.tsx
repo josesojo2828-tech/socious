@@ -1,7 +1,6 @@
 import { DynamicRenderForm } from "@/shared/components/organisms/DynamicForm/DynamicRenderForm";
 import { UserEndpoints } from "../../services/user.endpoints";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
-import { AccreditationSection } from "./AccreditationSection";
 import { User } from "lucide-react";
 
 export const UserDataSection = () => {
@@ -38,9 +37,6 @@ export const UserDataSection = () => {
           pathSend={UserEndpoints.actions.update(String(user?.id))}
         />
       </div>
-
-      {/* Acreditación Profesional */}
-      <AccreditationSection />
     </div>
   );
 };

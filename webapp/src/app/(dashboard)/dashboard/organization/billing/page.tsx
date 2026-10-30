@@ -1,6 +1,6 @@
 "use client";
 
-import { ClinicBillingPage } from "@/features/nutringest/clinic/pages/ClinicBillingPage";
+import { ClinicBillingPage } from "@/features/organization/pages/ClinicBillingPage";
 
 export default function Page() {
   return <ClinicBillingPage />;

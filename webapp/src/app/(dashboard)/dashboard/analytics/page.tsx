@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useAdminAnalytics } from "@/features/dashboard/hooks/useAdminAnalytics";
 import ActivityDashboard from "@/features/dashboard/components/ActivityDashboard";
@@ -18,7 +17,6 @@ import {
   RefreshCw,
   DollarSign,
   MapPin,
-  Calculator,
   Stethoscope,
   FileText,
   Clock,
@@ -27,8 +25,6 @@ import {
   CreditCard
 } from "lucide-react";
 import Link from "next/link";
-import { apiClient } from "@/shared/api/api.client";
-import { CalculatorUsageEndpoints } from "@/features/calculadora/service/calculator-usage.endpoints";
 
 const OfficeLocationsMap = dynamic(
   () => import("@/features/dashboard/components/OfficeLocationsMap"),
@@ -38,18 +34,6 @@ const OfficeLocationsMap = dynamic(
 export default function AdminAnalyticsPage() {
   const { t } = useTranslation();
   const { stats, loading, error, refetch } = useAdminAnalytics();
-  const [calculatorUses, setCalculatorUses] = useState<number>(0);
-
-  useEffect(() => {
-    apiClient
-      .get(CalculatorUsageEndpoints.api.stats)
-      .then((res) => {
-        const data = res.data;
-        const total = (data?.totalPacientes ?? 0) + (data?.totalDeportistas ?? 0) + (data?.totalPediatria ?? 0);
-        setCalculatorUses(total);
-      })
-      .catch(() => {});
-  }, []);
 
   if (loading) {
     return (
@@ -129,7 +113,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* KPI CARDS (BENTO GRID SUPERIOR) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
 
         {/* MRR */}
         <div className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
@@ -233,22 +217,6 @@ export default function AdminAnalyticsPage() {
               )}
             </h3>
             <p className="text-[11px] text-base-content/70 mt-0.5">Por verificar aprobación</p>
-          </div>
-        </div>
-
-        {/* Usos Calculadora */}
-        <div className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] font-extrabold text-base-content/60 uppercase tracking-wider">Calculadoras</p>
-            <div className="p-2.5 bg-blue-500/10 rounded-xl text-blue-500">
-              <Calculator size={20} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <h3 className="text-2xl font-black text-base-content">
-              {calculatorUses.toLocaleString()}
-            </h3>
-            <p className="text-[11px] text-base-content/70 mt-0.5">Cálculos ejecutados</p>
           </div>
         </div>
 

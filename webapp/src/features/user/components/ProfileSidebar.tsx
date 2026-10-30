@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
-import { Bell, Key, User, Camera, Loader2, Share2, FileText, Mail, AtSign, Check, BadgeCheck, Wallet, CreditCard, Sparkles } from "lucide-react";
+import { Bell, Key, User, Camera, Loader2, Mail, AtSign, Wallet, CreditCard, Sparkles } from "lucide-react";
 import { Avatar } from "@/shared/components/atoms/Avatar";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { Badge } from "@/shared/components/atoms/Badge";
@@ -12,8 +12,6 @@ import { FC } from "react";
 import { SECTION_TYPE } from "../types/user.types";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
-import { getMyPortfolio, updatePortfolio } from "@/features/portfolio/services/portfolio.service";
-import { hasEntitlement, isAdmin, ACCESS_KEYS } from "@/shared/authz";
 
 export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYPE) => void }> = ({
     section,
@@ -24,59 +22,8 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
     const { addToast } = useToastStore();
 
     const [uploading, setUploading] = useState(false);
-    const [bio, setBio] = useState("");
-    const [savingBio, setSavingBio] = useState(false);
-
-    const [hasPortfolioAccess, setHasPortfolioAccess] = useState(false);
-    const [verificationStatus, setVerificationStatus] = useState<string>("UNVERIFIED");
-
-    const canAccessSocial = (hasEntitlement(user, ACCESS_KEYS.PREMIUM) || isAdmin(user)) && hasPortfolioAccess;
 
     const sub = user?.subscriptions ? user?.subscriptions[0] : null;
-
-    useEffect(() => {
-        async function loadBio() {
-            try {
-                const portfolio = await getMyPortfolio();
-                if (portfolio) {
-                    setHasPortfolioAccess(true);
-                    if (portfolio.verificationStatus) {
-                        setVerificationStatus(portfolio.verificationStatus);
-                    }
-                    if (portfolio.bio) {
-                        setBio(portfolio.bio);
-                    }
-                }
-            } catch (err: any) {
-                if (err?.response?.status === 403) {
-                    setHasPortfolioAccess(false);
-                } else {
-                    console.error("Error al cargar la biografía del portafolio:", err);
-                }
-            }
-        }
-        loadBio();
-    }, []);
-
-    const handleSaveBio = async () => {
-        try {
-            setSavingBio(true);
-            await updatePortfolio({ bio });
-            addToast({
-                type: "success",
-                title: "Biografía actualizada",
-                message: "Tu descripción profesional se guardó correctamente.",
-            });
-        } catch (error) {
-            addToast({
-                type: "error",
-                title: "Error",
-                message: "No se pudo guardar la biografía.",
-            });
-        } finally {
-            setSavingBio(false);
-        }
-    };
 
     const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -182,11 +129,6 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                         <h2 className="text-xl font-black text-base-content">
                             {user?.firstName} {user?.lastName}
                         </h2>
-                        {verificationStatus === "VERIFIED" && (
-                            <span title="Nutricionista Verificado Nutringest 🛡️" className="inline-flex text-success shrink-0">
-                                <BadgeCheck className="w-5 h-5 fill-success text-white" />
-                            </span>
-                        )}
                     </div>
 
                     {/* Datos de Sesión */}
@@ -208,35 +150,6 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                             <Badge color="emerald">{user?.permits?.name || "Nutricionista"}</Badge>
                         )}
                     </div>
-
-                    {/* Biografía / Descripción estilo LinkedIn */}
-                    {hasPortfolioAccess && (
-                        <div className="mt-6 w-full text-left space-y-2 border-t border-base-300 pt-4" data-tour="profile-biolink">
-                            <label className="text-[11px] font-bold uppercase tracking-wider text-base-content/50 flex items-center gap-1">
-                                <FileText className="w-3.5 h-3.5" /> Biografía profesional
-                            </label>
-                            <textarea
-                                value={bio}
-                                onChange={(e) => setBio(e.target.value)}
-                                placeholder="Escribí una breve descripción profesional..."
-                                rows={3}
-                                maxLength={500}
-                                className="w-full px-3 py-2 text-xs rounded-lg bg-base-200 border border-base-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none font-medium"
-                            />
-                            <div className="flex justify-between items-center text-[10px] text-base-content/50">
-                                <span>{bio.length}/500</span>
-                                <button
-                                    type="button"
-                                    onClick={handleSaveBio}
-                                    disabled={savingBio}
-                                    className="text-xs font-bold text-primary hover:underline flex items-center gap-1 disabled:opacity-50 cursor-pointer"
-                                >
-                                    {savingBio ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
-                                    Guardar bio
-                                </button>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -246,16 +159,6 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                   Configuración & Cuenta
                 </p>
                 <nav className="space-y-1">
-                    {canAccessSocial && (
-                        <Button
-                            onClick={() => set("social")}
-                            className="w-full justify-start text-left gap-3 text-xs font-bold rounded-lg"
-                            variant={section === "social" ? "primary" : "ghost"}
-                            data-tour="profile-social"
-                        >
-                            <Share2 size={16} /> Redes Sociales
-                        </Button>
-                    )}
                     <Button
                         onClick={() => set("data")}
                         className="w-full justify-start text-left gap-3 text-xs font-bold rounded-lg"

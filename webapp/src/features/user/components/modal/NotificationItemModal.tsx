@@ -5,10 +5,8 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { apiClient } from "@/shared/api/api.client";
-import { CheckCircle, AlertTriangle, Info, X, Check, ExternalLink, Loader2 } from "lucide-react";
+import { CheckCircle, AlertTriangle, Info, X, Check, Loader2 } from "lucide-react";
 import { Text } from "@/shared/components/atoms/Text";
-import { RespondReferralModal } from '@/features/nutringest/patient-referral/components/RespondReferralModal';
-import type { PatientReferral } from '@/types/nutringest/patient-referral.interface';
 
 import { useNotifications } from '@/features/user/hooks/useNotifications';
 
@@ -18,7 +16,7 @@ interface NotificationItemModalProps {
 }
 
 export function NotificationItemModal({ notification, markAsRead }: NotificationItemModalProps) {
-    const { closeModal, openModal } = useModalStore();
+    const { closeModal } = useModalStore();
     const { addToast } = useToastStore();
     const { fetchNotifications } = useNotifications();
     const { fetchWorkspaces } = useWorkspaceStore();
@@ -33,7 +31,6 @@ export function NotificationItemModal({ notification, markAsRead }: Notification
     }, [notification, markAsRead]);
 
     const normType = notification?.entityType?.toLowerCase().replace(/[-_]/g, '');
-    const isPatientReferral = normType === 'patientreferral';
     const isInstitutionalCalculation = normType === 'institutionalcalculation';
     const isOrgInvitation = normType === 'organizationinvitation';
 
@@ -65,28 +62,6 @@ export function NotificationItemModal({ notification, markAsRead }: Notification
         } finally {
             setIsResponding(false);
         }
-    };
-
-    const handleAction = (action: 'accept' | 'reject') => {
-        if (!notification?.entityId) return;
-        const referral = { id: notification.entityId } as PatientReferral;
-        openModal(
-            <RespondReferralModal
-                referral={referral}
-                action={action}
-                onDone={() => {
-                    markAsRead(notification.id);
-                    fetchNotifications();
-                    closeModal();
-                }}
-            />,
-            { size: 'md' },
-        );
-    };
-
-    const handleGoToReferrals = () => {
-        closeModal();
-        router.push('/dashboard/referrals');
     };
 
     const handleOrgInvitationAction = async (accept: boolean) => {
@@ -226,27 +201,6 @@ export function NotificationItemModal({ notification, markAsRead }: Notification
                             className="btn btn-sm bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 font-bold rounded-xl text-xs flex items-center gap-1.5 px-3.5 py-2 transition-all"
                         >
                             <X size={14} /> Rechazar
-                        </button>
-                    </div>
-                ) : isPatientReferral && notification?.entityId ? (
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <button
-                            onClick={() => handleAction('accept')}
-                            className="btn btn-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 px-3 py-2"
-                        >
-                            <Check size={14} /> Aceptar
-                        </button>
-                        <button
-                            onClick={() => handleAction('reject')}
-                            className="btn btn-sm bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 font-bold rounded-xl text-xs flex items-center gap-1.5 px-3 py-2"
-                        >
-                            <X size={14} /> Rechazar
-                        </button>
-                        <button
-                            onClick={handleGoToReferrals}
-                            className="btn btn-sm bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/50 font-bold rounded-xl text-xs flex items-center gap-1.5 px-3 py-2"
-                        >
-                            <ExternalLink size={14} /> Ver en Referidos
                         </button>
                     </div>
                 ) : isInstitutionalCalculation && notification?.entityId ? (

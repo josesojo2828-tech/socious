@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ClinicBillingPage } from "@/features/nutringest/clinic/pages/ClinicBillingPage";
+import { ClinicBillingPage } from "@/features/organization/pages/ClinicBillingPage";
 
 export default function OrganizationBillingPage() {
   const params = useParams();

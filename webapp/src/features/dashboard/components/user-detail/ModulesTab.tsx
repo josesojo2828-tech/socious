@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Package,
-  Store,
   Settings2,
   Loader2,
   AlertCircle,
@@ -18,7 +17,6 @@ import { Tabs } from '@/shared/components/organisms/Tabs';
 import type { TabEntry } from '@/shared/components/organisms/Tabs/Tabs.types';
 import { SectionCard, Field, StatusPill } from './SectionCard';
 import { EntitlementCard } from '@/features/dashboard/components/EntitlementCard';
-import { SellerPermissionCard } from '@/features/dashboard/components/SellerPermissionCard';
 import { useToastStore } from '@/shared/store/ui/useToastStore';
 import {
   entitlementService,
@@ -439,15 +437,6 @@ export function ModulesTab({ userId, onUpdated }: ModulesTabProps) {
       value: 'module-grants',
       icon: Layers,
       content: <ModuleGrantList userId={userId} onUpdated={handleUpdated} />,
-    });
-
-    tabs.push({
-      label: 'Marketplace',
-      value: 'marketplace',
-      icon: Store,
-      content: (
-        <SellerPermissionCard userId={userId} onStatusUpdated={onUpdated} />
-      ),
     });
 
     tabs.push({

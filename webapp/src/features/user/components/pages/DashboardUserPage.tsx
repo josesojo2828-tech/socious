@@ -1,14 +1,7 @@
 import {
-    MapPin,
     Calendar,
     Mail,
-    Users,
-    Utensils,
-    ListTree,
-    BadgeCheck,
 } from 'lucide-react';
-import { getMyPortfolio } from '@/features/portfolio/services/portfolio.service';
-import { StatCard } from '../dashboard/StatCard';
 import { useAuthStore } from '@/shared/store/auth/useAuthStore';
 import { useTranslation } from '@/context/i18n.context';
 import { usePaymentAnalytics } from '../../hooks/analitics/usePaymentAnalytics';
@@ -16,16 +9,11 @@ import { Avatar } from '@/shared/components/atoms/Avatar';
 import { ExtractValue } from '@/shared/components/organisms/DynamicTable/StractValue';
 import { useReferrals } from '../../hooks/useReference';
 import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocationUser } from '../../hooks/useLocationUser';
 import { ConfirmLocationModal } from '../map/ConfirmLocationModal';
 import { useModalStore } from '@/shared/store/ui/useModalStore';
 
-import { usePatientMetrics } from '@/features/nutringest/patient/hooks/usePatientMetrics';
-import { useMenuDashboard } from '@/features/nutringest/menu/hooks/useMenuDashboard';
-import { useConsultationMetrics } from '@/features/nutringest/consultation/hooks/useConsultationMetrics';
-import { ExchangeDashboardMetrics } from '@/features/nutringest/exchange-list/types/exchange-list.dashbaord.type';
-import { apiClient } from '@/shared/api/api.client';
 import Link from 'next/link';
 import { PremiumHubShowcase } from '../dashboard/PremiumHubShowcase';
 import { AgendaHistoryChart } from '../dashboard/AgendaHistoryChart';
@@ -36,35 +24,10 @@ export default function DashboardUserPage() {
     const { copyReferralLink } = useReferrals({ execute: false });
     const { user, refreshSession } = useAuthStore();
     const { history } = usePaymentAnalytics();
-    const { metrics: patientMetrics } = usePatientMetrics();
-    const { metrics: consultationMetrics } = useConsultationMetrics();
-    const { data: menuMetrics } = useMenuDashboard();
     const { saveLocation, location, setLocation } = useLocationUser(user);
-
-    const [exchangeListMetrics, setExchangeListMetrics] = useState<ExchangeDashboardMetrics | null>(null);
-    const [isVerified, setIsVerified] = useState(false);
 
     useEffect(() => {
         refreshSession();
-        const controller = new AbortController();
-        apiClient
-            .get<ExchangeDashboardMetrics>('/api/exchange-list/dashboard', { signal: controller.signal })
-            .then((res) => setExchangeListMetrics(res.data))
-            .catch((err) => {
-                if (err?.code !== 'ERR_CANCELED') {
-                    console.error('Error fetching exchange metrics:', err);
-                }
-            });
-
-        getMyPortfolio()
-            .then((portfolio) => {
-                if (portfolio?.verificationStatus === "VERIFIED") {
-                    setIsVerified(true);
-                }
-            })
-            .catch(() => {});
-
-        return () => controller.abort();
     }, []);
 
     const { openModal } = useModalStore();
@@ -98,24 +61,10 @@ export default function DashboardUserPage() {
                         <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
                             <h1 className="text-2xl md:text-3xl font-black text-base-content tracking-tight flex items-center gap-2">
                                 {user?.firstName} {user?.lastName}
-                                {isVerified && (
-                                    <span
-                                        title="Nutricionista Verificado por Nutringest 🛡️"
-                                        className="inline-flex items-center text-[#0ea5e9] drop-shadow-[0_2px_8px_rgba(14,165,233,0.35)] transition-transform hover:scale-110 cursor-pointer"
-                                    >
-                                        <BadgeCheck className="w-7 h-7 fill-[#0ea5e9] text-white" />
-                                    </span>
-                                )}
                             </h1>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-base-200 text-base-content/70 border border-base-300">
                                 @{user?.username}
                             </span>
-                            {isVerified && (
-                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-sm shadow-sky-500/20 flex items-center gap-1">
-                                    <BadgeCheck className="w-3.5 h-3.5 fill-white text-sky-500" />
-                                    VERIFICADO
-                                </span>
-                            )}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-base-content/70 font-medium">
                             <span className="flex items-center gap-1.5"><Mail size={15} className="text-primary" /> {user?.email}</span>
@@ -140,35 +89,6 @@ export default function DashboardUserPage() {
             {/* KPIs del negocio (tab General) y Ubicación del Consultorio */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className='grid grid-cols-2 gap-3'>
-                    <StatCard
-                        title={t('dashboard.user_dashboard.total_patients') || 'Pacientes Totales'}
-                        value={patientMetrics?.overview?.total ?? (user?.nutritionistProfile?._count?.patients || 0)}
-                        subtext=""
-                        icon={<Users size={20} />}
-                        trend="neutral"
-                    />
-                    <StatCard
-                        title={t('dashboard.user_dashboard.total_consultations') || 'Consultas Realizadas'}
-                        value={consultationMetrics?.totalConsultations || 0}
-                        subtext=""
-                        icon={<Calendar size={20} />}
-                        trend="neutral"
-                    />
-                    <StatCard
-                        title={t('dashboard.user_dashboard.total_menus') || 'Total Menús'}
-                        value={menuMetrics?.overview?.totalMenus ?? 0}
-                        subtext=""
-                        icon={<Utensils size={20} />}
-                        trend="neutral"
-                    />
-                    <StatCard
-                        title={t('dashboard.user_dashboard.total_exchange_lists') || 'Total Listas de Intercambio'}
-                        value={exchangeListMetrics?.overview?.totalGroups ?? 0}
-                        subtext=""
-                        icon={<ListTree size={20} />}
-                        trend="neutral"
-                    />
-
                     <div className="card bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 col-span-2 flex-row items-center justify-between text-base-content">
                         <div>
                             <h2 className="font-bold text-xl text-base-content">Invita y Gana</h2>

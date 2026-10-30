@@ -1,5 +1,4 @@
 export * from './components/sections/IndexProfile';
-export * from './components/sections/UserSocialSection';
 export * from './components/ProfileNavbar';
 export * from './components/ProfileSidebar';
 export * from './components/sections/UserSecuritySection';

@@ -1,12 +1,12 @@
 "use client";
 
-import { ClinicManagementPage } from "@/features/nutringest/clinic/pages/ClinicManagementPage";
+import { ClinicManagementPage } from "@/features/organization/pages/ClinicManagementPage";
 import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { Users, Eye } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { organizationService } from "@/features/nutringest/clinic/services/organization.service";
-import { NutritionistDetailModal } from "@/features/nutringest/clinic/components/NutritionistDetailModal";
+import { organizationService } from "@/features/organization/services/organization.service";
+import { NutritionistDetailModal } from "@/features/organization/components/NutritionistDetailModal";
 
 interface Member {
   id: string;
