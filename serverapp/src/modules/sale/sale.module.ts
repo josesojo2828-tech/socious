@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import {  Module, forwardRef } from "@nestjs/common";
 import { SaleController } from "./sale.controller";
 import { SaleService } from "./sale.service";
+import { SaleReturnService } from "./sale-return.service";
 import { ExchangeModule } from "../exchange/exchange.module";
 
 /**
@@ -19,6 +20,6 @@ ExchangeModule],
   providers: [SaleService,
     JwtService,
   ],
-  exports: [SaleService],
+  exports: [SaleService, SaleReturnService],
 })
 export class SaleModule {}

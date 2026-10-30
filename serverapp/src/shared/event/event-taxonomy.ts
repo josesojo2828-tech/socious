@@ -189,6 +189,11 @@ export const EVENT_TAXONOMY = {
     version: TAXONOMY_VERSION,
     retentionDays: RETENTION_DAYS[EventCategory.ERP],
   },
+  "erp.sale.returned": {
+    category: EventCategory.ERP,
+    version: TAXONOMY_VERSION,
+    retentionDays: RETENTION_DAYS[EventCategory.ERP],
+  },
   "erp.sale.cancelled": {
     category: EventCategory.ERP,
     version: TAXONOMY_VERSION,

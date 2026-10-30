@@ -50,6 +50,8 @@ export const PAYLOAD_WHITELIST: Record<EventCategory, readonly string[]> = {
     "saleNumber",
     "purchaseNumber",
     "orderNumber",
+    "returnNumber",
+    "returnId",
     "status",
     "previousStatus",
     "quantity",

@@ -90,6 +90,7 @@ model User {
 
   // ERP Socius Relations
   createdClients                Client[]               @relation("CreatedClientRecords")
+  createdSaleReturns            SaleReturn[]           @relation("CreatedSaleReturnRecords")
   openedCashShifts              CashShift[]            @relation("OpenedCashShifts")
   closedCashShifts              CashShift[]            @relation("ClosedCashShifts")
   createdCashMovements          CashMovement[]         @relation("CreatedCashMovements")
@@ -566,6 +567,7 @@ model Organization {
   orders             Order[]
   stockMovements     StockMovement[]
   exchangeRates      ExchangeRate[]
+  saleReturns        SaleReturn[]
 }
 
 model OrganizationMember {
@@ -626,6 +628,70 @@ model Counter {
   @@index([scope])
 }
 
+
+// ======================================
+// DEVOLUCIONES DE VENTA (S13)
+// ======================================
+
+model SaleReturn {
+  id             String   @id @default(uuid())
+  returnNumber   String   // DEV-00001
+  organizationId String?
+  saleId         String
+  clientId       String?
+  issueDate      DateTime @default(now())
+  reason         String?
+  refundMethod   String? // CASH_USD, USDT_BINANCE, TRANSFER... (métodos de negocio)
+  cashShiftId    String? // reintegro entregado desde un turno abierto (opcional)
+
+  // Mismas tasas que la venta que revierte: el reverso de un documento pasado
+  // no se recalcula con la tasa de hoy.
+  rateBcv        Decimal  @default(1.00) @db.Decimal(14, 4)
+  rateUsdt       Decimal  @default(1.00) @db.Decimal(14, 4)
+
+  subtotalUSD    Decimal  @db.Decimal(14, 2)
+  taxUSD         Decimal  @default(0.00) @db.Decimal(14, 2)
+  totalUSD       Decimal  @db.Decimal(14, 2)
+  totalVES       Decimal  @default(0.00) @db.Decimal(14, 2)
+  totalUSDT      Decimal  @default(0.00) @db.Decimal(14, 2)
+
+  notes          String?
+  createdById    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  sale           Sale          @relation(fields: [saleId], references: [id])
+  client         Client?       @relation(fields: [clientId], references: [id])
+  cashShift      CashShift?    @relation(fields: [cashShiftId], references: [id])
+  createdBy      User?         @relation("CreatedSaleReturnRecords", fields: [createdById], references: [id])
+  items          SaleReturnItem[]
+
+  @@index([organizationId])
+  @@index([saleId])
+  @@index([returnNumber])
+  @@index([issueDate])
+}
+
+model SaleReturnItem {
+  id           String  @id @default(uuid())
+  returnId     String
+  saleItemId   String? // traza hasta la línea de venta original
+  productId    String?
+  productName  String  // denormalizado: el catálogo puede cambiar después
+  quantity     Decimal @db.Decimal(12, 2)
+  unitPriceUSD Decimal @db.Decimal(14, 2)
+  taxRate      Decimal @default(0.00) @db.Decimal(5, 2)
+  totalUSD     Decimal @db.Decimal(14, 2)
+
+  return       SaleReturn @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  product      Product?   @relation(fields: [productId], references: [id])
+
+  @@index([returnId])
+  @@index([productId])
+}
+
 // ======================================
 // CLIENTES (CRM)
 // ======================================
@@ -653,6 +719,7 @@ model Client {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   sales          Sale[]
   orders         Order[]
+  saleReturns    SaleReturn[]
 
   @@index([organizationId])
   @@index([taxId])
@@ -759,6 +826,7 @@ model Product {
   saleItems         SaleItem[]
   purchaseItems     PurchaseItem[]
   orderItems        OrderItem[]
+  saleReturnItems   SaleReturnItem[]
 
   @@index([organizationId])
   @@index([sku])
@@ -852,6 +920,7 @@ model CashShift {
   movements         CashMovement[]
   salePayments      SalePayment[]
   purchasePayments  PurchasePayment[]
+  saleReturns       SaleReturn[]
 
   @@index([cashRegisterId])
   @@index([status])
@@ -1075,6 +1144,7 @@ model Sale {
   order          Order?            @relation("OrderSale")
   items          SaleItem[]
   payments       SalePayment[]
+  returns        SaleReturn[]
 
   @@index([organizationId])
   @@index([clientId])

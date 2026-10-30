@@ -59,7 +59,7 @@ plataforma lo mantiene); `settings.fulfillment.enabledTypes` con checks
 
 **Aceptación:** el pedido público exige `customerName` + `customerEmail` (o `customerPhone`);
 se busca el `Client` existente por email y después por teléfono → si hay match se guarda
-`clientId`; si no hay match se crea un `Client` con la nota "Creado desde pedido web" (supuesto, L6).
+`clientId`; si no hay match se crea un `Client` con la nota "Creado desde pedido web" (supuesto, L7).
 
 ### S6: Delivery como opción de retiro, con monto configurable
 > "tambien agregar el delivery, en las opciones de retiro. el monto del delivery variaria, pero puede estar en las configuraciones tambien"
@@ -121,6 +121,19 @@ la UI; `branchId` nullable en `Sale`, `Order`, `CashRegister`, `CashShift`, `Pur
 
 Turnos de empleados, facturación real con pasarela y frontend quedan fuera de este documento.
 
+### S13: Devoluciones de venta
+> "tmabien monta por ahi el tema de las devoluciones."
+
+**Aceptación:** devolución parcial o total de una venta con documento propio
+(`DEV-00001`, numeración por tenant): valida que las cantidades devueltas no
+superen lo vendido **menos lo ya devuelto**, restaura el stock por kardex
+(`RETURN`), reduce el saldo del cliente sin dejarlo negativo, congela las
+mismas tasas de la venta que revierte y acepta un método de reintegro; si se
+indica turno de caja (y el control de caja está activo) el reintegro se
+registra como `EXPENSE` en la caja del turno. Los pedidos nunca se devuelven
+(son previos a la venta). Devoluciones a proveedor: fuera de esta unidad
+(ver L7).
+
 ---
 
 ## Tasks
@@ -134,6 +147,7 @@ Turnos de empleados, facturación real con pasarela y frontend quedan fuera de e
 | T5 | S8 | inline | pending | — |
 | T6 | S9, S11 | inline | pending | — |
 | T7 | S10 | inline | pending | — |
+| T9 | S13 | inline | pending | — |
 | T8 | Todos | inline | pending | cierre y verificación |
 
 > Ruta: todo inline. Cada unidad es de ~200-400 líneas autorizadas con el patrón ya
@@ -208,7 +222,11 @@ backfill a la sucursal por defecto; catálogo de productos/clientes compartido e
 
 > Me parece perfecto, procede con eso
 
-### L5 — Supuestos adoptados (vetoables, declarados antes de implementar)
+### L6 — Devoluciones (usuario, 2026-10-30)
+
+> tmabien monta por ahi el tema de las devoluciones.
+
+### L7 — Supuestos adoptados (vetoables, declarados antes de implementar)
 
 - Catálogo (productos, clientes, proveedores) **compartido** entre sucursales; solo stock,
   caja, ventas y pedidos se scoping por `branchId`.

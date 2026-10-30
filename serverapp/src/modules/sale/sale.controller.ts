@@ -11,6 +11,8 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { SaleService, SaleScope } from "./sale.service";
+import { SaleReturnService } from "./sale-return.service";
+import { CreateSaleReturnDto, ListSaleReturnsQueryDto } from "./dto/sale-return.dto";
 import {
   AddSalePaymentDto,
   CreateSaleDto,
@@ -33,6 +35,7 @@ export class SaleController {
 
   constructor(
     private readonly saleService: SaleService,
+    private readonly saleReturnService: SaleReturnService,
     private readonly workspaceContext: WorkspaceContextService,
     private readonly prisma: PrismaService,
   ) {
@@ -73,6 +76,42 @@ export class SaleController {
   ) {
     const scope = await this.resolveScope(request);
     return this.saleService.list(scope, query);
+  }
+
+  // Returns are declared before ":id" so "/returns" never resolves as a sale id.
+  @Get("returns")
+  async listReturns(
+    @Req() request: RequestWithUser,
+    @Query() query: ListSaleReturnsQueryDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleReturnService.list(scope, query);
+  }
+
+  @Get("returns/:id")
+  async getReturn(@Req() request: RequestWithUser, @Param("id") id: string) {
+    const scope = await this.resolveScope(request);
+    return this.saleReturnService.getOne(scope, id);
+  }
+
+  @Get(":id/returns")
+  async listReturnsOfSale(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Query() query: ListSaleReturnsQueryDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleReturnService.listBySale(scope, id, query);
+  }
+
+  @Post(":id/returns")
+  async createReturn(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: CreateSaleReturnDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleReturnService.create(scope, id, body);
   }
 
   @Get(":id")
