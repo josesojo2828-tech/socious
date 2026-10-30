@@ -182,8 +182,10 @@ describe("OrderService", () => {
       });
 
       expect(tx.product.findMany).toHaveBeenCalledTimes(1); // read only
-      expect(tx.product.update).toBeUndefined();
-      expect(tx.stockMovement?.create).toBeUndefined();
+      // The fixture declares the write mocks, so the assertion is "never
+      // called" instead of "does not exist".
+      expect(tx.product.update).not.toHaveBeenCalled();
+      expect(tx.stockMovement.create).not.toHaveBeenCalled();
     });
   });
 
