@@ -539,6 +539,10 @@ model Organization {
   status             String               @default("ACTIVE")
   defaultCurrency    String               @default("USD") // Moneda base del negocio (USD, VES, COP, etc.)
   currencyVisibility Json?                // { "showUSD": true, "showVES": true, "showUSDT": true, "showBCV": true }
+  // Configuración del tenant (S1): caja opcional, monedas visibles, tipos de
+  // entrega, agencias habilitadas, delivery y rutas. Se lee siempre a través de
+  // `TenantSettingsService`, que lo normaliza contra DEFAULT_TENANT_SETTINGS.
+  settings           Json?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   deletedAt          DateTime?

@@ -1,0 +1,107 @@
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Patch,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common";
+import { PrismaService } from "nestjs-prisma";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
+import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
+import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
+import { isAdmin } from "../permit/authz";
+import { UpdateTenantSettingsDto } from "./dto/settings.dto";
+import type { RequestWithUser } from "src/shared/types/server.type";
+
+const EDITABLE_ROLES = ["OWNER", "ADMIN"] as const;
+
+/**
+ * Tenant configuration surface (S1).
+ *
+ * `GET /api/settings` — any authenticated member of the workspace; without an
+ * organization it returns the defaults, so the settings screen always renders.
+ * `PATCH /api/settings` — requires a resolved organization and the OWNER/ADMIN
+ * membership (or a platform role): flipping `cash.shiftControl` or the visible
+ * currencies is an operator decision, not any member's.
+ */
+@Controller("api/settings")
+@UseGuards(SessionAuthGuard)
+export class SettingsController {
+  private readonly organizationScope: OrganizationScopeService;
+
+  constructor(
+    private readonly tenantSettings: TenantSettingsService,
+    private readonly workspaceContext: WorkspaceContextService,
+    private readonly prisma: PrismaService,
+  ) {
+    this.organizationScope = new OrganizationScopeService(this.prisma);
+  }
+
+  private async resolveOrganizationId(
+    request: RequestWithUser,
+  ): Promise<string | null> {
+    if (!request.user) {
+      throw new UnauthorizedException("No autorizado");
+    }
+
+    const resolved = await this.organizationScope.resolveOrganizationScope({
+      user: request.user as any,
+      requestedOrganizationId: this.workspaceContext.getWorkspaceId(),
+      unauthorizedFallback: "personal",
+      missingFallback: "personal",
+    });
+
+    return resolved.organizationId;
+  }
+
+  private async assertCanEdit(
+    request: RequestWithUser,
+    organizationId: string,
+  ): Promise<void> {
+    const user = request.user;
+    if (isAdmin(user as any)) return;
+
+    const membership = await this.prisma.organizationMember.findFirst({
+      where: {
+        userId: user.id,
+        organizationId,
+        status: "ACTIVE",
+        role: { in: [...EDITABLE_ROLES] },
+      },
+      select: { id: true },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException(
+        "Solo el propietario o un administrador de la organización puede cambiar la configuración.",
+      );
+    }
+  }
+
+  @Get()
+  async getSettings(@Req() request: RequestWithUser) {
+    const organizationId = await this.resolveOrganizationId(request);
+    return this.tenantSettings.get(organizationId);
+  }
+
+  @Patch()
+  async updateSettings(
+    @Req() request: RequestWithUser,
+    @Body() body: UpdateTenantSettingsDto,
+  ) {
+    const organizationId = await this.resolveOrganizationId(request);
+
+    if (!organizationId) {
+      throw new ForbiddenException(
+        "Crea una organización para configurar el negocio.",
+      );
+    }
+
+    await this.assertCanEdit(request, organizationId);
+    return this.tenantSettings.update(organizationId, body);
+  }
+}
