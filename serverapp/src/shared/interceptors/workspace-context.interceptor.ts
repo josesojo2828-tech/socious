@@ -15,8 +15,16 @@ export class WorkspaceContextInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const workspaceId = request.headers["x-workspace-id"] || null;
 
-    return this.workspaceContext.run(workspaceId, () => {
-      return next.handle();
+    // Nest composes interceptors as an Observable chain and subscribes to the
+    // outermost one AFTER this method returns. Running only the `next.handle()`
+    // call inside the ALS scope would pop the store before the route handler
+    // executes, so `getWorkspaceId()` would read null on every tenant-scoped
+    // endpoint. Subscribing inside the scope makes the handler — and every
+    // await inside it — inherit the workspace id.
+    return new Observable((observer) => {
+      this.workspaceContext.run(workspaceId, () => {
+        next.handle().subscribe(observer);
+      });
     });
   }
 }

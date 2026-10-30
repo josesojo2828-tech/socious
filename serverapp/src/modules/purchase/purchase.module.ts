@@ -1,13 +1,21 @@
-import { Module } from "@nestjs/common";
+import { PermitModule } from "../permit/permit.module";
+import { UserModule } from "../user/user.module";
+import { JwtService } from "@nestjs/jwt";
+import {  Module, forwardRef } from "@nestjs/common";
 import { PurchaseController } from "./purchase.controller";
 import { PurchaseService } from "./purchase.service";
 import { ExchangeModule } from "../exchange/exchange.module";
 
 /** Purchases from suppliers with accrual payables (S8). */
 @Module({
-  imports: [ExchangeModule],
+  imports: [
+    forwardRef(() => PermitModule),
+    forwardRef(() => UserModule),
+ExchangeModule],
   controllers: [PurchaseController],
-  providers: [PurchaseService],
+  providers: [PurchaseService,
+    JwtService,
+  ],
   exports: [PurchaseService],
 })
 export class PurchaseModule {}

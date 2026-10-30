@@ -1,4 +1,7 @@
-import { Module } from "@nestjs/common";
+import { PermitModule } from "../permit/permit.module";
+import { UserModule } from "../user/user.module";
+import { JwtService } from "@nestjs/jwt";
+import {  Module, forwardRef } from "@nestjs/common";
 import { SaleController } from "./sale.controller";
 import { SaleService } from "./sale.service";
 import { ExchangeModule } from "../exchange/exchange.module";
@@ -8,9 +11,14 @@ import { ExchangeModule } from "../exchange/exchange.module";
  * snapshot on every document.
  */
 @Module({
-  imports: [ExchangeModule],
+  imports: [
+    forwardRef(() => PermitModule),
+    forwardRef(() => UserModule),
+ExchangeModule],
   controllers: [SaleController],
-  providers: [SaleService],
+  providers: [SaleService,
+    JwtService,
+  ],
   exports: [SaleService],
 })
 export class SaleModule {}
