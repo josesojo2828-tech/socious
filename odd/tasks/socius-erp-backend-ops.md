@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Configuración de tenant, envíos, rutas y planes
 
-**Status:** FASE BACKEND EN CIERRE — T1-T7 y T9 cerrados; falta T8 (verificación HTTP completa) (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
+**Status:** **FASE BACKEND CERRADA** — T1-T9 completados. Typecheck 0, 75/75 suites, 652/652 tests, API verificada por HTTP en Docker. (caja opcional, config del tenant, devoluciones). Pendientes: F2 envíos, F3 rutas, F4 planes, F5 subcursales, cierre.
 **Type:** Feature / Backend
 **Area:** `serverapp`
 **Branch:** `feat/tenant-ops` (desde `main`)
@@ -148,7 +148,7 @@ registra como `EXPENSE` en la caja del turno. Los pedidos nunca se devuelven
 | T6 | S9, S11 | inline | done | `3f4acc8` (planes, add-ons, capacidad y módulos) |
 | T7 | S10 | inline | done | `3220cce` (Branch + branchId + backfill + capacidad) |
 | T9 | S13 | inline | done | `e2f1b21` (devoluciones de venta) |
-| T8 | Todos | inline | pending | cierre y verificación |
+| T8 | Todos | inline | done | `4982437` (cierre: DI + payload verificados al arrancar) |
 
 > Ruta: todo inline. Cada unidad es de ~200-400 líneas autorizadas con el patrón ya
 > establecido en la fase anterior (scope por `OrganizationScopeService`, DTO con
@@ -252,3 +252,40 @@ Además: la organización nace con **slug** público, con la **sucursal por
 defecto** y suscrita al plan **Básico**; el rol fundador se mantiene
 `CLINIC_ADMIN` hasta auditar los roles heredados (lo aceptan
 `module-framework` y la superficie de configuración).
+
+
+### Verificación de cierre (2026-10-30)
+
+- `npm run typecheck` → **0 errores** (baseline del repo: 67; heredado del purge: 119)
+- `npm test` → **75/75 suites, 652/652 tests**
+- API viva en Docker (`docker compose -f docker-compose.dev.yml up -d backend`, :3005) y recorrida por HTTP:
+
+| Paso | Evidencia observada |
+| --- | --- |
+| `GET /api/settings` | defaults correctos (`routes.enabled false`, `showEUR false`) |
+| `PATCH /api/settings` | persiste `routes=true`, `showEUR=true` |
+| `GET /api/delivery-routes` | 200 con el check encendido → crea `RUT-00001` |
+| Sidebar del **dueño real** (tenant USER) | `['Panel','POS','Ventas','Inventario','Clientes','Rutas de entrega']` |
+| Check apagado | `GET /api/delivery-routes` → **409** y `/dashboard/rutas` desaparece del sidebar |
+| `GET /api/shipping-agencies` (público) | `MRW`, `Zoom Envíos` |
+| `POST /api/branches` | **409 "Tu plan permite 1 sucursal(es)"** (compuerta del plan) |
+| `GET /api/branches` | `[('Principal', isDefault=true)]` |
+| `GET /api/cash/daily?date=` | cobrado 11.24, neto 11.24 |
+| `GET /api/sales/returns` + `/sales/:id/returns` | listados operativos |
+| `POST /api/orders/public` con `SHIPPING` | `PED-00003`, tipo SHIPPING, **cliente vinculado** |
+| `GET /api/orders?fulfillmentType=SHIPPING` | 1 (vista "qué enviar") |
+
+### Defectos que solo saltaron al arrancar (tipos de T8)
+
+1. **DI no visible para `tsc`**: `SaleModule` exportaba `SaleReturnService` sin
+   proveerlo; `OrderModule` importaba `ShippingAgencyModule` como statement y no
+   dentro de `imports: []`. `npm test` tampoco lo ve: nadie arma la app completa.
+2. **Prisma Client desfasado en el contenedor**: `node_modules` vive en un
+   volumen anónimo de la imagen, así que `npx prisma generate` del host no lo
+   alcanza. Tras cada cambio de schema: `docker exec socius_dev_backend npx
+   prisma generate` (o reconstruir la imagen).
+3. **Payload del pedido**: `agency`/`client` no se incluían en la respuesta de
+   creación/listado → `agency: null` aunque `agencyId` estuviera bien.
+4. **El sidebar del superadmin es el de plataforma** (sin secciones de
+   comerciante): S8 se verificó con un usuario tenant con rol OWNER, que es
+   como lo usará el dueño real.
