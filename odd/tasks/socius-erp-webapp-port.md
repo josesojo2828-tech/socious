@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP — Port del backend al frontend (webapp)
 
-**Status:** IN PROGRESS
+**Status:** IN PROGRESS — T1-T3 cerrados
 **Type:** Feature / Frontend
 **Area:** `webapp` (Next.js 16 App Router + React 19 + Tailwind 4 + Zustand + TanStack Query)
 **Branch:** `feat/webapp-erp` (desde `main`, ya sincronizado con `origin/main`)
@@ -94,16 +94,16 @@ Catálogo público (`GET /api/products/public?organization=`), carrito y `POST /
 con contacto obligatorio y tipo de entrega.
 
 ### S13: Cierre
-`npm run typecheck` 0, `npm test` verdes (≥161), smoke HTTP contra el backend Docker, y
+`npm run typecheck` 0, `npm test` verdes (baseline tras la poda: **15 suites / 154 tests** — se borró el spec de adoption, del código eliminado), smoke HTTP contra el backend Docker, y
 baseline de `AGENTS.md` corregido a 0 una vez logrado.
 
 ## Tasks
 
 | ID | Specs | Route | Status | Commit |
 | --- | --- | --- | --- | --- |
-| T1 | — | inline | pending | rama `feat/webapp-erp` |
-| T2 | S1 | inline | pending | — |
-| T3 | S2 | inline | pending | — |
+| T1 | — | inline | done | `49a5514` (rama + doc) |
+| T2 | S1 | inline | done | `ed9bce5` (62 → 0 errores) |
+| T3 | S2 | inline | done | `ed9bce5` (13 rutas + 6 archivos muertos borrados) |
 | T4 | S3 | inline | pending | — |
 | T5 | S4 | inline | pending | — |
 | T6 | S5 | inline | pending | — |
