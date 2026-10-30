@@ -7,11 +7,14 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
+  NotFoundException,
+  Param,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { isAdmin } from "../permit/authz";
 import { UpdateTenantSettingsDto } from "./dto/settings.dto";
@@ -88,6 +91,43 @@ export class SettingsController {
   async getSettings(@Req() request: RequestWithUser) {
     const organizationId = await this.resolveOrganizationId(request);
     return this.tenantSettings.get(organizationId);
+  }
+
+  /**
+   * Checkout configuration for a public storefront (S12): a visitor of
+   * `shop/[slug]` needs to know which fulfillment options THIS shop offers
+   * before posting an order. Only display-level flags leave the server — never
+   * anything that grants access.
+   */
+  @Public()
+  @Get("public/:slug")
+  async getPublicCheckoutConfig(@Param("slug") slug: string) {
+    const organization = await this.prisma.organization.findUnique({
+      where: { slug },
+      select: { id: true, status: true },
+    });
+
+    if (!organization || organization.status !== "ACTIVE") {
+      throw new NotFoundException("Tienda no encontrada.");
+    }
+
+    const settings = await this.tenantSettings.get(organization.id);
+    const agencies = await this.prisma.shippingAgency.findMany({
+      where: { active: true },
+      select: { id: true, key: true, name: true },
+    });
+
+    return {
+      fulfillmentTypes: settings.fulfillment.enabledTypes,
+      coordination: settings.fulfillment.coordination,
+      delivery: {
+        enabled: settings.delivery.enabled,
+        feeUSD: settings.delivery.feeUSD,
+      },
+      agencies: agencies.filter((agency) =>
+        settings.shipping.enabledAgencies.includes(agency.key),
+      ),
+    };
   }
 
   @Patch()

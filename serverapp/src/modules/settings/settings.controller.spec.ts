@@ -31,6 +31,15 @@ const makeController = (
   };
 
   const prisma = {
+    organization: {
+      findUnique: jest.fn().mockResolvedValue({ id: "org-1", status: "ACTIVE" }),
+    },
+    shippingAgency: {
+      findMany: jest.fn().mockResolvedValue([
+        { id: "a1", key: "ZOOM", name: "Zoom" },
+        { id: "a2", key: "MRW", name: "MRW" },
+      ]),
+    },
     organizationMember: {
       findFirst: jest.fn(async ({ where }: any) => {
         const row = members.find(
@@ -178,5 +187,82 @@ describe("SettingsController", () => {
       ),
     ).rejects.toThrow(ForbiddenException);
     expect(tenantSettings.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("SettingsController — public checkout config (S12)", () => {
+  it("returns only the options this shop enabled", async () => {
+    const { controller, tenantSettings } = makeController(
+      [],
+      null,
+      null,
+    );
+    tenantSettings.get.mockResolvedValue({
+      cash: { shiftControl: true },
+      currencies: {
+        showUSD: true,
+        showVES: true,
+        showUSDT: true,
+        showBCV: true,
+        showEUR: false,
+      },
+      fulfillment: {
+        enabledTypes: ["PICKUP", "DELIVERY"],
+        coordination: "WHATSAPP",
+      },
+      shipping: { enabledAgencies: ["ZOOM"] },
+      delivery: { enabled: true, feeUSD: 3.5 },
+      routes: { enabled: false },
+    });
+
+    const config = await controller.getPublicCheckoutConfig("socius-demo");
+
+    expect(config.fulfillmentTypes).toEqual(["PICKUP", "DELIVERY"]);
+    expect(config.coordination).toBe("WHATSAPP");
+    expect(config.delivery).toEqual({ enabled: true, feeUSD: 3.5 });
+    // MRW is active in the catalog but disabled by the tenant → excluded.
+    expect(config.agencies).toEqual([{ id: "a1", key: "ZOOM", name: "Zoom" }]);
+  });
+
+  it("answers 404 for an unknown or inactive shop", async () => {
+    const { controller, prisma } = makeController([], null, null);
+    prisma.organization.findUnique.mockResolvedValueOnce(null);
+
+    await expect(
+      controller.getPublicCheckoutConfig("no-existe"),
+    ).rejects.toThrow(/Tienda no encontrada/);
+
+    prisma.organization.findUnique.mockResolvedValueOnce({
+      id: "org-2",
+      status: "INACTIVE",
+    });
+    await expect(
+      controller.getPublicCheckoutConfig("pausada"),
+    ).rejects.toThrow(/Tienda no encontrada/);
+  });
+
+  it("resolves the organization by slug before reading settings", async () => {
+    const { controller, prisma, tenantSettings } = makeController([], null, null);
+    tenantSettings.get.mockResolvedValue({
+      cash: { shiftControl: true },
+      currencies: {
+        showUSD: true,
+        showVES: true,
+        showUSDT: true,
+        showBCV: true,
+        showEUR: false,
+      },
+      fulfillment: { enabledTypes: ["PICKUP"], coordination: "PHONE" },
+      shipping: { enabledAgencies: [] },
+      delivery: { enabled: false, feeUSD: 0 },
+      routes: { enabled: false },
+    });
+
+    await controller.getPublicCheckoutConfig("socius-demo");
+
+    expect(prisma.organization.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { slug: "socius-demo" } }),
+    );
+    expect(tenantSettings.get).toHaveBeenCalledWith("org-1");
   });
 });
