@@ -7,6 +7,10 @@ import PaymentMethodReporitory from "src/modules/payment-method/repository/payme
 import CmsRepository from "src/modules/cms/repository/cms.repository";
 import { PrismaService } from "nestjs-prisma";
 import { seedPlans } from "src/database/seeds/plans.seed";
+import { seedCategories } from "src/database/seeds/categories.seed";
+import { seedShippingAgencies } from "src/database/seeds/shipping-agencies.seed";
+import { seedModuleCatalog } from "src/database/seeds/module-catalog.seed";
+import { seedModuleEntitlements } from "src/database/seeds/module-entitlements.seed";
 
 @Injectable()
 export class DataFixtureService implements OnApplicationBootstrap {
@@ -41,11 +45,16 @@ export class DataFixtureService implements OnApplicationBootstrap {
       ? await this.loadOrganizationFixture(fixUser.id)
       : null;
 
-    // Plans (S9): must exist before any organization is created, because
-    // organization creation subscribes the owner to the default plan.
+    // Catalog seeds (S4/S5/S9): a fresh database must boot with the system
+    // categories, the shipping agencies and the plans already in place — the
+    // organization fixture below and every checkout depend on them.
     await seedPlans(this.prisma, {
       log: (message) => this.logger.log(message.trim()),
     });
+    await seedModuleCatalog(this.prisma);
+    await seedModuleEntitlements(this.prisma);
+    await seedCategories(this.prisma);
+    await seedShippingAgencies(this.prisma);
 
     return {
       subscription: { superadmin, admin, user, patient },

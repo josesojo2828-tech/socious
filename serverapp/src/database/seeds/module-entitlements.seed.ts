@@ -22,7 +22,8 @@ import {
   normalizeSubscriptionPlanContent,
 } from "../../modules/subscription/util/subscription-plan-content.util";
 
-const prisma = new PrismaClient();
+// Assigned by the entry point below (CLI or the boot fixture).
+let prisma: PrismaClient;
 
 const ATTENDANCE_CONTROL_KEY = "ATTENDANCE_CONTROL";
 
@@ -129,12 +130,22 @@ export function computeNormalizedPlanContent(
   const current = normalizeSubscriptionPlanContent(rawContent, planName);
   const base = BASE_PLAN_GRANTS[planKey(planName)];
 
-  const next: NormalizedSubscriptionPlanContent = {
+  // Extra keys the repository owns beyond the normalized triple — notably
+  // `capacity` (plan seats/branches, S9) — are PRESERVED: dropping them here
+  // would silently strip the pricing block the next time this seed runs.
+  const extras = (
+    rawContent && typeof rawContent === "object" && !Array.isArray(rawContent)
+      ? (rawContent as Record<string, unknown>)
+      : {}
+  ) as Record<string, unknown>;
+
+  const next = {
+    ...extras,
     features: current.features,
     grants: current.grants.length === 0 && base ? base.grants : current.grants,
     modules:
       current.modules.length === 0 && base ? base.modules : current.modules,
-  };
+  } as NormalizedSubscriptionPlanContent & Record<string, unknown>;
 
   const needsUpdate =
     Array.isArray(rawContent) ||
@@ -212,14 +223,24 @@ async function normalizePlans(): Promise<void> {
   }
 }
 
-async function main(): Promise<void> {
-  console.log("🌱 Seeding module entitlements...\n");
-
+/** Boot/CLI entry: add-on, field policies and plan normalization. */
+export async function seedModuleEntitlements(db: PrismaClient): Promise<void> {
+  prisma = db;
   await seedAddOn();
   await seedFieldPolicies();
   await normalizePlans();
+}
 
-  console.log("\n✅ Module entitlements seeded!");
+async function main(): Promise<void> {
+  console.log("🌱 Seeding module entitlements...\n");
+
+  const db = new PrismaClient();
+  try {
+    await seedModuleEntitlements(db);
+    console.log("\n✅ Module entitlements seeded!");
+  } finally {
+    await db.$disconnect();
+  }
 }
 
 if (require.main === module) {

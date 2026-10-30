@@ -289,3 +289,42 @@ defecto** y suscrita al plan **Básico**; el rol fundador se mantiene
 4. **El sidebar del superadmin es el de plataforma** (sin secciones de
    comerciante): S8 se verificó con un usuario tenant con rol OWNER, que es
    como lo usará el dueño real.
+
+
+### Verificación de arranque limpio (2026-10-30) — respuesta a "¿quedó todo en el back?"
+
+Al revisar con ojo de instalación nueva aparecieron **tres huecos reales**, cerrados hoy:
+
+1. **Seeds no cableados**: `categories` y `shipping-agencies` solo existían como
+   comandos manuales. En una base nueva el catálogo de categorías estaría vacío y
+   el checkout de envío apuntaría a ZOOM/MRW inexistentes. Los tres (más
+   `module-catalog` y `module-entitlements`) ahora corren desde
+   `DataFixtureService.loadFixtures()`, en orden y con cliente inyectado.
+2. **`categories.seed` no era importable**: ejecutaba `main()` al importar con su
+   propio `PrismaClient` (mataría la app con `process.exit(1)` en un fallo) y
+   keyaba por `slug`, que en `Category` **no es único** (solo índice) — se rehizo
+   con `export seedCategories(prisma)` keyando por `id`.
+3. **Defecto de precios**: `computeNormalizedPlanContent` (de
+   `seed:entitlements`) descartaba las claves extra del `content`, así que ese
+   comando habría **borrado el `capacity` del plan Premium** (3 sucursales / 6
+   empleados) en la próxima normalización. Ahora preserva las claves ajenas al
+   triple normalizado.
+
+**Evidencia (base fresca creada desde cero, migraciones + los 5 seeds):**
+
+```
+{"cats":7,"subs":28,"agencies":2,"plans":3,"selected":3,"modules":9,"addons":3,"policies":2}
+PREMIUM capacity tras normalizar: {"maxBranches":3,"includedSeats":6}
+idempotente → categorias:35 modulos:9 planes:3 agencias:2
+```
+
+**Evidencia (reinicio del contenedor sobre la base real):**
+
+```
+antes: 35 cat | 2 ag | 6 planes | 9 mod | 1 suc
+después: 35 cat | 2 ag | 6 planes | 9 mod | 1 suc   ← idempotente, sin duplicar
+Data fixtures loaded successfully · Nest application successfully started · API 200
+```
+
+**Queda pendiente (fuera de esta fase):** frontend, turnos de empleados,
+pasarela de pagos, devoluciones a proveedor y la auditoría de roles heredados.

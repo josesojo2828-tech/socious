@@ -18,7 +18,9 @@
 
 import { ModuleScope, PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// Assigned by the entry point below (CLI or the boot fixture), so the
+// seed can run on the application's own client without a second pool.
+let prisma: PrismaClient;
 
 /**
  * Initial catalog. Only the machine keys already present in the system are
@@ -141,13 +143,23 @@ async function backfillAddOnModules(): Promise<void> {
   console.log(`  → ${linked} link(s) inserted`);
 }
 
+/** Boot/CLI entry: runs the catalog + the AddOn backfill on the given client. */
+export async function seedModuleCatalog(db: PrismaClient): Promise<void> {
+  prisma = db;
+  await seedCatalog();
+  await backfillAddOnModules();
+}
+
 async function main(): Promise<void> {
   console.log("🌱 Seeding module catalog...\n");
 
-  await seedCatalog();
-  await backfillAddOnModules();
-
-  console.log("\n✅ Module catalog seeded!");
+  const db = new PrismaClient();
+  try {
+    await seedModuleCatalog(db);
+    console.log("\n✅ Module catalog seeded!");
+  } finally {
+    await db.$disconnect();
+  }
 }
 
 if (require.main === module) {

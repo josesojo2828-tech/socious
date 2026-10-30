@@ -14,34 +14,37 @@
 
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
 const SHIPPING_AGENCIES = [
   { key: "ZOOM", name: "Zoom Envíos" },
   { key: "MRW", name: "MRW" },
 ];
 
-async function main(): Promise<void> {
-  let created = 0;
-
+export async function seedShippingAgencies(
+  prisma: PrismaClient,
+): Promise<void> {
   for (const agency of SHIPPING_AGENCIES) {
     await prisma.shippingAgency.upsert({
       where: { key: agency.key },
       create: { key: agency.key, name: agency.name },
       update: { name: agency.name },
     });
-    created += 1;
   }
-
-  const total = await prisma.shippingAgency.count();
-  console.log(
-    `✅ Shipping agencies: ${created} procesadas, ${total} en total.`,
-  );
 }
 
-main()
-  .catch((error) => {
+async function main(): Promise<void> {
+  const prisma = new PrismaClient();
+  try {
+    await seedShippingAgencies(prisma);
+    const total = await prisma.shippingAgency.count();
+    console.log(`✅ Shipping agencies listas (${total} en total).`);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+if (require.main === module) {
+  main().catch((error) => {
     console.error("❌ Error sembrando agencias de envío:", error);
     process.exitCode = 1;
-  })
-  .finally(() => prisma.$disconnect());
+  });
+}

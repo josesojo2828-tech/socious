@@ -1,6 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+/**
+ * System category catalog (S5).
+ *
+ * Importable: `seedCategories(prisma)` takes the caller's client so the boot
+ * fixture (DataFixtureService) can run it inside the application's lifecycle.
+ * The CLI entry point below keeps `npm run seed:categories` working.
+ *
+ * Idempotent: upsert keyed by slug; the repository always wins.
+ */
 
-const prisma = new PrismaClient();
+import { PrismaClient } from "@prisma/client";
 
 const STANDARD_CATEGORIES = [
   {
@@ -89,12 +97,12 @@ const STANDARD_CATEGORIES = [
   },
 ];
 
-async function main() {
-  console.log("🌱 Sembrando catálogo maestro de categorías y subcategorías...");
-
+export async function seedCategories(prisma: PrismaClient): Promise<void> {
   for (const cat of STANDARD_CATEGORIES) {
+    // `slug` is indexed but not unique; the catalog creates every row with
+    // id === slug, so the id is the natural upsert key.
     const parent = await prisma.category.upsert({
-      where: { id: cat.slug }, // fallback or lookup
+      where: { id: cat.slug },
       update: {
         name: cat.name,
         slug: cat.slug,
@@ -108,6 +116,7 @@ async function main() {
         slug: cat.slug,
         icon: cat.icon,
         description: cat.description,
+        parentId: null,
         isSystem: true,
       },
     });
@@ -130,18 +139,21 @@ async function main() {
         },
       });
     }
-
-    console.log(`  → ${cat.name} (${cat.subCategories.length} subcategorías)`);
   }
-
-  console.log("✅ Catálogo maestro de categorías listo!");
 }
 
-main()
-  .catch((e) => {
+async function main(): Promise<void> {
+  const prisma = new PrismaClient();
+  try {
+    await seedCategories(prisma);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+if (require.main === module) {
+  main().catch((e) => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });
+}
