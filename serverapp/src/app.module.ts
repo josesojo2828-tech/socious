@@ -59,6 +59,7 @@ import { SupplierModule } from "./modules/supplier/supplier.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
 import { CashModule } from "./modules/cash/cash.module";
+import { SaleModule } from "./modules/sale/sale.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -212,6 +213,7 @@ imports: [
     CategoryModule,
     ProductModule,
     CashModule,
+    SaleModule,
   ],
   controllers: [AppController, SelectController],
   providers: [
