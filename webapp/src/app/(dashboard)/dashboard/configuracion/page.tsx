@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Save, Settings2, Truck, Wallet, Map, Coins, TruckElectric } from "lucide-react";
+import {
+  Loader2,
+  Save,
+  Settings2,
+  Truck,
+  Wallet,
+  Map,
+  Coins,
+  TruckElectric,
+  Building2,
+  Sparkles,
+} from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { Toggle } from "@/shared/components/atoms/Toggle";
@@ -15,6 +26,16 @@ import {
   updateTenantSettings,
 } from "@/features/settings/services/settings.service";
 import { ShippingEndpoints } from "@/features/shipping/services/shipping.endpoints";
+import { BranchEndpoints } from "@/features/branches/services/branches.endpoints";
+import type { Branch } from "@/features/branches/types/branch.type";
+import {
+  branchSummary,
+  buildBranchPayload,
+  validateBranchForm,
+  visibleBranches,
+} from "@/features/branches/lib/branch-form";
+import { PlanEndpoints } from "@/features/plans/services/plans.endpoints";
+import { PLAN_ORDER, type Plan } from "@/features/plans/types/plan.type";
 import {
   applySettingsPatch,
   patchAgency,
@@ -54,19 +75,33 @@ export default function SettingsPage() {
   const [agencies, setAgencies] = useState<ShippingAgency[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [branchName, setBranchName] = useState<string>("");
+  const [branchAddress, setBranchAddress] = useState<string>("");
 
   useEffect(() => {
     let cancelled = false;
 
     void (async () => {
       try {
-        const [current, agencyList] = await Promise.all([
+        const [current, agencyList, branchList, planPage] = await Promise.all([
           getTenantSettings(),
           apiClient.get<ShippingAgency[]>(ShippingEndpoints.agencies),
+          apiClient
+            .get<Branch[]>(BranchEndpoints.list)
+            .catch(() => ({ data: [] as Branch[] })),
+          apiClient
+            .get<{ list: Plan[] }>(PlanEndpoints.list, {
+              params: { limit: 20 },
+            })
+            .catch(() => ({ data: { list: [] as Plan[] } })),
         ]);
         if (cancelled) return;
         setSettings(current);
         setAgencies(agencyList.data);
+        setBranches(branchList.data);
+        setPlans(planPage.data.list ?? []);
       } catch {
         if (!cancelled) {
           addToast({
@@ -105,6 +140,39 @@ export default function SettingsPage() {
         title: "Configuración",
         message: "No se pudo guardar el cambio. Volvemos al valor anterior.",
       });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCreateBranch = async (): Promise<void> => {
+    const validation = validateBranchForm(branchName);
+    if (validation) {
+      addToast({ type: "warning", title: "Sucursales", message: validation });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await apiClient.post(
+        BranchEndpoints.list,
+        buildBranchPayload(branchName, branchAddress),
+      );
+      const { data } = await apiClient.get<Branch[]>(BranchEndpoints.list);
+      setBranches(data);
+      setBranchName("");
+      setBranchAddress("");
+      addToast({
+        type: "success",
+        title: "Sucursales",
+        message: "Sucursal creada.",
+      });
+    } catch (error) {
+      // The plan capacity gate answers 409 with the explanation — show it as is.
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? "No se pudo crear la sucursal.";
+      addToast({ type: "error", title: "Sucursales", message });
     } finally {
       setSaving(false);
     }
@@ -328,6 +396,123 @@ export default function SettingsPage() {
             }
           />
         </SectionRow>
+      </SectionCard>
+
+      <SectionCard
+        icon={<Building2 className="h-5 w-5" />}
+        title="Sucursales"
+        description={`${branchSummary(branches).included} incluida(s) en tu plan · ${branchSummary(branches).extra} creada(s)`}
+      >
+        {visibleBranches(branches).length > 0 ? (
+          <div className="mb-3 space-y-1">
+            {visibleBranches(branches).map((branch) => (
+              <SectionRow
+                key={branch.id}
+                label={branch.name}
+                hint={branch.address ?? "Sin dirección"}
+              >
+                <span className="text-xs text-slate-400">
+                  {(branch._count?.sales ?? 0)} venta(s) ·{" "}
+                  {(branch._count?.orders ?? 0)} pedido(s)
+                </span>
+              </SectionRow>
+            ))}
+          </div>
+        ) : (
+          <p className="mb-3 text-sm text-slate-500">
+            Tu plan trae una sucursal activa desde la creación del negocio. Las
+            sucursales adicionales se suman acá.
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-end gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
+          <label className="flex flex-col gap-1 text-xs text-slate-500">
+            Nueva sucursal
+            <input
+              type="text"
+              value={branchName}
+              onChange={(event) => setBranchName(event.target.value)}
+              placeholder="Sucursal Norte"
+              className="w-56 rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-xs text-slate-500">
+            Dirección (opcional)
+            <input
+              type="text"
+              value={branchAddress}
+              onChange={(event) => setBranchAddress(event.target.value)}
+              placeholder="Av. Principal 123"
+              className="w-64 rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={saving || !branchName.trim()}
+            onClick={() => void handleCreateBranch()}
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          >
+            Agregar sucursal
+          </button>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        icon={<Sparkles className="h-5 w-5" />}
+        title="Planes"
+        description="Precios por usuario y mes; se cambian desde la plataforma, no desde acá."
+      >
+        {plans.length === 0 ? (
+          <p className="text-sm text-slate-500">
+            No se pudieron cargar los planes.
+          </p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[...plans]
+              .sort((a, b) => {
+                const order = (plan: Plan) => {
+                  const index = PLAN_ORDER.indexOf(
+                    plan.id as (typeof PLAN_ORDER)[number],
+                  );
+                  return index === -1 ? 99 : index;
+                };
+                return order(a) - order(b);
+              })
+              .map((plan) => (
+                <div
+                  key={plan.id}
+                  className="rounded-lg border border-slate-200 p-3 dark:border-slate-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold">{plan.name}</p>
+                    {plan.badge ? (
+                      <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] uppercase text-indigo-600 dark:bg-indigo-950">
+                        {plan.badge}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-1 text-lg font-semibold">
+                    ${Number(plan.price).toFixed(2)}
+                    <span className="text-xs font-normal text-slate-400">
+                      {" "}
+                      /mes
+                    </span>
+                  </p>
+                  <ul className="mt-2 space-y-0.5 text-xs text-slate-500">
+                    {(plan.content?.features ?? []).map((feature) => (
+                      <li key={feature}>• {feature}</li>
+                    ))}
+                  </ul>
+                  {plan.content?.capacity ? (
+                    <p className="mt-2 text-[11px] text-slate-400">
+                      {plan.content.capacity.maxBranches} sucursal(es) ·{" "}
+                      {plan.content.capacity.includedSeats} empleado(s)
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+          </div>
+        )}
       </SectionCard>
     </div>
   );
