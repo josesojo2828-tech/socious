@@ -79,8 +79,8 @@ landing servida por `next dev` y verificada por HTTP, sin referencias a
 | T1 | — | inline | pending | rama `feat/socius-brand` |
 | T2 | S1 | inline | done | `188c0a6` (fixture PRO fuera del boot, BASE_PLAN_GRANTS vaciado, planes legacy borrados) |
 | T3 | S2, S3 | inline | done | paleta indigo/slate + Inter + radio compacto, tokens clínicos borrados |
-| T4 | S5 | inline | pending | — (Stitch: proyecto + design system + pantallas) |
-| T5 | S4 | inline | pending | — (landing nueva consumiendo el backend) |
+| T4 | S5 | inline | done | proyecto creado (`projects/7362308867375265012`); **limitación de la API** ver L3 — dirección fijada en los tokens de T3 |
+| T5 | S4 | inline | done | `1a396e9` (landing nueva + endpoint público de planes + borrado de landing-data) |
 | T6 | S6 | inline | pending | cierre |
 
 > Ruta: todo inline (cada unidad es una superficie acotada: seeds+filtros, tokens CSS,
@@ -118,3 +118,32 @@ landing servida por `next dev` y verificada por HTTP, sin referencias a
   "tailwindcss"` y bloques `@theme` / `@plugin "daisyUI/theme"` en `globals.css`.
 - El catálogo de planes en BD hoy: `PRO 4.00`, `Premium 20.00`, `Clinica 99.99`
   (legacy, `selected=false`) + `BASICO 9.99`, `AVANZADO 19.99`, `PREMIUM 34.99`.
+
+
+### L3 — Limitación de Stitch (evidencia, 2026-10-30)
+
+`stitch_create_project` crea proyectos de tipo `PROJECT_DESIGN`, pero
+`stitch_apply_design_system` y `stitch_generate_screen_from_text` solo operan
+sobre `TEXT_TO_UI_PRO` (probado con el ID exacto, con y sin prefijo `projects/`:
+"Request contains an invalid argument" y "Requested entity was not found"). Sin
+una forma de crear TEXT_TO_UI_PRO por API, el diseño se fijó directamente en los
+tokens del producto (T3: Inter + indigo + radio compacto) y la landing se
+implementó contra esos tokens. El proyecto de Stitch queda en la cuenta por si
+querés generar mockups desde la UI (el usuario puede crear un proyecto de tipo
+"generate from text" y pedirme que lo use).
+
+### Verificación de cierre (2026-10-30)
+
+| Check | Resultado |
+| --- | --- |
+| webapp `npm run typecheck` | **0** (se limpió `.next` obsoleto que referenciaba el route borrado) |
+| webapp `npm test` | **26/26 suites · 248 tests** |
+| Lint en superficies nuevas | 0 (un warning preexistente en `features/public/hooks/useDashboard.ts`, no tocado) |
+| `GET /` bajo `next dev` | **200**, sin errores de compilación |
+| `/login`, `/terms`, `/privacy` | **200** |
+| `GET /api/subscription/public` (Docker) | devuelve los 3 planes reales: Básico 9.99, Avanzado 19.99, Premium 34.99 con sus features verbatim |
+| Planes legacy en la BD | **0** (solo BASICO/AVANZADO/PREMIUM) |
+
+**Ramas:** `feat/socius-brand` (esta fase, local) sobre `feat/webapp-erp` (también local);
+`main` en `origin` sigue con la fase backend. Ninguna de las dos ramas de frontend está
+pusheada: decisión del usuario.
