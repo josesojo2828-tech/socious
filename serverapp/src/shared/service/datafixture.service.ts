@@ -100,6 +100,19 @@ export class DataFixtureService implements OnApplicationBootstrap {
       },
     });
 
+    const branchCount = await this.prisma.branch.count({
+      where: { organizationId: organization.id, isDefault: true },
+    });
+    if (branchCount === 0) {
+      await this.prisma.branch.create({
+        data: {
+          organizationId: organization.id,
+          name: "Principal",
+          isDefault: true,
+        },
+      });
+    }
+
     return { organization, member };
   }
 

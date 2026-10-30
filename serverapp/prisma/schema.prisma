@@ -569,6 +569,7 @@ model Organization {
   stockMovements     StockMovement[]
   exchangeRates      ExchangeRate[]
   saleReturns        SaleReturn[]
+  branches           Branch[]
   deliveryRoutes     DeliveryRoute[]
 }
 
@@ -751,6 +752,32 @@ model SaleReturnItem {
 }
 
 // ======================================
+// SUCURSALES (S10) — una por defecto, oculta hasta que el plan escale
+// ======================================
+
+model Branch {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  address        String?
+  isDefault      Boolean  @default(false) // la sucursal que nace con la organización
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sales          Sale[]
+  orders         Order[]
+  cashRegisters  CashRegister[]
+  cashShifts     CashShift[]
+  purchases      Purchase[]
+  stockMovements StockMovement[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+// ======================================
 // CLIENTES (CRM)
 // ======================================
 
@@ -923,6 +950,8 @@ model StockMovement {
   product        Product           @relation(fields: [productId], references: [id])
   organization   Organization?     @relation(fields: [organizationId], references: [id])
   createdBy      User?             @relation("CreatedStockMovementRecords", fields: [createdById], references: [id])
+  branchId       String?
+  branch         Branch?          @relation(fields: [branchId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
   @@index([productId])
@@ -948,6 +977,8 @@ model CashRegister {
 
   organization   Organization?      @relation(fields: [organizationId], references: [id])
   shifts         CashShift[]
+  branchId       String?
+  branch         Branch?             @relation(fields: [branchId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
 }
@@ -973,6 +1004,8 @@ model CashShift {
   notes             String?
 
   cashRegister      CashRegister      @relation(fields: [cashRegisterId], references: [id])
+  branchId          String?
+  branch            Branch?           @relation(fields: [branchId], references: [id], onDelete: SetNull)
   openedBy          User              @relation("OpenedCashShifts", fields: [openedById], references: [id])
   closedBy          User?             @relation("ClosedCashShifts", fields: [closedById], references: [id])
   movements         CashMovement[]
@@ -1076,6 +1109,8 @@ model Order {
   client          Client?       @relation(fields: [clientId], references: [id])
   createdBy       User?         @relation("CreatedOrderRecords", fields: [createdById], references: [id])
   sale            Sale?         @relation("OrderSale", fields: [saleId], references: [id])
+  branchId         String?
+  branch           Branch?       @relation(fields: [branchId], references: [id], onDelete: SetNull)
   agency          ShippingAgency? @relation(fields: [agencyId], references: [id])
   items           OrderItem[]
   routeItems      DeliveryRouteItem[]
@@ -1139,6 +1174,8 @@ model Purchase {
   organization   Organization?     @relation(fields: [organizationId], references: [id])
   supplier       Supplier?         @relation(fields: [supplierId], references: [id])
   createdBy      User?             @relation("CreatedPurchaseRecords", fields: [createdById], references: [id])
+  branchId       String?
+  branch         Branch?         @relation(fields: [branchId], references: [id], onDelete: SetNull)
   items          PurchaseItem[]
   payments       PurchasePayment[]
 
@@ -1235,6 +1272,8 @@ model Sale {
   organization   Organization?     @relation(fields: [organizationId], references: [id])
   client         Client?           @relation(fields: [clientId], references: [id])
   createdBy      User?             @relation("CreatedSaleRecords", fields: [createdById], references: [id])
+  branchId         String?
+  branch           Branch?           @relation(fields: [branchId], references: [id], onDelete: SetNull)
   order          Order?            @relation("OrderSale")
   items          SaleItem[]
   payments       SalePayment[]

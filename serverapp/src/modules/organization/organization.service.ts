@@ -5,6 +5,7 @@ import { MailService } from '../mail/mail.service';
 import NotificationRepository from '../notification/repository/notification.repository';
 import { NotificationType } from 'src/shared/types/schema.types';
 import { Logger } from "@nestjs/common";
+import { readPlanCapacity } from "src/shared/utils/plan-capacity";
 const logger = new Logger("organization.service");
 
 
@@ -42,17 +43,7 @@ export class OrganizationService {
     maxBranches: number;
     includedSeats: number;
   } | null {
-    const capacity = (content as { capacity?: Record<string, unknown> } | null)
-      ?.capacity;
-    if (!capacity || typeof capacity !== "object") return null;
-
-    const maxBranches = Number(capacity.maxBranches);
-    const includedSeats = Number(capacity.includedSeats);
-    if (!Number.isFinite(maxBranches) || !Number.isFinite(includedSeats)) {
-      return null;
-    }
-
-    return { maxBranches, includedSeats };
+    return readPlanCapacity(content);
   }
 
   /** Slug for the public store, unique across organizations. */
@@ -115,6 +106,12 @@ export class OrganizationService {
           },
         },
       },
+    });
+
+    // S10: the organization is born with one branch, hidden behind isDefault
+    // so scaling to Premium later is an addition, never a migration.
+    await this.prisma.branch.create({
+      data: { organizationId: org.id, name: "Principal", isDefault: true },
     });
 
     if (plan) {

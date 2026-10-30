@@ -37,6 +37,9 @@ const makePrisma = (opts: {
     subscription: {
       create: jest.fn(async (args: any) => ({ id: "sub-1", ...args.data })),
     },
+    branch: {
+      create: jest.fn(async (args: any) => ({ id: "branch-1", ...args.data })),
+    },
   };
 
   return prisma;
@@ -124,6 +127,18 @@ describe("OrganizationService.createOrganization (S9/S10)", () => {
     expect(prisma.subscription.create).not.toHaveBeenCalled();
     // historical default preserved when there is no plan to read
     expect(prisma.organization.create.mock.calls[0][0].data.maxSeats).toBe(5);
+  });
+
+  it("creates the hidden default branch (S10)", async () => {
+    const { service, prisma } = makeService({ plan: DEFAULT_PLAN });
+
+    await service.createOrganization({ name: "Tienda" } as any, ADMIN);
+
+    expect(prisma.branch.create.mock.calls[0][0].data).toEqual({
+      organizationId: "org-1",
+      name: "Principal",
+      isDefault: true,
+    });
   });
 
   it("keeps the founding member as the org admin role", async () => {
