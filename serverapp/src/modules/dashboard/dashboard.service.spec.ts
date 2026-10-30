@@ -162,6 +162,19 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     ).not.toContain("/dashboard/portfolio");
   });
 
+  it("always offers the tenant settings entry (S4 del port)", async () => {
+    const links = linksOf(
+      await makeService().getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: 'org-1',
+      }),
+    );
+
+    expect(links).toContain('/dashboard/configuracion');
+  });
+
   it("shows the delivery routes entry only when the tenant enabled the check (S8)", async () => {
     const withoutCheck = linksOf(
       await makeService([], { routes: { enabled: false } }).getSidebarSections({

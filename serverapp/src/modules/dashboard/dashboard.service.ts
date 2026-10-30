@@ -284,6 +284,20 @@ export class DashboardService {
         });
       }
 
+      // 5c. Configuración del negocio (S4 del port): los checks viven en
+      // /dashboard/configuracion y se leen con GET /api/settings.
+      sections.push({
+        title: "Configuración",
+        icon: "settings",
+        items: [
+          {
+            title: "Configuración del negocio",
+            icon: "settings",
+            link: "/dashboard/configuracion",
+          },
+        ],
+      });
+
       // 6. Mi Clínica (si aplica)
       if (
         permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||
