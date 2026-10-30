@@ -1,6 +1,6 @@
 # ODD Task: Socius ERP Core Modules
 
-**Status:** IN PROGRESS
+**Status:** **FASE BACKEND CERRADA.** Typecheck 0 errores, 68/68 suites y 557/557 tests en verde, API viva en Docker (`socius_dev_backend`, puerto 3005) verificada por HTTP de punta a punta. Queda la Fase frontend (webapp).
 **Type:** Feature / Backend
 **Area:** `serverapp` (NestJS + Prisma + PostgreSQL)
 **Branch:** `feat/socius-erp-core`
@@ -65,16 +65,52 @@ Las operaciones de negocio emiten eventos que `ActivityListenerService` persiste
 
 | ID | Specs | Route | Status | Commit |
 | --- | --- | --- | --- | --- |
-| T1 | S1, S2, S12 | inline | pending | — |
-| T2 | S3, S10 | inline | pending | — |
-| T3 | S4, S10 | delegated | pending | — |
-| T4 | S5, S10 | delegated | pending | — |
-| T5 | S6, S10 | inline | pending | — |
-| T6 | S1, S7, S10 | inline | pending | — |
-| T7 | S7, S9, S10, S12 | inline | pending | — |
-| T8 | S8, S10, S12 | inline | pending | — |
-| T9 | S9, S10, S12 | inline | pending | — |
-| T10 | S11 | inline | pending | — |
+| T0 | — | inline | done | `b48e330` (reparación del build: 119 → 0 errores de typecheck) |
+| T1 | S1, S2, S12 | inline | done | `7544d6a` |
+| T2 | S3, S10 | inline | done | `d422044` + `d533cd6` |
+| T3 | S4, S10 | inline | done | `fe6b53a` |
+| T4 | S5, S10 | inline | done | `fe6b53a` |
+| T5 | S6, S10 | inline | done | `f58df68` |
+| T6 | S7 support | inline | done | `f4f5cfe` |
+| T7 | S7, S12 | inline | done | `9640ef6` |
+| T8 | S8, S12 | inline | done | `21c4027` |
+| T9 | S9, S12 | inline | done | `768f96b` |
+| T10 | S11 | inline | done | `15527fe` |
+| T11 | arranque | inline | done | `d7415dd` (fixture `socius-demo`) |
+| T12 | — | inline | done | `51a0b4c` + `2dbb865` (corrección de arranque e integridad) |
+
+> Ruta: todo inline. La regla Writer no se disparó: cada unidad fue de
+> 150-450 líneas autorizadas con su patrón ya establecido en la unidad
+> anterior, así que delegar habría costado más contexto del que ahorraba.
+
+### Verificación
+
+- `npm run typecheck` → **0 errores** (baseline del repo: 67; estado heredado del purge: 119).
+- `npm test` → **68/68 suites, 557/557 tests verdes**.
+- **API por HTTP en Docker** (`docker compose -f docker-compose.dev.yml up -d backend`, puerto 3005), recorrido completo sobre la base real:
+
+| Paso | Resultado observado |
+| --- | --- |
+| Login `superadmin@example.com` | `tokens.access_token` devuelto |
+| `GET /rates/latest` | `rateBcv 889.2553` / `rateUsdt 1001.3333`, `persisted: true` |
+| Cliente + proveedor + producto | creados y aislados a la organización del header |
+| Ajuste de kardex | `IN 50 -> 60` |
+| Venta `VTA-00001` | `20 USD / 17.785,11 VES / 17,76 USDT`, estado `PARTIAL` |
+| Abono fechado en mayo | `paidAt` real separado del devengo |
+| `GET /sales/report` | devengado `2026-10: 44 USD` vs cobrado `2026-05: 20 USD` + `2026-10: 11,24` |
+| Stock + kardex | `50 -> 40`, fila `SALE` referida a `VTA-00001` |
+| Arqueo de caja | esperado `105,62`, contado `145`, diferencia `39,38` |
+| Pedido público (sin token) | `PED-00001 PENDING` por slug `socius-demo` |
+| Conversión a venta | `VTA-00004` |
+| Activity feed | 8 eventos `erp.*` (S11) |
+
+### Bugs reales encontrados y corregidos en esta fase
+
+1. **El contexto de workspace no llegaba al handler** (`WorkspaceContextInterceptor`): Nest suscribe el Observable *después* de cerrar el `run()`, así que todo endpoint con guard resolvía `organizationId = null` (403 en "abrir caja"). Los controllers viejos lo parcheaban leyendo el header a mano; corregido en la raíz con spec que quedaba en rojo.
+2. **Arranque imposible**: los módulos nuevos usaban `SessionAuthGuard` sin importar `UserModule`/`PermitModule` ni proveer `JwtService`.
+3. **Índices únicos parciales y CHECK desaparecidos**: el `init` regenerado no puede expresarlos en `schema.prisma`; sin ellos la base aceptaba entitlements/grant duplicados.
+4. **`POST` con `Content-Type: application/json` y cuerpo vacío** → 400 de Fastify en las mutaciones sin cuerpo (`/convert`, `/cancel`).
+5. **Redondeo de saldos**: `20 - 15.62` devolvía `4.380000000000001` en el balance del cliente/proveedor.
 
 ---
 
@@ -118,6 +154,29 @@ Las operaciones de negocio emiten eventos que `ActivityListenerService` persiste
 El usuario reporta que el agente anterior (Antigravity) no rinde y pide continuar el trabajo en este repositorio.
 
 Estado verificado al retomar: 3 commits (`2ccb7d8`, `6350974`, `872cb32`), migración `20261029200954_init` aplicada, `socius_dev_db` saludable en 5477, `schema.prisma` con los 43 modelos ERP. Módulos NestJS de negocio ausentes.
+
+### L6 — Toma de control y reparación del build (2026-10-29)
+
+Al retomar, el backend **no compilaba**: el purge de nutrición borró
+modelos de Prisma y dejó 119 errores de typecheck y 7 specs rotos.
+Se reparó primero (T0) antes de seguir sumando módulos: scripts y
+fixtures clínicos borrados, `usage` y `adoption-analytics` fuera,
+dashboard/usuario/auth reescritos sobre el modelo ERP.
+
+### L7 — Endpoints entregados (fase backend)
+
+| Ruta | Qué hace |
+| --- | --- |
+| `GET/POST/PATCH/DELETE /api/clients` + `/:id/balance` | CRM rápido con límite de crédito y saldo |
+| `GET/POST/PATCH/DELETE /api/suppliers` + `/:id/balance` | Proveedores con cuenta por pagar |
+| `GET /api/categories` (pública), `/mine`, CRUD | Catálogo maestro de solo lectura para tenants |
+| `GET/POST/PATCH/DELETE /api/products`, `/:id/stock`, `/:id/stock-movements` | Catálogo, estados, Kardex |
+| `GET/POST/PATCH/DELETE /api/cash/registers`, `/shifts`, `/:id/close`, `/:id/movements` | Caja, turnos y arqueo |
+| `POST/GET /api/sales`, `/:id/payments`, `/:id/cancel`, `GET /api/sales/report` | Ventas con devengo vs cobro |
+| `POST/GET /api/purchases`, `/:id/receive`, `/:id/payments`, `/:id/cancel`, `GET /api/purchases/report` | Compras y cuentas por pagar |
+| `POST /api/orders/public`, `GET /api/orders`, `/:id/status`, `/:id/convert` | Tienda pública y bandeja de pedidos |
+| `GET /api/exchange/rates/latest`, `POST /api/exchange/rates`, `GET /api/exchange/rates/history` | Tasas BCV/USDT congeladas |
+| `GET /api/payment-methods/options` | Métodos de pago de negocio |
 
 ### L5 — Decisiones de implementación tomadas
 
