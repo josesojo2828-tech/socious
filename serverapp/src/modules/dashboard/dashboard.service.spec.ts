@@ -175,6 +175,39 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain('/dashboard/pedidos');
   });
 
+  it("groups clients, suppliers and balances under one CRM section", async () => {
+    const links = linksOf(
+      await makeService().getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: 'org-1',
+      }),
+    );
+
+    expect(links).toContain('/dashboard/clientes');
+    expect(links).toContain('/dashboard/proveedores');
+    expect(links).toContain('/dashboard/cuentas-por-cobrar');
+    expect(links).toContain('/dashboard/cuentas-por-pagar');
+  });
+
+  it("keeps POS, sales, orders and cash together under Ventas (S grouping)", async () => {
+    const sections = await makeService().getSidebarSections({
+      id: 'u1',
+      permits: BASE_PERMITS,
+      modules: [],
+      organizationId: 'org-1',
+    });
+    const ventas = sections.find((section) => section.title === 'Ventas');
+
+    expect(ventas?.items.map((item) => item.link)).toEqual([
+      '/dashboard/pos',
+      '/dashboard/ventas',
+      '/dashboard/pedidos',
+      '/dashboard/caja',
+    ]);
+  });
+
   it("always offers the tenant settings entry (S4 del port)", async () => {
     const links = linksOf(
       await makeService().getSidebarSections({

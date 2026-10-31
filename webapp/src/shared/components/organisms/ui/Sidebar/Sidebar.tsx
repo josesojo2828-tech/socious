@@ -57,6 +57,9 @@ const iconMap: Record<string, LucideIcon> = {
   droplet: LucideIcons.Droplet,
   mortarboard: LucideIcons.GraduationCap,
   "shopping-bag": LucideIcons.ShoppingBag,
+  folder: LucideIcons.Folder,
+  "arrows-down-up": LucideIcons.ArrowUpDown,
+  truck: LucideIcons.Truck,
   adminstration: LucideIcons.ShieldAlert,
 };
 

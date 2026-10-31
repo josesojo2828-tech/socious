@@ -191,31 +191,27 @@ export class DashboardService {
         });
       }
 
-      // 2. Operaciones & POS
-      const posItems: SidebarItem[] = [
+      // 2. Ventas (agrupa todo lo referente: mostrador, pedidos y caja)
+      const salesItems: SidebarItem[] = [
         {
           title: "Punto de Venta (POS)",
           icon: "calculator",
           link: "/dashboard/pos",
         },
         {
-          title: "Caja y Turnos",
-          icon: "wallet",
-          link: "/dashboard/caja",
-        },
-      ];
-      sections.push({
-        title: "Punto de Venta",
-        icon: "calculator",
-        items: posItems,
-      });
-
-      // 3. Ventas & Facturación
-      const salesItems: SidebarItem[] = [
-        {
-          title: "Ventas Realizadas",
+          title: "Ventas y devoluciones",
           icon: "receipt",
           link: "/dashboard/ventas",
+        },
+        {
+          title: "Bandeja de pedidos",
+          icon: "shopping-bag",
+          link: "/dashboard/pedidos",
+        },
+        {
+          title: "Caja y turnos",
+          icon: "wallet",
+          link: "/dashboard/caja",
         },
       ];
       sections.push({
@@ -224,22 +220,36 @@ export class DashboardService {
         items: salesItems,
       });
 
-      // 3b. Pedidos (S7/S9 del port): la bandeja donde el comercio confirma,
-      //   coordina y despacha lo que llega de la tienda online.
-      const orderItems: SidebarItem[] = [
+      // 3. CRM (cartera y saldos)
+      const crmItems: SidebarItem[] = [
         {
-          title: "Bandeja de pedidos",
-          icon: "shopping-bag",
-          link: "/dashboard/pedidos",
+          title: "Clientes",
+          icon: "users",
+          link: "/dashboard/clientes",
+        },
+        {
+          title: "Proveedores",
+          icon: "store",
+          link: "/dashboard/proveedores",
+        },
+        {
+          title: "Cuentas por cobrar",
+          icon: "credit-card",
+          link: "/dashboard/cuentas-por-cobrar",
+        },
+        {
+          title: "Cuentas por pagar",
+          icon: "credit-card-fill",
+          link: "/dashboard/cuentas-por-pagar",
         },
       ];
       sections.push({
-        title: "Pedidos",
-        icon: "shopping-bag",
-        items: orderItems,
+        title: "CRM",
+        icon: "users",
+        items: crmItems,
       });
 
-      // 4. Inventario & Catálogo
+      // 4. Inventario & Catálogo (los proveedores viven en el CRM)
       const inventoryItems: SidebarItem[] = [
         {
           title: "Productos y Servicios",
@@ -256,30 +266,11 @@ export class DashboardService {
           icon: "arrows-down-up",
           link: "/dashboard/inventario",
         },
-        {
-          title: "Proveedores",
-          icon: "truck",
-          link: "/dashboard/proveedores",
-        },
       ];
       sections.push({
         title: "Inventario",
         icon: "package",
         items: inventoryItems,
-      });
-
-      // 5. Clientes (CRM)
-      const clientItems: SidebarItem[] = [
-        {
-          title: "Clientes",
-          icon: "users",
-          link: "/dashboard/clientes",
-        },
-      ];
-      sections.push({
-        title: "Clientes",
-        icon: "users",
-        items: clientItems,
       });
 
       // 5b. Rutas de entrega (S8): el check de configuración es el único que
