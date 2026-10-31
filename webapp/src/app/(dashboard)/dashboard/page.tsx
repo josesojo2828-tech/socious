@@ -7,6 +7,7 @@ import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { hasPermit, isAdmin } from "@/shared/authz";
 import { resolveDashboardHome } from "@/features/dashboard/lib/dashboard-home";
+import HomeDashboard from "@/features/dashboard/components/HomeDashboard";
 
 /**
  * `/dashboard` is a router, not a screen. It must wait for the workspace
@@ -39,14 +40,18 @@ export default function AppDashboardPage() {
 
     useEffect(() => {
         if (!route) return;
-        if (route === "org-workspace") {
-            router.replace("/dashboard/ventas");
-        } else if (route === "platform-admin") {
+        // El espacio de organización se queda en /dashboard: el panel con
+        // datos reales ES la vista (feedback: nueva home del dashboard).
+        if (route === "platform-admin") {
             router.replace("/dashboard/users");
         } else if (route === "login") {
             router.replace("/login");
         }
     }, [route, router]);
+
+    if (route === "org-workspace") {
+        return <HomeDashboard />;
+    }
 
     if (route === "choose-workspace") {
         return (
