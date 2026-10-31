@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { Checkbox } from "@/shared/components/atoms/Checkbox";
 import {
@@ -144,6 +145,9 @@ export default function SettingsPage() {
     try {
       const fresh = await updateTenantSettings(patch);
       setSettings(fresh);
+      // Settings feed the sidebar (cash title, routes…): refetch it so the
+      // change is visible without a full reload.
+      void useAuthStore.getState().refreshSession();
     } catch (error) {
       setSettings(previous);
       // The plan/organization gates answer 403 with the explanation — show it as is.

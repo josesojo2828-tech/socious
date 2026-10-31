@@ -349,6 +349,7 @@ export class SaleService {
           client: { select: { id: true, name: true } },
           payments: { orderBy: { paidAt: "desc" } },
           items: true,
+          returns: { select: { totalUSD: true, returnNumber: true } },
         },
       }),
       this.prisma.sale.count({ where }),
@@ -376,6 +377,16 @@ export class SaleService {
         payments: { orderBy: { paidAt: "desc" } },
         client: true,
         order: true,
+        returns: {
+          orderBy: { issueDate: "desc" },
+          select: {
+            id: true,
+            returnNumber: true,
+            totalUSD: true,
+            issueDate: true,
+            reason: true,
+          },
+        },
       },
     });
 

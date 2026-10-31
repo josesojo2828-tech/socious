@@ -275,9 +275,10 @@ export default function ClientsPage() {
               />
             </label>
             <label className={label}>
-              Correo
+              Correo *
               <input
                 type="email"
+                required
                 className={field}
                 value={form.email ?? ""}
                 onChange={(event) => patchForm({ email: event.target.value })}

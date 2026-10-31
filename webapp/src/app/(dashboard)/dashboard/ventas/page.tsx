@@ -305,7 +305,7 @@ export default function SalesPage() {
           message: `${data.returnNumber} registrada. El stock y el saldo se ajustaron.`,
         });
         setReturning(false);
-        await openDetail(selected.id);
+        await openReturns(selected.id);
         await loadList().catch(() => undefined);
       } catch (error) {
         addToast({
@@ -513,7 +513,23 @@ export default function SalesPage() {
                   <td className="px-4 py-2 text-right">
                     ${Number(sale.totalUSD).toFixed(2)}
                   </td>
-                  <td className={`px-4 py-2 ${status.className}`}>{status.text}</td>
+                  <td className="px-4 py-2">
+                    <span className={status.className}>{status.text}</span>
+                    {sale.returns && sale.returns.length > 0 ? (
+                      (() => {
+                        const returnedUSD = sale.returns!.reduce(
+                          (sum, ref) => sum + Number(ref.totalUSD),
+                          0,
+                        );
+                        const full = returnedUSD >= Number(sale.totalUSD) - 0.01;
+                        return (
+                          <span className="ml-1 inline-flex rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-600">
+                            {full ? "Devuelta" : "Devolución parcial"}
+                          </span>
+                        );
+                      })()
+                    ) : null}
+                  </td>
                   <td className="px-4 py-2 text-right">
                     <button
                       type="button"
@@ -615,6 +631,11 @@ export default function SalesPage() {
             <p className="mb-4 text-sm text-slate-500">Todavía sin cobros.</p>
           )}
 
+          {selected.paymentStatus === "PAID" ? (
+            <p className="rounded-lg bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600">
+              Venta saldada: no hay nada por abonar.
+            </p>
+          ) : (
           <div className="rounded-lg bg-slate-50 p-3 dark:bg-slate-800">
             <p className="text-xs font-medium uppercase text-slate-400 mb-2">
               Registrar abono
@@ -673,6 +694,21 @@ export default function SalesPage() {
               enero sigue siendo cobro de mayo.
             </p>
           </div>
+          )}
+
+          {selected.returns && selected.returns.length > 0 ? (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm dark:border-amber-900 dark:bg-amber-950">
+              <p className="font-medium text-amber-700 dark:text-amber-300">
+                Devoluciones ({selected.returns.length})
+              </p>
+              {selected.returns.map((ref) => (
+                <p key={ref.id ?? ref.returnNumber} className="text-xs text-amber-700/80 dark:text-amber-300/80">
+                  {ref.returnNumber} · ${Number(ref.totalUSD).toFixed(2)}
+                  {ref.reason ? ` · ${ref.reason}` : ""}
+                </p>
+              ))}
+            </div>
+          ) : null}
 
           <div className="mt-3 flex flex-wrap gap-2">
             <button

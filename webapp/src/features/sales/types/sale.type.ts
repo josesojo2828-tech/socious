@@ -48,6 +48,7 @@ export interface Sale {
   client?: { id: string; name: string } | null;
   items?: SaleItem[];
   payments?: SalePayment[];
+  returns?: SaleReturnRef[];
 }
 
 export interface SalePaymentInput {
@@ -81,6 +82,15 @@ export interface CreateSalePayload {
   creditCadence?: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
   creditEveryNDays?: number;
   creditMonthlyDay?: number;
+}
+
+/** A return attached to a sale (list + detail expose them since S10). */
+export interface SaleReturnRef {
+  id?: string;
+  returnNumber?: string;
+  totalUSD: string | number;
+  issueDate?: string;
+  reason?: string | null;
 }
 
 export interface SaleReturn {
