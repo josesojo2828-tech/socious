@@ -26,6 +26,8 @@ interface WorkspaceState {
   activeWorkspace: WorkspaceItem;
   workspaces: WorkspaceItem[];
   isLoading: boolean;
+  /** True once fetchWorkspaces has answered (success or failure). Never persisted. */
+  hasLoaded: boolean;
   setActiveWorkspace: (workspace: WorkspaceItem) => void;
   fetchWorkspaces: (user?: User | null, options?: { preserveSelection?: boolean }) => Promise<void>;
 }
@@ -43,6 +45,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       activeWorkspace: DEFAULT_PERSONAL_WORKSPACE,
       workspaces: [DEFAULT_PERSONAL_WORKSPACE],
       isLoading: false,
+      hasLoaded: false,
 
       setActiveWorkspace: (workspace: WorkspaceItem) => {
         if (workspace.type === 'PERSONAL' && get().workspaces.every(w => w.type === 'ORGANIZATION')) {
@@ -52,6 +55,9 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       },
 
       fetchWorkspaces: async (user?: User | null, options?: { preserveSelection?: boolean }) => {
+        // One in-flight load per store: the dashboard router and the header
+        // switcher may both ask for the list on the same mount.
+        if (get().isLoading) return;
         set({ isLoading: true });
         try {
           const response = await apiClient.get('/api/organizations/my-workspaces');
@@ -89,7 +95,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           const allWorkspaces = isClinicAdmin ? orgs : [personalWorkspace, ...orgs];
 
           if (options?.preserveSelection) {
-            set({ workspaces: allWorkspaces, isLoading: false });
+            set({ workspaces: allWorkspaces, isLoading: false, hasLoaded: true });
             return;
           }
 
@@ -104,10 +110,12 @@ export const useWorkspaceStore = create<WorkspaceState>()(
             workspaces: allWorkspaces,
             activeWorkspace: selectedWorkspace,
             isLoading: false,
+            hasLoaded: true,
           });
         } catch (error) {
           console.error('Error al cargar workspaces:', error);
-          set({ isLoading: false });
+          // Mark the load as settled even on failure so routers never wait forever.
+          set({ isLoading: false, hasLoaded: true });
         }
       },
     }),
