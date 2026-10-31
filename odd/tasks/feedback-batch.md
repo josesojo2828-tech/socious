@@ -47,14 +47,19 @@ returned totals; the drawer refetches after a return).
 
 | ID | S# | Status | Commit |
 | -- | -- | ------ | ------ |
-| T1 | S1,S9 | pending | |
-| T2 | S10 | pending | |
-| T3 | S8 | pending | |
-| T4 | S2,S3,S6 | pending | |
-| T5 | S4,S5 | pending | |
-| T6 | S7 | pending | |
+| T1 | S1,S9 | done | see Log |
+| T2 | S10 | done | see Log |
+| T3 | S8 | done | see Log |
+| T4 | S2,S3,S6 | done | see Log |
+| T5 | S4,S5 | done | see Log |
+| T6 | S7 | done | see Log |
 
 ## Log
 
 L1: the ten numbered requests verbatim (S1–S10). Report per item: brief
 description, complete or questions, how to verify.
+
+L2: all six work units closed across commits 2a908f2, cb5deba, 136c12a and
+this one. Purchase payments still accept built-in codes even when disabled
+(sale-side enforcement only); POS Pedido requires the ORDERS module (Avanzado+)
+per the plan matrix.

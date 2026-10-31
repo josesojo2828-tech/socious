@@ -86,7 +86,10 @@ export class OrderService {
   // Public storefront
   // ------------------------------------------------------------------
 
-  async createPublicOrder(data: CreateOrderDto) {
+  async createPublicOrder(
+    data: CreateOrderDto,
+    options: { internalOk?: boolean } = {},
+  ) {
     const organization = await this.prisma.organization.findUnique({
       where: { slug: data.organizationSlug },
       select: { id: true, name: true, slug: true, status: true },
@@ -135,7 +138,12 @@ export class OrderService {
       if (!product) {
         throw new NotFoundException("Uno de los productos ya no está disponible.");
       }
-      if (!product.isPublic || product.status !== ProductStatus.ACTIVE) {
+      // The storefront only sells isPublic products; POS orders (internalOk)
+      // may order any ACTIVE catalog item.
+      if (
+        (!options.internalOk && !product.isPublic) ||
+        product.status !== ProductStatus.ACTIVE
+      ) {
         throw new BadRequestException(
           `"${product.name}" no está disponible para pedir en línea.`,
         );

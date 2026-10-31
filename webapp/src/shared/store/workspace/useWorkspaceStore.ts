@@ -8,6 +8,8 @@ export type WorkspaceType = 'PERSONAL' | 'ORGANIZATION' | 'PATIENT_NUTRITIONIST'
 
 export interface WorkspaceItem {
   id: string; // 'personal' or organization UUID
+  /** Public storefront handle — POST /api/orders needs it (feedback S7). */
+  slug?: string;
   name: string;
   type: WorkspaceType;
   role?: string;
@@ -63,6 +65,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           const response = await apiClient.get('/api/organizations/my-workspaces');
         const orgs: WorkspaceItem[] = (response.data || []).map((org: any) => ({
           id: org.id,
+          slug: org.slug,
           name: org.name,
           type: 'ORGANIZATION' as WorkspaceType,
           role: org.userRole,

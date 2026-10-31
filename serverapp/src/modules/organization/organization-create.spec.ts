@@ -136,7 +136,7 @@ describe("OrganizationService.createOrganization (S9/S10)", () => {
 
     expect(prisma.branch.create.mock.calls[0][0].data).toEqual({
       organizationId: "org-1",
-      name: "Principal",
+      name: "Subsucursal principal",
       isDefault: true,
     });
   });

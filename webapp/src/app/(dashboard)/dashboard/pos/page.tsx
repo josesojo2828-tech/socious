@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product } from "@/features/products/types/product.type";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
+import { OrderEndpoints } from "@/features/orders/services/orders.endpoints";
 import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
@@ -82,7 +84,8 @@ export default function PosPage() {
   const [clientId, setClientId] = useState<string>("");
   const [methodCode, setMethodCode] = useState<string>("");
   const [currency, setCurrency] = useState<"USD" | "VES" | "USDT">("USD");
-  const [mode, setMode] = useState<"now" | "credit">("now");
+  const [mode, setMode] = useState<"now" | "credit" | "order">("now");
+  const { activeWorkspace } = useWorkspaceStore();
   const [creditCadence, setCreditCadence] =
     useState<TenantSettings["credit"]["cadence"]>("QUINCENAL");
   const [creditInitial, setCreditInitial] = useState<string>("");
@@ -300,6 +303,70 @@ export default function PosPage() {
             }
           : {}),
       };
+    } else if (mode === "order") {
+      const client = clients.find((item) => item.id === clientId);
+      if (!client) {
+        addToast({
+          type: "warning",
+          title: "Pedido",
+          message: "Elegí el cliente del pedido en el paso superior.",
+        });
+        return;
+      }
+      if (!client.email) {
+        addToast({
+          type: "warning",
+          title: "Pedido",
+          message: `${client.name} no tiene correo: completalo en Clientes.`,
+        });
+        return;
+      }
+      if (!activeWorkspace?.slug) {
+        addToast({
+          type: "error",
+          title: "Pedido",
+          message: "No se detectó la tienda del espacio activo.",
+        });
+        return;
+      }
+      const orderPayload = {
+        organizationSlug: activeWorkspace.slug,
+        customerName: client.name,
+        customerEmail: client.email,
+        clientId: client.id,
+        ...(settings?.fulfillment?.coordination
+          ? { coordination: settings.fulfillment.coordination }
+          : {}),
+        items: cart.map((line) => ({
+          productId: line.productId,
+          quantity: line.quantity,
+          priceUSD: line.unitPriceUSD,
+        })),
+      };
+      setBusy(true);
+      try {
+        const { data } = await apiClient.post<{ orderNumber: string }>(
+          OrderEndpoints.list,
+          orderPayload,
+        );
+        addToast({
+          type: "success",
+          title: "Pedido creado",
+          message: `${data.orderNumber ?? ""} en la bandeja de pedidos.`,
+        });
+        setCart([]);
+        setNotes("");
+        await loadProducts();
+      } catch (error) {
+        addToast({
+          type: "error",
+          title: "Pedido",
+          message: apiMessage(error, "No se pudo crear el pedido."),
+        });
+      } finally {
+        setBusy(false);
+      }
+      return;
     } else {
       if (!method || !Number.isFinite(paymentAmount) || paymentAmount <= 0) {
         addToast({
@@ -617,6 +684,9 @@ export default function PosPage() {
                   [
                     ["now", "Pagar ahora"],
                     ["credit", "Crédito"],
+                    ...((settings?.planModules ?? []).includes("ORDERS")
+                      ? ([["order", "Pedido"]] as const)
+                      : []),
                   ] as const
                 ).map(([key, label]) => (
                   <button
@@ -633,6 +703,13 @@ export default function PosPage() {
                   </button>
                 ))}
               </div>
+
+              {mode === "order" ? (
+                <p className="rounded-xl border border-sky-200 bg-sky-50/60 p-3 text-xs text-sky-800 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-300">
+                  Se creará un pedido en la bandeja (sin cobro ahora). Elegí un
+                  cliente con correo para poder registrarlo.
+                </p>
+              ) : null}
 
               {mode === "credit" ? (
                 <div className="space-y-2 rounded-xl border border-amber-200 bg-amber-50/50 p-3 dark:border-amber-900/50 dark:bg-amber-950/20">
@@ -718,22 +795,24 @@ export default function PosPage() {
                 </div>
               ) : null}
 
-              <label className="block text-xs text-slate-500">
-                Medio de cobro
-                <select
-                  value={methodCode}
-                  onChange={(event) => handleMethodChange(event.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
-                >
-                  {methods.map((method) => (
-                    <option key={method.code} value={method.code}>
-                      {method.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              {mode !== "order" ? (
+                <label className="block text-xs text-slate-500">
+                  Medio de cobro
+                  <select
+                    value={methodCode}
+                    onChange={(event) => handleMethodChange(event.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  >
+                    {methods.map((method) => (
+                      <option key={method.code} value={method.code}>
+                        {method.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
 
-              <div>
+              <div className={mode === "order" ? "hidden" : ""}>
                 <label className="block text-xs text-slate-500">
                   Monto cobrado
                   <span className="ml-1 font-semibold text-slate-400">
@@ -772,7 +851,7 @@ export default function PosPage() {
                 ) : (
                   <Receipt className="h-4 w-4" />
                 )}
-                Registrar venta
+                {mode === "order" ? "Crear pedido" : "Registrar venta"}
               </button>
             </div>
           </SectionCard>

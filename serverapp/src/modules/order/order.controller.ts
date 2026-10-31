@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   Req,
+  ForbiddenException,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
@@ -62,6 +63,31 @@ export class OrderController {
   @Post("public")
   createPublicOrder(@Body() body: CreateOrderDto) {
     return this.orderService.createPublicOrder(body);
+  }
+
+  /**
+   * POS order creation (feedback S7): the caller's active organization must
+   * match the slug, and internal (non-public) catalog items are allowed.
+   */
+  @Post()
+  @UseGuards(SessionAuthGuard)
+  async create(@Req() request: RequestWithUser, @Body() body: CreateOrderDto) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId) {
+      throw new UnauthorizedException(
+        "Crea una organización para registrar pedidos.",
+      );
+    }
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: scope.organizationId, slug: body.organizationSlug },
+      select: { id: true },
+    });
+    if (!organization) {
+      throw new ForbiddenException(
+        "La tienda no corresponde al espacio de trabajo activo.",
+      );
+    }
+    return this.orderService.createPublicOrder(body, { internalOk: true });
   }
 
   @Get()

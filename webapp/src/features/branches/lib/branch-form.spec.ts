@@ -32,14 +32,14 @@ describe("branch-form (S11)", () => {
     expect(validateBranchForm("Norte")).toBeNull();
   });
 
-  it("hides the default branch from the manageable list (S10)", () => {
+  it("shows the default branch next to the created ones (feedback S4)", () => {
     const branches = [
-      branch({ id: "default", name: "Principal", isDefault: true }),
+      branch({ id: "default", name: "Subsucursal principal", isDefault: true }),
       branch({ id: "norte" }),
     ];
 
     expect(visibleBranches(branches).map((item) => item.id)).toEqual([
-      "b-1",
+      "default",
       "norte",
     ]);
     expect(visibleBranches(branches)).toHaveLength(2);
