@@ -23,10 +23,10 @@ import { slugify } from "@/shared/lib/utils";
 import type { SidebarProps } from "./Sidebar.types";
 
 /**
- * Northpeak-style rail (round 3 restyle):
- * light `#fbfbfc` / dark `#111317`, neutral rows with a #e8eaee active state,
- * uppercase micro group heads, teal `#1d6f8c` as the single accent. The
- * backend still drives sections/items; only the skin changed.
+ * Maison Lévrier rail (round 4 restyle): pearl `#f0ede4` glass with navy
+ * `#1a2a46` ink, brass `#b2944a` as the single accent (active inset bar,
+ * head dots, CTA), rose `#c87878` on logout hover, uppercase micro group
+ * heads. The backend still drives sections/items; only the skin changed.
  */
 
 const iconMap: Record<string, LucideIcon> = {
@@ -70,98 +70,13 @@ const iconMap: Record<string, LucideIcon> = {
   adminstration: LucideIcons.ShieldAlert,
 };
 
-/**
- * Color por sección (round 4): cada grupo del rail lleva su tinte — icono
- * coloreado en reposo y fondo suave del mismo tono en el activo. El ciclo es
- * determinista por índice para que no cambie entre renders.
- */
-const SECTION_HUES = [
-  {
-    icon: "text-indigo-500 dark:text-indigo-400",
-    dot: "bg-indigo-500",
-    active:
-      "bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300",
-    bar: "shadow-[inset_2px_0_0_0_#6366f1]",
-    activeIcon: "text-indigo-600 dark:text-indigo-300",
-  },
-  {
-    icon: "text-emerald-600 dark:text-emerald-400",
-    dot: "bg-emerald-500",
-    active:
-      "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300",
-    bar: "shadow-[inset_2px_0_0_0_#10b981]",
-    activeIcon: "text-emerald-600 dark:text-emerald-300",
-  },
-  {
-    icon: "text-sky-600 dark:text-sky-400",
-    dot: "bg-sky-500",
-    active:
-      "bg-sky-500/10 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300",
-    bar: "shadow-[inset_2px_0_0_0_#0ea5e9]",
-    activeIcon: "text-sky-600 dark:text-sky-300",
-  },
-  {
-    icon: "text-amber-500 dark:text-amber-400",
-    dot: "bg-amber-500",
-    active:
-      "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
-    bar: "shadow-[inset_2px_0_0_0_#f59e0b]",
-    activeIcon: "text-amber-600 dark:text-amber-300",
-  },
-  {
-    icon: "text-rose-500 dark:text-rose-400",
-    dot: "bg-rose-500",
-    active:
-      "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300",
-    bar: "shadow-[inset_2px_0_0_0_#f43f5e]",
-    activeIcon: "text-rose-600 dark:text-rose-300",
-  },
-  {
-    icon: "text-violet-500 dark:text-violet-400",
-    dot: "bg-violet-500",
-    active:
-      "bg-violet-500/10 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300",
-    bar: "shadow-[inset_2px_0_0_0_#8b5cf6]",
-    activeIcon: "text-violet-600 dark:text-violet-300",
-  },
-  {
-    icon: "text-cyan-600 dark:text-cyan-400",
-    dot: "bg-cyan-500",
-    active:
-      "bg-cyan-500/10 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300",
-    bar: "shadow-[inset_2px_0_0_0_#06b6d4]",
-    activeIcon: "text-cyan-600 dark:text-cyan-300",
-  },
-  {
-    icon: "text-orange-500 dark:text-orange-400",
-    dot: "bg-orange-500",
-    active:
-      "bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300",
-    bar: "shadow-[inset_2px_0_0_0_#f97316]",
-    activeIcon: "text-orange-600 dark:text-orange-300",
-  },
-] as const;
-
-type SectionHue = (typeof SECTION_HUES)[number];
-
-/** Hash determinista (FNV-ish) título → índice de la paleta. */
-function sectionHue(title: string): SectionHue {
-  let hash = 0;
-  for (let i = 0; i < title.length; i += 1) {
-    hash = (hash * 31 + title.charCodeAt(i)) >>> 0;
-  }
-  return SECTION_HUES[hash % SECTION_HUES.length];
-}
-
 function SidebarLink({
   item,
-  hue,
   isCollapsed,
   pathname,
   close,
 }: {
   item: { title: string; icon: string; link: string };
-  hue: SectionHue;
   isCollapsed: boolean;
   pathname: string | null;
   close: () => void;
@@ -179,18 +94,20 @@ function SidebarLink({
       title={isCollapsed ? t(item?.title || "") : undefined}
       className={clsx(
         "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] transition-colors duration-[180ms] ease-[cubic-bezier(0.16,1,0.3,1)] group mb-px",
-        "focus-visible:outline-2 focus-visible:outline-indigo-500 focus-visible:-outline-offset-2",
+        "focus-visible:outline-2 focus-visible:outline-[#b2944a] focus-visible:-outline-offset-2",
         isCollapsed && "justify-center px-0",
         isActive
-          ? `font-medium ${hue.active} ${hue.bar}`
-          : "text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white",
+          ? "bg-[#1a2a46]/[0.07] text-[#111018] shadow-[inset_2px_0_0_0_#b2944a] dark:bg-white/10 dark:text-white"
+          : "text-[#1a2a46]/70 hover:bg-[#1a2a46]/[0.05] hover:text-[#111018] dark:text-[#b7b3a8] dark:hover:bg-white/5 dark:hover:text-white",
       )}
     >
       <IconComponent
         size={17}
         className={clsx(
           "flex-shrink-0 transition-colors duration-150",
-          isActive ? hue.activeIcon : hue.icon,
+          isActive
+            ? "text-[#b2944a] dark:text-[#d8c084]"
+            : "text-[#1a2a46]/55 group-hover:text-[#1a2a46] dark:text-[#b7b3a8] dark:group-hover:text-white",
         )}
       />
       {!isCollapsed && (
@@ -221,7 +138,6 @@ function SidebarSection({
   sectionKey,
   title,
   items,
-  hue,
   isCollapsed,
   pathname,
   close,
@@ -229,7 +145,6 @@ function SidebarSection({
   sectionKey: string;
   title: string;
   items: { title: string; icon: string; link: string }[];
-  hue: SectionHue;
   isCollapsed: boolean;
   pathname: string | null;
   close: () => void;
@@ -287,7 +202,6 @@ function SidebarSection({
           <SidebarLink
             key={item?.link || item?.title}
             item={item}
-            hue={hue}
             isCollapsed
             pathname={pathname}
             close={close}
@@ -305,7 +219,7 @@ function SidebarSection({
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={toggle}
-        className="flex items-center gap-[7px] w-full h-[26px] px-2 text-[11.5px] font-bold uppercase tracking-[0.13em] text-[#767d89] hover:text-[#575d67] dark:text-[#7d848f] dark:hover:text-[#aab0ba] transition-colors cursor-pointer border-0 bg-transparent rounded-[7px]"
+        className="flex items-center gap-[7px] w-full h-[26px] px-2 text-[11.5px] font-bold uppercase tracking-[0.13em] text-[#1a2a46]/55 hover:text-[#1a2a46] dark:text-[#b7b3a8] dark:hover:text-white transition-colors cursor-pointer border-0 bg-transparent rounded-[7px]"
       >
         <ChevronDown
           size={12}
@@ -315,7 +229,7 @@ function SidebarSection({
             isOpen ? "rotate-0" : "-rotate-90",
           )}
         />
-        <span className={clsx("w-1.5 h-1.5 rounded-full flex-none", hue.dot)} />
+        <span className="w-1.5 h-1.5 rounded-full flex-none bg-[#b2944a]" />
         <span className="truncate">{t(title)}</span>
       </button>
 
@@ -335,7 +249,6 @@ function SidebarSection({
             <SidebarLink
               key={item?.link || item?.title}
               item={item}
-              hue={hue}
               isCollapsed={false}
               pathname={pathname}
               close={close}
@@ -449,8 +362,8 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
       <div
         className={clsx(
           "fixed inset-y-0 left-0 z-50 transition-all duration-300 ease-in-out md:static md:shadow-none print:hidden shadow-xl",
-          "bg-[#fbfbfc] text-[#171a1f] border-r border-[#e5e7ec]",
-          "dark:bg-[#111317] dark:text-[#e7eaef] dark:border-[#22252c]",
+          "bg-[#f0ede4]/75 backdrop-blur-xl text-[#1a2a46] border-r border-[#1a2a46]/10",
+          "dark:bg-[#12162a]/80 dark:text-[#e6e1d5] dark:border-white/10",
           isCollapsed ? "md:w-[72px]" : "md:w-[250px]",
           "w-[250px]",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
@@ -458,22 +371,19 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
       >
         <div className="flex flex-col h-full">
           {/* Proj row: marca + contexto (estilo .proj de Northpeak) */}
-          <div className="flex flex-col flex-shrink-0 px-3 pt-3.5 pb-3 border-b border-[#e5e7ec] dark:border-[#22252c]">
+          <div className="flex flex-col flex-shrink-0 px-3 pt-3.5 pb-3 border-b border-[#1a2a46]/10 dark:border-white/10">
             <InternalLink
               href="/"
               className={clsx(
-                "flex items-center gap-[11px] w-full py-1 rounded-[7px] text-left transition-colors hover:bg-[#f1f2f5] dark:hover:bg-[#1b1e24] focus-visible:outline-2 focus-visible:outline-[#1d6f8c]",
+                "flex items-center gap-[11px] w-full py-1 rounded-[7px] text-left transition-colors hover:bg-[#1a2a46]/[0.05] dark:hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-[#b2944a]",
                 isCollapsed && "justify-center px-0",
               )}
             >
               <span
-                className="w-7 h-7 flex-none rounded-lg grid place-items-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),0_0_0_3px_rgba(99,102,241,0.16)]"
-                style={{
-                  background: "linear-gradient(155deg,#4f46e5 0%,#3730a3 100%)",
-                }}
+                className="w-7 h-7 flex-none rounded-full grid place-items-center bg-[#1a2a46] shadow-[0_0_0_2px_rgba(178,148,74,0.45)]"
                 aria-label="Socius ERP"
               >
-                <span className="text-white font-bold text-sm leading-none">
+                <span className="text-[#f0ede4] font-semibold text-sm leading-none">
                   S
                 </span>
               </span>
@@ -482,7 +392,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   <b className="block text-[14.5px] font-semibold leading-tight tracking-[-0.012em] truncate">
                     {activeWorkspace?.name || "Socius ERP"}
                   </b>
-                  <span className="block text-xs text-[#767d89] dark:text-[#7d848f] truncate">
+                  <span className="block text-xs text-[#1a2a46]/55 dark:text-[#9a958a] truncate">
                     {activeWorkspace?.type === "ORGANIZATION"
                       ? "Espacio de negocio"
                       : "Espacio personal"}
@@ -498,9 +408,9 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 href="/dashboard/pos"
                 onClick={close}
                 className={clsx(
-                  "mt-3 flex items-center gap-2 h-[34px] px-3 rounded-[7px] text-white text-[14.5px] font-semibold tracking-[-0.008em] transition-all",
-                  "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-px active:translate-y-0 shadow-[0_1px_2px_rgba(49,46,129,0.3)]",
-                  "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:outline-offset-2",
+                  "mt-3 flex items-center gap-2 h-[34px] px-3 rounded-[7px] text-[#111018] text-[14.5px] font-semibold tracking-[-0.008em] transition-all",
+                  "bg-[#b2944a] hover:bg-[#bf9f54] hover:-translate-y-px active:translate-y-0 shadow-[0_1px_2px_rgba(178,148,74,0.6)]",
+                  "focus-visible:outline-2 focus-visible:outline-[#b2944a] focus-visible:outline-offset-2",
                   isCollapsed && "justify-center px-0",
                 )}
                 title={isCollapsed ? "Nueva venta" : undefined}
@@ -519,7 +429,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               <Fragment key={entry.section?.icon || entry.section?.title || entry.idx}>
                 {i > 0 ? (
                   <div
-                    className="h-px bg-[#e5e7ec] dark:bg-[#22252c] mx-1 my-3.5"
+                    className="h-px bg-[#1a2a46]/10 dark:bg-white/10 mx-1 my-3.5"
                     aria-hidden
                   />
                 ) : null}
@@ -527,7 +437,6 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   sectionKey={entry.sectionKey}
                   title={entry.section?.title || ""}
                   items={entry.items}
-                  hue={sectionHue(entry.section?.title || `section-${entry.idx}`)}
                   isCollapsed={isCollapsed}
                   pathname={pathname}
                   close={close}
@@ -537,17 +446,17 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
           </nav>
 
           {/* Footer estilo .rail-foot */}
-          <div className="mt-auto px-3 pt-3 pb-3 border-t border-[#e5e7ec] dark:border-[#22252c]">
+          <div className="mt-auto px-3 pt-3 pb-3 border-t border-[#1a2a46]/10 dark:border-white/10">
             {/* Feedback */}
             <label
               htmlFor="feedback-drawer"
               title={isCollapsed ? t("common.sidebar.feedback") : undefined}
               className={clsx(
-                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] text-emerald-700 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 dark:text-emerald-300 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25 dark:border-emerald-500/25 transition-colors cursor-pointer group",
+                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] text-[#8e7538] bg-[#b2944a]/10 hover:bg-[#b2944a]/20 border border-[#b2944a]/30 dark:text-[#d8c084] dark:bg-[#b2944a]/15 dark:hover:bg-[#b2944a]/25 dark:border-[#b2944a]/30 transition-colors cursor-pointer group",
                 isCollapsed && "justify-center px-0",
               )}
             >
-              <MessageSquarePlus size={17} className="flex-none text-emerald-600 dark:text-emerald-400" />
+              <MessageSquarePlus size={17} className="flex-none text-[#b2944a]" />
               {!isCollapsed && (
                 <span className="flex-1 truncate text-left">
                   {t("common.sidebar.feedback")}
@@ -564,7 +473,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               }}
               title={isCollapsed ? t("common.auth.logout") : undefined}
               className={clsx(
-                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#575d67] hover:bg-[#fdefef] hover:text-[#b4423a] dark:text-[#9aa1ad] dark:hover:bg-[#2a1618] dark:hover:text-[#e5857c] transition-colors cursor-pointer border-0 bg-transparent",
+                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#1a2a46]/70 hover:bg-[#c87878]/15 hover:text-[#a85a5a] dark:text-[#b7b3a8] dark:hover:bg-[#c87878]/15 dark:hover:text-[#e09a9a] transition-colors cursor-pointer border-0 bg-transparent",
                 isCollapsed && "justify-center px-0",
               )}
             >
@@ -577,13 +486,13 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
             </button>
 
             {/* Divider */}
-            <div className="h-px bg-[#e5e7ec] dark:bg-[#22252c] my-3" />
+            <div className="h-px bg-[#1a2a46]/10 dark:bg-white/10 my-3" />
 
             {/* Collapse (desktop only) */}
             <button
               onClick={toggleCollapse}
               className={clsx(
-                "hidden md:flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent",
+                "hidden md:flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#1a2a46]/70 hover:bg-[#1a2a46]/[0.05] hover:text-[#111018] dark:text-[#b7b3a8] dark:hover:bg-white/5 dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent",
                 isCollapsed && "justify-center px-0",
               )}
               title={
