@@ -10,6 +10,9 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { ProductService, ProductScope } from "./product.service";
@@ -29,6 +32,7 @@ import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import type { RequestWithUser } from "src/shared/types/server.type";
 
 /**
@@ -43,6 +47,7 @@ export class ProductController {
     private readonly productService: ProductService,
     private readonly presentationService: PresentationService,
     private readonly workspaceContext: WorkspaceContextService,
+    private readonly tenantSettings: TenantSettingsService,
     private readonly prisma: PrismaService,
   ) {
     this.organizationScope = new OrganizationScopeService(this.prisma);
@@ -222,6 +227,54 @@ export class ProductController {
     return this.presentationService.decompose(scope.organizationId, id, body);
   }
 
+  // Imágenes del producto (S8): la clave la sube el cliente a /api/file/upload.
+  @Post(":id/images")
+  @UseGuards(SessionAuthGuard)
+  async addImage(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: { key?: string },
+  ) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId || !body.key?.trim()) {
+      throw new BadRequestException("Falta la imagen subida.");
+    }
+    const existing = await this.prisma.productImage.count({
+      where: { productId: id },
+    });
+    const limits = await this.tenantSettings.imageLimits(scope.organizationId);
+    if (existing >= limits.product) {
+      throw new BadRequestException(
+        `Tu plan permite ${limits.product} imagen(es) por producto.`,
+      );
+    }
+    return this.prisma.productImage.create({
+      data: {
+        productId: id,
+        key: body.key.trim(),
+        position: existing,
+      },
+    });
+  }
+
+  @Delete("images/:imageId")
+  @UseGuards(SessionAuthGuard)
+  async removeImage(
+    @Req() request: RequestWithUser,
+    @Param("imageId") imageId: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    const image = await this.prisma.productImage.findFirst({
+      where: { id: imageId },
+      include: { product: { select: { organizationId: true } } },
+    });
+    if (!image || image.product.organizationId !== scope.organizationId) {
+      throw new NotFoundException("Imagen no encontrada.");
+    }
+    await this.prisma.productImage.delete({ where: { id: imageId } });
+    return { deleted: true };
+  }
+
   @Patch(":id")
   @UseGuards(SessionAuthGuard)
   async update(
@@ -229,6 +282,17 @@ export class ProductController {
     @Param("id") id: string,
     @Body() body: UpdateProductDto,
   ) {
+    // Catálogo online es de Avanzado+ (S10): publicar exige el módulo.
+    if (body.isPublic === true) {
+      const modules =
+        (request.user as { entitlements?: { modules?: { key: string }[] } })
+          ?.entitlements?.modules ?? [];
+      if (!modules.some((m) => m.key === "CATALOG_ONLINE")) {
+        throw new ForbiddenException(
+          "Publicar en la tienda requiere el plan Avanzado o superior.",
+        );
+      }
+    }
     const scope = await this.resolveScope(request);
     return this.productService.update(scope, id, body);
   }

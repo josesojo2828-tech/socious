@@ -8,6 +8,8 @@ export const PUBLIC_ASSET_PREFIXES = [
   "portfolio_",
   "profile_",
   "menu_",
+  "product_", // imágenes de catálogo (producto y presentaciones, S8)
+  "offer_",   // banners de ofertas (S9)
 ] as const;
 
 export function isPublicAssetKey(key: string): boolean {

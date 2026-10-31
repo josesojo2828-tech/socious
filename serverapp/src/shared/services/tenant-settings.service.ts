@@ -48,6 +48,26 @@ export class TenantSettingsService {
     return normalizeTenantSettings(organization?.settings);
   }
 
+  /**
+   * Límites de imágenes por plan (S8): el módulo no distingue Avanzado de
+   * Premium, así que la verdad del plan sale de la suscripción de la org.
+   * Sin suscripción → Básico (1/1).
+   */
+  async imageLimits(
+    organizationId: string | null | undefined,
+  ): Promise<{ product: number; variant: number }> {
+    if (!organizationId) return { product: 1, variant: 1 };
+    const subscription = await this.prisma.subscription.findFirst({
+      where: { organizationId, status: "ACTIVE" },
+      include: { plan: { select: { id: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+    const planId = subscription?.plan?.id;
+    if (planId === "PREMIUM") return { product: 5, variant: 3 };
+    if (planId === "AVANZADO") return { product: 3, variant: 2 };
+    return { product: 1, variant: 1 };
+  }
+
   async update(
     organizationId: string | null | undefined,
     patch: unknown,

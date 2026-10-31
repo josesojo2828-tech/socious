@@ -24,6 +24,7 @@ const makeController = (
   const tenantSettings = {
     get: jest.fn().mockResolvedValue({ routes: { enabled: false } }),
     update: jest.fn().mockResolvedValue({ routes: { enabled: true } }),
+    imageLimits: jest.fn().mockResolvedValue({ product: 1, variant: 1 }),
   };
 
   const workspaceContext = {

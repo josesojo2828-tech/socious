@@ -187,6 +187,16 @@ export class DashboardService {
               icon: "globe",
               link: "/shop",
             },
+            // Ofertas (S9): módulo OFFERS (Avanzado/Premium).
+            ...(hasModule("OFFERS")
+              ? [
+                  {
+                    title: "Ofertas",
+                    icon: "megaphone",
+                    link: "/dashboard/ofertas",
+                  },
+                ]
+              : []),
           ],
         });
       }

@@ -62,6 +62,15 @@ const NEW_MODULES = [
     sortOrder: 70,
   },
   {
+    key: "OFFERS",
+    name: "Ofertas",
+    description:
+      "Promos con banner y vencimiento sobre productos elegidos (Avanzado+).",
+    icon: "megaphone",
+    category: "COMMERCIAL",
+    sortOrder: 85,
+  },
+  {
     key: "BRANCHES",
     name: "Sucursales",
     description:
@@ -103,6 +112,7 @@ const PLAN_MODULES = {
     "ROUTES",
     "PRESENTATIONS",
     "NOTIFICATIONS",
+    "OFFERS",
   ],
   PREMIUM: [
     "CLIENTS",
@@ -115,6 +125,7 @@ const PLAN_MODULES = {
     "ROUTES",
     "PRESENTATIONS",
     "NOTIFICATIONS",
+    "OFFERS",
   ],
 } as const;
 

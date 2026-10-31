@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { Prisma } from "@prisma/client";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import {
   CreatePresentationDto,
   DecomposeDto,
@@ -18,7 +19,10 @@ import {
  */
 @Injectable()
 export class PresentationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tenantSettings: TenantSettingsService,
+  ) {}
 
   private async assertProduct(organizationId: string | null, productId: string) {
     const product = await this.prisma.product.findFirst({
@@ -34,6 +38,7 @@ export class PresentationService {
     return this.prisma.productPresentation.findMany({
       where: { productId },
       orderBy: { name: "asc" },
+      include: { images: { orderBy: { position: "asc" } } },
     });
   }
 
@@ -140,5 +145,47 @@ export class PresentationService {
       }),
     ]);
     return updated;
+  }
+
+  // ---- Imágenes por variante (S8): límite por plan ----
+
+  async addImage(
+    organizationId: string,
+    presentationId: string,
+    key: string,
+  ) {
+    const presentation = await this.prisma.productPresentation.findFirst({
+      where: { id: presentationId },
+      select: { id: true },
+    });
+    if (!presentation) throw new NotFoundException("Presentación no encontrada.");
+    const existing = await this.prisma.presentationImage.count({
+      where: { presentationId },
+    });
+    const limits = await this.tenantSettings.imageLimits(organizationId);
+    if (existing >= limits.variant) {
+      throw new BadRequestException(
+        `Tu plan permite ${limits.variant} imagen(es) por variante.`,
+      );
+    }
+    return this.prisma.presentationImage.create({
+      data: { presentationId, key, position: existing },
+    });
+  }
+
+  async removeImage(organizationId: string, imageId: string) {
+    const image = await this.prisma.presentationImage.findFirst({
+      where: { id: imageId },
+      include: {
+        presentation: {
+          include: { product: { select: { organizationId: true } } },
+        },
+      },
+    });
+    if (!image || image.presentation.product.organizationId !== organizationId) {
+      throw new NotFoundException("Imagen no encontrada.");
+    }
+    await this.prisma.presentationImage.delete({ where: { id: imageId } });
+    return { deleted: true };
   }
 }

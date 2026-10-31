@@ -54,6 +54,57 @@ dates, item lines with catalog pick, totals); draft save / restore / discard
 with a pure lib + specs; the existing list keeps its detail drawer with
 receive/pay/cancel (moving that drawer to a route is S5, not this round).
 
+### S6 — Color del producto (#1)
+User (verbatim): "Vamos a agregar un campo para el color, sera el color de
+el producto, en el POS se debe mostrar un circulito con ese color"
+Acceptance: `Product.color` (migration), form field, POS product card shows
+a dot with that color.
+
+### S7 — Variantes como copia (#2)
+User (verbatim): "Vamos a agregar variantes en productos, se deben crear en
+la ficha, que seria como una copia de este producto, es decir, seria,
+producto casi igual, por ejemplo, distintos colores y cosas asi"
+Acceptance: the product ficha offers "Crear variante" → the new-product
+form prefilled as a copy (name/category/prices/unit/tax/color…) for the
+merchant to tweak and save as a new product. Interpretation stated: variant
+= copied PRODUCT (distinct from presentations/stock variants).
+
+### S8 — Imágenes con límites por plan (#3)
+User (verbatim): "Vamos a hacer la funcionalidad de cargar imagenes, plan
+basico 1 imagen por producto y una por variante, plan premium 3 imagenes por
+producto y 1 por variante" + clarified table: "Escalonado: 1/3/5 y variantes
+1/2/3" → per PRODUCT: Básico 1 · Avanzado 3 · Premium 5; per VARIANT
+(presentation): Básico 1 · Avanzado 2 · Premium 3.
+Acceptance: real multipart upload (POST /api/file/upload → MinIO, public
+prefixes product_/offer_), ProductImage + PresentationImage tables, image
+slots in the product ficha and presentations card respecting the limits,
+`imageLimits` exposed by GET /api/settings (server-computed from the org
+subscription — modules cannot tell Avanzado from Premium).
+
+### S9 — Módulo Ofertas (#4, plans clarified)
+User (verbatim): "Vamos a crear las ofertas, debe ser un modulo nuevo
+(practicamente) debe tener una fecha limite y productos, al crear se debe
+agregar el nombre, slogan, imagenes tipo banner o algo asi, y la fecha de
+vencimiento, y los productos que apliquen."
+Clarified: plans = AVANZADO + PREMIUM.
+Acceptance: Offer model (name, slogan, bannerKey, expiresAt, active) +
+product links; OFFERS module seeded into Avanzado/Premium; CRUD screens
+/list, /nueva, /editar (banner upload); sidebar entry; entitlement check
+on write. Storefront display = follow-up (S11).
+
+### S10 — Visibilidad en tienda desde la lista + validación de plan (#5/#6)
+User (verbatim): "En la misma tabla de productos (la lista) debemos poder
+con checks habilitar si esta visible en la tienda, pero claro con
+permisos, ya que los planes basico no tienen eso" / "Validar los planes
+tambien debe aplicar en las nuevas funcionalidades, por ejemplo para crear
+producto pide que se marque si esta publico en la tienda, pero en el plan
+basico no se debe ver, valida eso"
+Acceptance: products table gains an isPublic toggle hidden without the
+CATALOG_ONLINE module; backend rejects isPublic=true without it; all new
+features (images, offers) validate their plan server-side.
+
+### S11 — Consumo de ofertas en la tienda (follow-up)
+
 ### S5 — Resto de vistas (follow-up)
 Recorded for later: ventas, pedidos, inventario, configuración, cuentas por
 cobrar/pagar, rutas — same Maison treatment.
@@ -65,7 +116,10 @@ cobrar/pagar, rutas — same Maison treatment.
 | T1 | S1,S2,S3 | delegated (productos) | pending | |
 | T2 | S1,S3 | delegated (clientes) | pending | |
 | T3 | S1,S3 | delegated (proveedores) | pending | |
-| T4 | S1,S4 | delegated (compras) | pending | |
+| T4 | S1,S4 | delegated (compras) | done | 4a7484b |
+| T5 | S6-S8,S10 | backend foundation (parent) | pending | |
+| T6 | S6-S8,S10 | delegated (producto/POS UI) | pending | |
+| T7 | S9 | delegated (ofertas UI) | pending | |
 
 ## Log
 

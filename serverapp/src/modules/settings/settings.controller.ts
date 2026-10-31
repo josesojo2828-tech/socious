@@ -111,10 +111,12 @@ export class SettingsController {
           select: { module: { select: { key: true } } },
         })
       : [];
+    const imageLimits = await this.tenantSettings.imageLimits(organizationId);
     return {
       ...settings,
       planModules,
       manualGrants: [...new Set(grants.map((g) => g.module.key))],
+      imageLimits,
     };
   }
 

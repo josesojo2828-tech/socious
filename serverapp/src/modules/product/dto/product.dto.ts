@@ -33,6 +33,12 @@ export class CreateProductDto {
   @MaxLength(60)
   barcode?: string;
 
+  /** Color del producto (hex #rrggbb o nombre corto), S6. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  color?: string;
+
   @IsOptional()
   @IsString()
   @MaxLength(NOTES_MAX)
@@ -123,6 +129,12 @@ export class UpdateProductDto {
   @IsString()
   @MaxLength(60)
   barcode?: string;
+
+  /** Color del producto (hex #rrggbb o nombre corto), S6. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  color?: string;
 
   @IsOptional()
   @IsString()

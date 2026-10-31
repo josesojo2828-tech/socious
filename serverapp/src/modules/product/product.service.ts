@@ -125,7 +125,8 @@ export class ProductService {
   async getOne(scope: ProductScope, id: string) {
     const product = await this.prisma.product.findFirst({
       where: { id, ...this.scopeWhere(scope.organizationId) },
-      include: { category: true, supplier: true },
+      include: {images: { orderBy: { position: "asc" } },
+         category: true, supplier: true },
     });
 
     if (!product) throw new NotFoundException("Producto no encontrado.");
@@ -145,6 +146,7 @@ export class ProductService {
         data: {
           sku: data.sku.trim(),
           barcode: data.barcode?.trim() || null,
+          color: data.color?.trim() || null,
           name: data.name.trim(),
           description: data.description?.trim() || null,
           costPriceUSD: data.costPriceUSD ?? 0,
@@ -209,6 +211,7 @@ export class ProductService {
         ...(data.sku !== undefined && { sku: data.sku.trim() }),
         ...(data.name !== undefined && { name: data.name.trim() }),
         ...(data.barcode !== undefined && { barcode: data.barcode?.trim() || null }),
+        ...(data.color !== undefined && { color: data.color?.trim() || null }),
         ...(data.description !== undefined && {
           description: data.description?.trim() || null,
         }),

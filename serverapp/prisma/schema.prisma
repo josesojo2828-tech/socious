@@ -563,6 +563,7 @@ model Organization {
   products           Product[]
   suppliers          Supplier[]
   units              UnitOfMeasure[]
+  offers             Offer[]
   tenantPaymentMethods TenantPaymentMethod[]
   cashRegisters      CashRegister[]
   sales              Sale[]
@@ -934,6 +935,7 @@ model Product {
   id                String          @id @default(uuid())
   sku               String          // Código interno / SKU
   barcode           String?         // Código de barras
+  color             String?         // Color del producto (hex o nombre, S6)
   name              String
   description       String?
   costPriceUSD      Decimal         @default(0.00) @db.Decimal(14, 2)
@@ -960,6 +962,8 @@ model Product {
   stockMovements    StockMovement[]
   saleItems         SaleItem[]
   presentations     ProductPresentation[]
+  images            ProductImage[]
+  offerLinks        OfferProduct[]
   purchaseItems     PurchaseItem[]
   orderItems        OrderItem[]
   saleReturnItems   SaleReturnItem[]
@@ -1317,7 +1321,66 @@ model ProductPresentation {
 
   product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   saleItems      SaleItem[]
+  images         PresentationImage[]
 
+  @@index([productId])
+}
+
+// ======================================
+// IMÁGENES Y OFERTAS (S6–S9)
+// ======================================
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  key       String   // clave MinIO (se sirve por /api/file/public/<key>)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model PresentationImage {
+  id             String   @id @default(uuid())
+  presentationId String
+  key            String
+  position       Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  presentation   ProductPresentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+
+  @@index([presentationId])
+}
+
+model Offer {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  slogan         String?
+  bannerKey      String?  // imagen tipo banner (S9)
+  expiresAt      DateTime // fecha límite
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  items          OfferProduct[]
+
+  @@index([organizationId])
+  @@index([expiresAt])
+}
+
+model OfferProduct {
+  id        String   @id @default(uuid())
+  offerId   String
+  productId String
+
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([offerId, productId])
   @@index([productId])
 }
 

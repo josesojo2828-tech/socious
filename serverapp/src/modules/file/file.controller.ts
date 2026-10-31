@@ -1,13 +1,71 @@
-import { Controller, Get, Param, Res } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor, type File } from "@nest-lab/fastify-multer";
 import type { FastifyReply } from "fastify";
 import { StorageService } from "./storage.service";
 import { Public } from "src/shared/decorators/public.decorator";
 import { SkipThrottle } from "@nestjs/throttler";
 import { isPublicAssetKey } from "./storage-keys.util";
+import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
+import { safeExtensionFromMime } from "src/shared/helpers/file.util";
+import type { RequestWithUser } from "src/shared/types/server.type";
+
+const ALLOWED_MIME = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+const MAX_SIZE = 5 * 1024 * 1024;
+const UPLOAD_PREFIXES = ["product", "offer"] as const;
 
 @Controller("api/file")
 export class FileController {
   constructor(private readonly storageService: StorageService) {}
+
+  /**
+   * Upload de imágenes de catálogo/ofertas (S8/S9). El prefijo se limita a
+   * la allowlist para no escribir claves arbitrarias en el bucket; la
+   * respuesta devuelve la clave (persistida en la entidad) y la URL pública.
+   */
+  @Post("upload")
+  @UseGuards(SessionAuthGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  async uploadImage(
+    @Req() _req: RequestWithUser,
+    @UploadedFile() file: File,
+    @Body() body: { prefix?: string },
+  ) {
+    if (!file || !file.buffer) {
+      throw new BadRequestException("Debe subir una imagen.");
+    }
+    if (file.size && file.size > MAX_SIZE) {
+      throw new BadRequestException("La imagen excede el máximo de 5MB.");
+    }
+    if (!ALLOWED_MIME.includes(file.mimetype)) {
+      throw new BadRequestException(
+        "Formato no permitido. Solo PNG, JPG, JPEG o WEBP.",
+      );
+    }
+    const prefix = UPLOAD_PREFIXES.includes(
+      (body?.prefix ?? "product") as (typeof UPLOAD_PREFIXES)[number],
+    )
+      ? body.prefix
+      : "product";
+    const extension = safeExtensionFromMime(file.mimetype, file.originalname);
+    const key = `${prefix}_${Date.now()}_${Math.random()
+      .toString(36)
+      .slice(2, 8)}.${extension}`;
+    await this.storageService.uploadFile(file.buffer, key, file.mimetype);
+    const url = await this.storageService.getFileUrl(key);
+    return { key, url };
+  }
 
   @Public()
   @SkipThrottle()

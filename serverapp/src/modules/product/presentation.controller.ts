@@ -4,9 +4,12 @@ import {
   Delete,
   Param,
   Patch,
+  Post,
   Req,
   UnauthorizedException,
   UseGuards,
+  BadRequestException,
+  NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { PresentationService } from "./presentation.service";
@@ -14,6 +17,7 @@ import { UpdatePresentationDto } from "./dto/presentation.dto";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import type { RequestWithUser } from "src/shared/types/server.type";
 
 /** Presentation updates/deletes live on their own resource (S4). */
@@ -56,6 +60,39 @@ export class PresentationController {
       );
     }
     return this.presentations.update(organizationId, id, body);
+  }
+
+  // Imágenes de la variante (S8)
+  @Post(":id/images")
+  async addImage(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: { key?: string },
+  ) {
+    const organizationId = await this.resolveOrg(request);
+    if (!organizationId) {
+      throw new UnauthorizedException(
+        "Crea una organización para gestionar imágenes.",
+      );
+    }
+    if (!body.key?.trim()) {
+      throw new BadRequestException("Falta la imagen subida.");
+    }
+    return this.presentations.addImage(organizationId, id, body.key.trim());
+  }
+
+  @Delete("images/:imageId")
+  async removeImage(
+    @Req() request: RequestWithUser,
+    @Param("imageId") imageId: string,
+  ) {
+    const organizationId = await this.resolveOrg(request);
+    if (!organizationId) {
+      throw new UnauthorizedException(
+        "Crea una organización para gestionar imágenes.",
+      );
+    }
+    return this.presentations.removeImage(organizationId, imageId);
   }
 
   @Delete(":id")

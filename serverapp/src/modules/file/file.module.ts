@@ -1,4 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
+import { PermitModule } from "../permit/permit.module";
+import { UserModule } from "../user/user.module";
 import { FileService } from "./file.service";
 import { StorageService } from "./storage.service";
 import { FileController } from "./file.controller";
@@ -8,6 +10,7 @@ import { LoggerService } from "src/shared/logger/logger.service";
 import { JwtService } from "@nestjs/jwt";
 
 @Module({
+  imports: [forwardRef(() => PermitModule), forwardRef(() => UserModule)],
   controllers: [FileController],
   providers: [
     FileService,
