@@ -214,6 +214,11 @@ export default function SettingsPage() {
   const coordinationMethods = Object.keys(
     COORDINATION_LABELS,
   ) as CoordinationMethod[];
+  // Shipping, delivery and routes live in the AVANZADO+ plans; a Básico
+  // tenant never sees the switches for features their plan does not include.
+  const planModules = settings.planModules ?? [];
+  const canManageShipping = planModules.includes("SHIPPING");
+  const canManageRoutes = planModules.includes("ROUTES");
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
@@ -276,6 +281,8 @@ export default function SettingsPage() {
         </div>
       </SectionCard>
 
+      {canManageShipping ? (
+        <>
       <SectionCard
         icon={<Truck className="h-5 w-5" />}
         title="Tipos de entrega"
@@ -284,13 +291,10 @@ export default function SettingsPage() {
         <div className="grid sm:grid-cols-2 gap-x-6">
           {fulfillmentTypes.map((type) => {
             const enabled = settings.fulfillment.enabledTypes.includes(type);
-            const isLast = enabled && settings.fulfillment.enabledTypes.length === 1;
             return (
               <SectionRow key={type} label={FULFILLMENT_TYPE_LABELS[type]}>
                 <Checkbox
                   checked={enabled}
-                  disabled={isLast}
-                  title={isLast ? "Debe quedar al menos un tipo activo." : undefined}
                   onChange={(event) =>
                     void save((current) =>
                       patchFulfillmentType(current, type, event.target.checked),
@@ -384,23 +388,27 @@ export default function SettingsPage() {
           />
         </SectionRow>
       </SectionCard>
+        </>
+      ) : null}
 
-      <SectionCard
-        icon={<Map className="h-5 w-5" />}
-        title="Rutas de entrega"
-        description="Agrupa los pedidos de un día en una ruta. Al habilitarlo aparece la opción en el menú lateral."
-      >
-        <SectionRow label="Trabajar por rutas">
-          <Toggle
-            checked={settings.routes.enabled}
-            onChange={(event) =>
-              void save((current) =>
-                patchRoutesEnabled(current, event.target.checked),
-              )
-            }
-          />
-        </SectionRow>
-      </SectionCard>
+      {canManageRoutes ? (
+        <SectionCard
+          icon={<Map className="h-5 w-5" />}
+          title="Rutas de entrega"
+          description="Agrupa los pedidos de un día en una ruta. Al habilitarlo aparece la opción en el menú lateral."
+        >
+          <SectionRow label="Trabajar por rutas">
+            <Toggle
+              checked={settings.routes.enabled}
+              onChange={(event) =>
+                void save((current) =>
+                  patchRoutesEnabled(current, event.target.checked),
+                )
+              }
+            />
+          </SectionRow>
+        </SectionCard>
+      ) : null}
 
       <SectionCard
         icon={<Building2 className="h-5 w-5" />}

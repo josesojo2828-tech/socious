@@ -87,10 +87,28 @@ export class SettingsController {
     }
   }
 
+  /**
+   * The response also carries `planModules` (the resolved entitlement module
+   * keys) so the settings screen can hide the AVANZADO+ sections — shipping,
+   * delivery and routes — for a Básico tenant instead of offering switches
+   * that only exist in higher plans.
+   */
+  private withPlanModules<T extends object>(
+    request: RequestWithUser,
+    settings: T,
+  ): T & { planModules: string[] } {
+    const entitlements = (request.user as { entitlements?: {
+      modules?: { key: string }[];
+    } })?.entitlements;
+    const planModules = entitlements?.modules?.map((m) => m.key) ?? [];
+    return { ...settings, planModules };
+  }
+
   @Get()
   async getSettings(@Req() request: RequestWithUser) {
     const organizationId = await this.resolveOrganizationId(request);
-    return this.tenantSettings.get(organizationId);
+    const settings = await this.tenantSettings.get(organizationId);
+    return this.withPlanModules(request, settings);
   }
 
   /**
@@ -144,6 +162,7 @@ export class SettingsController {
     }
 
     await this.assertCanEdit(request, organizationId);
-    return this.tenantSettings.update(organizationId, body);
+    const settings = await this.tenantSettings.update(organizationId, body);
+    return this.withPlanModules(request, settings);
   }
 }

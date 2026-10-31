@@ -109,6 +109,31 @@ describe("SettingsController", () => {
     expect(tenantSettings.get).toHaveBeenCalledWith(ORG_A);
   });
 
+  it("surfaces the plan modules so the UI can gate AVANZADO sections", async () => {
+    const userWithModules = {
+      ...ownerUser,
+      entitlements: { modules: [{ key: "CLIENTS" }, { key: "POS" }] },
+    };
+    const { controller } = makeController(
+      [
+        {
+          userId: ownerUser.id,
+          organizationId: ORG_A,
+          status: "ACTIVE",
+          role: "OWNER",
+        },
+      ],
+      ORG_A,
+      userWithModules,
+    );
+
+    const result = await controller.getSettings(
+      request(userWithModules, { "x-workspace-id": ORG_A }),
+    );
+
+    expect(result.planModules).toEqual(["CLIENTS", "POS"]);
+  });
+
   it("falls back to defaults without an organization instead of failing", async () => {
     const { controller, tenantSettings } = makeController([], null, ownerUser);
 

@@ -29,6 +29,13 @@ export interface TenantSettings {
   shipping: { enabledAgencies: string[] };
   delivery: { enabled: boolean; feeUSD: number };
   routes: { enabled: boolean };
+  /**
+   * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
+   * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the
+   * sections those modules own instead of offering switches that only exist
+   * in higher plans.
+   */
+  planModules?: string[];
 }
 
 /** A PATCH sends any subset of the sections; the backend merges the rest. */

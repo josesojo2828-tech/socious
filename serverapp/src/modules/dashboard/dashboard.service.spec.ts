@@ -74,24 +74,24 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).not.toContain("/dashboard/institutional");
   });
 
-  it("shows the public storefront only when a business module is entitled", async () => {
-    const withoutModules = linksOf(
+  it("shows the public storefront only for the CATALOG_ONLINE module (AVANZADO+)", async () => {
+    const withoutCatalog = linksOf(
       await makeService().getSidebarSections({
         id: "u1",
         permits: BASE_PERMITS,
-        modules: ["ATTENDANCE_CONTROL"],
+        modules: ["INVENTORY", "POS"],
       }),
     );
-    expect(withoutModules).not.toContain("/shop");
+    expect(withoutCatalog).not.toContain("/shop");
 
-    const withInventory = linksOf(
+    const withCatalog = linksOf(
       await makeService().getSidebarSections({
         id: "u1",
         permits: BASE_PERMITS,
-        modules: ["INVENTORY"],
+        modules: ["INVENTORY", "CATALOG_ONLINE"],
       }),
     );
-    expect(withInventory).toContain("/shop");
+    expect(withCatalog).toContain("/shop");
   });
 
   it("keeps the fixed global-role sections regardless of modules", async () => {
@@ -163,17 +163,26 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     ).not.toContain("/dashboard/portfolio");
   });
 
-  it("always offers the orders inbox entry (S7/S9 del port)", async () => {
-    const links = linksOf(
+  it("offers the orders inbox only for the ORDERS module (AVANZADO+)", async () => {
+    const withOrders = linksOf(
       await makeService().getSidebarSections({
         id: 'u1',
         permits: BASE_PERMITS,
-        modules: [],
+        modules: ['ORDERS'],
         organizationId: 'org-1',
       }),
     );
+    expect(withOrders).toContain('/dashboard/pedidos');
 
-    expect(links).toContain('/dashboard/pedidos');
+    const withoutOrders = linksOf(
+      await makeService().getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: ['CLIENTS', 'INVENTORY', 'POS', 'BILLING_SALES'],
+        organizationId: 'org-1',
+      }),
+    );
+    expect(withoutOrders).not.toContain('/dashboard/pedidos');
   });
 
   it("groups clients, suppliers and balances under one CRM section", async () => {
@@ -196,7 +205,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     const sections = await makeService().getSidebarSections({
       id: 'u1',
       permits: BASE_PERMITS,
-      modules: [],
+      modules: ['ORDERS'],
       organizationId: 'org-1',
     });
     const ventas = sections.find((section) => section.title === 'Ventas');
@@ -207,6 +216,44 @@ describe("DashboardService — entitlement-driven sidebar", () => {
       '/dashboard/pedidos',
       '/dashboard/caja',
     ]);
+  });
+
+  const ADVANCED_MODULES = [
+    'CLIENTS', 'INVENTORY', 'POS', 'BILLING_SALES',
+    'ORDERS', 'CATALOG_ONLINE', 'SHIPPING', 'ROUTES',
+  ];
+  const BASIC_MODULES = ['CLIENTS', 'INVENTORY', 'POS', 'BILLING_SALES'];
+
+  it("hides the AVANZADO modules from a Básico plan", async () => {
+    const links = linksOf(
+      await makeService([], { routes: { enabled: true } }).getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: BASIC_MODULES,
+        organizationId: 'org-1',
+      }),
+    );
+
+    expect(links).toContain('/dashboard/pos');
+    expect(links).toContain('/dashboard/configuracion');
+    expect(links).not.toContain('/dashboard/pedidos');
+    expect(links).not.toContain('/dashboard/rutas');
+    expect(links).not.toContain('/shop');
+  });
+
+  it("shows pedidos, shop and routes for an Avanzado plan", async () => {
+    const links = linksOf(
+      await makeService([], { routes: { enabled: true } }).getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: ADVANCED_MODULES,
+        organizationId: 'org-1',
+      }),
+    );
+
+    expect(links).toContain('/dashboard/pedidos');
+    expect(links).toContain('/dashboard/rutas');
+    expect(links).toContain('/shop');
   });
 
   it("hides every ERP section for a user without an organization", async () => {
@@ -251,7 +298,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
       await makeService([], { routes: { enabled: false } }).getSidebarSections({
         id: "u1",
         permits: BASE_PERMITS,
-        modules: [],
+        modules: ['ROUTES'],
         organizationId: "org-1",
       }),
     );
@@ -261,7 +308,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
       await makeService([], { routes: { enabled: true } }).getSidebarSections({
         id: "u1",
         permits: BASE_PERMITS,
-        modules: [],
+        modules: ['ROUTES'],
         organizationId: "org-1",
       }),
     );

@@ -176,8 +176,8 @@ export class DashboardService {
         ],
       });
 
-      // 2. Tienda pública (catálogo que ven los clientes finales)
-      if (hasModule("INVENTORY") || hasModule("POS")) {
+      // 2. Tienda pública (catálogo online, módulo AVANZADO del plan)
+      if (hasModule("CATALOG_ONLINE")) {
         sections.push({
           title: "common.sidebar.online_store",
           icon: "globe",
@@ -207,11 +207,17 @@ export class DashboardService {
             icon: "receipt",
             link: "/dashboard/ventas",
           },
-          {
-            title: "Bandeja de pedidos",
-            icon: "shopping-bag",
-            link: "/dashboard/pedidos",
-          },
+          // Bandeja de pedidos: módulo ORDERS (AVANZADO+); el POS y las
+          // ventas en mostrador son de Básico y no dependen de ella.
+          ...(hasModule("ORDERS")
+            ? [
+                {
+                  title: "Bandeja de pedidos",
+                  icon: "shopping-bag" as const,
+                  link: "/dashboard/pedidos",
+                },
+              ]
+            : []),
           {
             title: "Caja y turnos",
             icon: "wallet",
@@ -277,10 +283,10 @@ export class DashboardService {
           items: inventoryItems,
         });
 
-        // 5b. Rutas de entrega (S8): el check de configuración es el único que
-        // decide si la opción existe — sin él la API también devuelve 409.
+        // 5b. Rutas de entrega (S8): módulo ROUTES del plan (AVANZADO+) más
+        // el check de configuración — sin el check la API también devuelve 409.
         const settings = await this.tenantSettings.get(organizationId ?? null);
-        if (settings.routes.enabled) {
+        if (hasModule("ROUTES") && settings.routes.enabled) {
           sections.push({
             title: "Rutas de entrega",
             icon: "route",
