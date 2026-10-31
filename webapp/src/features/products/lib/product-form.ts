@@ -1,4 +1,4 @@
-import type { Product } from "../types/product.type";
+import type { Category, Product, ProductStatus } from "../types/product.type";
 
 /**
  * Pure inventory logic (S7): form payloads and stock arithmetic, mirroring the
@@ -26,6 +26,78 @@ export interface ProductForm {
   imageUrl?: string;
   categoryId?: string;
   supplierId?: string;
+}
+
+/** Blank form for the create route. */
+export const EMPTY_PRODUCT_FORM: ProductForm = {
+  sku: "",
+  name: "",
+  barcode: "",
+  description: "",
+  costPriceUSD: 0,
+  salePriceUSD: 0,
+  minStock: 0,
+  stock: 0,
+  unit: "UND",
+  taxRate: 0,
+  isService: false,
+  isPublic: false,
+  status: "ACTIVE",
+  categoryId: "",
+  supplierId: "",
+};
+
+export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
+  [
+    { value: "ACTIVE", label: "Activo" },
+    { value: "INACTIVE", label: "Inactivo" },
+    { value: "OUT_OF_STOCK", label: "Sin stock" },
+    { value: "ON_SALE", label: "En oferta" },
+  ];
+
+/** Editable form seeded from a stored product (decimal columns → numbers). */
+export function toForm(product: Product): ProductForm {
+  return {
+    sku: product.sku,
+    name: product.name,
+    barcode: product.barcode ?? "",
+    description: product.description ?? "",
+    costPriceUSD: Number(product.costPriceUSD),
+    salePriceUSD: Number(product.salePriceUSD),
+    wholesalePriceUSD:
+      product.wholesalePriceUSD === null ||
+      product.wholesalePriceUSD === undefined
+        ? undefined
+        : Number(product.wholesalePriceUSD),
+    minStock: Number(product.minStock),
+    stock: Number(product.stock),
+    unit: product.unit,
+    taxRate: Number(product.taxRate),
+    isService: product.isService,
+    isPublic: product.isPublic,
+    status: product.status,
+    categoryId: product.categoryId ?? "",
+    supplierId: product.supplierId ?? "",
+  };
+}
+
+/** The warning message to show, or null when the form can be submitted. */
+export function validateProductForm(form: ProductForm): string | null {
+  if (!form.sku.trim() || !form.name.trim()) {
+    return "SKU y nombre son obligatorios.";
+  }
+  return null;
+}
+
+/** Root + children as one option list, children marked with "↳ ". */
+export function flattenCategories(categories: Category[]): Category[] {
+  return categories.flatMap((root) => [
+    root,
+    ...(root.subCategories ?? []).map((child) => ({
+      ...child,
+      name: `↳ ${child.name}`,
+    })),
+  ]);
 }
 
 const trim = (value: string | undefined): string | undefined => {

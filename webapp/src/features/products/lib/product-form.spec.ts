@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   buildProductPayload,
   buildStockPayload,
+  flattenCategories,
   isLowStock,
   stockAfter,
+  toForm,
+  validateProductForm,
   type ProductForm,
 } from "./product-form";
 import type { Product } from "../types/product.type";
@@ -134,6 +137,83 @@ describe("product-form (S7)", () => {
       expect(
         buildStockPayload({ type: "IN", quantity: 5, newStock: 99 }),
       ).toEqual({ type: "IN", quantity: 5 });
+    });
+  });
+
+  describe("toForm", () => {
+    it("maps a stored product into the editable form", () => {
+      const stored = product({
+        barcode: "4006381333931",
+        description: "largo",
+        wholesalePriceUSD: "3.00",
+        categoryId: "c-1",
+        supplierId: "s-1",
+      });
+
+      expect(toForm(stored)).toEqual({
+        sku: "ARROZ-1K",
+        name: "Arroz 1kg",
+        barcode: "4006381333931",
+        description: "largo",
+        costPriceUSD: 1,
+        salePriceUSD: 2,
+        wholesalePriceUSD: 3,
+        minStock: 2,
+        stock: 10,
+        unit: "KG",
+        taxRate: 16,
+        isService: false,
+        isPublic: true,
+        status: "ACTIVE",
+        categoryId: "c-1",
+        supplierId: "s-1",
+      });
+    });
+
+    it("leaves wholesale price, category and supplier empty when unset", () => {
+      const form = toForm(product({ wholesalePriceUSD: null }));
+      expect(form.wholesalePriceUSD).toBeUndefined();
+      expect(form.categoryId).toBe("");
+      expect(form.supplierId).toBe("");
+      expect(form.description).toBe("");
+      expect(form.barcode).toBe("");
+    });
+  });
+
+  describe("validateProductForm", () => {
+    it("accepts a form with sku and name", () => {
+      expect(validateProductForm(form())).toBeNull();
+    });
+
+    it("requires a non-blank sku and name", () => {
+      expect(validateProductForm(form({ sku: "   " }))).toBe(
+        "SKU y nombre son obligatorios.",
+      );
+      expect(validateProductForm(form({ name: "" }))).toBe(
+        "SKU y nombre son obligatorios.",
+      );
+    });
+  });
+
+  describe("flattenCategories", () => {
+    it("lists children after their root with a visual prefix", () => {
+      const flat = flattenCategories([
+        {
+          id: "root-1",
+          name: "Bebidas",
+          slug: "bebidas",
+          isSystem: false,
+          subCategories: [{ id: "child-1", name: "Aguas", slug: "aguas", isSystem: false }],
+        },
+        { id: "root-2", name: "Granos", slug: "granos", isSystem: false },
+      ]);
+
+      expect(flat.map((category) => category.id)).toEqual([
+        "root-1",
+        "child-1",
+        "root-2",
+      ]);
+      expect(flat[1].name).toBe("↳ Aguas");
     });
   });
 });
