@@ -118,11 +118,11 @@ export function GuideFab({ onClick, mood = "wave", label = "Ver guía", classNam
       title={label}
       style={{ width: FAB_SIZE, height: FAB_SIZE }}
       className={cn(
-        "relative flex items-center justify-center rounded-full border border-white/60 bg-white shadow-xl shadow-[#0d0ea0]/25",
+        "relative flex items-center justify-center rounded-full border border-white/60 bg-white shadow-xl shadow-[#4f46e5]/25",
         className
       )}
     >
-      <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-[#0d0ea0]/20 animate-ping" />
+      <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-[#4f46e5]/20 animate-ping" />
       <Avatar mood={mood} size={FAB_SIZE - 10} />
     </button>
   );

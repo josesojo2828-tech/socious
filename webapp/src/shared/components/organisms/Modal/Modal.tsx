@@ -80,7 +80,7 @@ export const ModalRoot = () => {
         )}
       >
         {/* Top Accent Bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-indigo-500 to-indigo-600" />
 
         {/* Mobile handle indicator */}
         <div className="flex justify-center md:hidden pb-3">

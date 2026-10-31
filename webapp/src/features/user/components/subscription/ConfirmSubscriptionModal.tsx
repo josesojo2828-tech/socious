@@ -121,7 +121,7 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
     <div className="w-full font-sans bg-transparent text-slate-800 dark:text-slate-100">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2.5 bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 border border-purple-100 dark:border-purple-900/40 rounded-xl">
+        <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/40 rounded-xl">
           <Wallet size={24} />
         </div>
         <div>
@@ -138,7 +138,7 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
         </div>
         <div className="flex justify-between items-center">
           <span className="text-gray-500 dark:text-slate-400 text-sm font-medium">Costo Mensual:</span>
-          <span className="font-mono font-bold text-purple-600 dark:text-purple-400 text-lg">
+          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-lg">
             {planCurrency === 'VES' && rate 
               ? `Bs ${(Number(plan.price || 0) * rate).toLocaleString('es-VE', { minimumFractionDigits: 0 })}`
               : `$${Number(plan.price || 0).toFixed(2)} USD`
@@ -222,8 +222,8 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
               />
               <div className={`w-5 h-5 rounded-md border transition-all flex items-center justify-center ${
                 autoRenew 
-                  ? 'bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/30' 
-                  : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 group-hover:border-purple-500'
+                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/30' 
+                  : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 group-hover:border-indigo-500'
               }`}>
                 {autoRenew && <Check size={12} strokeWidth={3} />}
               </div>
@@ -255,7 +255,7 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
           disabled={loadingWallet || submitting || (!isFirstSubscription && !hasFunds)}
           className={`flex-1 py-3 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
             (isFirstSubscription || hasFunds) && !submitting
-              ? 'bg-purple-600 hover:bg-purple-700 shadow-md hover:-translate-y-0.5 active:translate-y-0' 
+              ? 'bg-indigo-600 hover:bg-indigo-700 shadow-md hover:-translate-y-0.5 active:translate-y-0' 
               : 'bg-gray-200 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border-none shadow-none'
           }`}
         >

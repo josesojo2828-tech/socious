@@ -70,7 +70,7 @@ export function StatsTab({ user, stats, activityFeed, activityLoading }: StatsTa
           />
           <MetricCard
             icon={Activity}
-            iconClassName="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400"
+            iconClassName="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
             value={stats.totalActivityLogs}
             label="Total activity logs"
           />

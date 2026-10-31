@@ -8,12 +8,12 @@ export default function DashboardNotFound() {
                 {/* Icono de Alerta Estilizado */}
                 <div className="mb-6 flex justify-center">
                     <div className="relative">
-                        <div className="h-24 w-24 rounded-full bg-purple-100 flex items-center justify-center">
-                            <AlertCircle className="h-12 w-12 text-purple-600" />
+                        <div className="h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <AlertCircle className="h-12 w-12 text-indigo-600" />
                         </div>
                         {/* Pequeño adorno flotante */}
                         <div className="absolute -top-2 -right-2 h-8 w-8 rounded-lg bg-white shadow-md flex items-center justify-center">
-                            <span className="text-xs font-bold text-purple-600">404</span>
+                            <span className="text-xs font-bold text-indigo-600">404</span>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@ export default function DashboardNotFound() {
                 <div className="grid gap-3">
                     <Link
                         href="/dashboard"
-                        className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all shadow-sm shadow-purple-200"
+                        className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-sm shadow-indigo-200"
                     >
                         <LayoutDashboard size={18} />
                         Regresar al Inicio

@@ -229,7 +229,7 @@ export default function DashboardLayout({
                     <div className="flex flex-col flex-1 min-w-0 md:overflow-hidden">
 
                         {/* A. Header Fijo Superior */}
-                        <header className="h-16 border-b border-purple-950/40 bg-gradient-to-r from-[#210740] via-[#290a4f] to-[#1c063b] z-30 sticky top-0 flex-shrink-0 print:hidden">
+                        <header className="h-16 border-b border-indigo-950/40 bg-gradient-to-r from-[#210740] via-[#290a4f] to-[#1c063b] z-30 sticky top-0 flex-shrink-0 print:hidden">
                             <PrivateHeader />
                         </header>
 

@@ -86,8 +86,8 @@ function SidebarLink({
         "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 group mb-1 border-l-4",
         isCollapsed && "justify-center border-l-0 px-2",
         isActive
-          ? "bg-purple-600/80 text-white border-emerald-400 shadow-md shadow-purple-900/30 font-bold backdrop-blur-xs dark:bg-white/15 dark:text-white dark:border-[#10b981]"
-          : "text-white/80 border-transparent hover:bg-white/10 hover:text-white dark:text-purple-200/70 dark:hover:bg-white/10 dark:hover:text-white",
+          ? "bg-indigo-600/80 text-white border-emerald-400 shadow-md shadow-indigo-900/30 font-bold backdrop-blur-xs dark:bg-white/15 dark:text-white dark:border-[#059669]"
+          : "text-white/80 border-transparent hover:bg-white/10 hover:text-white dark:text-indigo-200/70 dark:hover:bg-white/10 dark:hover:text-white",
       )}
     >
       <IconComponent
@@ -95,8 +95,8 @@ function SidebarLink({
         className={clsx(
           "transition-transform duration-200 group-hover:scale-110 flex-shrink-0",
           isActive
-            ? "text-emerald-300 dark:text-[#10b981]"
-            : "text-white/60 group-hover:text-white dark:text-purple-300/60 dark:group-hover:text-purple-100",
+            ? "text-emerald-300 dark:text-[#059669]"
+            : "text-white/60 group-hover:text-white dark:text-indigo-300/60 dark:group-hover:text-indigo-100",
         )}
       />
       {!isCollapsed && t(item?.title || "")}
@@ -204,7 +204,7 @@ function SidebarSection({
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={toggle}
-        className="flex items-center justify-between w-full text-[10px] font-extrabold text-white/60 dark:text-purple-300/40 uppercase tracking-[0.15em] mb-3 px-3 rounded-lg transition-colors cursor-pointer border-0 bg-transparent hover:text-white/90 dark:hover:text-purple-200/70"
+        className="flex items-center justify-between w-full text-[10px] font-extrabold text-white/60 dark:text-indigo-300/40 uppercase tracking-[0.15em] mb-3 px-3 rounded-lg transition-colors cursor-pointer border-0 bg-transparent hover:text-white/90 dark:hover:text-indigo-200/70"
       >
         <span>{t(title)}</span>
         <ChevronDown
@@ -221,7 +221,7 @@ function SidebarSection({
         role="region"
         aria-labelledby={headerId}
         className={clsx(
-          "grid transition-all duration-300 ease-in-out ml-1 border-l border-white/20 dark:border-purple-950/40",
+          "grid transition-all duration-300 ease-in-out ml-1 border-l border-white/20 dark:border-indigo-950/40",
           isOpen
             ? "grid-rows-[1fr] opacity-100 mt-0.5"
             : "grid-rows-[0fr] opacity-0 mt-0",
@@ -280,8 +280,8 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
       <div
         className={clsx(
           "fixed inset-y-0 left-0 z-50 transition-all duration-300 ease-in-out md:static md:shadow-none print:hidden shadow-xl",
-          "bg-gradient-to-b from-[#2d0754] via-[#3a0a6a] to-[#480d82] text-white border-r border-purple-900/40",
-          "dark:from-[#1d0537] dark:via-[#2c0852] dark:to-[#3b0b6f] dark:text-slate-100 dark:border-purple-500/20",
+          "bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#334155] text-white border-r border-indigo-900/40",
+          "dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#334155] dark:text-slate-100 dark:border-indigo-500/20",
           isCollapsed ? "md:w-[72px]" : "md:w-64",
           "w-64",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
@@ -289,7 +289,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
       >
         <div className="flex flex-col h-full">
           {/* Logo & Active Workspace Badge */}
-          <div className="flex flex-col border-b border-white/10 dark:border-purple-500/20 flex-shrink-0">
+          <div className="flex flex-col border-b border-white/10 dark:border-indigo-500/20 flex-shrink-0">
             <InternalLink
               href={"/"}
               className={clsx(
@@ -303,36 +303,35 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   isCollapsed ? "w-12 h-12" : "w-16 h-16",
                 )}
               >
-                <Image
-                  width={isCollapsed ? 40 : 48}
-                  height={isCollapsed ? 40 : 48}
-                  alt="Nutringest"
-                  src={"/png/IsologoBlanco.png"}
+                <span
                   className={clsx(
-                    "object-contain",
-                    isCollapsed ? "w-10 h-10" : "w-12 h-12",
+                    "flex items-center justify-center rounded-lg bg-indigo-600 font-bold text-white",
+                    isCollapsed ? "h-10 w-10 text-lg" : "h-12 w-12 text-xl",
                   )}
-                />
+                  aria-label="Socius ERP"
+                >
+                  S
+                </span>
               </div>
             </InternalLink>
 
             {/* Banner de Contexto de Workspace Activo */}
             {!isPatient && !isCollapsed && activeWorkspace && (
               <div className="px-3 pb-3">
-                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/10 dark:bg-black/30 border border-white/15 dark:border-purple-800/30 text-xs shadow-xs backdrop-blur-xs">
+                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/10 dark:bg-black/30 border border-white/15 dark:border-indigo-800/30 text-xs shadow-xs backdrop-blur-xs">
                   <div className="flex items-center gap-2 truncate">
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse"
                       style={{ backgroundColor: activeWorkspace.userColorHex || '#4F46E5' }}
                     />
                     <div className="truncate">
-                      <p className="text-[9px] uppercase font-extrabold text-white/70 dark:text-purple-300/60 leading-tight">
+                      <p className="text-[9px] uppercase font-extrabold text-white/70 dark:text-indigo-300/60 leading-tight">
                         {activeWorkspace.type === 'ORGANIZATION' ? '🏥 Modo Clínica' : '👤 Modo Particular'}
                       </p>
                       <div className="flex items-center gap-1.5">
                         <p className="font-semibold text-white dark:text-slate-100 truncate text-xs">{activeWorkspace.name}</p>
                         {currentRole && (
-                          <span className="px-1.5 py-0.5 text-[8px] uppercase font-bold tracking-wider rounded bg-purple-400/20 dark:bg-indigo-500/20 text-purple-200 dark:text-indigo-300 border border-purple-400/30 dark:border-indigo-500/30 shrink-0">
+                          <span className="px-1.5 py-0.5 text-[8px] uppercase font-bold tracking-wider rounded bg-indigo-400/20 dark:bg-indigo-500/20 text-indigo-200 dark:text-indigo-300 border border-indigo-400/30 dark:border-indigo-500/30 shrink-0">
                             {currentRole.replace('CLINIC_', '')}
                           </span>
                         )}
@@ -391,7 +390,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   >
                     <LucideIcons.Zap size={18} className="text-emerald-300 group-hover:scale-110 transition-transform" />
                     <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-purple-950"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-indigo-950"></span>
                     </span>
                   </InternalLink>
                 </div>
@@ -473,11 +472,11 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-white/10 dark:border-purple-500/20 space-y-2">
+          <div className="p-4 border-t border-white/10 dark:border-indigo-500/20 space-y-2">
             {/* Collapse Toggle Button (Desktop only) */}
             <button
               onClick={toggleCollapse}
-              className="hidden md:flex w-full items-center justify-center gap-3 px-3 py-2 rounded-xl text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white dark:text-purple-300/60 dark:hover:bg-white/5 dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent"
+              className="hidden md:flex w-full items-center justify-center gap-3 px-3 py-2 rounded-xl text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white dark:text-indigo-300/60 dark:hover:bg-white/5 dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent"
               title={
                 isCollapsed
                   ? t("common.sidebar.expand")

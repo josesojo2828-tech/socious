@@ -63,7 +63,7 @@ function NutritionistTeamView() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-indigo-600 to-indigo-600 rounded-2xl p-6 text-white">
         <div className="flex items-center gap-3 mb-2">
           <Users className="w-6 h-6" />
           <h1 className="text-2xl font-bold">Equipo de la Clínica</h1>

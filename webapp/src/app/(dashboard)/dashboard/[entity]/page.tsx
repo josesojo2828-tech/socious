@@ -289,7 +289,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         <>
           <td className="px-6 py-4 font-medium text-base-content">
             <div className="flex items-center gap-2">
-              <CreditCard size={14} className="text-purple-500" />
+              <CreditCard size={14} className="text-indigo-500" />
               {item.name || '-'}
             </div>
           </td>
@@ -354,7 +354,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         <>
           <td className="px-6 py-4 font-medium text-base-content">
             <div className="flex items-center gap-2">
-              <GraduationCap size={14} className="text-purple-500" />
+              <GraduationCap size={14} className="text-indigo-500" />
               {item.name || '-'}
             </div>
           </td>

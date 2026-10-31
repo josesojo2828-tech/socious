@@ -39,7 +39,7 @@ export default function BlogPage() {
 
     const getCategoryColor = (cat: string) => {
         // ... same logic but check against the original category ID or normalized string
-        if (cat.includes('Major')) return 'text-purple-600 bg-purple-100';
+        if (cat.includes('Major')) return 'text-indigo-600 bg-indigo-100';
         if (cat.includes('Features')) return 'text-emerald-600 bg-emerald-100';
         if (cat.includes('Security')) return 'text-green-600 bg-green-100';
         if (cat.includes('Integration')) return 'text-orange-600 bg-orange-100';

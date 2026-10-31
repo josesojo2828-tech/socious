@@ -25,7 +25,7 @@ export function PremiumHubShowcase() {
                 <Link
                     href="/dashboard/campus"
                     data-tour="hub-campus"
-                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-purple-900/20 flex flex-col justify-end p-4 bg-slate-900"
+                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
                         src="/png/hub/campus-v2.png"
@@ -51,7 +51,7 @@ export function PremiumHubShowcase() {
                 <Link
                     href="/dashboard/community"
                     data-tour="hub-community"
-                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-purple-900/20 flex flex-col justify-end p-4 bg-slate-900"
+                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
                         src="/png/hub/community-v2.png"
@@ -62,7 +62,7 @@ export function PremiumHubShowcase() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
                     
                     <div className="relative z-10">
-                        <h3 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
+                        <h3 className="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
                             Comunidad Nutringest
                         </h3>
                         <p className="text-[11px] text-slate-300 font-medium">
@@ -76,7 +76,7 @@ export function PremiumHubShowcase() {
                 <Link
                     href="/dashboard/foods"
                     data-tour="hub-foods"
-                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-purple-900/20 flex flex-col justify-end p-4 bg-slate-900"
+                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
                         src="/png/hub/foods-base.png"
@@ -100,7 +100,7 @@ export function PremiumHubShowcase() {
                 <Link
                     href="/dashboard/exchange-food"
                     data-tour="hub-exchange"
-                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-purple-900/20 flex flex-col justify-end p-4 bg-slate-900"
+                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
                         src="/png/hub/exchange-list.png"
@@ -124,7 +124,7 @@ export function PremiumHubShowcase() {
                 <Link
                     href="/dashboard/marketplace"
                     data-tour="hub-marketplace"
-                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-purple-900/20 flex flex-col justify-end p-4 bg-slate-900"
+                    className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
                         src="/png/hub/marketplace-v3.png"

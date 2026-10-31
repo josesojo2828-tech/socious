@@ -79,8 +79,8 @@ export default function MaintenancePage() {
 
                     {/* Elementos Flotantes (Estilo Hero) */}
                     <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl z-20 hidden md:flex items-center gap-3 border border-slate-100">
-                        <div className="bg-purple-100 p-2 rounded-lg">
-                            <Settings className="text-purple-600 w-5 h-5" />
+                        <div className="bg-indigo-100 p-2 rounded-lg">
+                            <Settings className="text-indigo-600 w-5 h-5" />
                         </div>
                         <div>
                             <p className="text-[10px] text-slate-400 font-bold uppercase">Estimado</p>

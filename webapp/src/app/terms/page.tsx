@@ -40,10 +40,10 @@ export default function TermsPage() {
       <main className="flex-grow pt-24 pb-16 relative">
         {/* Decorative Background Blobs */}
         <div className="absolute top-0 right-0 -z-10 opacity-30 translate-x-1/4 pointer-events-none">
-          <div className="w-[600px] h-[600px] rounded-full bg-[#2b0c4f]/10 blur-[150px]" />
+          <div className="w-[600px] h-[600px] rounded-full bg-[#0f172a]/10 blur-[150px]" />
         </div>
         <div className="absolute bottom-0 left-0 -z-10 opacity-35 -translate-x-1/3 pointer-events-none">
-          <div className="w-[500px] h-[500px] rounded-full bg-[#0d0ea0]/10 blur-[130px]" />
+          <div className="w-[500px] h-[500px] rounded-full bg-[#4f46e5]/10 blur-[130px]" />
         </div>
 
         {/* Header */}

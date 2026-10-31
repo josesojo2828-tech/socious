@@ -776,7 +776,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                           member.role === 'CLINIC_ADMIN'
-                            ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                            ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                             : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                         }`}>
                           {member.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Nutricionista'}

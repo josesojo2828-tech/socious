@@ -51,7 +51,7 @@ const AVAILABLE_COLORS = [
   '#4F46E5', // Indigo
   '#059669', // Emerald
   '#D97706', // Amber
-  '#7C3AED', // Violet
+  '#4338ca', // Violet
   '#DB2777', // Pink
   '#2563EB', // Blue
   '#DC2626', // Red
@@ -206,7 +206,7 @@ export const NutritionistDetailModal: React.FC<NutritionistDetailModalProps> = (
             </div>
 
             <div className="bg-base-200 p-4 rounded-2xl border border-base-300 text-center">
-              <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto mb-2">
+              <div className="w-8 h-8 rounded-xl bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-2">
                 <FileText className="w-4 h-4" />
               </div>
               <span className="text-2xl font-black text-base-content">{stats.menuCount}</span>

@@ -80,7 +80,7 @@ export function FichaPaymentMethod({ id, HandleDelete, HandleUpdate }: FichaPaym
         }
     };
 
-    const brandColor = entity?.paymentMethod.colorStart || '#8b5cf6';
+    const brandColor = entity?.paymentMethod.colorStart || '#6366f1';
     const meta = getMetaInfo();
 
     return (

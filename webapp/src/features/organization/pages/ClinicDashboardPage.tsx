@@ -251,7 +251,7 @@ export function ClinicDashboardPage() {
                 <span>Mis Pacientes (Clínica): <strong className="text-white">{myPatientsCount} Pacientes</strong></span>
               </div>
               <div className="flex items-center gap-2.5">
-                <FileText className="w-4 h-4 text-purple-400" />
+                <FileText className="w-4 h-4 text-indigo-400" />
                 <span>Mis Menús Generados: <strong className="text-white">{myMenusCount} Dietas</strong></span>
               </div>
             </>
@@ -317,10 +317,10 @@ export function ClinicDashboardPage() {
             </div>
 
             {/* Card 4: Planes & Menús */}
-            <div className="bg-base-100 p-5 rounded-xl border border-base-300 shadow-sm hover:border-purple-500/30 transition-all text-base-content">
+            <div className="bg-base-100 p-5 rounded-xl border border-base-300 shadow-sm hover:border-indigo-500/30 transition-all text-base-content">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold text-base-content/60 uppercase tracking-wider">Planes & Menús Generados</span>
-                <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
               </div>
@@ -363,10 +363,10 @@ export function ClinicDashboardPage() {
             </div>
 
             {/* Card 3: Mis Menús Generados */}
-            <div className="bg-base-100 p-5 rounded-xl border border-base-300 shadow-sm hover:border-purple-500/30 transition-all text-base-content">
+            <div className="bg-base-100 p-5 rounded-xl border border-base-300 shadow-sm hover:border-indigo-500/30 transition-all text-base-content">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold text-base-content/60 uppercase tracking-wider">Mis Menús Generados</span>
-                <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
               </div>

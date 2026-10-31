@@ -336,7 +336,7 @@ export default function AdminSettingsPage() {
               }}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
                 cmsSubTab === "mission"
-                  ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
                   : "bg-base-100 text-base-content/70 border-base-300 hover:bg-base-200"
               }`}
             >
@@ -351,7 +351,7 @@ export default function AdminSettingsPage() {
               }}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
                 cmsSubTab === "vision"
-                  ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
                   : "bg-base-100 text-base-content/70 border-base-300 hover:bg-base-200"
               }`}
             >
@@ -366,7 +366,7 @@ export default function AdminSettingsPage() {
               }}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
                 cmsSubTab === "values"
-                  ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
                   : "bg-base-100 text-base-content/70 border-base-300 hover:bg-base-200"
               }`}
             >
@@ -381,7 +381,7 @@ export default function AdminSettingsPage() {
               }}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
                 cmsSubTab === "faq"
-                  ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
                   : "bg-base-100 text-base-content/70 border-base-300 hover:bg-base-200"
               }`}
             >
@@ -401,14 +401,14 @@ export default function AdminSettingsPage() {
                   Modificá el contenido oficial que se muestra en la web pública corporativa.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
                 {cmsSubTab}
               </span>
             </div>
 
             {loadingCms ? (
               <div className="flex items-center gap-3 text-base-content/60 py-6">
-                <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
+                <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
                 <span>Cargando datos del CMS...</span>
               </div>
             ) : (
@@ -473,7 +473,7 @@ export default function AdminSettingsPage() {
                   <button
                     onClick={handleSaveCms}
                     disabled={savingCms}
-                    className="btn btn-primary bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                    className="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
                   >
                     {savingCms ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

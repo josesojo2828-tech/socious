@@ -402,7 +402,7 @@ function RegisterFormContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary)] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+            className="w-full py-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary)] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-900/20 hover:shadow-xl hover:shadow-indigo-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (
               <>

@@ -75,7 +75,7 @@ export default function DashboardUserPage() {
                                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                                 </span>
                             </span>
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-[#10b981] border border-emerald-500/20 uppercase tracking-wider">{sub?.plan?.name || 'Free'}</span>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-[#059669] border border-emerald-500/20 uppercase tracking-wider">{sub?.plan?.name || 'Free'}</span>
                         </div>
                     </div>
                 </div>

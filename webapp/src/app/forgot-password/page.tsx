@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-4 bg-[#5b21b6] hover:bg-[#4c1d95] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+                      className="w-full py-4 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-900/20 hover:shadow-xl hover:shadow-indigo-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
                     >
                       {isLoading ? (
                         <>
@@ -153,7 +153,7 @@ export default function ForgotPasswordPage() {
 
                 <div className="pt-4 space-y-3">
                   <Link href="/reset-password">
-                    <button className="w-full py-4 bg-[#5b21b6] hover:bg-[#4c1d95] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3">
+                    <button className="w-full py-4 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-900/20 hover:shadow-xl hover:shadow-indigo-900/30 transition-all flex items-center justify-center gap-3">
                       <span>Ingresar el código</span>
                       <ArrowRight size={18} />
                     </button>

@@ -234,7 +234,7 @@ export function GuidedTour({
               <Avatar mood={step.mood ?? "idle"} size={72} />
             </div>
             <div className="max-h-[58dvh] min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pt-1 pr-1">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-[#0d0ea0]">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-[#4f46e5]">
                 Paso {index + 1} de {visibleSteps.length}
               </p>
               <h3 className="text-base font-black leading-tight text-slate-900">{step.title}</h3>
@@ -251,7 +251,7 @@ export function GuidedTour({
                       key={i}
                       className={cn(
                         "h-1.5 rounded-full transition-all",
-                        i === index ? "w-5 bg-[#0d0ea0]" : "w-1.5 bg-slate-200"
+                        i === index ? "w-5 bg-[#4f46e5]" : "w-1.5 bg-slate-200"
                       )}
                     />
                   ))}
@@ -259,7 +259,7 @@ export function GuidedTour({
               ) : (
                 <div className="h-1.5 w-full max-w-[140px] overflow-hidden rounded-full bg-slate-200">
                   <div
-                    className="h-full rounded-full bg-[#0d0ea0] transition-all duration-300"
+                    className="h-full rounded-full bg-[#4f46e5] transition-all duration-300"
                     style={{ width: `${((index + 1) / visibleSteps.length) * 100}%` }}
                   />
                 </div>
@@ -278,7 +278,7 @@ export function GuidedTour({
               <button
                 type="button"
                 onClick={next}
-                className="inline-flex items-center gap-1 rounded-xl bg-[#0d0ea0] px-4 py-2.5 sm:px-4 sm:py-2 text-[13px] sm:text-xs font-bold text-white shadow-md shadow-[#0d0ea0]/20 transition-all hover:bg-[#0b0c80] active:scale-[0.98]"
+                className="inline-flex items-center gap-1 rounded-xl bg-[#4f46e5] px-4 py-2.5 sm:px-4 sm:py-2 text-[13px] sm:text-xs font-bold text-white shadow-md shadow-[#4f46e5]/20 transition-all hover:bg-[#0b0c80] active:scale-[0.98]"
               >
                 {isLast ? finishLabel : nextLabel}
                 {!isLast && <ArrowRight size={14} />}

@@ -54,7 +54,7 @@ export const MultyLineChart = ({
     // Props modo simple
     data,
     labelName = 'Valor',
-    color = '#8b5cf6',
+    color = '#6366f1',
     // Props modo multi
     datasets,
     className

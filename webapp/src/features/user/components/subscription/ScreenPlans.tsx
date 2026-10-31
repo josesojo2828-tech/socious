@@ -8,8 +8,8 @@ import { ConfirmSubscriptionModal } from "./ConfirmSubscriptionModal";
 import { useExchangeRate } from "@/shared/hooks/useExchangeRate";
 import { normalizePlanContent } from "@/shared/authz";
 
-const DEFAULT_COLORS = { bg: "#ffffff", text: "#1e293b", accent: "#7c3aed", badge: "#7c3aed" };
-const FEATURED_DEFAULT = { bg: "#1e1b4b", text: "#ffffff", accent: "#7c3aed", badge: "#7c3aed" };
+const DEFAULT_COLORS = { bg: "#ffffff", text: "#1e293b", accent: "#4338ca", badge: "#4338ca" };
+const FEATURED_DEFAULT = { bg: "#1e1b4b", text: "#ffffff", accent: "#4338ca", badge: "#4338ca" };
 
 function formatPrice(price: number, currency: string, rate: number | null) {
     if (currency === 'VES' && rate) {

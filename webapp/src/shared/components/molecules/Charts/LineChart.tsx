@@ -40,7 +40,7 @@ export const LineChart = ({
     labels,
     data,
     labelName = 'Valor',
-    color = '#8b5cf6', // Un morado por defecto (puedes usar tus variables)
+    color = '#6366f1', // Un morado por defecto (puedes usar tus variables)
     className
 }: LineChartProps) => {
 

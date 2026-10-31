@@ -300,7 +300,7 @@ export default function ActivityDashboard({ scope, userId, title }: ActivityDash
           </div>
           {isGlobalScope ? (
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-xs flex items-center gap-4">
-              <div className="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-xl text-purple-600 dark:text-purple-400">
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl text-indigo-600 dark:text-indigo-400">
                 <Users size={22} />
               </div>
               <div>
@@ -314,7 +314,7 @@ export default function ActivityDashboard({ scope, userId, title }: ActivityDash
             </div>
           ) : (
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-xs flex items-center gap-4">
-              <div className="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-xl text-purple-600 dark:text-purple-400">
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl text-indigo-600 dark:text-indigo-400">
                 <Users size={22} />
               </div>
               <div>

@@ -151,7 +151,7 @@ export default function AdminAnalyticsPage() {
         <div className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <p className="text-[11px] font-extrabold text-base-content/60 uppercase tracking-wider">Pacientes Totales</p>
-            <div className="p-2.5 bg-purple-500/10 rounded-xl text-purple-500">
+            <div className="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-500">
               <UserCheck size={20} />
             </div>
           </div>

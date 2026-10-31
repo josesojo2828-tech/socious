@@ -1120,7 +1120,7 @@ export default function MarketingPlaybookPage() {
                 <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Playbook Práctico de Trabajo · Equipo de Marketing
               </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
-                Nutringest <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600 bg-clip-text text-transparent">Marketing & Content Operating Playbook</span>
+                Nutringest <span className="bg-gradient-to-r from-indigo-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">Marketing & Content Operating Playbook</span>
               </h1>
               <p className="text-slate-600 text-base sm:text-lg max-w-3xl leading-relaxed">
                 Plantilla de ejecución inmediata con funcionalidades 100% reales auditadas de Nutringest: Matriz de Beneficios, 10 Briefs Listos con Checklist, Guía de Grabación para Tutoriales y Scripts de Ventas.
@@ -1155,7 +1155,7 @@ export default function MarketingPlaybookPage() {
               <div className="text-[11px] text-slate-600 font-medium">Guiones con Screens</div>
             </div>
             <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200">
-              <div className="text-xl sm:text-2xl font-bold text-purple-600">16</div>
+              <div className="text-xl sm:text-2xl font-bold text-indigo-600">16</div>
               <div className="text-[11px] text-slate-600 font-medium">Fichas de Tutorial Video</div>
             </div>
             <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200">
@@ -1277,7 +1277,7 @@ export default function MarketingPlaybookPage() {
                 </div>
 
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-3">
                     <PhoneCall className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-slate-900 mb-1">4. Community Manager</h3>
@@ -1306,7 +1306,7 @@ export default function MarketingPlaybookPage() {
                     <p className="text-slate-600">Graba la pantalla exacta de Nutringest según las indicaciones de la Ficha Técnica.</p>
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
-                    <span className="text-purple-600 font-bold block mb-1">Paso 4: Estado</span>
+                    <span className="text-indigo-600 font-bold block mb-1">Paso 4: Estado</span>
                     <p className="text-slate-600">Cambia el badge a <span className="text-sky-700 font-semibold">[En Producción]</span> y luego a <span className="text-emerald-700 font-semibold">[Publicado]</span>.</p>
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
@@ -1688,11 +1688,11 @@ export default function MarketingPlaybookPage() {
                           </div>
 
                           {/* STEP 4: CALL TO ACTION */}
-                          <div className="bg-white border border-purple-200 p-3.5 rounded-xl space-y-1 shadow-xs">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 block">
+                          <div className="bg-white border border-indigo-200 p-3.5 rounded-xl space-y-1 shadow-xs">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 block">
                               4. Call to Action (30-45s)
                             </span>
-                            <p className="text-purple-900 font-medium">
+                            <p className="text-indigo-900 font-medium">
                               📢 {brief.reel.cta}
                             </p>
                           </div>

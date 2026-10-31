@@ -79,7 +79,7 @@ export const PrivateHeader = () => {
   const showExpiry = subscription?.status === "ACTIVE" && daysRemaining !== null;
 
   return (
-    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-gradient-to-r from-[#2d0754] via-[#3a0a6a] to-[#480d82] text-white border-b border-purple-900/40 dark:from-[#1d0537] dark:via-[#2c0852] dark:to-[#3b0b6f] dark:text-white dark:border-purple-500/20 shadow-sm">
+    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#334155] text-white border-b border-indigo-900/40 dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#334155] dark:text-white dark:border-indigo-500/20 shadow-sm">
 
       {/* Izquierda: Toggle Menu + Workspace Switcher */}
       <div className="flex items-center gap-3">
@@ -124,11 +124,11 @@ export const PrivateHeader = () => {
               setIsNotifOpen(!isNotifOpen);
               setIsProfileOpen(false); // Cerrar el otro por si acaso
             }}
-            className={`relative text-white/80 hover:bg-white/10 border-0 transition-all dark:text-purple-200 dark:hover:bg-white/10 ${isNotifOpen ? 'bg-white/20 text-emerald-300 dark:bg-white/10 dark:text-emerald-400' : ''}`}
+            className={`relative text-white/80 hover:bg-white/10 border-0 transition-all dark:text-indigo-200 dark:hover:bg-white/10 ${isNotifOpen ? 'bg-white/20 text-emerald-300 dark:bg-white/10 dark:text-emerald-400' : ''}`}
           >
             <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white border-2 border-[#2d0754] dark:border-[#1d0537] animate-in zoom-in">
+              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white border-2 border-[#0f172a] dark:border-[#0f172a] animate-in zoom-in">
                 {unreadCount > 9 ? '+9' : unreadCount}
               </span>
             )}
@@ -168,7 +168,7 @@ export const PrivateHeader = () => {
         </div>
 
         {/* Separador */}
-        <div className="h-6 w-px bg-white/20 dark:bg-purple-500/20 hidden md:block"></div>
+        <div className="h-6 w-px bg-white/20 dark:bg-indigo-500/20 hidden md:block"></div>
 
         {/* Dropdown de Usuario */}
         <div className="relative" ref={profileRef} data-tour="header-profile">
@@ -182,7 +182,7 @@ export const PrivateHeader = () => {
           >
             <div className="text-right hidden md:block">
               <Text as={'p'} className="text-sm font-bold text-white dark:text-white leading-none">@{user?.username}</Text>
-              <Text as={'p'} className="text-[10px] font-extrabold text-emerald-400 dark:text-[#10b981] uppercase tracking-wider mt-1">
+              <Text as={'p'} className="text-[10px] font-extrabold text-emerald-400 dark:text-[#059669] uppercase tracking-wider mt-1">
                 {user?.permits?.name === 'PATIENT'
                   ? 'Paciente'
                   : activeWorkspace?.type === 'ORGANIZATION'
@@ -196,7 +196,7 @@ export const PrivateHeader = () => {
               src={user?.avatarUrl}
               initials={`${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`}
             />
-            <ChevronDown size={14} className={`text-white/80 dark:text-purple-300 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown size={14} className={`text-white/80 dark:text-indigo-300 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
           </Button>
 
           {/* Menú de Perfil */}
