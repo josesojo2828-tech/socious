@@ -35,6 +35,8 @@ import {
   visibleBranches,
 } from "@/features/branches/lib/branch-form";
 import { PlanEndpoints } from "@/features/plans/services/plans.endpoints";
+import { UnitsPanel } from "@/features/units/components/UnitsPanel";
+import { CategoriesPanel } from "@/features/categories/components/CategoriesPanel";
 import { PLAN_ORDER, type Plan } from "@/features/plans/types/plan.type";
 import {
   applySettingsPatch,
@@ -77,6 +79,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState<boolean>(false);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [tab, setTab] = useState<"general" | "inventory">("general");
   const [branchName, setBranchName] = useState<string>("");
   const [branchAddress, setBranchAddress] = useState<string>("");
 
@@ -244,6 +247,30 @@ export default function SettingsPage() {
         </span>
       </header>
 
+      <nav className="flex gap-1 border-b border-slate-200 dark:border-slate-800">
+        {(
+          [
+            ["general", "General"],
+            ["inventory", "Inventario"],
+          ] as const
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setTab(key)}
+            className={
+              tab === key
+                ? "border-b-2 border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600"
+                : "border-b-2 border-transparent px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700"
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+
+      {tab === "general" ? (
+        <>
       <SectionCard
         icon={<Wallet className="h-5 w-5" />}
         title="Caja"
@@ -526,6 +553,15 @@ export default function SettingsPage() {
           </div>
         )}
       </SectionCard>
+        </>
+      ) : null}
+
+      {tab === "inventory" ? (
+        <>
+          <UnitsPanel />
+          <CategoriesPanel />
+        </>
+      ) : null}
     </div>
   );
 }

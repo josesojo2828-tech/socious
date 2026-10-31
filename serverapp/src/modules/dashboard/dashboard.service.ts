@@ -272,11 +272,6 @@ export class DashboardService {
             link: "/dashboard/productos",
           },
           {
-            title: "Categorías",
-            icon: "folder",
-            link: "/dashboard/categorias",
-          },
-          {
             title: "Movimientos / Stock",
             icon: "arrows-down-up",
             link: "/dashboard/inventario",

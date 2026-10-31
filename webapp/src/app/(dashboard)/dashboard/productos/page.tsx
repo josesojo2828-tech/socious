@@ -27,6 +27,8 @@ import type {
   ProductStatus,
 } from "@/features/products/types/product.type";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
+import { UnitEndpoints } from "@/features/units/services/units.endpoints";
+import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import {
   buildProductPayload,
@@ -112,6 +114,7 @@ export default function ProductsPage() {
 
   const [rows, setRows] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [units, setUnits] = useState<UnitOfMeasure[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
@@ -138,20 +141,25 @@ export default function ProductsPage() {
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [productPage, categoryTree, supplierPage] = await Promise.all([
-        apiClient.get<Paged<Product>>(ProductEndpoints.list, {
-          params: { limit: 100 },
-        }),
-        apiClient
-          .get<Category[]>(ProductEndpoints.categories)
-          .catch(() => ({ data: [] as Category[] })),
-        apiClient.get<Paged<Supplier>>(SupplierEndpoints.list, {
-          params: { limit: 100 },
-        }),
-      ]);
+      const [productPage, categoryTree, supplierPage, unitList] =
+        await Promise.all([
+          apiClient.get<Paged<Product>>(ProductEndpoints.list, {
+            params: { limit: 100 },
+          }),
+          apiClient
+            .get<Category[]>(ProductEndpoints.categories)
+            .catch(() => ({ data: [] as Category[] })),
+          apiClient.get<Paged<Supplier>>(SupplierEndpoints.list, {
+            params: { limit: 100 },
+          }),
+          apiClient
+            .get<UnitOfMeasure[]>(UnitEndpoints.list)
+            .catch(() => ({ data: [] as UnitOfMeasure[] })),
+        ]);
       setRows(productPage.data.list);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
+      setUnits(Array.isArray(unitList.data) ? unitList.data : []);
     } catch {
       addToast({
         type: "error",
@@ -360,11 +368,26 @@ export default function ProductsPage() {
             </label>
             <label className={label}>
               Unidad
-              <input
+              <select
                 className={field}
                 value={form.unit}
                 onChange={(event) => patchForm({ unit: event.target.value })}
-              />
+              >
+                {!units.some((unit) => unit.abbreviation === form.unit) &&
+                form.unit ? (
+                  <option value={form.unit}>{form.unit}</option>
+                ) : null}
+                {units
+                  .filter((unit) => unit.active)
+                  .map((unit) => (
+                    <option
+                      key={unit.id}
+                      value={unit.abbreviation}
+                    >
+                      {unit.name} ({unit.abbreviation})
+                    </option>
+                  ))}
+              </select>
             </label>
             <label className={label}>
               Costo USD

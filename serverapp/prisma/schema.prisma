@@ -562,6 +562,7 @@ model Organization {
   categories         Category[]
   products           Product[]
   suppliers          Supplier[]
+  units              UnitOfMeasure[]
   cashRegisters      CashRegister[]
   sales              Sale[]
   purchases          Purchase[]
@@ -853,6 +854,7 @@ model Category {
   description    String?
   parentId       String?
   isSystem       Boolean       @default(true) // Catálogo estándar de plataforma (no manipulable por clientes comunes)
+  isActive       Boolean       @default(true) // El comercio puede ocultar categorías que no usa
   organizationId String?       // null = global del sistema
 
   parent         Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id])
@@ -867,6 +869,32 @@ model Category {
   @@index([parentId])
   @@index([organizationId])
   @@index([slug])
+}
+
+// ======================================
+// UNIDADES DE MEDIDA (CRUD por tenant)
+// ======================================
+
+enum UnitKind {
+  COUNT
+  WEIGHT
+  VOLUME
+}
+
+model UnitOfMeasure {
+  id             String    @id @default(uuid())
+  organizationId String?   // null = unidad del sistema (solo lectura)
+  name           String
+  abbreviation   String    // "kg", "UND", "lb"… se guarda en Product.unit
+  kind           UnitKind  @default(COUNT)
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([abbreviation])
 }
 
 // ======================================

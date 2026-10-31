@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Query,
   Patch,
   Post,
   Req,
@@ -65,12 +66,18 @@ export class CategoryController {
     return this.categoryService.listTree(null);
   }
 
-  /** Catalog + the caller's own categories. */
+  /** Catalog + the caller's own categories. `?includeInactive=1` for settings. */
   @Get("mine")
   @UseGuards(SessionAuthGuard)
-  async listMine(@Req() request: RequestWithUser) {
+  async listMine(
+    @Req() request: RequestWithUser,
+    @Query("includeInactive") includeInactive?: string,
+  ) {
     const scope = await this.resolveScope(request);
-    return this.categoryService.listTree(scope.organizationId);
+    return this.categoryService.listTree(
+      scope.organizationId,
+      includeInactive === "1" || includeInactive === "true",
+    );
   }
 
   @Get(":id")

@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsOptional,
   IsString,
   Matches,
@@ -37,6 +38,10 @@ export class CreateCategoryDto {
 }
 
 export class UpdateCategoryDto {
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
   @IsOptional()
   @IsString()
   @MaxLength(120)

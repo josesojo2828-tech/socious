@@ -48,9 +48,17 @@ export class CategoryService {
     };
   }
 
-  async listTree(organizationId: string | null): Promise<CategoryNode[]> {
+  async listTree(
+    organizationId: string | null,
+    includeInactive = false,
+  ): Promise<CategoryNode[]> {
     const categories = await this.prisma.category.findMany({
-      where: this.visibleWhere(organizationId),
+      where: {
+        ...this.visibleWhere(organizationId),
+        // The settings tab needs every row (to toggle); product selects only
+        // offer the categories the merchant actually uses.
+        ...(includeInactive ? {} : { isActive: true }),
+      },
       orderBy: { name: "asc" },
     });
 
@@ -180,6 +188,7 @@ export class CategoryService {
         ...(data.description !== undefined && {
           description: data.description?.trim() || null,
         }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
       },
     });
   }
