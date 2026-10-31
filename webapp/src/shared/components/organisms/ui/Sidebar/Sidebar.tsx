@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  Plus,
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -20,6 +21,13 @@ import { useTranslation } from "@/context/i18n.context";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import { slugify } from "@/shared/lib/utils";
 import type { SidebarProps } from "./Sidebar.types";
+
+/**
+ * Northpeak-style rail (round 3 restyle):
+ * light `#fbfbfc` / dark `#111317`, neutral rows with a #e8eaee active state,
+ * uppercase micro group heads, teal `#1d6f8c` as the single accent. The
+ * backend still drives sections/items; only the skin changed.
+ */
 
 const iconMap: Record<string, LucideIcon> = {
   dashboard: LucideIcons.LayoutDashboard,
@@ -85,23 +93,28 @@ function SidebarLink({
       onClick={close}
       title={isCollapsed ? t(item?.title || "") : undefined}
       className={clsx(
-        "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 group mb-1 border-l-4",
-        isCollapsed && "justify-center border-l-0 px-2",
+        "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] tracking-[-0.006em] transition-colors duration-150 group mb-px",
+        "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:-outline-offset-2",
+        isCollapsed && "justify-center px-0",
         isActive
-          ? "bg-indigo-600/80 text-white border-emerald-400 shadow-md shadow-indigo-900/30 font-bold backdrop-blur-xs dark:bg-white/15 dark:text-white dark:border-[#059669]"
-          : "text-white/80 border-transparent hover:bg-white/10 hover:text-white dark:text-indigo-200/70 dark:hover:bg-white/10 dark:hover:text-white",
+          ? "bg-[#e8eaee] text-[#171a1f] font-medium dark:bg-[#262a31] dark:text-white"
+          : "text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white",
       )}
     >
       <IconComponent
-        size={18}
+        size={17}
         className={clsx(
-          "transition-transform duration-200 group-hover:scale-110 flex-shrink-0",
+          "flex-shrink-0 transition-colors duration-150",
           isActive
-            ? "text-emerald-300 dark:text-[#059669]"
-            : "text-white/60 group-hover:text-white dark:text-indigo-300/60 dark:group-hover:text-indigo-100",
+            ? "text-[#171a1f] dark:text-white"
+            : "text-[#767d89] group-hover:text-[#575d67] dark:text-[#848b97] dark:group-hover:text-[#c9ced6]",
         )}
       />
-      {!isCollapsed && t(item?.title || "")}
+      {!isCollapsed && (
+        <span className="flex-1 min-w-0 truncate text-left">
+          {t(item?.title || "")}
+        </span>
+      )}
     </InternalLink>
   );
 }
@@ -199,23 +212,24 @@ function SidebarSection({
   }
 
   return (
-    <div>
+    <div className="mb-3.5 last:mb-0">
       <button
         type="button"
         id={headerId}
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={toggle}
-        className="flex items-center justify-between w-full text-[10px] font-extrabold text-white/60 dark:text-indigo-300/40 uppercase tracking-[0.15em] mb-3 px-3 rounded-lg transition-colors cursor-pointer border-0 bg-transparent hover:text-white/90 dark:hover:text-indigo-200/70"
+        className="flex items-center gap-[7px] w-full h-[26px] px-2 text-[11.5px] font-semibold uppercase tracking-[0.09em] text-[#767d89] hover:text-[#575d67] dark:text-[#7d848f] dark:hover:text-[#aab0ba] transition-colors cursor-pointer border-0 bg-transparent rounded-[7px]"
       >
-        <span>{t(title)}</span>
         <ChevronDown
-          size={14}
+          size={12}
+          strokeWidth={2.4}
           className={clsx(
             "transition-transform duration-300 flex-shrink-0",
             isOpen ? "rotate-0" : "-rotate-90",
           )}
         />
+        <span className="truncate">{t(title)}</span>
       </button>
 
       <div
@@ -223,13 +237,13 @@ function SidebarSection({
         role="region"
         aria-labelledby={headerId}
         className={clsx(
-          "grid transition-all duration-300 ease-in-out ml-1 border-l border-white/20 dark:border-indigo-950/40",
+          "grid transition-all duration-300 ease-in-out",
           isOpen
-            ? "grid-rows-[1fr] opacity-100 mt-0.5"
+            ? "grid-rows-[1fr] opacity-100 mt-px"
             : "grid-rows-[0fr] opacity-0 mt-0",
         )}
       >
-        <div className="overflow-hidden space-y-0.5">
+        <div className="overflow-hidden">
           {(items || []).map((item) => (
             <SidebarLink
               key={item?.link || item?.title}
@@ -252,7 +266,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
   const { sidebar: storeSidebar } = useAuthStore();
   const sidebar = customSidebar !== undefined ? customSidebar : storeSidebar;
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
-  const { currentRole } = useWorkspaceRole();
+  const { currentRole, isGlobalAdmin } = useWorkspaceRole();
   const { t } = useTranslation();
   const isPatient = user?.permits?.name === "PATIENT";
 
@@ -269,6 +283,11 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // "Nueva venta" solo en contextos de negocio reales: org activa, sin admin
+  // global ni paciente.
+  const showCreate =
+    activeWorkspace?.type === "ORGANIZATION" && !isGlobalAdmin && !isPatient;
+
   return (
     <>
       {/* Overlay para móvil */}
@@ -282,71 +301,72 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
       <div
         className={clsx(
           "fixed inset-y-0 left-0 z-50 transition-all duration-300 ease-in-out md:static md:shadow-none print:hidden shadow-xl",
-          "bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#334155] text-white border-r border-indigo-900/40",
-          "dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#334155] dark:text-slate-100 dark:border-indigo-500/20",
-          isCollapsed ? "md:w-[72px]" : "md:w-64",
-          "w-64",
+          "bg-[#fbfbfc] text-[#171a1f] border-r border-[#e5e7ec]",
+          "dark:bg-[#111317] dark:text-[#e7eaef] dark:border-[#22252c]",
+          isCollapsed ? "md:w-[72px]" : "md:w-[250px]",
+          "w-[250px]",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
         <div className="flex flex-col h-full">
-          {/* Logo & Active Workspace Badge */}
-          <div className="flex flex-col border-b border-white/10 dark:border-indigo-500/20 flex-shrink-0">
+          {/* Proj row: marca + contexto (estilo .proj de Northpeak) */}
+          <div className="flex flex-col flex-shrink-0 px-3 pt-3.5 pb-3 border-b border-[#e5e7ec] dark:border-[#22252c]">
             <InternalLink
-              href={"/"}
+              href="/"
               className={clsx(
-                "h-16 flex items-center transition-all duration-300",
-                isCollapsed ? "justify-center px-2" : "justify-center px-6",
+                "flex items-center gap-[11px] w-full py-1 rounded-[7px] text-left transition-colors hover:bg-[#f1f2f5] dark:hover:bg-[#1b1e24] focus-visible:outline-2 focus-visible:outline-[#1d6f8c]",
+                isCollapsed && "justify-center px-0",
               )}
             >
-              <div
-                className={clsx(
-                  "flex items-center justify-center",
-                  isCollapsed ? "w-12 h-12" : "w-16 h-16",
-                )}
+              <span
+                className="w-7 h-7 flex-none rounded-lg grid place-items-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)]"
+                style={{
+                  background: "linear-gradient(155deg,#1d6f8c 0%,#17566f 100%)",
+                }}
+                aria-label="Socius ERP"
               >
-                <span
-                  className={clsx(
-                    "flex items-center justify-center rounded-lg bg-indigo-600 font-bold text-white",
-                    isCollapsed ? "h-10 w-10 text-lg" : "h-12 w-12 text-xl",
-                  )}
-                  aria-label="Socius ERP"
-                >
+                <span className="text-white font-bold text-sm leading-none">
                   S
                 </span>
-              </div>
+              </span>
+              {!isCollapsed && (
+                <span className="flex-1 min-w-0">
+                  <b className="block text-[14.5px] font-semibold tracking-[-0.012em] truncate">
+                    {activeWorkspace?.name || "Socius ERP"}
+                  </b>
+                  <span className="block text-xs text-[#767d89] dark:text-[#7d848f] truncate">
+                    {activeWorkspace?.type === "ORGANIZATION"
+                      ? "Espacio de negocio"
+                      : "Espacio personal"}
+                    {currentRole ? ` · ${currentRole.replace("CLINIC_", "")}` : ""}
+                  </span>
+                </span>
+              )}
             </InternalLink>
 
-            {/* Banner de Contexto de Workspace Activo */}
-            {!isPatient && !isCollapsed && activeWorkspace && (
-              <div className="px-3 pb-3">
-                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/10 dark:bg-black/30 border border-white/15 dark:border-indigo-800/30 text-xs shadow-xs backdrop-blur-xs">
-                  <div className="flex items-center gap-2 truncate">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse"
-                      style={{ backgroundColor: activeWorkspace.userColorHex || '#4F46E5' }}
-                    />
-                    <div className="truncate">
-                      <p className="text-[9px] uppercase font-extrabold text-white/70 dark:text-indigo-300/60 leading-tight">
-                        {activeWorkspace.type === 'ORGANIZATION' ? '🏥 Modo Clínica' : '👤 Modo Particular'}
-                      </p>
-                      <div className="flex items-center gap-1.5">
-                        <p className="font-semibold text-white dark:text-slate-100 truncate text-xs">{activeWorkspace.name}</p>
-                        {currentRole && (
-                          <span className="px-1.5 py-0.5 text-[8px] uppercase font-bold tracking-wider rounded bg-indigo-400/20 dark:bg-indigo-500/20 text-indigo-200 dark:text-indigo-300 border border-indigo-400/30 dark:border-indigo-500/30 shrink-0">
-                            {currentRole.replace('CLINIC_', '')}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* CTA estilo .create */}
+            {showCreate && (
+              <InternalLink
+                href="/dashboard/pos"
+                onClick={close}
+                className={clsx(
+                  "mt-3 flex items-center gap-2 h-[34px] px-3 rounded-[7px] text-white text-[14.5px] font-semibold tracking-[-0.008em] transition-all",
+                  "bg-[#1d6f8c] hover:bg-[#14556e] hover:-translate-y-px active:translate-y-0 shadow-[0_1px_2px_rgba(20,60,80,0.25)]",
+                  "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:outline-offset-2",
+                  isCollapsed && "justify-center px-0",
+                )}
+                title={isCollapsed ? "Nueva venta" : undefined}
+              >
+                <Plus size={15} strokeWidth={2.3} className="flex-none" />
+                {!isCollapsed && (
+                  <span className="flex-1 text-left">Nueva venta</span>
+                )}
+              </InternalLink>
             )}
           </div>
 
           {/* Nav Items */}
-          <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
+          <nav className="flex-1 py-3 px-3 overflow-y-auto">
             {(sidebar || []).map((section, idx) => {
               const items = section?.items || [];
               if (!items || items.length === 0) return null;
@@ -402,66 +422,37 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 `section-${idx}`;
 
               return (
-                <div
-                  className="mb-6"
+                <SidebarSection
                   key={section?.icon || section?.title || idx}
-                >
-                  <SidebarSection
-                    sectionKey={sectionKey}
-                    title={section?.title || ""}
-                    items={filteredItems}
-                    isCollapsed={isCollapsed}
-                    pathname={pathname}
-                    close={close}
-                  />
-                </div>
+                  sectionKey={sectionKey}
+                  title={section?.title || ""}
+                  items={filteredItems}
+                  isCollapsed={isCollapsed}
+                  pathname={pathname}
+                  close={close}
+                />
               );
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-white/10 dark:border-indigo-500/20 space-y-2">
-            {/* Collapse Toggle Button (Desktop only) */}
-            <button
-              onClick={toggleCollapse}
-              className="hidden md:flex w-full items-center justify-center gap-3 px-3 py-2 rounded-xl text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white dark:text-indigo-300/60 dark:hover:bg-white/5 dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent"
-              title={
-                isCollapsed
-                  ? t("common.sidebar.expand")
-                  : t("common.sidebar.collapse")
-              }
-            >
-              {isCollapsed ? (
-                <ChevronRight size={20} />
-              ) : (
-                <ChevronLeft size={20} />
-              )}
-              {!isCollapsed && <span>{t("common.sidebar.collapse")}</span>}
-            </button>
-
+          {/* Footer estilo .rail-foot */}
+          <div className="mt-auto px-3 pt-3 pb-3 border-t border-[#e5e7ec] dark:border-[#22252c]">
             {/* Feedback */}
-            {!isCollapsed && (
-              <label
-                htmlFor="feedback-drawer"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-500/30 dark:text-emerald-400 dark:bg-emerald-950/25 dark:hover:bg-emerald-950/40 dark:border-emerald-900/30 transition-all cursor-pointer group"
-              >
-                <MessageSquarePlus
-                  size={20}
-                  className="group-hover:scale-110 transition-transform"
-                />
-                {t("common.sidebar.feedback")}
-              </label>
-            )}
-
-            {isCollapsed && (
-              <label
-                htmlFor="feedback-drawer"
-                className="flex items-center justify-center px-2 py-2.5 rounded-xl text-emerald-300 hover:bg-emerald-950/40 dark:text-emerald-400 dark:hover:bg-emerald-950/40 transition-all cursor-pointer"
-                title={t("common.sidebar.feedback")}
-              >
-                <MessageSquarePlus size={20} />
-              </label>
-            )}
+            <label
+              htmlFor="feedback-drawer"
+              title={isCollapsed ? t("common.sidebar.feedback") : undefined}
+              className={clsx(
+                "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-colors cursor-pointer group",
+                isCollapsed && "justify-center px-0",
+              )}
+            >
+              <MessageSquarePlus size={17} className="flex-none text-[#767d89] group-hover:text-[#1d6f8c] dark:text-[#848b97] transition-colors" />
+              {!isCollapsed && (
+                <span className="flex-1 truncate text-left">
+                  {t("common.sidebar.feedback")}
+                </span>
+              )}
+            </label>
 
             {/* Logout */}
             <button
@@ -470,16 +461,46 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 logout();
                 window.location.href = "/";
               }}
-              className={clsx(
-                "w-full flex items-center gap-3 rounded-xl text-sm font-bold text-red-300 hover:bg-red-950/40 hover:text-red-200 dark:text-red-400 dark:hover:bg-red-950/20 dark:hover:text-red-300 transition-all cursor-pointer border-0 bg-transparent",
-                isCollapsed
-                  ? "justify-center px-2 py-2.5"
-                  : "justify-start px-3 py-2.5",
-              )}
               title={isCollapsed ? t("common.auth.logout") : undefined}
+              className={clsx(
+                "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] w-full text-[#575d67] hover:bg-[#fdefef] hover:text-[#b4423a] dark:text-[#9aa1ad] dark:hover:bg-[#2a1618] dark:hover:text-[#e5857c] transition-colors cursor-pointer border-0 bg-transparent",
+                isCollapsed && "justify-center px-0",
+              )}
             >
-              <LogOut size={20} className="text-red-400 dark:text-red-400 flex-shrink-0" />
-              {!isCollapsed && t("common.auth.logout")}
+              <LogOut size={17} className="flex-none" />
+              {!isCollapsed && (
+                <span className="flex-1 truncate text-left">
+                  {t("common.auth.logout")}
+                </span>
+              )}
+            </button>
+
+            {/* Divider */}
+            <div className="h-px bg-[#e5e7ec] dark:bg-[#22252c] my-3" />
+
+            {/* Collapse (desktop only) */}
+            <button
+              onClick={toggleCollapse}
+              className={clsx(
+                "hidden md:flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] w-full text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent",
+                isCollapsed && "justify-center px-0",
+              )}
+              title={
+                isCollapsed
+                  ? t("common.sidebar.expand")
+                  : t("common.sidebar.collapse")
+              }
+            >
+              {isCollapsed ? (
+                <ChevronRight size={17} className="flex-none" />
+              ) : (
+                <ChevronLeft size={17} className="flex-none" />
+              )}
+              {!isCollapsed && (
+                <span className="flex-1 truncate text-left">
+                  {t("common.sidebar.collapse")}
+                </span>
+              )}
             </button>
           </div>
         </div>
