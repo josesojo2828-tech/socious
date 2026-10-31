@@ -243,6 +243,11 @@ export class DashboardService {
             link: "/dashboard/proveedores",
           },
           {
+            title: "Compras",
+            icon: "archive",
+            link: "/dashboard/compras",
+          },
+          {
             title: "Cuentas por cobrar",
             icon: "credit-card",
             link: "/dashboard/cuentas-por-cobrar",

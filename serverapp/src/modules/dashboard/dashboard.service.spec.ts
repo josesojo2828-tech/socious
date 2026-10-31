@@ -197,6 +197,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
 
     expect(links).toContain('/dashboard/clientes');
     expect(links).toContain('/dashboard/proveedores');
+    expect(links).toContain('/dashboard/compras');
     expect(links).toContain('/dashboard/cuentas-por-cobrar');
     expect(links).toContain('/dashboard/cuentas-por-pagar');
   });
