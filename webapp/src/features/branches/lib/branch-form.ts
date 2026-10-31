@@ -1,9 +1,9 @@
 import type { Branch } from "../types/branch.type";
 
 /**
- * Branch form logic (S11): the default branch the organization is born with
- * is never shown as a manageable row (it is the business's base, and the plan
- * counts it), so the UI only lists the branches the owner actually created.
+ * Branch form logic (S11): every organization is born with its default
+ * branch — "Subsucursal principal" — and the merchant SEES it (feedback S4);
+ * the plan capacity still counts it as the included unit.
  */
 
 export function buildBranchPayload(
@@ -21,9 +21,9 @@ export function validateBranchForm(name: string): string | null {
   return null;
 }
 
-/** The hidden default branch plus the ones the owner extended. */
+/** The default branch plus the ones the owner extended. */
 export function visibleBranches(branches: Branch[]): Branch[] {
-  return branches.filter((branch) => !branch.isDefault);
+  return branches;
 }
 
 /** "1 sucursal incluida · 2 creadas" — for the summary line. */

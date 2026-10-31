@@ -7,6 +7,12 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { SupplierLocationsCard } from "@/features/suppliers/components/SupplierLocationsCard";
+import dynamic from "next/dynamic";
+
+const NutriMapPicker = dynamic(
+  () => import("@/features/user/components/map/NutriMapPicker"),
+  { ssr: false },
+);
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import {
   buildSupplierPayload,
@@ -56,6 +62,10 @@ export default function SuppliersPage() {
   const [query, setQuery] = useState<string>("");
   const [form, setForm] = useState<SupplierForm>(EMPTY_FORM);
   const [creating, setCreating] = useState<boolean>(false);
+  const [locPick, setLocPick] = useState<{ lat: number; lng: number } | null>(
+    null,
+  );
+  const [locLabel, setLocLabel] = useState<string>("");
   const [editing, setEditing] = useState<Supplier | null>(null);
 
   const [selected, setSelected] = useState<Supplier | null>(null);
@@ -138,7 +148,22 @@ export default function SuppliersPage() {
         if (editing) {
           await apiClient.patch(SupplierEndpoints.detail(editing.id), payload);
         } else {
-          await apiClient.post(SupplierEndpoints.list, payload);
+          const { data: created } = await apiClient.post<{ id: string }>(
+            SupplierEndpoints.list,
+            payload,
+          );
+          // Ubicación en el mismo momento de crear (S5).
+          if (locPick && locLabel.trim()) {
+            await apiClient
+              .post(SupplierEndpoints.locations(created.id), {
+                label: locLabel.trim(),
+                lat: locPick.lat,
+                lng: locPick.lng,
+              })
+              .catch(() => undefined);
+          }
+          setLocPick(null);
+          setLocLabel("");
         }
         addToast({
           type: "success",
@@ -308,6 +333,49 @@ export default function SuppliersPage() {
               />
             </label>
           </div>
+
+          {!editing ? (
+            locPick ? (
+              <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-indigo-200 bg-indigo-50/50 px-3 py-2 text-sm dark:border-indigo-900">
+                <span>
+                  Ubicación: {locLabel || "sin etiqueta"} ·{" "}
+                  <span className="font-mono text-xs">
+                    {locPick.lat.toFixed(5)}, {locPick.lng.toFixed(5)}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLocPick(null);
+                    setLocLabel("");
+                  }}
+                  className="text-xs font-semibold text-indigo-600 hover:underline"
+                >
+                  Quitar
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className={label}>
+                    Etiqueta de la ubicación (opcional)
+                    <input
+                      className={field}
+                      value={locLabel}
+                      onChange={(event) => setLocLabel(event.target.value)}
+                      placeholder="Sede principal, Punto de entrega…"
+                    />
+                  </label>
+                  <p className="self-end text-xs text-slate-400">
+                    Tocá el mapa para marcar dónde queda este proveedor.
+                  </p>
+                </div>
+                <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+                  <NutriMapPicker height="220px" onLocationSelect={(lat, lng) => setLocPick({ lat, lng })} />
+                </div>
+              </div>
+            )
+          ) : null}
 
           <div className="mt-4 flex gap-2">
             <button

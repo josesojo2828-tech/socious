@@ -38,8 +38,11 @@ describe("branch-form (S11)", () => {
       branch({ id: "norte" }),
     ];
 
-    expect(visibleBranches(branches).map((item) => item.id)).toEqual(["norte"]);
-    expect(visibleBranches(branches)).toHaveLength(1);
+    expect(visibleBranches(branches).map((item) => item.id)).toEqual([
+      "b-1",
+      "norte",
+    ]);
+    expect(visibleBranches(branches)).toHaveLength(2);
   });
 
   it("summarizes included vs created branches", () => {

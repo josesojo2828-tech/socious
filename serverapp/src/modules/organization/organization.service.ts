@@ -111,7 +111,11 @@ export class OrganizationService {
     // S10: the organization is born with one branch, hidden behind isDefault
     // so scaling to Premium later is an addition, never a migration.
     await this.prisma.branch.create({
-      data: { organizationId: org.id, name: "Principal", isDefault: true },
+      data: {
+        organizationId: org.id,
+        name: "Subsucursal principal",
+        isDefault: true,
+      },
     });
 
     if (plan) {
