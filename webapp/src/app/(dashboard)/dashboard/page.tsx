@@ -1,34 +1,39 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
-import { resolveDashboardView } from "@/shared/authz/dashboard-view";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
-import { useTranslation } from "@/context/i18n.context";
-import DashboardUserPage from "@/features/user/components/pages/DashboardUserPage";
-import AdminAnalyticsPage from "./analytics/page";
-import { ClinicDashboardPage } from "@/features/organization/pages/ClinicDashboardPage";
+import { hasPermit, isAdmin } from "@/shared/authz";
 
+/**
+ * `/dashboard` is a router, not a screen: it sends each role to its real
+ * working surface. The nutrition-era dashboards (clinic, patient, personal
+ * wallet) were deleted with the Socius migration — see odd/tasks/.
+ */
 export default function AppDashboardPage() {
-    const { t } = useTranslation();
+    const router = useRouter();
     const { user } = useAuthStore();
     const { activeWorkspace } = useWorkspaceStore();
 
-    const isClinicWorkspace = activeWorkspace?.type === "ORGANIZATION";
-    const view = resolveDashboardView(user, isClinicWorkspace);
+    useEffect(() => {
+        const isClinicWorkspace = activeWorkspace?.type === "ORGANIZATION";
+        if (isClinicWorkspace) {
+            router.replace("/dashboard/ventas");
+            return;
+        }
+        if (isAdmin(user) || hasPermit(user, "USER_LIST")) {
+            router.replace("/dashboard/users");
+            return;
+        }
+        router.replace("/");
+    }, [activeWorkspace?.type, router, user]);
 
     return (
-        <div className="space-y-6 pb-10 font-sans">
-            <div className="flex flex-col items-start gap-4">
-                <main className="w-full">
-                    {view === "admin" ? (
-                        <AdminAnalyticsPage />
-                    ) : view === "clinic" ? (
-                        <ClinicDashboardPage />
-                    ) : (
-                        <DashboardUserPage />
-                    )}
-                </main>
-            </div>
+        <div className="min-h-[60vh] w-full flex flex-col items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            <p className="text-slate-500 mt-4 animate-pulse">Abriendo tu panel…</p>
         </div>
     );
 }
