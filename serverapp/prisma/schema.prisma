@@ -838,6 +838,7 @@ model Supplier {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   products       Product[]
   purchases      Purchase[]
+  locations      SupplierLocation[]
 
   @@index([organizationId])
   @@index([name])
@@ -1273,6 +1274,25 @@ model PurchasePayment {
 
   @@index([purchaseId])
   @@index([paidAt])
+}
+
+// ======================================
+// UBICACIONES DEL PROVEEDOR (CRM)
+// ======================================
+
+model SupplierLocation {
+  id          String   @id @default(uuid())
+  supplierId  String
+  label       String   // "Sede principal", "Punto de entrega"…
+  lat         Float
+  lng         Float
+  address     String?  // texto libre complementario
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  supplier    Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
 }
 
 // ======================================

@@ -133,6 +133,24 @@ export class CreditSettingsDto {
   monthlyDay?: number;
 }
 
+export class NotificationsSettingsDto {
+  @IsOptional()
+  @IsBoolean()
+  lowStock?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  creditDue?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  orderReceived?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  saleCreated?: boolean;
+}
+
 export class UpdateTenantSettingsDto {
   @IsOptional()
   @ValidateNested()
@@ -173,6 +191,11 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => CreditSettingsDto)
   credit?: CreditSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => NotificationsSettingsDto)
+  notifications?: NotificationsSettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

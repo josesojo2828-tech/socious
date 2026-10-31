@@ -6,6 +6,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
+import { SupplierLocationsCard } from "@/features/suppliers/components/SupplierLocationsCard";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import {
   buildSupplierPayload,
@@ -437,6 +438,8 @@ export default function SuppliersPage() {
                   <p className="text-sm text-slate-500">Sin saldo cargado.</p>
                 )}
               </SectionCard>
+
+              <SupplierLocationsCard supplierId={selected.id} />
 
               <button
                 type="button"

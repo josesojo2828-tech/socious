@@ -20,7 +20,8 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** `null` when the form is acceptable, otherwise the message to show. */
 export function validateClientForm(form: ClientForm): string | null {
   if (!form.name?.trim()) return "El nombre es obligatorio.";
-  if (form.email && form.email.trim() && !EMAIL_PATTERN.test(form.email.trim())) {
+  if (!form.email?.trim()) return "El correo es obligatorio.";
+  if (!EMAIL_PATTERN.test(form.email.trim())) {
     return "El correo no tiene un formato válido.";
   }
   if (form.creditLimitUSD !== undefined && Number(form.creditLimitUSD) < 0) {
@@ -31,11 +32,13 @@ export function validateClientForm(form: ClientForm): string | null {
 
 /** Trimmed body for POST /api/clients (create) — empty fields stay absent. */
 export function buildClientPayload(form: ClientForm): Record<string, unknown> {
-  const payload: Record<string, unknown> = { name: form.name.trim() };
+  const payload: Record<string, unknown> = {
+    name: form.name.trim(),
+    email: form.email?.trim() ?? "",
+  };
 
   const optional: [keyof ClientForm, string | undefined][] = [
     ["taxId", form.taxId],
-    ["email", form.email],
     ["phone", form.phone],
     ["address", form.address],
     ["city", form.city],

@@ -52,6 +52,13 @@ export interface TenantSettings {
   routes: { enabled: boolean };
   /** Enabled return reasons shown as a select on the returns flow (S5). */
   returns: { reasons: string[] };
+  /** Logic-only notification switches (CRM S2); nothing is sent yet. */
+  notifications: {
+    lowStock: boolean;
+    creditDue: boolean;
+    orderReceived: boolean;
+    saleCreated: boolean;
+  };
   /** Default terms for credit sales (S3). */
   credit: {
     /** Optional down-payment hint in USD; null = no default initial. */
@@ -99,6 +106,12 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
     cadence: "QUINCENAL",
     everyNDays: 15,
     monthlyDay: 1,
+  },
+  notifications: {
+    lowStock: true,
+    creditDue: true,
+    orderReceived: true,
+    saleCreated: false,
   },
 };
 
@@ -227,6 +240,9 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
   const routes = isPlainObject(source.routes) ? source.routes : {};
   const returns = isPlainObject(source.returns) ? source.returns : {};
   const credit = isPlainObject(source.credit) ? source.credit : {};
+  const notifications = isPlainObject(source.notifications)
+    ? source.notifications
+    : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -267,6 +283,18 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       reasons: asReasonList(returns.reasons, defaults.returns.reasons),
     },
     credit: asCredit(credit, defaults.credit),
+    notifications: {
+      lowStock: asBool(notifications.lowStock, defaults.notifications.lowStock),
+      creditDue: asBool(notifications.creditDue, defaults.notifications.creditDue),
+      orderReceived: asBool(
+        notifications.orderReceived,
+        defaults.notifications.orderReceived,
+      ),
+      saleCreated: asBool(
+        notifications.saleCreated,
+        defaults.notifications.saleCreated,
+      ),
+    },
   };
 }
 

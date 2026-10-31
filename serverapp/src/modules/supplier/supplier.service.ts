@@ -11,6 +11,7 @@ import {
   ListSuppliersQueryDto,
   UpdateSupplierDto,
 } from "./dto/supplier.dto";
+import { CreateSupplierLocationDto, UpdateSupplierLocationDto } from "./dto/supplier-location.dto";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
@@ -208,5 +209,74 @@ export class SupplierService {
         "Ya existe un proveedor con ese documento en este negocio.",
       );
     }
+  }
+
+  // ---- Ubicaciones (CRM S3): puntos en el mapa con etiqueta ----
+
+  private async assertSupplier(scope: SupplierScope, id: string) {
+    const supplier = await this.prisma.supplier.findFirst({
+      where: { id, ...this.scopeWhere(scope.organizationId) },
+      select: { id: true },
+    });
+    if (!supplier) throw new NotFoundException("Proveedor no encontrado.");
+    return supplier;
+  }
+
+  async listLocations(scope: SupplierScope, supplierId: string) {
+    await this.assertSupplier(scope, supplierId);
+    return this.prisma.supplierLocation.findMany({
+      where: { supplierId },
+      orderBy: { createdAt: "asc" },
+    });
+  }
+
+  async createLocation(
+    scope: SupplierScope,
+    supplierId: string,
+    dto: CreateSupplierLocationDto,
+  ) {
+    await this.assertSupplier(scope, supplierId);
+    return this.prisma.supplierLocation.create({
+      data: {
+        supplierId,
+        label: dto.label.trim(),
+        lat: dto.lat,
+        lng: dto.lng,
+        address: dto.address?.trim() || null,
+      },
+    });
+  }
+
+  private async ownLocation(scope: SupplierScope, id: string) {
+    const location = await this.prisma.supplierLocation.findFirst({
+      where: { id, supplier: this.scopeWhere(scope.organizationId) },
+    });
+    if (!location) throw new NotFoundException("Ubicación no encontrada.");
+    return location;
+  }
+
+  async updateLocation(
+    scope: SupplierScope,
+    id: string,
+    dto: UpdateSupplierLocationDto,
+  ) {
+    await this.ownLocation(scope, id);
+    return this.prisma.supplierLocation.update({
+      where: { id },
+      data: {
+        ...(dto.label !== undefined ? { label: dto.label.trim() } : {}),
+        ...(dto.lat !== undefined ? { lat: dto.lat } : {}),
+        ...(dto.lng !== undefined ? { lng: dto.lng } : {}),
+        ...(dto.address !== undefined
+          ? { address: dto.address?.trim() || null }
+          : {}),
+      },
+    });
+  }
+
+  async removeLocation(scope: SupplierScope, id: string) {
+    await this.ownLocation(scope, id);
+    await this.prisma.supplierLocation.delete({ where: { id } });
+    return { deleted: true };
   }
 }

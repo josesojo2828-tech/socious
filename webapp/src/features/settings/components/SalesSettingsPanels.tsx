@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Banknote, CalendarClock, CreditCard, Loader2, Plus, Trash2 } from "lucide-react";
+import { Banknote, Bell, CalendarClock, CreditCard, Loader2, Plus, Trash2 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
@@ -410,6 +410,67 @@ export function ReturnReasonsPanel({
           <Plus className="h-4 w-4" /> Agregar
         </button>
       </form>
+    </SectionCard>
+  );
+}
+
+/** Notification switches (CRM S2): stored, nothing is sent yet. */
+export function NotificationsPanel({
+  settings,
+  save,
+}: {
+  settings: TenantSettings;
+  save: (patch: Partial<TenantSettings>) => Promise<void>;
+}) {
+  const notifications = settings.notifications;
+  const items: Array<{
+    key: keyof TenantSettings["notifications"];
+    label: string;
+    hint: string;
+  }> = [
+    {
+      key: "lowStock",
+      label: "Stock bajo",
+      hint: "Avisa cuando un producto llegue a su mínimo.",
+    },
+    {
+      key: "creditDue",
+      label: "Créditos por vencer",
+      hint: "Avisa cuando una venta a crédito esté por vencer.",
+    },
+    {
+      key: "orderReceived",
+      label: "Pedido online recibido",
+      hint: "Avisa cuando entre un pedido de la tienda.",
+    },
+    {
+      key: "saleCreated",
+      label: "Cada venta registrada",
+      hint: "Aviso por venta (puede ser ruidoso).",
+    },
+  ];
+
+  return (
+    <SectionCard
+      icon={<Bell className="h-5 w-5" />}
+      title="Notificaciones"
+      description="Preferencias de avisos. Hoy solo guardamos la lógica: el envío por correo llegará después."
+    >
+      {items.map((item) => (
+        <SectionRow key={item.key} label={item.label} hint={item.hint}>
+          <Toggle
+            checked={notifications[item.key]}
+            onChange={(event) =>
+              void save({
+                notifications: {
+                  ...notifications,
+                  [item.key]: event.target.checked,
+                },
+              })
+            }
+          />
+        </SectionRow>
+      ))}
     </SectionCard>
   );
 }

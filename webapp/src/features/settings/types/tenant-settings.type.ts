@@ -31,6 +31,13 @@ export interface TenantSettings {
   routes: { enabled: boolean };
   /** Enabled return reasons (S5 of the sales overhaul). */
   returns: { reasons: string[] };
+  /** Logic-only notification switches (CRM S2). */
+  notifications: {
+    lowStock: boolean;
+    creditDue: boolean;
+    orderReceived: boolean;
+    saleCreated: boolean;
+  };
   /** Default terms for credit sales (S3). */
   credit: {
     initialPaymentUSD: number | null;

@@ -36,6 +36,12 @@ const base: TenantSettings = {
     everyNDays: 15,
     monthlyDay: 1,
   },
+  notifications: {
+    lowStock: true,
+    creditDue: true,
+    orderReceived: true,
+    saleCreated: false,
+  },
 };
 
 describe("settings-form (S4)", () => {

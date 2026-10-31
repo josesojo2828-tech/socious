@@ -62,6 +62,15 @@ const NEW_MODULES = [
     sortOrder: 70,
   },
   {
+    key: "NOTIFICATIONS",
+    name: "Notificaciones",
+    description:
+      "Avisos de stock, cobros y pedidos (lógica de preferencias; el envío llega después).",
+    icon: "bell",
+    category: "OPERATIONS",
+    sortOrder: 90,
+  },
+  {
     key: "PRESENTATIONS",
     name: "Presentaciones",
     description:
@@ -84,6 +93,7 @@ const PLAN_MODULES = {
     "SHIPPING",
     "ROUTES",
     "PRESENTATIONS",
+    "NOTIFICATIONS",
   ],
   PREMIUM: [
     "CLIENTS",
@@ -95,6 +105,7 @@ const PLAN_MODULES = {
     "SHIPPING",
     "ROUTES",
     "PRESENTATIONS",
+    "NOTIFICATIONS",
   ],
 } as const;
 

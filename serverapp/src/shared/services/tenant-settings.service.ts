@@ -299,6 +299,33 @@ export class TenantSettingsService {
       result.credit = patchSection;
     }
 
+    if (input.notifications !== undefined) {
+      const notifications = input.notifications as Record<string, unknown>;
+      assertKnownKeys("notifications", notifications, [
+        "lowStock",
+        "creditDue",
+        "orderReceived",
+        "saleCreated",
+      ]);
+      const patchSection: Partial<TenantSettings["notifications"]> = {};
+      for (const key of [
+        "lowStock",
+        "creditDue",
+        "orderReceived",
+        "saleCreated",
+      ] as const) {
+        const value = notifications[key];
+        if (value === undefined) continue;
+        if (typeof value !== "boolean") {
+          throw new BadRequestException(
+            `notifications.${key} debe ser verdadero o falso.`,
+          );
+        }
+        patchSection[key] = value;
+      }
+      result.notifications = patchSection;
+    }
+
     return result;
   }
 }
@@ -365,5 +392,6 @@ export function mergeTenantSettings(
       reasons: patch.returns?.reasons ?? base.returns.reasons,
     },
     credit: { ...base.credit, ...(patch.credit ?? {}) },
+    notifications: { ...base.notifications, ...(patch.notifications ?? {}) },
   });
 }

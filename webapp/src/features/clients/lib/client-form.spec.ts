@@ -27,11 +27,14 @@ describe("client-form (S8)", () => {
       expect(validateClientForm(form({ name: "   " }))).toMatch(/nombre/i);
     });
 
-    it("rejects a malformed email but accepts an empty one", () => {
-      expect(validateClientForm(form({ email: "no-es-correo" }))).toMatch(
-        /correo/i,
+    it("requires the email and rejects a malformed one", () => {
+      expect(validateClientForm(form({ email: "" }))).toBe(
+        "El correo es obligatorio.",
       );
-      expect(validateClientForm(form({ email: "" }))).toBeNull();
+      expect(validateClientForm(form({ email: "no-es-correo" }))).toMatch(
+        /formato válido/,
+      );
+      expect(validateClientForm(form({ email: " ok@x.com " }))).toBeNull();
     });
 
     it("rejects a negative credit limit", () => {

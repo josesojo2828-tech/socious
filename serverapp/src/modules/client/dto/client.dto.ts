@@ -22,9 +22,8 @@ export class CreateClientDto {
   @MaxLength(40, { message: "El documento no puede exceder 40 caracteres." })
   taxId?: string;
 
-  @IsOptional()
-  @IsEmail({}, { message: "Formato de email inválido." })
-  email?: string;
+  @IsEmail({}, { message: "El email es obligatorio y debe ser válido." })
+  email: string;
 
   @IsOptional()
   @IsString({ message: "El teléfono debe ser una cadena de texto." })

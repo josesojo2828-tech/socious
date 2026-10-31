@@ -22,6 +22,7 @@ import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
 import type { RequestWithUser } from "src/shared/types/server.type";
+import { CreateSupplierLocationDto, UpdateSupplierLocationDto } from "./dto/supplier-location.dto";
 
 /** Supplier directory (S4), tenant-scoped like the client module. */
 @Controller("api/suppliers")
@@ -85,6 +86,42 @@ export class SupplierController {
   ) {
     const scope = await this.resolveScope(request);
     return this.supplierService.create(scope, body);
+  }
+
+  // Ubicaciones (CRM S3)
+  @Get(":id/locations")
+  async listLocations(@Req() request: RequestWithUser, @Param("id") id: string) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.listLocations(scope, id);
+  }
+
+  @Post(":id/locations")
+  async createLocation(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: CreateSupplierLocationDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.createLocation(scope, id, body);
+  }
+
+  @Patch("locations/:locationId")
+  async updateLocation(
+    @Req() request: RequestWithUser,
+    @Param("locationId") locationId: string,
+    @Body() body: UpdateSupplierLocationDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.updateLocation(scope, locationId, body);
+  }
+
+  @Delete("locations/:locationId")
+  async removeLocation(
+    @Req() request: RequestWithUser,
+    @Param("locationId") locationId: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.removeLocation(scope, locationId);
   }
 
   @Patch(":id")

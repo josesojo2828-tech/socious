@@ -45,6 +45,7 @@ export function applySettingsPatch(
       reasons: patch.returns?.reasons ?? current.returns.reasons,
     },
     credit: { ...current.credit, ...(patch.credit ?? {}) },
+    notifications: { ...current.notifications, ...(patch.notifications ?? {}) },
   };
 }
 

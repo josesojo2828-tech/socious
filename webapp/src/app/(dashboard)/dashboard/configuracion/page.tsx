@@ -39,6 +39,7 @@ import { UnitsPanel } from "@/features/units/components/UnitsPanel";
 import { CategoriesPanel } from "@/features/categories/components/CategoriesPanel";
 import {
   CreditSettingsPanel,
+  NotificationsPanel,
   PaymentMethodsPanel,
   ReturnReasonsPanel,
 } from "@/features/settings/components/SalesSettingsPanels";
@@ -85,7 +86,7 @@ export default function SettingsPage() {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [tab, setTab] = useState<
-    "general" | "inventory" | "payments" | "credit" | "returns"
+    "general" | "inventory" | "payments" | "credit" | "returns" | "notifications"
   >("general");
   const [branchName, setBranchName] = useState<string>("");
   const [branchAddress, setBranchAddress] = useState<string>("");
@@ -262,6 +263,9 @@ export default function SettingsPage() {
             ["payments", "Pagos"],
             ["credit", "Ventas a crédito"],
             ["returns", "Devoluciones"],
+            ...(planModules.includes("NOTIFICATIONS")
+              ? ([["notifications", "Notificaciones"]] as const)
+              : []),
           ] as const
         ).map(([key, label]) => (
           <button
@@ -584,6 +588,13 @@ export default function SettingsPage() {
 
       {tab === "returns" && settings ? (
         <ReturnReasonsPanel
+          settings={settings}
+          save={async (patch) => save(() => patch as TenantSettingsPatch)}
+        />
+      ) : null}
+
+      {tab === "notifications" && settings ? (
+        <NotificationsPanel
           settings={settings}
           save={async (patch) => save(() => patch as TenantSettingsPatch)}
         />
