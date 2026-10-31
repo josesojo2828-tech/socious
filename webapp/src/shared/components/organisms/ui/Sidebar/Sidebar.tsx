@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useSyncExternalStore } from "react";
+import { Fragment, useEffect, useCallback, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import {
   LogOut,
@@ -70,13 +70,98 @@ const iconMap: Record<string, LucideIcon> = {
   adminstration: LucideIcons.ShieldAlert,
 };
 
+/**
+ * Color por sección (round 4): cada grupo del rail lleva su tinte — icono
+ * coloreado en reposo y fondo suave del mismo tono en el activo. El ciclo es
+ * determinista por índice para que no cambie entre renders.
+ */
+const SECTION_HUES = [
+  {
+    icon: "text-indigo-500 dark:text-indigo-400",
+    dot: "bg-indigo-500",
+    active:
+      "bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300",
+    bar: "shadow-[inset_2px_0_0_0_#6366f1]",
+    activeIcon: "text-indigo-600 dark:text-indigo-300",
+  },
+  {
+    icon: "text-emerald-600 dark:text-emerald-400",
+    dot: "bg-emerald-500",
+    active:
+      "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300",
+    bar: "shadow-[inset_2px_0_0_0_#10b981]",
+    activeIcon: "text-emerald-600 dark:text-emerald-300",
+  },
+  {
+    icon: "text-sky-600 dark:text-sky-400",
+    dot: "bg-sky-500",
+    active:
+      "bg-sky-500/10 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300",
+    bar: "shadow-[inset_2px_0_0_0_#0ea5e9]",
+    activeIcon: "text-sky-600 dark:text-sky-300",
+  },
+  {
+    icon: "text-amber-500 dark:text-amber-400",
+    dot: "bg-amber-500",
+    active:
+      "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
+    bar: "shadow-[inset_2px_0_0_0_#f59e0b]",
+    activeIcon: "text-amber-600 dark:text-amber-300",
+  },
+  {
+    icon: "text-rose-500 dark:text-rose-400",
+    dot: "bg-rose-500",
+    active:
+      "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300",
+    bar: "shadow-[inset_2px_0_0_0_#f43f5e]",
+    activeIcon: "text-rose-600 dark:text-rose-300",
+  },
+  {
+    icon: "text-violet-500 dark:text-violet-400",
+    dot: "bg-violet-500",
+    active:
+      "bg-violet-500/10 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300",
+    bar: "shadow-[inset_2px_0_0_0_#8b5cf6]",
+    activeIcon: "text-violet-600 dark:text-violet-300",
+  },
+  {
+    icon: "text-cyan-600 dark:text-cyan-400",
+    dot: "bg-cyan-500",
+    active:
+      "bg-cyan-500/10 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300",
+    bar: "shadow-[inset_2px_0_0_0_#06b6d4]",
+    activeIcon: "text-cyan-600 dark:text-cyan-300",
+  },
+  {
+    icon: "text-orange-500 dark:text-orange-400",
+    dot: "bg-orange-500",
+    active:
+      "bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300",
+    bar: "shadow-[inset_2px_0_0_0_#f97316]",
+    activeIcon: "text-orange-600 dark:text-orange-300",
+  },
+] as const;
+
+type SectionHue = (typeof SECTION_HUES)[number];
+
+/** Hash determinista (FNV-ish) título → índice de la paleta. */
+function sectionHue(title: string): SectionHue {
+  let hash = 0;
+  for (let i = 0; i < title.length; i += 1) {
+    hash = (hash * 31 + title.charCodeAt(i)) >>> 0;
+  }
+  return SECTION_HUES[hash % SECTION_HUES.length];
+}
+
 function SidebarLink({
   item,
+  hue,
   isCollapsed,
   pathname,
   close,
 }: {
   item: { title: string; icon: string; link: string };
+  hue: SectionHue;
   isCollapsed: boolean;
   pathname: string | null;
   close: () => void;
@@ -93,11 +178,11 @@ function SidebarLink({
       onClick={close}
       title={isCollapsed ? t(item?.title || "") : undefined}
       className={clsx(
-        "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] tracking-[-0.006em] transition-colors duration-[180ms] ease-[cubic-bezier(0.16,1,0.3,1)] group mb-px",
-        "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:-outline-offset-2",
+        "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] transition-colors duration-[180ms] ease-[cubic-bezier(0.16,1,0.3,1)] group mb-px",
+        "focus-visible:outline-2 focus-visible:outline-indigo-500 focus-visible:-outline-offset-2",
         isCollapsed && "justify-center px-0",
         isActive
-          ? "bg-[#e8eaee] text-[#171a1f] font-medium dark:bg-[#262a31] dark:text-white"
+          ? `font-medium ${hue.active} ${hue.bar}`
           : "text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white",
       )}
     >
@@ -105,9 +190,7 @@ function SidebarLink({
         size={17}
         className={clsx(
           "flex-shrink-0 transition-colors duration-150",
-          isActive
-            ? "text-[#171a1f] dark:text-white"
-            : "text-[#767d89] group-hover:text-[#575d67] dark:text-[#848b97] dark:group-hover:text-[#c9ced6]",
+          isActive ? hue.activeIcon : hue.icon,
         )}
       />
       {!isCollapsed && (
@@ -138,6 +221,7 @@ function SidebarSection({
   sectionKey,
   title,
   items,
+  hue,
   isCollapsed,
   pathname,
   close,
@@ -145,6 +229,7 @@ function SidebarSection({
   sectionKey: string;
   title: string;
   items: { title: string; icon: string; link: string }[];
+  hue: SectionHue;
   isCollapsed: boolean;
   pathname: string | null;
   close: () => void;
@@ -202,6 +287,7 @@ function SidebarSection({
           <SidebarLink
             key={item?.link || item?.title}
             item={item}
+            hue={hue}
             isCollapsed
             pathname={pathname}
             close={close}
@@ -212,14 +298,14 @@ function SidebarSection({
   }
 
   return (
-    <div className="mb-3.5 last:mb-0">
+    <div className="mb-5 last:mb-0">
       <button
         type="button"
         id={headerId}
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={toggle}
-        className="flex items-center gap-[7px] w-full h-[26px] px-2 text-[11.5px] font-semibold uppercase tracking-[0.09em] text-[#767d89] hover:text-[#575d67] dark:text-[#7d848f] dark:hover:text-[#aab0ba] transition-colors cursor-pointer border-0 bg-transparent rounded-[7px]"
+        className="flex items-center gap-[7px] w-full h-[26px] px-2 text-[11.5px] font-bold uppercase tracking-[0.13em] text-[#767d89] hover:text-[#575d67] dark:text-[#7d848f] dark:hover:text-[#aab0ba] transition-colors cursor-pointer border-0 bg-transparent rounded-[7px]"
       >
         <ChevronDown
           size={12}
@@ -229,6 +315,7 @@ function SidebarSection({
             isOpen ? "rotate-0" : "-rotate-90",
           )}
         />
+        <span className={clsx("w-1.5 h-1.5 rounded-full flex-none", hue.dot)} />
         <span className="truncate">{t(title)}</span>
       </button>
 
@@ -248,6 +335,7 @@ function SidebarSection({
             <SidebarLink
               key={item?.link || item?.title}
               item={item}
+              hue={hue}
               isCollapsed={false}
               pathname={pathname}
               close={close}
@@ -288,6 +376,66 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
   const showCreate =
     activeWorkspace?.type === "ORGANIZATION" && !isGlobalAdmin && !isPatient;
 
+  // Secciones visibles calculadas fuera del JSX (puras): el divisor entre
+  // grupos sale del índice, sin contadores mutantes en render.
+  const navSections = (sidebar || [])
+    .map((section, idx) => {
+      const items = (section?.items || []).filter((subItem) => {
+        const link = subItem?.link || "";
+        const title = subItem?.title || "";
+
+        if (isPatient) {
+          const forbiddenPatientLinks = [
+            '/dashboard/patients',
+            '/dashboard/menu',
+            '/dashboard/diets',
+            '/dashboard/foods',
+            '/dashboard/exchange-list',
+            '/dashboard/exchange-food',
+            '/dashboard/condiments',
+            '/dashboard/institutional',
+            '/dashboard/subscription',
+            '/dashboard/organization',
+            '/dashboard/community',
+            '/dashboard/campus',
+            '/dashboard/marketplace',
+            '/dashboard/adoption',
+            '/dashboard/activity',
+            '/dashboard/users',
+            '/dashboard/permits',
+            '/dashboard/transactions',
+            '/dashboard/wallets',
+          ];
+          if (forbiddenPatientLinks.some((forbidden) => link.startsWith(forbidden))) {
+            return false;
+          }
+        }
+
+        if (activeWorkspace?.type === "PERSONAL") {
+          if (
+            link.includes('/dashboard/organization') ||
+            title.toLowerCase().includes('clínica') ||
+            title.toLowerCase().includes('clinica')
+          ) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (items.length === 0) return null;
+
+      const sectionKey =
+        slugify(section?.title || "") ||
+        slugify(section?.icon || "") ||
+        `section-${idx}`;
+
+      return { section, idx, items, sectionKey };
+    })
+    .filter(
+      (entry): entry is NonNullable<typeof entry> => entry !== null,
+    );
+
   return (
     <>
       {/* Overlay para móvil */}
@@ -319,9 +467,9 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               )}
             >
               <span
-                className="w-7 h-7 flex-none rounded-lg grid place-items-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)]"
+                className="w-7 h-7 flex-none rounded-lg grid place-items-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),0_0_0_3px_rgba(99,102,241,0.16)]"
                 style={{
-                  background: "linear-gradient(155deg,#1d6f8c 0%,#17566f 100%)",
+                  background: "linear-gradient(155deg,#4f46e5 0%,#3730a3 100%)",
                 }}
                 aria-label="Socius ERP"
               >
@@ -351,7 +499,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 onClick={close}
                 className={clsx(
                   "mt-3 flex items-center gap-2 h-[34px] px-3 rounded-[7px] text-white text-[14.5px] font-semibold tracking-[-0.008em] transition-all",
-                  "bg-[#1d6f8c] hover:bg-[#14556e] hover:-translate-y-px active:translate-y-0 shadow-[0_1px_2px_rgba(20,60,80,0.25)]",
+                  "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-px active:translate-y-0 shadow-[0_1px_2px_rgba(49,46,129,0.3)]",
                   "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:outline-offset-2",
                   isCollapsed && "justify-center px-0",
                 )}
@@ -366,73 +514,26 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
           </div>
 
           {/* Nav Items */}
-          <nav className="sidebar-nav flex-1 py-3 px-3 overflow-y-auto">
-            {(sidebar || []).map((section, idx) => {
-              const items = section?.items || [];
-              if (!items || items.length === 0) return null;
-
-              const filteredItems = items.filter((subItem) => {
-                const link = subItem?.link || "";
-                const title = subItem?.title || "";
-
-                if (isPatient) {
-                  const forbiddenPatientLinks = [
-                    '/dashboard/patients',
-                    '/dashboard/menu',
-                    '/dashboard/diets',
-                    '/dashboard/foods',
-                    '/dashboard/exchange-list',
-                    '/dashboard/exchange-food',
-                    '/dashboard/condiments',
-                    '/dashboard/institutional',
-                    '/dashboard/subscription',
-                    '/dashboard/organization',
-                    '/dashboard/community',
-                    '/dashboard/campus',
-                    '/dashboard/marketplace',
-                    '/dashboard/adoption',
-                    '/dashboard/activity',
-                    '/dashboard/users',
-                    '/dashboard/permits',
-                    '/dashboard/transactions',
-                    '/dashboard/wallets',
-                  ];
-                  if (forbiddenPatientLinks.some((forbidden) => link.startsWith(forbidden))) {
-                    return false;
-                  }
-                }
-
-                if (activeWorkspace?.type === 'PERSONAL') {
-                  if (
-                    link.includes('/dashboard/organization') ||
-                    title.toLowerCase().includes('clínica') ||
-                    title.toLowerCase().includes('clinica')
-                  ) {
-                    return false;
-                  }
-                }
-                return true;
-              });
-
-              if (filteredItems.length === 0) return null;
-
-              const sectionKey =
-                slugify(section?.title || "") ||
-                slugify(section?.icon || "") ||
-                `section-${idx}`;
-
-              return (
+          <nav className="sidebar-nav flex-1 py-4 px-3 overflow-y-auto">
+            {navSections.map((entry, i) => (
+              <Fragment key={entry.section?.icon || entry.section?.title || entry.idx}>
+                {i > 0 ? (
+                  <div
+                    className="h-px bg-[#e5e7ec] dark:bg-[#22252c] mx-1 my-3.5"
+                    aria-hidden
+                  />
+                ) : null}
                 <SidebarSection
-                  key={section?.icon || section?.title || idx}
-                  sectionKey={sectionKey}
-                  title={section?.title || ""}
-                  items={filteredItems}
+                  sectionKey={entry.sectionKey}
+                  title={entry.section?.title || ""}
+                  items={entry.items}
+                  hue={sectionHue(entry.section?.title || `section-${entry.idx}`)}
                   isCollapsed={isCollapsed}
                   pathname={pathname}
                   close={close}
                 />
-              );
-            })}
+              </Fragment>
+            ))}
           </nav>
 
           {/* Footer estilo .rail-foot */}
@@ -442,11 +543,11 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               htmlFor="feedback-drawer"
               title={isCollapsed ? t("common.sidebar.feedback") : undefined}
               className={clsx(
-                "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-colors cursor-pointer group",
+                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] text-emerald-700 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 dark:text-emerald-300 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25 dark:border-emerald-500/25 transition-colors cursor-pointer group",
                 isCollapsed && "justify-center px-0",
               )}
             >
-              <MessageSquarePlus size={17} className="flex-none text-[#767d89] group-hover:text-[#1d6f8c] dark:text-[#848b97] transition-colors" />
+              <MessageSquarePlus size={17} className="flex-none text-emerald-600 dark:text-emerald-400" />
               {!isCollapsed && (
                 <span className="flex-1 truncate text-left">
                   {t("common.sidebar.feedback")}
@@ -463,7 +564,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               }}
               title={isCollapsed ? t("common.auth.logout") : undefined}
               className={clsx(
-                "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] w-full text-[#575d67] hover:bg-[#fdefef] hover:text-[#b4423a] dark:text-[#9aa1ad] dark:hover:bg-[#2a1618] dark:hover:text-[#e5857c] transition-colors cursor-pointer border-0 bg-transparent",
+                "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#575d67] hover:bg-[#fdefef] hover:text-[#b4423a] dark:text-[#9aa1ad] dark:hover:bg-[#2a1618] dark:hover:text-[#e5857c] transition-colors cursor-pointer border-0 bg-transparent",
                 isCollapsed && "justify-center px-0",
               )}
             >
@@ -482,7 +583,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
             <button
               onClick={toggleCollapse}
               className={clsx(
-                "hidden md:flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] w-full text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent",
+                "hidden md:flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] w-full text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white transition-all cursor-pointer border-0 bg-transparent",
                 isCollapsed && "justify-center px-0",
               )}
               title={
