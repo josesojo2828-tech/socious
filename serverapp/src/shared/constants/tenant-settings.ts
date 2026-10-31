@@ -108,10 +108,10 @@ const asTypeList = (
   fallback: FulfillmentType[],
 ): FulfillmentType[] => {
   if (!Array.isArray(value)) return fallback;
-  const types = [...new Set(value.filter(isFulfillmentType))];
-  // An empty list would leave the checkout with nothing to offer, so it is
-  // treated as "not configured" and the defaults come back.
-  return types.length > 0 ? types : fallback;
+  // An explicitly empty list is a legal choice: the merchant turned every
+  // type off and coordinates pickups manually (e.g. over WhatsApp). Only a
+  // missing or corrupt value falls back to the defaults.
+  return [...new Set(value.filter(isFulfillmentType))];
 };
 
 const asAgencyList = (

@@ -142,11 +142,8 @@ export class TenantSettingsService {
             `Tipo de entrega desconocido: "${String(invalid)}". Valores: ${FULFILLMENT_TYPES.join(", ")}.`,
           );
         }
-        if (list.length === 0) {
-          throw new BadRequestException(
-            "Selecciona al menos un tipo de entrega.",
-          );
-        }
+        // An empty list is legal: the merchant may turn every type off and
+        // coordinate pickups manually (e.g. over WhatsApp).
         patchSection.enabledTypes = [...new Set(list)] as FulfillmentEnabled;
       }
 

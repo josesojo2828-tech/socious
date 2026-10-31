@@ -139,12 +139,13 @@ describe("TenantSettingsService", () => {
       { fulfillment: { enabledTypes: ["DRONE"] } },
       /Tipo de entrega desconocido/,
     );
-    rejects(
-      "rejects an empty fulfillment list at the service boundary too",
-      { fulfillment: { enabledTypes: [] } },
-      /./,
-      undefined,
-    );
+    it("accepts an empty fulfillment list so every type can be turned off", async () => {
+      const { service } = makeService();
+      const settings = await service.update(ORG, {
+        fulfillment: { enabledTypes: [] },
+      });
+      expect(settings.fulfillment.enabledTypes).toEqual([]);
+    });
     rejects(
       "rejects a negative delivery fee",
       { delivery: { feeUSD: -1 } },
