@@ -146,7 +146,8 @@ function RegisterFormContent() {
         message: 'Tu cuenta ha sido creada exitosamente. Seleccioná tu plan para comenzar.',
       });
 
-      router.push('/dashboard/subscription');
+      // The account is safe; the business profile is the next step.
+      router.push('/onboarding/business');
     } catch (error) {
       console.error(error);
       const apiMsg =

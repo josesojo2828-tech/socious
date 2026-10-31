@@ -36,7 +36,7 @@ export default function DashboardLayout({
     const router = useRouter();
     const pathname = usePathname();
     const { user, isAuthenticated, sidebar, refreshSession, logout } = useAuthStore();
-    const { hasLoaded, isLoading, fetchWorkspaces } = useWorkspaceStore();
+    const { hasLoaded, isLoading, fetchWorkspaces, workspaces } = useWorkspaceStore();
     const [isAuthorized, setIsAuthorized] = useState(false);
 
     const isSuperAdminOrAdmin =
@@ -56,6 +56,11 @@ export default function DashboardLayout({
             )
         );
     }, [isSuperAdminOrAdmin, isPatient, user?.subscriptions]);
+
+    const hasOrganization = useMemo(
+        () => workspaces.some((w) => w.type === 'ORGANIZATION'),
+        [workspaces],
+    );
 
     const { t } = useTranslation();
     const userName = user?.email || "Usuario";
@@ -102,10 +107,18 @@ export default function DashboardLayout({
             router.replace('/dashboard');
             return;
         }
+        // Business-first: an account without an organization must finish
+        // onboarding before anything else — this is what turns orphaned
+        // registrations into working ERP tenants. Platform admins manage the
+        // whole fleet and never need one.
+        if (hasLoaded && !isSuperAdminOrAdmin && !hasOrganization) {
+            router.replace('/onboarding/business');
+            return;
+        }
         if (isAuthorized && !hasActiveSubscription && pathname !== '/dashboard/subscription') {
             router.replace('/dashboard/subscription');
         }
-    }, [isAuthorized, hasActiveSubscription, isPatient, pathname, router]);
+    }, [hasLoaded, hasOrganization, isAuthorized, hasActiveSubscription, isPatient, isSuperAdminOrAdmin, pathname, router]);
 
     // The api client only attaches X-Workspace-Id once the store resolved the
     // organization; without it every mutating dashboard call answers 403
