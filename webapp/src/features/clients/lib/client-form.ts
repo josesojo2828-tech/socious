@@ -79,6 +79,24 @@ export function balanceState(currentBalanceUSD: number, creditLimitUSD: number):
   return { tone: "attention", label: `Debe $${balance.toFixed(2)}` };
 }
 
+/** Summary strip aggregates for the client list (Maison CRUD, S1). */
+export interface PortfolioSummary {
+  total: number;
+  active: number;
+  withBalance: number;
+}
+
+/** Real aggregates for the list strip: total, active and balance > 0. */
+export function portfolioSummary(clients: Client[]): PortfolioSummary {
+  return {
+    total: clients.length,
+    active: clients.filter((client) => client.isActive).length,
+    withBalance: clients.filter(
+      (client) => Number(client.currentBalanceUSD) > 0,
+    ).length,
+  };
+}
+
 /** Flattens a client into the editable form. */
 export function toClientForm(client: Client): ClientForm {
   return {

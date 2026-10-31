@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   balanceState,
   buildClientPayload,
+  portfolioSummary,
   toClientForm,
   validateClientForm,
   type ClientForm,
 } from "./client-form";
+import type { Client } from "../types/client.type";
 
 const form = (overrides: Partial<ClientForm> = {}): ClientForm => ({
   name: " Almacén El Sol ",
@@ -102,6 +104,46 @@ describe("client-form (S8)", () => {
       expect(parsed.creditLimitUSD).toBe(500);
       expect(parsed.taxId).toBe("");
       expect(parsed.isActive).toBe(true);
+    });
+  });
+
+  describe("portfolioSummary", () => {
+    const client = (overrides: Partial<Client>): Client => ({
+      id: "c-1",
+      name: "Cliente",
+      creditLimitUSD: 0,
+      currentBalanceUSD: 0,
+      isActive: true,
+      ...overrides,
+    });
+
+    it("counts the portfolio, the active ones and the ones with balance", () => {
+      const summary = portfolioSummary([
+        client({ id: "c-1", isActive: true, currentBalanceUSD: "0.00" }),
+        client({ id: "c-2", isActive: true, currentBalanceUSD: "42.50" }),
+        client({ id: "c-3", isActive: false, currentBalanceUSD: "10.00" }),
+        client({ id: "c-4", isActive: false, currentBalanceUSD: 0 }),
+      ]);
+
+      expect(summary).toEqual({ total: 4, active: 2, withBalance: 2 });
+    });
+
+    it("treats stored decimal strings as numbers", () => {
+      const summary = portfolioSummary([
+        client({ currentBalanceUSD: "0.00" }),
+        client({ currentBalanceUSD: "-3.00" }),
+        client({ currentBalanceUSD: Number.NaN }),
+      ]);
+
+      expect(summary.withBalance).toBe(0);
+    });
+
+    it("stays sane on an empty portfolio", () => {
+      expect(portfolioSummary([])).toEqual({
+        total: 0,
+        active: 0,
+        withBalance: 0,
+      });
     });
   });
 });
