@@ -211,232 +211,227 @@ export default function HomeDashboard() {
     );
   }
 
+  const kpis: {
+    label: string;
+    value: string;
+    sub: string;
+    deltaPct?: number | null;
+  }[] = [
+    {
+      label: "Ventas hoy",
+      value: usd(todayUSD),
+      sub: `${todayCount} venta${todayCount === 1 ? "" : "s"} · vs ayer`,
+      deltaPct,
+    },
+    {
+      label: "Dinero en la calle",
+      value: usd(arTotalUSD),
+      sub: "Saldo total por cobrar",
+    },
+    {
+      label: "Cuentas por cobrar",
+      value: String(openItems.length),
+      sub: "Facturas abiertas",
+    },
+    {
+      label: "Pedidos pendientes",
+      value: String(pendingOrders),
+      sub: "En la bandeja",
+    },
+  ];
+
   const arTop = openItems.slice(0, 5);
 
   return (
-    <div className="rounded-xl border border-[#1b1d21]/12 bg-[#fafaf7] overflow-hidden">
-      {/* Franja superior */}
-      <div className="px-5 sm:px-8 py-4 border-b border-[#1b1d21]/12 flex items-baseline justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="font-semibold text-[15px] tracking-tight text-[#1b1d21]">
-            Panel
-          </span>
-          <span className="font-mono text-[11px] text-[#1b1d21]/65 border-l border-[#1b1d21]/12 pl-3 hidden sm:inline">
-            SOCIOUS ERP
-          </span>
+    <div className="space-y-6">
+      {/* Título sobre el fondo de la página */}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-[#1b1d21] dark:text-slate-100">
+            Dashboard
+          </h1>
+          <p className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 mt-1">
+            DATOS EN VIVO · SOCIOUS ERP
+          </p>
         </div>
-        <span className="font-mono text-[10px] text-[#1b1d21]/65 uppercase tracking-[0.14em] tnum">
+        <span className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 tnum">
           {new Date().toLocaleDateString("es-VE", {
-            weekday: "short",
+            weekday: "long",
             day: "2-digit",
-            month: "short",
+            month: "long",
             year: "numeric",
           })}
         </span>
       </div>
 
-      {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-[#1b1d21]/12 border-b border-[#1b1d21]/12">
-        <div className="bg-[#fafaf7] p-5 sm:p-6">
-          <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#1b1d21]/65">
-            Ventas hoy
-          </p>
-          <div className="mt-4 flex items-end justify-between gap-2">
-            <span className="font-mono text-[30px] sm:text-[36px] leading-none font-medium tnum text-[#1b1d21]">
-              {usd(todayUSD)}
-            </span>
-            {deltaPct !== null ? (
-              <span
-                className={`font-mono text-[12px] tnum mb-1 flex items-center gap-0.5 ${
-                  deltaPct >= 0 ? "text-[#128454]" : "text-[#c63749]"
-                }`}
-              >
-                {deltaPct >= 0 ? (
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                ) : (
-                  <ArrowDownRight className="h-3.5 w-3.5" />
-                )}
-                {deltaPct >= 0 ? "+" : ""}
-                {deltaPct.toFixed(1)}%
-              </span>
-            ) : null}
-          </div>
-          <p className="mt-2 text-xs text-[#1b1d21]/55">
-            {todayCount} venta{todayCount === 1 ? "" : "s"} · vs ayer
-          </p>
-        </div>
-
-        <div className="bg-[#fafaf7] p-5 sm:p-6">
-          <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#1b1d21]/65">
-            Dinero en la calle
-          </p>
-          <div className="mt-4">
-            <span className="font-mono text-[30px] sm:text-[36px] leading-none font-medium tnum text-[#1b1d21]">
-              {usd(arTotalUSD)}
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-[#1b1d21]/55">
-            Saldo total por cobrar
-          </p>
-        </div>
-
-        <div className="bg-[#fafaf7] p-5 sm:p-6">
-          <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#1b1d21]/65">
-            Cuentas por cobrar
-          </p>
-          <div className="mt-4">
-            <span className="font-mono text-[30px] sm:text-[36px] leading-none font-medium tnum text-[#1b1d21]">
-              {openItems.length}
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-[#1b1d21]/55">Facturas abiertas</p>
-        </div>
-
-        <div className="bg-[#fafaf7] p-5 sm:p-6">
-          <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#1b1d21]/65">
-            Pedidos pendientes
-          </p>
-          <div className="mt-4">
-            <span className="font-mono text-[30px] sm:text-[36px] leading-none font-medium tnum text-[#1b1d21]">
-              {pendingOrders}
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-[#1b1d21]/55">En la bandeja</p>
-        </div>
+      {/* KPIs: cada stat en su propia card */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {kpis.map((kpi) => {
+          const showDelta =
+            kpi.deltaPct !== null && kpi.deltaPct !== undefined;
+          const up = (kpi.deltaPct ?? 0) >= 0;
+          return (
+            <div
+              key={kpi.label}
+              className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] p-5"
+            >
+              <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#1b1d21]/65 dark:text-slate-400">
+                {kpi.label}
+              </p>
+              <div className="mt-4 flex items-end justify-between gap-2">
+                <span className="font-mono text-[28px] sm:text-[32px] leading-none font-medium tnum text-[#1b1d21] dark:text-slate-50">
+                  {kpi.value}
+                </span>
+                {showDelta ? (
+                  <span
+                    className={`font-mono text-[12px] tnum mb-1 flex items-center gap-0.5 ${
+                      up ? "text-[#128454]" : "text-[#c63749]"
+                    }`}
+                  >
+                    {up ? (
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    ) : (
+                      <ArrowDownRight className="h-3.5 w-3.5" />
+                    )}
+                    {up ? "+" : ""}
+                    {kpi.deltaPct!.toFixed(1)}%
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-2 text-xs text-[#1b1d21]/55 dark:text-slate-400">
+                {kpi.sub}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Cuerpo */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 p-5 sm:p-8">
-        {/* Mapa de calor */}
+      {/* Cuerpo: heat + tablas, cada uno en su card */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <section className="xl:col-span-7">
-          <div className="flex items-baseline justify-between mb-4">
-            <h2 className="font-semibold text-[17px] tracking-tight text-[#1b1d21]">
-              Ventas por día
-            </h2>
-            <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-[#1b1d21]/65">
-              Últimas 4 semanas · por día
-            </span>
-          </div>
-          <div className="rounded-xl bg-white border border-[#1b1d21]/12 shadow-[0_1px_2px_rgba(27,29,33,0.05)] p-5">
-            {heat ? (
-              <>
-                <div className="overflow-x-auto">
-                  <div className="min-w-[420px]">
-                    <div
-                      className="grid gap-1"
-                      style={{
-                        gridTemplateColumns: "64px repeat(7, minmax(0,1fr))",
-                      }}
-                    >
-                      <span />
-                      {heat.weekdays.map((day) => (
-                        <span
-                          key={day}
-                          className="text-center font-mono text-[10px] text-[#1b1d21]/55 pb-1"
-                        >
-                          {day}
-                        </span>
-                      ))}
-                      {heat.cells.map((row, weekIdx) => (
-                        <Fragment key={heat.labels[weekIdx]}>
-                          <span className="flex items-center justify-end pr-2 font-mono text-[10px] text-[#1b1d21]/55">
-                            {heat.labels[weekIdx]}
+          <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
+            <CardHeader title="Ventas por día" note="últimas 4 semanas" />
+            <div className="p-5">
+              {heat ? (
+                <>
+                  <div className="overflow-x-auto">
+                    <div className="min-w-[420px]">
+                      <div
+                        className="grid gap-1"
+                        style={{
+                          gridTemplateColumns: "64px repeat(7, minmax(0,1fr))",
+                        }}
+                      >
+                        <span />
+                        {heat.weekdays.map((day) => (
+                          <span
+                            key={day}
+                            className="text-center font-mono text-[10px] text-[#1b1d21]/55 dark:text-slate-400 pb-1"
+                          >
+                            {day}
                           </span>
-                          {row.map((count, dayIdx) => {
-                            if (count === null) {
+                        ))}
+                        {heat.cells.map((row, weekIdx) => (
+                          <Fragment key={heat.labels[weekIdx]}>
+                            <span className="flex items-center justify-end pr-2 font-mono text-[10px] text-[#1b1d21]/55 dark:text-slate-400">
+                              {heat.labels[weekIdx]}
+                            </span>
+                            {row.map((count, dayIdx) => {
+                              if (count === null) {
+                                return (
+                                  <div
+                                    key={dayIdx}
+                                    className="h-9 rounded-[3px] border border-dashed border-[#1b1d21]/10 dark:border-white/10"
+                                  />
+                                );
+                              }
+                              const ratio = count / heat.max;
+                              const opacity =
+                                count === 0 ? 0.04 : 0.18 + ratio * 0.74;
                               return (
                                 <div
                                   key={dayIdx}
-                                  className="h-9 rounded-[3px] border border-dashed border-[#1b1d21]/10"
-                                />
+                                  title={`${count} venta${count === 1 ? "" : "s"}`}
+                                  className="h-9 rounded-[3px] flex items-center justify-center font-mono text-[11px] tnum"
+                                  style={{
+                                    backgroundColor: `rgba(79,70,229,${opacity})`,
+                                    color:
+                                      count > 0 && ratio > 0.55
+                                        ? "rgba(255,255,255,0.95)"
+                                        : "rgba(27,29,33,0.55)",
+                                  }}
+                                >
+                                  {count}
+                                </div>
                               );
-                            }
-                            const ratio = count / heat.max;
-                            const opacity =
-                              count === 0 ? 0.04 : 0.18 + ratio * 0.74;
-                            return (
-                              <div
-                                key={dayIdx}
-                                title={`${count} venta${count === 1 ? "" : "s"}`}
-                                className="h-9 rounded-[3px] flex items-center justify-center font-mono text-[11px] tnum"
-                                style={{
-                                  backgroundColor: `rgba(79,70,229,${opacity})`,
-                                  color:
-                                    count > 0 && ratio > 0.55
-                                      ? "rgba(255,255,255,0.95)"
-                                      : "rgba(27,29,33,0.55)",
-                                }}
-                              >
-                                {count}
-                              </div>
-                            );
-                          })}
-                        </Fragment>
-                      ))}
+                            })}
+                          </Fragment>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-5 pt-4 border-t border-[#1b1d21]/12 flex items-center justify-between">
-                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#1b1d21]/65">
-                    Ventas
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] text-[#1b1d21]/65">0</span>
-                    <div className="flex">
-                      {[0.08, 0.25, 0.45, 0.68, 0.9].map((opacity) => (
-                        <div
-                          key={opacity}
-                          className="w-6 h-3"
-                          style={{ backgroundColor: `rgba(79,70,229,${opacity})` }}
-                        />
-                      ))}
-                    </div>
-                    <span className="font-mono text-[10px] text-[#1b1d21]/65">
-                      {heat.max}
+                  <div className="mt-5 pt-4 border-t border-[#1b1d21]/12 dark:border-white/10 flex items-center justify-between">
+                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#1b1d21]/65 dark:text-slate-400">
+                      Ventas
                     </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] text-[#1b1d21]/65 dark:text-slate-400">
+                        0
+                      </span>
+                      <div className="flex">
+                        {[0.08, 0.25, 0.45, 0.68, 0.9].map((opacity) => (
+                          <div
+                            key={opacity}
+                            className="w-6 h-3"
+                            style={{
+                              backgroundColor: `rgba(79,70,229,${opacity})`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-mono text-[10px] text-[#1b1d21]/65 dark:text-slate-400">
+                        {heat.max}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </>
-            ) : (
-              <p className="text-sm text-slate-500 py-6 text-center">
-                Sin datos de ventas.
-              </p>
-            )}
+                </>
+              ) : (
+                <p className="text-sm text-slate-500 py-6 text-center">
+                  Sin datos de ventas.
+                </p>
+              )}
+            </div>
           </div>
         </section>
 
-        {/* Tablas */}
         <section className="xl:col-span-5 space-y-6">
-          <div className="rounded-xl bg-white border border-[#1b1d21]/12 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
+          <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
             <CardHeader title="Cuentas por cobrar" note="más recientes" />
             {arTop.length === 0 ? (
-              <p className="px-5 py-6 text-sm text-[#1b1d21]/55 text-center">
+              <p className="px-5 py-6 text-sm text-[#1b1d21]/55 dark:text-slate-400 text-center">
                 Todo cobrado: no hay cuentas abiertas.
               </p>
             ) : (
-              <ul className="divide-y divide-[#1b1d21]/12">
+              <ul className="divide-y divide-[#1b1d21]/12 dark:divide-white/10">
                 {arTop.map((item) => (
-                  <li
-                    key={item.id}
-                    className="px-5 py-3 flex items-center gap-3"
-                  >
-                    <span className="font-mono text-[12px] tnum text-[#1b1d21]/75 w-24 shrink-0">
+                  <li key={item.id} className="px-5 py-3 flex items-center gap-3">
+                    <span className="font-mono text-[12px] tnum text-[#1b1d21]/75 dark:text-slate-300 w-24 shrink-0">
                       {item.saleNumber}
                     </span>
-                    <span className="flex-1 min-w-0 text-[13px] truncate text-[#1b1d21]">
+                    <span className="flex-1 min-w-0 text-[13px] truncate text-[#1b1d21] dark:text-slate-100">
                       {item.client?.name ?? "Sin cliente"}
                     </span>
                     <span
                       className={`font-mono text-[11px] tnum ${
                         item.daysOverdue > 0
                           ? "text-[#c63749]"
-                          : "text-[#1b1d21]/55"
+                          : "text-[#1b1d21]/55 dark:text-slate-400"
                       }`}
                     >
                       {item.daysOverdue > 0 ? `${item.daysOverdue}d` : "al día"}
                     </span>
-                    <span className="font-mono text-[12px] tnum font-medium text-right w-20">
+                    <span className="font-mono text-[12px] tnum font-medium text-right w-20 text-[#1b1d21] dark:text-slate-100">
                       {usd(item.totalUSD)}
                     </span>
                   </li>
@@ -445,25 +440,26 @@ export default function HomeDashboard() {
             )}
           </div>
 
-          <div className="rounded-xl bg-white border border-[#1b1d21]/12 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
+          <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
             <CardHeader title="Pedidos" note="recientes" />
             {recentOrders.length === 0 ? (
-              <p className="px-5 py-6 text-sm text-[#1b1d21]/55 text-center">
+              <p className="px-5 py-6 text-sm text-[#1b1d21]/55 dark:text-slate-400 text-center">
                 Sin pedidos todavía.
               </p>
             ) : (
-              <ul className="divide-y divide-[#1b1d21]/12">
+              <ul className="divide-y divide-[#1b1d21]/12 dark:divide-white/10">
                 {recentOrders.map((order) => {
-                  const status = ORDER_STATUS[order.status] ?? ORDER_STATUS.PENDING;
+                  const status =
+                    ORDER_STATUS[order.status] ?? ORDER_STATUS.PENDING;
                   return (
                     <li
                       key={order.id}
                       className="px-5 py-3 flex items-center gap-3"
                     >
-                      <span className="font-mono text-[12px] tnum text-[#1b1d21]/75 w-24 shrink-0">
+                      <span className="font-mono text-[12px] tnum text-[#1b1d21]/75 dark:text-slate-300 w-24 shrink-0">
                         {order.orderNumber}
                       </span>
-                      <span className="flex-1 min-w-0 text-[13px] truncate text-[#1b1d21]">
+                      <span className="flex-1 min-w-0 text-[13px] truncate text-[#1b1d21] dark:text-slate-100">
                         {order.customerName}
                       </span>
                       <span
@@ -471,7 +467,7 @@ export default function HomeDashboard() {
                       >
                         {status.label}
                       </span>
-                      <span className="font-mono text-[12px] tnum font-medium text-right w-20">
+                      <span className="font-mono text-[12px] tnum font-medium text-right w-20 text-[#1b1d21] dark:text-slate-100">
                         {usd(Number(order.totalUSD))}
                       </span>
                     </li>
