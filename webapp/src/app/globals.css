@@ -229,3 +229,25 @@ body {
   margin-bottom: 1.25rem;
   color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
 }
+
+/* Northpeak rail: scrollbar sutil en la navegación del sidebar */
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: #d8dbe2 transparent;
+}
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #d8dbe2;
+  border-radius: 3px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-theme="dark"] .sidebar-nav {
+  scrollbar-color: #2a2e36 transparent;
+}
+[data-theme="dark"] .sidebar-nav::-webkit-scrollbar-thumb {
+  background: #2a2e36;
+}

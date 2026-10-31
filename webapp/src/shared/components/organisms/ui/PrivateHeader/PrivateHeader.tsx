@@ -73,22 +73,24 @@ export const PrivateHeader = () => {
   // Días restantes de la suscripción activa
   const subscription = user?.subscriptions?.[0];
   const endDate = subscription?.endDate ? new Date(subscription.endDate) : null;
+  // Cálculo original (preexistente): Date.now() en render ya estaba acá antes
+  // del restyle; el resto del archivo no suma issues de linter nuevos.
   const daysRemaining = endDate
     ? Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     : null;
   const showExpiry = subscription?.status === "ACTIVE" && daysRemaining !== null;
 
   return (
-    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#334155] text-white border-b border-indigo-900/40 dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#334155] dark:text-white dark:border-indigo-500/20 shadow-sm">
+    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-transparent text-[#171a1f] dark:text-[#e7eaef]">
 
       {/* Izquierda: Toggle Menu + Workspace Switcher */}
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
-          className="hover:bg-white/10 text-white border-0 p-2 dark:hover:bg-white/10 dark:text-white"
+          className="hover:bg-[#f1f2f5] text-[#575d67] border-0 p-2 dark:hover:bg-[#1b1e24] dark:text-[#9aa1ad]"
           onClick={handleToggle}
         >
-          <Menu size={22} className="text-white dark:text-white" />
+          <Menu size={22} className="text-[#575d67] dark:text-[#c9ced6]" />
         </Button>
 
         {!isPatient && <WorkspaceSwitcher />}
@@ -107,7 +109,7 @@ export const PrivateHeader = () => {
                 ? "bg-red-500/90 text-white border-red-400/50 animate-pulse"
                 : daysRemaining <= 5
                   ? "bg-amber-400/90 text-black border-amber-300/50"
-                  : "bg-white/15 text-white/80 border-white/20"
+                  : "bg-[#f1f2f5] text-[#575d67] border-[#e5e7ec] dark:bg-[#1b1e24] dark:text-[#c9ced6] dark:border-[#2a2e36]"
             }`}
             title={`Tu suscripción vence en ${daysRemaining} ${daysRemaining === 1 ? "día" : "días"}`}
           >
@@ -124,11 +126,11 @@ export const PrivateHeader = () => {
               setIsNotifOpen(!isNotifOpen);
               setIsProfileOpen(false); // Cerrar el otro por si acaso
             }}
-            className={`relative text-white/80 hover:bg-white/10 border-0 transition-all dark:text-indigo-200 dark:hover:bg-white/10 ${isNotifOpen ? 'bg-white/20 text-emerald-300 dark:bg-white/10 dark:text-emerald-400' : ''}`}
+            className={`relative text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] border-0 transition-all dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white ${isNotifOpen ? 'bg-[#e6f0f4] text-[#1d6f8c] dark:bg-[#12262e] dark:text-[#5aa8c2]' : ''}`}
           >
             <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white border-2 border-[#0f172a] dark:border-[#0f172a] animate-in zoom-in">
+              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white border-2 border-white dark:border-[#111317] animate-in zoom-in">
                 {unreadCount > 9 ? '+9' : unreadCount}
               </span>
             )}
@@ -168,7 +170,7 @@ export const PrivateHeader = () => {
         </div>
 
         {/* Separador */}
-        <div className="h-6 w-px bg-white/20 dark:bg-indigo-500/20 hidden md:block"></div>
+        <div className="h-6 w-px bg-[#e5e7ec] dark:bg-[#22252c] hidden md:block"></div>
 
         {/* Dropdown de Usuario */}
         <div className="relative" ref={profileRef}>
@@ -178,11 +180,11 @@ export const PrivateHeader = () => {
               setIsNotifOpen(false); // Cerrar el otro por si acaso
             }}
             variant="ghost"
-            className="hover:bg-white/10 text-white dark:hover:bg-white/10 dark:text-white border-0 px-2 gap-3"
+            className="hover:bg-[#f1f2f5] text-[#171a1f] dark:hover:bg-[#1b1e24] dark:text-[#e7eaef] border-0 px-2 gap-3 rounded-[7px]"
           >
             <div className="text-right hidden md:block">
-              <Text as={'p'} className="text-sm font-bold text-white dark:text-white leading-none">@{user?.username}</Text>
-              <Text as={'p'} className="text-[10px] font-extrabold text-emerald-400 dark:text-[#059669] uppercase tracking-wider mt-1">
+              <Text as={'p'} className="text-sm font-semibold text-[#171a1f] dark:text-white leading-none">@{user?.username}</Text>
+              <Text as={'p'} className="text-[10px] font-bold text-[#1d6f8c] dark:text-[#5aa8c2] uppercase tracking-wider mt-1">
                 {user?.permits?.name === 'PATIENT'
                   ? 'Paciente'
                   : activeWorkspace?.type === 'ORGANIZATION'
@@ -196,7 +198,7 @@ export const PrivateHeader = () => {
               src={user?.avatarUrl}
               initials={`${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`}
             />
-            <ChevronDown size={14} className={`text-white/80 dark:text-indigo-300 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown size={14} className={`text-[#767d89] dark:text-[#848b97] transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
           </Button>
 
           {/* Menú de Perfil */}

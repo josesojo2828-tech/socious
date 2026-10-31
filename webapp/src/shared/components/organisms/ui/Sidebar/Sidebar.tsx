@@ -93,7 +93,7 @@ function SidebarLink({
       onClick={close}
       title={isCollapsed ? t(item?.title || "") : undefined}
       className={clsx(
-        "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] tracking-[-0.006em] transition-colors duration-150 group mb-px",
+        "flex items-center gap-[11px] h-8 px-2.5 rounded-[7px] text-[14.5px] tracking-[-0.006em] transition-colors duration-[180ms] ease-[cubic-bezier(0.16,1,0.3,1)] group mb-px",
         "focus-visible:outline-2 focus-visible:outline-[#1d6f8c] focus-visible:-outline-offset-2",
         isCollapsed && "justify-center px-0",
         isActive
@@ -331,7 +331,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               </span>
               {!isCollapsed && (
                 <span className="flex-1 min-w-0">
-                  <b className="block text-[14.5px] font-semibold tracking-[-0.012em] truncate">
+                  <b className="block text-[14.5px] font-semibold leading-tight tracking-[-0.012em] truncate">
                     {activeWorkspace?.name || "Socius ERP"}
                   </b>
                   <span className="block text-xs text-[#767d89] dark:text-[#7d848f] truncate">
@@ -366,7 +366,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
           </div>
 
           {/* Nav Items */}
-          <nav className="flex-1 py-3 px-3 overflow-y-auto">
+          <nav className="sidebar-nav flex-1 py-3 px-3 overflow-y-auto">
             {(sidebar || []).map((section, idx) => {
               const items = section?.items || [];
               if (!items || items.length === 0) return null;
