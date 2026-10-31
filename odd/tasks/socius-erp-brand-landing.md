@@ -147,3 +147,34 @@ querés generar mockups desde la UI (el usuario puede crear un proyecto de tipo
 **Ramas:** `feat/socius-brand` (esta fase, local) sobre `feat/webapp-erp` (también local);
 `main` en `origin` sigue con la fase backend. Ninguna de las dos ramas de frontend está
 pusheada: decisión del usuario.
+
+
+### L4 — Extensión posterior al cierre: identidad post-login (usuario)
+
+> modifica tambien la vista de login y registro
+> y vamos a cambiar los colores bro, ya que ahi luego de haber iniciado sesion veo todo igual sabes, o sea, aun morados y asi, modifica eso.
+
+Commits: `b774ec9` (login, registro, AuthHeader y AuthHeroSlider) y
+`82187c3` (barrido de paleta en el UI autenticado).
+
+- **Login/registro**: AuthHeader con wordmark de texto "Socius ERP" (los PNG
+  de Nutringest salieron de las 5 páginas de auth de una), AuthHeroSlider
+  reescrito como panel de marca en pizarra con borde índigo (sin foto de
+  personas, sin gradientes morados), hexes de marca → tokens del tema,
+  checkbox "recordarme" decorativo eliminado (nunca se enviaba), rutas muertas
+  de post-login (campus/bienvenido, atajo PATIENT) fuera, flujo de cupón de
+  campus completo fuera de registro (endpoint huérfano) y "de Nutringest" →
+  "de Socius" en la aceptación legal. Los `any` de catch tipados.
+- **Paleta post-login**: 144 tokens `purple-N` → `indigo-N` en 36 archivos;
+  hexes reasignados (#0d0ea0/#5b21b6/#4c1d95/#7c3aed/#8b5cf6 → índigo; los 6
+  stops del gradiente de cabecera/sidebar #2d0754…#3b0b6f → pizarra
+  #0f172a/#1e293b/#334155; #10b981 → #059669 para igualar el success del
+  tema); el sidebar renderiza la marca "S" de Socius en vez del PNG; el átomo
+  `Logo` (0 importadores, solo assets de Nutringest) eliminado.
+- Verificación: webapp typecheck 0 · 26/248 tests · **0 tokens purple y 0
+  hexes de marca en el código** · `GET /` y `GET /login` y `GET /register`
+  → 200 sin rastros de marca vieja en el HTML servido.
+
+**Nota de recursos (preferencia del usuario):** no correr builds ni operaciones
+pesadas en este entorno; la verificación fue tsc + vitest (~1.5s) + una única
+petición HTTP al stack Docker que ya estaba corriendo.
