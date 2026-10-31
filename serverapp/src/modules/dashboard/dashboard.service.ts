@@ -191,118 +191,123 @@ export class DashboardService {
         });
       }
 
-      // 2. Ventas (agrupa todo lo referente: mostrador, pedidos y caja)
-      const salesItems: SidebarItem[] = [
-        {
-          title: "Punto de Venta (POS)",
-          icon: "calculator",
-          link: "/dashboard/pos",
-        },
-        {
-          title: "Ventas y devoluciones",
-          icon: "receipt",
-          link: "/dashboard/ventas",
-        },
-        {
-          title: "Bandeja de pedidos",
-          icon: "shopping-bag",
-          link: "/dashboard/pedidos",
-        },
-        {
-          title: "Caja y turnos",
-          icon: "wallet",
-          link: "/dashboard/caja",
-        },
-      ];
-      sections.push({
-        title: "Ventas",
-        icon: "receipt",
-        items: salesItems,
-      });
-
-      // 3. CRM (cartera y saldos)
-      const crmItems: SidebarItem[] = [
-        {
-          title: "Clientes",
-          icon: "users",
-          link: "/dashboard/clientes",
-        },
-        {
-          title: "Proveedores",
-          icon: "store",
-          link: "/dashboard/proveedores",
-        },
-        {
-          title: "Cuentas por cobrar",
-          icon: "credit-card",
-          link: "/dashboard/cuentas-por-cobrar",
-        },
-        {
-          title: "Cuentas por pagar",
-          icon: "credit-card-fill",
-          link: "/dashboard/cuentas-por-pagar",
-        },
-      ];
-      sections.push({
-        title: "CRM",
-        icon: "users",
-        items: crmItems,
-      });
-
-      // 4. Inventario & Catálogo (los proveedores viven en el CRM)
-      const inventoryItems: SidebarItem[] = [
-        {
-          title: "Productos y Servicios",
-          icon: "package",
-          link: "/dashboard/productos",
-        },
-        {
-          title: "Categorías",
-          icon: "folder",
-          link: "/dashboard/categorias",
-        },
-        {
-          title: "Movimientos / Stock",
-          icon: "arrows-down-up",
-          link: "/dashboard/inventario",
-        },
-      ];
-      sections.push({
-        title: "Inventario",
-        icon: "package",
-        items: inventoryItems,
-      });
-
-      // 5b. Rutas de entrega (S8): el check de configuración es el único que
-      // decide si la opción existe — sin él la API también devuelve 409.
-      const settings = await this.tenantSettings.get(organizationId ?? null);
-      if (settings.routes.enabled) {
+      // ERP sections require an organization: without one every mutation
+      // answers 403, so the sidebar must not advertise them. The personal
+      // context keeps the general panel and the public shop only.
+      if (organizationId) {
+        // 2. Ventas (agrupa todo lo referente: mostrador, pedidos y caja)
+        const salesItems: SidebarItem[] = [
+          {
+            title: "Punto de Venta (POS)",
+            icon: "calculator",
+            link: "/dashboard/pos",
+          },
+          {
+            title: "Ventas y devoluciones",
+            icon: "receipt",
+            link: "/dashboard/ventas",
+          },
+          {
+            title: "Bandeja de pedidos",
+            icon: "shopping-bag",
+            link: "/dashboard/pedidos",
+          },
+          {
+            title: "Caja y turnos",
+            icon: "wallet",
+            link: "/dashboard/caja",
+          },
+        ];
         sections.push({
-          title: "Rutas de entrega",
-          icon: "route",
+          title: "Ventas",
+          icon: "receipt",
+          items: salesItems,
+        });
+
+        // 3. CRM (cartera y saldos)
+        const crmItems: SidebarItem[] = [
+          {
+            title: "Clientes",
+            icon: "users",
+            link: "/dashboard/clientes",
+          },
+          {
+            title: "Proveedores",
+            icon: "store",
+            link: "/dashboard/proveedores",
+          },
+          {
+            title: "Cuentas por cobrar",
+            icon: "credit-card",
+            link: "/dashboard/cuentas-por-cobrar",
+          },
+          {
+            title: "Cuentas por pagar",
+            icon: "credit-card-fill",
+            link: "/dashboard/cuentas-por-pagar",
+          },
+        ];
+        sections.push({
+          title: "CRM",
+          icon: "users",
+          items: crmItems,
+        });
+
+        // 4. Inventario & Catálogo (los proveedores viven en el CRM)
+        const inventoryItems: SidebarItem[] = [
+          {
+            title: "Productos y Servicios",
+            icon: "package",
+            link: "/dashboard/productos",
+          },
+          {
+            title: "Categorías",
+            icon: "folder",
+            link: "/dashboard/categorias",
+          },
+          {
+            title: "Movimientos / Stock",
+            icon: "arrows-down-up",
+            link: "/dashboard/inventario",
+          },
+        ];
+        sections.push({
+          title: "Inventario",
+          icon: "package",
+          items: inventoryItems,
+        });
+
+        // 5b. Rutas de entrega (S8): el check de configuración es el único que
+        // decide si la opción existe — sin él la API también devuelve 409.
+        const settings = await this.tenantSettings.get(organizationId ?? null);
+        if (settings.routes.enabled) {
+          sections.push({
+            title: "Rutas de entrega",
+            icon: "route",
+            items: [
+              {
+                title: "Rutas de entrega",
+                icon: "route",
+                link: "/dashboard/rutas",
+              },
+            ],
+          });
+        }
+
+        // 5c. Configuración del negocio (S4 del port): los checks viven en
+        // /dashboard/configuracion y se leen con GET /api/settings.
+        sections.push({
+          title: "Configuración",
+          icon: "settings",
           items: [
             {
-              title: "Rutas de entrega",
-              icon: "route",
-              link: "/dashboard/rutas",
+              title: "Configuración del negocio",
+              icon: "settings",
+              link: "/dashboard/configuracion",
             },
           ],
         });
       }
-
-      // 5c. Configuración del negocio (S4 del port): los checks viven en
-      // /dashboard/configuracion y se leen con GET /api/settings.
-      sections.push({
-        title: "Configuración",
-        icon: "settings",
-        items: [
-          {
-            title: "Configuración del negocio",
-            icon: "settings",
-            link: "/dashboard/configuracion",
-          },
-        ],
-      });
 
       // 6. Mi Clínica (si aplica)
       if (

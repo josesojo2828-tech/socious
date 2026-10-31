@@ -45,6 +45,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
         id: "u1",
         permits: BASE_PERMITS,
         modules: [],
+        organizationId: "org-1",
       }),
     );
 
@@ -206,6 +207,30 @@ describe("DashboardService — entitlement-driven sidebar", () => {
       '/dashboard/pedidos',
       '/dashboard/caja',
     ]);
+  });
+
+  it("hides every ERP section for a user without an organization", async () => {
+    const links = linksOf(
+      await makeService().getSidebarSections({
+        id: 'u1',
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: null,
+      }),
+    );
+
+    expect(links).toContain('/dashboard');
+    for (const erpLink of [
+      '/dashboard/pos',
+      '/dashboard/ventas',
+      '/dashboard/clientes',
+      '/dashboard/proveedores',
+      '/dashboard/cuentas-por-cobrar',
+      '/dashboard/configuracion',
+      '/dashboard/rutas',
+    ]) {
+      expect(links).not.toContain(erpLink);
+    }
   });
 
   it("always offers the tenant settings entry (S4 del port)", async () => {
