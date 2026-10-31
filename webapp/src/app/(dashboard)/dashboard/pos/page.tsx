@@ -73,7 +73,6 @@ export default function PosPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [methods, setMethods] = useState<PaymentOption[]>([]);
-  const [currencies, setCurrencies] = useState<CurrencyOption[]>([]);
   const [rates, setRates] = useState<RateSnapshot | null>(null);
   const [shift, setShift] = useState<CashShift | null>(null);
   const [shiftControl, setShiftControl] = useState<boolean>(true);
@@ -87,6 +86,8 @@ export default function PosPage() {
   const [creditCadence, setCreditCadence] =
     useState<TenantSettings["credit"]["cadence"]>("QUINCENAL");
   const [creditInitial, setCreditInitial] = useState<string>("");
+  const [creditDays, setCreditDays] = useState<number>(15);
+  const [creditMonthlyDay, setCreditMonthlyDay] = useState<number>(1);
   const [pickProduct, setPickProduct] = useState<Product | null>(null);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
   const [pickPresentations, setPickPresentations] = useState<
@@ -113,7 +114,6 @@ export default function PosPage() {
           productPage,
           clientPage,
           optionList,
-          currencyList,
           rateView,
           currentShift,
           settings,
@@ -125,7 +125,6 @@ export default function PosPage() {
             params: { limit: 100 },
           }),
           apiClient.get<PaymentOption[]>(TenantPaymentMethodEndpoints.posOptions),
-          apiClient.get<CurrencyOption[]>(ExchangeEndpoints.currencies),
           apiClient
             .get<RateSnapshot>(ExchangeEndpoints.latest)
             .catch(() => ({ data: null as RateSnapshot | null })),
@@ -139,17 +138,13 @@ export default function PosPage() {
         setProducts(productPage.data.list);
         setClients(clientPage.data.list);
         setMethods(optionList.data);
-        setCurrencies(currencyList.data);
         setRates(rateView.data);
         setShift(currentShift);
         setShiftControl(settings.cash.shiftControl);
         setSettings(settings);
         setCreditCadence(settings.credit?.cadence ?? "QUINCENAL");
-        setCreditInitial(
-          settings.credit?.initialPaymentUSD != null
-            ? String(settings.credit.initialPaymentUSD)
-            : "",
-        );
+        setCreditDays(settings.credit?.everyNDays ?? 15);
+        setCreditMonthlyDay(settings.credit?.monthlyDay ?? 1);
 
         const firstMethod = optionList.data[0];
         if (firstMethod) {
@@ -179,6 +174,28 @@ export default function PosPage() {
   useEffect(() => {
     setAmount(String(suggestedAmount(currency, totals.totalUSD, rates)));
   }, [currency, totals.totalUSD, rates]);
+
+  // Credit initial follows the configured percent until the cashier types.
+  useEffect(() => {
+    if (mode !== "credit" || !settings) return;
+    const pct = settings.credit?.initialPercent ?? 0;
+    const initial = Math.round(totals.totalUSD * pct) / 100;
+    setCreditInitial(pct > 0 ? initial.toFixed(2) : "");
+  }, [mode, settings, totals.totalUSD]);
+
+  const duePreview = useMemo(() => {
+    if (mode !== "credit" || creditCadence === "FREE") return null;
+    const from = new Date();
+    if (creditCadence === "MONTHLY") {
+      const due = new Date(from.getFullYear(), from.getMonth(), creditMonthlyDay);
+      if (due.getTime() <= from.getTime()) due.setMonth(due.getMonth() + 1);
+      return due;
+    }
+    const days = Math.min(Math.max(creditDays, 1), 365);
+    const due = new Date(from);
+    due.setDate(due.getDate() + days);
+    return due;
+  }, [mode, creditCadence, creditDays, creditMonthlyDay]);
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -267,7 +284,11 @@ export default function PosPage() {
       }
       payloadInput = {
         ...payloadInput,
-        credit: { cadence: creditCadence },
+        credit: {
+          cadence: creditCadence,
+          everyNDays: creditDays,
+          monthlyDay: creditMonthlyDay,
+        },
         // A zero initial sells the whole amount on credit (no payment row).
         ...(paymentAmount > 0 && method
           ? {
@@ -649,45 +670,75 @@ export default function PosPage() {
                       ))}
                     </select>
                   </label>
+                  {creditCadence === "QUINCENAL" ||
+                  creditCadence === "EVERY_N_DAYS" ? (
+                    <label className="block text-xs text-slate-500">
+                      Días entre cobros
+                      <input
+                        type="number"
+                        min={1}
+                        max={365}
+                        value={creditDays}
+                        onChange={(event) =>
+                          setCreditDays(Number(event.target.value) || 15)
+                        }
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                      />
+                    </label>
+                  ) : null}
+                  {creditCadence === "MONTHLY" ? (
+                    <label className="block text-xs text-slate-500">
+                      Día del mes de cobro
+                      <input
+                        type="number"
+                        min={1}
+                        max={28}
+                        value={creditMonthlyDay}
+                        onChange={(event) =>
+                          setCreditMonthlyDay(Number(event.target.value) || 1)
+                        }
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                      />
+                    </label>
+                  ) : null}
+                  {duePreview ? (
+                    <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                      Vence:{" "}
+                      {duePreview.toLocaleDateString("es-VE", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      Sin fecha fija: se cobra por abonos.
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <label className="block text-xs text-slate-500">
-                  Medio de cobro
-                  <select
-                    value={methodCode}
-                    onChange={(event) => handleMethodChange(event.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  >
-                    {methods.map((method) => (
-                      <option key={method.code} value={method.code}>
-                        {method.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
+              ) : null}
 
-              <div className="grid grid-cols-2 gap-2">
-                <label className="block text-xs text-slate-500">
-                  Moneda
-                  <select
-                    value={currency}
-                    onChange={(event) =>
-                      setCurrency(event.target.value as "USD" | "VES" | "USDT")
-                    }
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  >
-                    {currencies
-                      .filter((option) => option.storage)
-                      .map((option) => (
-                        <option key={option.code} value={option.code}>
-                          {option.code}
-                        </option>
-                      ))}
-                  </select>
-                </label>
+              <label className="block text-xs text-slate-500">
+                Medio de cobro
+                <select
+                  value={methodCode}
+                  onChange={(event) => handleMethodChange(event.target.value)}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                >
+                  {methods.map((method) => (
+                    <option key={method.code} value={method.code}>
+                      {method.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div>
                 <label className="block text-xs text-slate-500">
                   Monto cobrado
+                  <span className="ml-1 font-semibold text-slate-400">
+                    ({currency})
+                  </span>
                   <input
                     type="number"
                     min={0}

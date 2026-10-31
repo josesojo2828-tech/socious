@@ -806,7 +806,17 @@ export class SaleService {
     organizationId: string | null,
     code: string,
   ): Promise<void> {
-    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) return;
+    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) {
+      if (organizationId) {
+        const settings = await this.tenantSettings.get(organizationId);
+        if (settings.payments?.disabledCodes?.includes(code)) {
+          throw new BadRequestException(
+            `El método "${code}" está deshabilitado en la configuración.`,
+          );
+        }
+      }
+      return;
+    }
     if (!organizationId) {
       throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
     }

@@ -32,6 +32,7 @@ const base: TenantSettings = {
   returns: { reasons: ["Solo lo estaba probando"] },
   credit: {
     initialPaymentUSD: null,
+    initialPercent: 0,
     cadence: "QUINCENAL",
     everyNDays: 15,
     monthlyDay: 1,
@@ -42,6 +43,7 @@ const base: TenantSettings = {
     orderReceived: true,
     saleCreated: false,
   },
+  payments: { disabledCodes: [] },
 };
 
 describe("settings-form (S4)", () => {

@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { BUSINESS_PAYMENT_METHODS } from "src/shared/constants/payment-methods";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 
 const CODE_PATTERN = /^[A-Z][A-Z0-9_]{1,39}$/;
 
@@ -22,18 +23,25 @@ export interface TenantMethodInput {
  */
 @Injectable()
 export class TenantPaymentMethodService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tenantSettings: TenantSettingsService,
+  ) {}
 
   /** Built-ins first, then the tenant's methods (for the POS). */
   async posOptions(organizationId: string | null) {
-    const customs = organizationId
-      ? await this.prisma.tenantPaymentMethod.findMany({
-          where: { organizationId, active: true },
-          orderBy: { name: "asc" },
-        })
-      : [];
+    const [customs, settings] = await Promise.all([
+      organizationId
+        ? this.prisma.tenantPaymentMethod.findMany({
+            where: { organizationId, active: true },
+            orderBy: { name: "asc" },
+          })
+        : Promise.resolve([]),
+      this.tenantSettings.get(organizationId),
+    ]);
+    const disabled = new Set(settings.payments.disabledCodes);
     return [
-      ...BUSINESS_PAYMENT_METHODS,
+      ...BUSINESS_PAYMENT_METHODS.filter((method) => !disabled.has(method.code)),
       ...customs.map((row) => ({
         code: row.code,
         label: row.name,

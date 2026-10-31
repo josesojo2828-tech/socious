@@ -41,10 +41,14 @@ export interface TenantSettings {
   /** Default terms for credit sales (S3). */
   credit: {
     initialPaymentUSD: number | null;
+    /** Default initial as a percent (check options 0/10/20/30/50). */
+    initialPercent: number;
     cadence: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
     everyNDays: number;
     monthlyDay: number;
   };
+  /** Built-ins the merchant turned off (S3). */
+  payments: { disabledCodes: string[] };
   /**
    * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
    * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the

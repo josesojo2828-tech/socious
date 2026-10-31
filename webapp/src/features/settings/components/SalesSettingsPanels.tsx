@@ -7,6 +7,10 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
+import {
+  getTenantSettings,
+  updateTenantSettings,
+} from "../services/settings.service";
 import type { TenantPaymentMethod } from "@/features/tenant-payment-methods/types/tenant-payment-method.type";
 import { CREDIT_CADENCE_LABELS } from "../types/tenant-settings.type";
 import type { TenantSettings } from "../types/tenant-settings.type";
@@ -25,14 +29,26 @@ export function PaymentMethodsPanel() {
   const [code, setCode] = useState<string>("");
   const [currency, setCurrency] = useState<string>("USD");
   const [saving, setSaving] = useState<boolean>(false);
+  const [builtins, setBuiltins] = useState<
+    { code: string; label: string; currency: string }[]
+  >([]);
+  const [disabledCodes, setDisabledCodes] = useState<string[]>([]);
 
   const fetchList = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await apiClient.get<TenantPaymentMethod[]>(
-        TenantPaymentMethodEndpoints.list,
-      );
-      setRows(Array.isArray(data) ? data : []);
+      const [customs, builtinOptions, currentSettings] = await Promise.all([
+        apiClient.get<TenantPaymentMethod[]>(TenantPaymentMethodEndpoints.list),
+        apiClient
+          .get<{ code: string; label: string; currency: string }[]>(
+            "/api/payment-methods/options",
+          )
+          .catch(() => ({ data: [] as { code: string; label: string; currency: string }[] })),
+        getTenantSettings().catch(() => null),
+      ]);
+      setBuiltins(builtinOptions.data ?? []);
+      setDisabledCodes(currentSettings?.payments?.disabledCodes ?? []);
+      setRows(Array.isArray(customs.data) ? customs.data : []);
     } catch (error) {
       addToast({
         type: "error",
@@ -94,6 +110,22 @@ export function PaymentMethodsPanel() {
     }
   };
 
+  const toggleBuiltin = async (code: string, enabled: boolean) => {
+    const next = enabled
+      ? disabledCodes.filter((item) => item !== code)
+      : [...disabledCodes, code];
+    try {
+      await updateTenantSettings({ payments: { disabledCodes: next } });
+      setDisabledCodes(next);
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Métodos de pago",
+        message: apiMessage(error, "No se pudo actualizar la lista."),
+      });
+    }
+  };
+
   const remove = async (method: TenantPaymentMethod) => {
     try {
       await apiClient.delete(TenantPaymentMethodEndpoints.detail(method.id));
@@ -113,6 +145,39 @@ export function PaymentMethodsPanel() {
       title="Métodos de pago"
       description="Los base (efectivo, pago móvil, Zelle, USDT…) siempre están. Creá los tuyos: Pago Móvil Mercantil, Zelle de Ana, etc."
     >
+      <ul className="mb-4 divide-y divide-slate-100 dark:divide-slate-800">
+        {builtins.map((method) => (
+          <li
+            key={method.code}
+            className="flex items-center justify-between gap-3 py-2"
+          >
+            <div>
+              <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                {method.label}{" "}
+                <span className="font-mono text-xs text-slate-400">
+                  {method.code}
+                </span>
+              </p>
+              <p className="text-xs text-slate-400">{method.currency}</p>
+            </div>
+            <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-500">
+              <input
+                type="checkbox"
+                className="accent-indigo-600"
+                checked={!disabledCodes.includes(method.code)}
+                onChange={(event) =>
+                  void toggleBuiltin(method.code, event.target.checked)
+                }
+              />
+              Activo
+            </label>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mb-2 text-xs font-semibold uppercase text-slate-400">
+        Tus métodos
+      </p>
       <form onSubmit={submit} className="mb-4 flex flex-wrap items-end gap-3">
         <label className="block text-sm">
           <span className="text-slate-600 dark:text-slate-300">Nombre</span>
@@ -215,27 +280,31 @@ export function CreditSettingsPanel({
       description="Términos por defecto al cobrar a crédito desde el POS. Cada venta puede cambiarlos."
     >
       <SectionRow
-        label="Inicial sugerida (USD)"
-        hint="Monto que el POS precarga como pago inicial. Dejar vacío = sin inicial."
+        label="Inicial por defecto"
+        hint="Porcentaje que el POS precarga como pago inicial de las ventas a crédito."
       >
-        <input
-          type="number"
-          min={0}
-          step="0.01"
-          value={credit.initialPaymentUSD ?? ""}
-          onChange={(event) =>
-            void save({
-              credit: {
-                ...credit,
-                initialPaymentUSD:
-                  event.target.value === ""
-                    ? null
-                    : Number(event.target.value),
-              },
-            })
-          }
-          className="w-32 rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
-        />
+        <div className="flex flex-wrap gap-2">
+          {[0, 10, 20, 30, 50].map((pct) => (
+            <label
+              key={pct}
+              className={
+                credit.initialPercent === pct
+                  ? "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-indigo-500 bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-600"
+                  : "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-500 dark:border-slate-600"
+              }
+            >
+              <input
+                type="checkbox"
+                className="accent-indigo-600"
+                checked={credit.initialPercent === pct}
+                onChange={() =>
+                  void save({ credit: { ...credit, initialPercent: pct } })
+                }
+              />
+              {pct}%
+            </label>
+          ))}
+        </div>
       </SectionRow>
       <SectionRow label="Cadencia de cobro">
         <select

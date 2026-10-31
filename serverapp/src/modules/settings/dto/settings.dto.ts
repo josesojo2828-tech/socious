@@ -115,6 +115,12 @@ export class CreditSettingsDto {
   initialPaymentUSD?: number | null;
 
   @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  initialPercent?: number;
+
+  @IsOptional()
   @IsIn(["QUINCENAL", "MONTHLY", "EVERY_N_DAYS", "FREE"], {
     message: "Cadencia de crédito no válida.",
   })
@@ -149,6 +155,13 @@ export class NotificationsSettingsDto {
   @IsOptional()
   @IsBoolean()
   saleCreated?: boolean;
+}
+
+export class PaymentsSettingsDto {
+  @IsOptional()
+  @IsArray({ message: "payments.disabledCodes debe ser una lista." })
+  @IsString({ each: true })
+  disabledCodes?: string[];
 }
 
 export class UpdateTenantSettingsDto {
@@ -196,6 +209,11 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => NotificationsSettingsDto)
   notifications?: NotificationsSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PaymentsSettingsDto)
+  payments?: PaymentsSettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

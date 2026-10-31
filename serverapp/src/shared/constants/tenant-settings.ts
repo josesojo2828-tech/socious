@@ -52,6 +52,8 @@ export interface TenantSettings {
   routes: { enabled: boolean };
   /** Enabled return reasons shown as a select on the returns flow (S5). */
   returns: { reasons: string[] };
+  /** Payment-method switches (S3): built-ins the merchant turned off. */
+  payments: { disabledCodes: string[] };
   /** Logic-only notification switches (CRM S2); nothing is sent yet. */
   notifications: {
     lowStock: boolean;
@@ -61,8 +63,10 @@ export interface TenantSettings {
   };
   /** Default terms for credit sales (S3). */
   credit: {
-    /** Optional down-payment hint in USD; null = no default initial. */
+    /** Legacy amount hint in USD; the POS now prefills from initialPercent. */
     initialPaymentUSD: number | null;
+    /** Default initial as a percent of the total (checks: 0/10/20/30/50). */
+    initialPercent: number;
     cadence: CreditCadence;
     everyNDays: number;
     monthlyDay: number;
@@ -103,10 +107,12 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
   },
   credit: {
     initialPaymentUSD: null,
+    initialPercent: 0,
     cadence: "QUINCENAL",
     everyNDays: 15,
     monthlyDay: 1,
   },
+  payments: { disabledCodes: [] },
   notifications: {
     lowStock: true,
     creditDue: true,
@@ -178,11 +184,17 @@ const asCredit = (
     typeof value.monthlyDay === "number" && value.monthlyDay >= 1
       ? Math.min(Math.floor(value.monthlyDay), 28)
       : defaults.monthlyDay;
+  const rawPercent = value.initialPercent;
+  const initialPercent =
+    typeof rawPercent === "number" && Number.isFinite(rawPercent)
+      ? Math.min(100, Math.max(0, Math.round(rawPercent)))
+      : defaults.initialPercent;
   return {
     initialPaymentUSD: asNullableFee(
       value.initialPaymentUSD,
       defaults.initialPaymentUSD,
     ),
+    initialPercent,
     cadence: isCreditCadence(value.cadence) ? value.cadence : defaults.cadence,
     everyNDays,
     monthlyDay,
@@ -243,6 +255,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
   const notifications = isPlainObject(source.notifications)
     ? source.notifications
     : {};
+  const payments = isPlainObject(source.payments) ? source.payments : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -283,6 +296,11 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       reasons: asReasonList(returns.reasons, defaults.returns.reasons),
     },
     credit: asCredit(credit, defaults.credit),
+    payments: {
+      disabledCodes: Array.isArray(payments.disabledCodes)
+        ? [...new Set(payments.disabledCodes.filter((c: unknown) => typeof c === "string"))]
+        : defaults.payments.disabledCodes,
+    },
     notifications: {
       lowStock: asBool(notifications.lowStock, defaults.notifications.lowStock),
       creditDue: asBool(notifications.creditDue, defaults.notifications.creditDue),

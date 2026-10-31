@@ -46,6 +46,12 @@ export function applySettingsPatch(
     },
     credit: { ...current.credit, ...(patch.credit ?? {}) },
     notifications: { ...current.notifications, ...(patch.notifications ?? {}) },
+    payments: {
+      ...current.payments,
+      ...(patch.payments ?? {}),
+      disabledCodes:
+        patch.payments?.disabledCodes ?? current.payments.disabledCodes,
+    },
   };
 }
 

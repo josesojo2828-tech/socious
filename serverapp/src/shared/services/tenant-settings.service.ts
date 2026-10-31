@@ -255,6 +255,7 @@ export class TenantSettingsService {
         "cadence",
         "everyNDays",
         "monthlyDay",
+        "initialPercent",
       ]);
       const patchSection: Partial<TenantSettings["credit"]> = {};
       if (credit.initialPaymentUSD !== undefined) {
@@ -269,6 +270,15 @@ export class TenantSettingsService {
         } else {
           patchSection.initialPaymentUSD = null;
         }
+      }
+      if (credit.initialPercent !== undefined) {
+        const pct = credit.initialPercent;
+        if (typeof pct !== "number" || pct < 0 || pct > 100) {
+          throw new BadRequestException(
+            "credit.initialPercent debe estar entre 0 y 100.",
+          );
+        }
+        patchSection.initialPercent = Math.round(pct);
       }
       if (credit.cadence !== undefined) {
         if (!isCreditCadence(credit.cadence)) {
@@ -297,6 +307,20 @@ export class TenantSettingsService {
         patchSection.monthlyDay = Math.floor(day);
       }
       result.credit = patchSection;
+    }
+
+    if (input.payments !== undefined) {
+      const payments = input.payments as Record<string, unknown>;
+      assertKnownKeys("payments", payments, ["disabledCodes"]);
+      if (payments.disabledCodes !== undefined) {
+        const list = payments.disabledCodes;
+        if (!Array.isArray(list) || list.some((c) => typeof c !== "string")) {
+          throw new BadRequestException("payments.disabledCodes debe ser una lista de códigos.");
+        }
+        result.payments = {
+          disabledCodes: [...new Set(list as string[])],
+        };
+      }
     }
 
     if (input.notifications !== undefined) {
@@ -393,5 +417,11 @@ export function mergeTenantSettings(
     },
     credit: { ...base.credit, ...(patch.credit ?? {}) },
     notifications: { ...base.notifications, ...(patch.notifications ?? {}) },
+    payments: {
+      ...base.payments,
+      ...(patch.payments ?? {}),
+      disabledCodes:
+        patch.payments?.disabledCodes ?? base.payments.disabledCodes,
+    },
   });
 }

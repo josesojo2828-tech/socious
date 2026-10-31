@@ -12,8 +12,10 @@ export function computeCreditDueDate(
   if (cadence === "FREE") return null;
 
   if (cadence === "QUINCENAL") {
+    // The POS may edit the interval (default 15 = quincena).
+    const days = Math.min(Math.max(Math.floor(options.everyNDays ?? 15), 1), 365);
     const due = new Date(from);
-    due.setDate(due.getDate() + 15);
+    due.setDate(due.getDate() + days);
     return due;
   }
 
