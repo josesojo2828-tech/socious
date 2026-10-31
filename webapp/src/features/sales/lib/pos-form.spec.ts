@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   addToCart,
   buildPosPayload,
+  creditInitialPayment,
   cartTotals,
   changeQuantity,
   lineTotal,
@@ -173,15 +174,15 @@ describe("presentations and credit (sales overhaul)", () => {
   };
 
   it("keeps bulk and presentation lines apart", () => {
-    let cart = addToCart([], product as any);
-    cart = addToCart(cart, product as any, 1, { id: "pres-1", name: "Bolsa 100 g" });
+    let cart = addToCart([], product);
+    cart = addToCart(cart, product, 1, { id: "pres-1", name: "Bolsa 100 g" });
     expect(cart).toHaveLength(2);
     expect(cart[1].presentationId).toBe("pres-1");
     expect(cart[1].productName).toBe("Bolsa 100 g");
   });
 
   it("sends presentationId and credit terms in the payload", () => {
-    const cart = addToCart([], product as any, 2, { id: "pres-1", name: "Bolsa" });
+    const cart = addToCart([], product, 2, { id: "pres-1", name: "Bolsa" });
     const payload = buildPosPayload({
       cart,
       credit: { cadence: "QUINCENAL" },
@@ -190,5 +191,26 @@ describe("presentations and credit (sales overhaul)", () => {
     expect(payload.items[0].presentationId).toBe("pres-1");
     expect(payload.creditCadence).toBe("QUINCENAL");
     expect(payload.payments).toHaveLength(1);
+  });
+});
+
+describe("creditInitialPayment (regresión: ventas a crédito no pagadas)", () => {
+  it("no genera pago cuando el inicial está vacío o en cero", () => {
+    expect(creditInitialPayment("", "USD", "CASH_USD")).toBeUndefined();
+    expect(creditInitialPayment("0", "USD", "CASH_USD")).toBeUndefined();
+    expect(creditInitialPayment("-5", "USD", "CASH_USD")).toBeUndefined();
+  });
+
+  it("no genera pago sin medio de cobro", () => {
+    expect(creditInitialPayment("25", "USD", null)).toBeUndefined();
+    expect(creditInitialPayment("25", "USD", "")).toBeUndefined();
+  });
+
+  it("usa SOLO el campo de inicial con su medio, en la moneda del método", () => {
+    expect(creditInitialPayment("25.50", "VES", "PAGO_MOVIL")).toEqual({
+      amountOriginal: 25.5,
+      currency: "VES",
+      paymentMethod: "PAGO_MOVIL",
+    });
   });
 });

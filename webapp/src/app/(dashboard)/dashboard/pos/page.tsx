@@ -31,6 +31,7 @@ import {
   buildPosPayload,
   cartTotals,
   changeQuantity,
+  creditInitialPayment,
   lineTotal,
   removeFromCart,
   suggestedAmount,
@@ -297,7 +298,10 @@ export default function PosPage() {
     };
 
     if (mode === "credit") {
-      if (!Number.isFinite(paymentAmount) || paymentAmount < 0) {
+      // El pago inicial es SOLO el campo del panel de crédito; `amount`
+      // (monto cobrado) está autocompletado con el TOTAL y no aplica acá.
+      const initial = Number(creditInitial);
+      if (!Number.isFinite(initial) || initial < 0) {
         addToast({
           type: "warning",
           title: "Crédito",
@@ -305,6 +309,11 @@ export default function PosPage() {
         });
         return;
       }
+      const creditPayment = creditInitialPayment(
+        creditInitial,
+        currency,
+        method ? method.code : null,
+      );
       payloadInput = {
         ...payloadInput,
         credit: {
@@ -312,16 +321,8 @@ export default function PosPage() {
           everyNDays: creditDays,
           monthlyDay: creditMonthlyDay,
         },
-        // A zero initial sells the whole amount on credit (no payment row).
-        ...(paymentAmount > 0 && method
-          ? {
-              payment: {
-                amountOriginal: paymentAmount,
-                currency,
-                paymentMethod: method.code,
-              },
-            }
-          : {}),
+        // Inicial en cero → la venta queda entera a crédito (sin pago).
+        ...(creditPayment ? { payment: creditPayment } : {}),
       };
     } else if (mode === "order") {
       const client = clients.find((item) => item.id === clientId);
@@ -983,7 +984,7 @@ export default function PosPage() {
                 </label>
               ) : null}
 
-              <div className={mode === "order" ? "hidden" : ""}>
+              <div className={mode !== "now" ? "hidden" : ""}>
                 <label className="block text-xs text-slate-500 dark:text-slate-400">
                   Monto cobrado
                   <span className="ml-1 font-semibold text-[#b2944a]">

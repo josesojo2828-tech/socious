@@ -154,6 +154,29 @@ export function suggestedAmount(
   return roundMoney((totalUSD * rates.rateBcv) / rates.rateUsdt);
 }
 
+export interface CreditPaymentInput {
+  amountOriginal: number;
+  currency: "USD" | "VES" | "USDT";
+  paymentMethod: string;
+}
+
+/**
+ * El pago inicial de una venta a crédito sale SOLO del campo "Pago inicial"
+ * (creditInitial) — jamás del "monto cobrado", que la UI autocompleta con el
+ * TOTAL de la venta (ese era el bug que marcaba las ventas a crédito como
+ * pagadas y escondía el formulario de abono).
+ */
+export function creditInitialPayment(
+  creditInitial: string,
+  currency: "USD" | "VES" | "USDT",
+  methodCode: string | null | undefined,
+): CreditPaymentInput | undefined {
+  if (!methodCode) return undefined;
+  const initial = Number(creditInitial);
+  if (!Number.isFinite(initial) || initial <= 0) return undefined;
+  return { amountOriginal: initial, currency, paymentMethod: methodCode };
+}
+
 export interface PosPayloadInput {
   cart: CartLine[];
   clientId?: string;
