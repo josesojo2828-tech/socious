@@ -23,7 +23,8 @@ services:
     container_name: ${PROJECT_NAME:-socius}_pgadmin
     restart: always
     ports:
-      - "5089:80"
+      # 5089 lo ocupa el pgAdmin de Nutringest en esta máquina.
+      - "${SOCIUS_PGADMIN_PORT:-5090}:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-root}
@@ -133,7 +134,8 @@ services:
       # Limita el heap de Next.js y previene pérdidas de memoria en dev
       NODE_OPTIONS: "--max-old-space-size=1536"
     ports:
-      - "3050:3000"
+      # 3050 lo ocupa el stack de producción de Nutringest en esta máquina.
+      - "${SOCIUS_FRONTEND_PORT:-3051}:3000"
     volumes:
       - ./webapp:/app
       - /app/node_modules
@@ -161,7 +163,8 @@ services:
       PORT: 3000
       NODE_OPTIONS: "--max-old-space-size=1024"
     ports:
-      - "3060:3000"
+      # 3060 lo ocupa el sub-frontend de Nutringest en esta máquina.
+      - "${SOCIUS_SUBFRONTEND_PORT:-3061}:3000"
     volumes:
       - ./sub-webapp:/app
       - /app/node_modules
@@ -180,7 +183,9 @@ services:
     volumes:
       - ${NGINX_CONF_PATH:-./docker/nginx.conf}:/etc/nginx/nginx.conf:ro
     ports:
-      - "${NGINX_HTTP_PORT:-8080}:80"
+      # 8080 lo ocupa cabana-app en esta máquina: el entry point del dev stack
+      # es 8081 (nginx → /api al backend y / al frontend).
+      - "${NGINX_HTTP_PORT:-8081}:80"
     depends_on:
       - frontend
       - sub-frontend
