@@ -36,7 +36,7 @@ export default function DashboardLayout({
     const router = useRouter();
     const pathname = usePathname();
     const { user, isAuthenticated, sidebar, refreshSession, logout } = useAuthStore();
-    const { activeWorkspace } = useWorkspaceStore();
+    const { hasLoaded, isLoading, fetchWorkspaces } = useWorkspaceStore();
     const [isAuthorized, setIsAuthorized] = useState(false);
 
     const isSuperAdminOrAdmin =
@@ -107,11 +107,23 @@ export default function DashboardLayout({
         }
     }, [isAuthorized, hasActiveSubscription, isPatient, pathname, router]);
 
-    if (!isAuthorized) {
+    // The api client only attaches X-Workspace-Id once the store resolved the
+    // organization; without it every mutating dashboard call answers 403
+    // ("Crea una organización para configurar el negocio"). Gate the whole
+    // shell on that list so no screen ever fires a half-contexted request.
+    useEffect(() => {
+        if (!hasLoaded && !isLoading) {
+            void fetchWorkspaces(user);
+        }
+    }, [fetchWorkspaces, hasLoaded, isLoading, user]);
+
+    if (!isAuthorized || !hasLoaded) {
         return (
             <div className="h-screen w-full flex flex-col items-center justify-center bg-base-100">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <p className="text-base-content/60 mt-4 animate-pulse">{t('common.auth.verifying_session')}</p>
+                <p className="text-base-content/60 mt-4 animate-pulse">
+                    {isAuthorized ? "Cargando tu espacio de trabajo…" : t('common.auth.verifying_session')}
+                </p>
             </div>
         );
     }

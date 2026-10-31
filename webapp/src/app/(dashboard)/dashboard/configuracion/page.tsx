@@ -133,12 +133,16 @@ export default function SettingsPage() {
     try {
       const fresh = await updateTenantSettings(patch);
       setSettings(fresh);
-    } catch {
+    } catch (error) {
       setSettings(previous);
+      // The plan/organization gates answer 403 with the explanation — show it as is.
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? "No se pudo guardar el cambio. Volvemos al valor anterior.";
       addToast({
         type: "error",
         title: "Configuración",
-        message: "No se pudo guardar el cambio. Volvemos al valor anterior.",
+        message,
       });
     } finally {
       setSaving(false);
