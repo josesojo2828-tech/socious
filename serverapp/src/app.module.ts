@@ -57,6 +57,7 @@ import { ExchangeModule } from "./modules/exchange/exchange.module";
 import { ClientModule } from "./modules/client/client.module";
 import { SupplierModule } from "./modules/supplier/supplier.module";
 import { UnitOfMeasureModule } from "./modules/unit-of-measure/unit-of-measure.module";
+import { TenantPaymentMethodModule } from "./modules/tenant-payment-method/tenant-payment-method.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
 import { CashModule } from "./modules/cash/cash.module";
@@ -218,6 +219,7 @@ imports: [
     ClientModule,
     SupplierModule,
     UnitOfMeasureModule,
+    TenantPaymentMethodModule,
     CategoryModule,
     ProductModule,
     CashModule,

@@ -195,6 +195,8 @@ export class DashboardService {
       // answers 403, so the sidebar must not advertise them. The personal
       // context keeps the general panel and the public shop only.
       if (organizationId) {
+        const settings = await this.tenantSettings.get(organizationId ?? null);
+
         // 2. Ventas (agrupa todo lo referente: mostrador, pedidos y caja)
         const salesItems: SidebarItem[] = [
           {
@@ -219,7 +221,7 @@ export class DashboardService {
               ]
             : []),
           {
-            title: "Caja y turnos",
+            title: settings.cash.shiftControl ? "Caja y turnos" : "Caja",
             icon: "wallet",
             link: "/dashboard/caja",
           },
@@ -285,7 +287,7 @@ export class DashboardService {
 
         // 5b. Rutas de entrega (S8): módulo ROUTES del plan (AVANZADO+) más
         // el check de configuración — sin el check la API también devuelve 409.
-        const settings = await this.tenantSettings.get(organizationId ?? null);
+        // `settings` was resolved above for the cash title.
         if (hasModule("ROUTES") && settings.routes.enabled) {
           sections.push({
             title: "Rutas de entrega",

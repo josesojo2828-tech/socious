@@ -10,11 +10,11 @@ import {
   Matches,
   MaxLength,
   Min,
+  Max,
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
 import { PaymentStatus, SaleStatus } from "@prisma/client";
-import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 
 const NOTES_MAX = 1000;
 
@@ -22,6 +22,11 @@ export class SaleItemInputDto {
   @IsOptional()
   @IsString()
   productId?: string;
+
+  /** Sale of a presentation: its stock is the one that decrements (S6). */
+  @IsOptional()
+  @IsString()
+  presentationId?: string;
 
   /**
    * Denormalized on purpose: the sale keeps the name sold even when the
@@ -63,7 +68,7 @@ export class SalePaymentInputDto {
   @IsIn(["USD", "VES", "USDT"], { message: "Moneda no soportada." })
   currency: "USD" | "VES" | "USDT";
 
-  @IsIn(BUSINESS_PAYMENT_METHOD_CODES, {
+  @Matches(/^[A-Z][A-Z0-9_]{1,39}$/, {
     message: "Método de pago no reconocido.",
   })
   paymentMethod: string;
@@ -100,6 +105,24 @@ export class CreateSaleDto {
   @IsOptional()
   @IsDateString()
   dueDate?: string;
+
+  /** Credit terms (S3): the service computes dueDate from the cadence. */
+  @IsOptional()
+  @IsIn(["QUINCENAL", "MONTHLY", "EVERY_N_DAYS", "FREE"])
+  creditCadence?: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  creditEveryNDays?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  @Max(28)
+  creditMonthlyDay?: number;
 
   @IsOptional()
   @IsString()

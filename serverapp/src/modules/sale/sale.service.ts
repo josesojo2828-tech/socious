@@ -1,9 +1,10 @@
-import {
-  BadRequestException,
+import {  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
+import { computeCreditDueDate } from "./util/credit-due-date";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, ProductStatus, SaleStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
@@ -40,6 +41,7 @@ export interface SaleScope {
 
 interface ResolvedItem {
   productId: string | null;
+  presentationId: string | null;
   productName: string;
   quantity: number;
   unitPriceUSD: number;
@@ -102,6 +104,10 @@ export class SaleService {
 
     await this.assertCashShiftAllowed(scope, data.cashShiftId);
 
+    for (const payment of data.payments ?? []) {
+      await this.assertPaymentMethod(scope.organizationId, payment.paymentMethod);
+    }
+
     const rates = await this.exchangeService.resolveRates(
       scope.organizationId,
       { rateBcv: data.rateBcv, rateUsdt: data.rateUsdt },
@@ -121,6 +127,22 @@ export class SaleService {
         rates,
       );
 
+      let dueDate = data.dueDate ? new Date(data.dueDate) : null;
+      let creditTerms: string | null = null;
+      if (data.creditCadence) {
+        creditTerms = JSON.stringify({
+          cadence: data.creditCadence,
+          everyNDays: data.creditEveryNDays ?? null,
+          monthlyDay: data.creditMonthlyDay ?? null,
+        });
+        if (!dueDate) {
+          dueDate = computeCreditDueDate(data.creditCadence, {
+            everyNDays: data.creditEveryNDays,
+            monthlyDay: data.creditMonthlyDay,
+          });
+        }
+      }
+
       const saleNumber = await this.sequenceService.nextFormatted(
         "SALE",
         scope.organizationId,
@@ -136,7 +158,8 @@ export class SaleService {
           clientId: data.clientId ?? null,
           orderId: data.orderId ?? null,
           issueDate: data.issueDate ? new Date(data.issueDate) : new Date(),
-          dueDate: data.dueDate ? new Date(data.dueDate) : null,
+          dueDate,
+          creditTerms,
           rateBcv: rates.rateBcv,
           rateUsdt: rates.rateUsdt,
           subtotalUSD: totals.subtotalUSD,
@@ -212,6 +235,7 @@ export class SaleService {
   // ------------------------------------------------------------------
 
   async addPayment(scope: SaleScope, saleId: string, data: AddSalePaymentDto) {
+    await this.assertPaymentMethod(scope.organizationId, data.paymentMethod);
     return this.prisma.$transaction(async (tx) => {
       const sale = await tx.sale.findFirst({
         where: { id: saleId, ...this.scopeWhere(scope.organizationId) },
@@ -511,6 +535,23 @@ export class SaleService {
 
       for (const item of sale.items) {
         if (!item.productId) continue;
+        if (item.presentationId) {
+          const presentation = await tx.productPresentation.findFirst({
+            where: { id: item.presentationId },
+            select: { id: true, stock: true },
+          });
+          if (presentation) {
+            await tx.productPresentation.update({
+              where: { id: item.presentationId },
+              data: {
+                stock: round2(
+                  Number(presentation.stock ?? 0) + Number(item.quantity),
+                ),
+              },
+            });
+          }
+          continue;
+        }
         const product = await tx.product.findFirst({
           where: { id: item.productId },
         });
@@ -585,8 +626,31 @@ export class SaleService {
       let productName = input.productName?.trim();
       let isService = false;
       let productId: string | null = input.productId ?? null;
+      let presentationId: string | null = input.presentationId ?? null;
 
-      if (productId) {
+      if (presentationId) {
+        const presentation = await tx.productPresentation.findFirst({
+          where: { id: presentationId },
+          select: { id: true, productId: true, name: true, stock: true },
+        });
+        if (!presentation) {
+          throw new NotFoundException("La presentación no existe.");
+        }
+        if (productId && presentation.productId !== productId) {
+          throw new BadRequestException(
+            "La presentación no pertenece a ese producto.",
+          );
+        }
+        if (Number(presentation.stock ?? 0) < quantity) {
+          throw new BadRequestException(
+            `Stock insuficiente para "${presentation.name}": hay ${Number(presentation.stock ?? 0)} y se piden ${quantity}.`,
+          );
+        }
+        productId = presentation.productId;
+        productName = presentation.name;
+      }
+
+      if (productId && !presentationId) {
         const product = await tx.product.findFirst({
           where: {
             id: productId,
@@ -627,6 +691,7 @@ export class SaleService {
 
       resolved.push({
         productId,
+        presentationId,
         productName: productName as string,
         quantity,
         unitPriceUSD,
@@ -651,6 +716,7 @@ export class SaleService {
         data: {
           saleId,
           productId: item.productId,
+          presentationId: item.presentationId,
           productName: item.productName,
           quantity: item.quantity,
           unitPriceUSD: item.unitPriceUSD,
@@ -671,6 +737,22 @@ export class SaleService {
   ): Promise<void> {
     for (const item of items) {
       if (!item.productId || item.isService) continue;
+
+      // Presentation sale: its own stock is the one that moves; the product
+      // bulk and the Kardex stay untouched (v1 — presentations have no rows).
+      if (item.presentationId) {
+        const presentation = await tx.productPresentation.findFirst({
+          where: { id: item.presentationId },
+          select: { id: true, stock: true },
+        });
+        if (presentation) {
+          await tx.productPresentation.update({
+            where: { id: item.presentationId },
+            data: { stock: round2(Number(presentation.stock ?? 0) - item.quantity) },
+          });
+        }
+        continue;
+      }
 
       const product = await tx.product.findFirst({
         where: { id: item.productId },
@@ -705,6 +787,24 @@ export class SaleService {
               : product.status,
         },
       });
+    }
+  }
+
+  /** Built-in business codes plus the tenant's own active methods (S1). */
+  private async assertPaymentMethod(
+    organizationId: string | null,
+    code: string,
+  ): Promise<void> {
+    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) return;
+    if (!organizationId) {
+      throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
+    }
+    const custom = await this.prisma.tenantPaymentMethod.findFirst({
+      where: { organizationId, code, active: true },
+      select: { id: true },
+    });
+    if (!custom) {
+      throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
     }
   }
 

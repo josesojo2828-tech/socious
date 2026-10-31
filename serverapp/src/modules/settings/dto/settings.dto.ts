@@ -6,8 +6,10 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
+  IsString,
   Matches,
   Min,
+  Max,
   ValidateNested,
 } from "class-validator";
 import {
@@ -99,6 +101,38 @@ export class RoutesSettingsDto {
   enabled?: boolean;
 }
 
+export class ReturnsSettingsDto {
+  @IsOptional()
+  @IsArray({ message: "returns.reasons debe ser una lista." })
+  @IsString({ each: true })
+  reasons?: string[];
+}
+
+export class CreditSettingsDto {
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  initialPaymentUSD?: number | null;
+
+  @IsOptional()
+  @IsIn(["QUINCENAL", "MONTHLY", "EVERY_N_DAYS", "FREE"], {
+    message: "Cadencia de crédito no válida.",
+  })
+  cadence?: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(365)
+  everyNDays?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(28)
+  monthlyDay?: number;
+}
+
 export class UpdateTenantSettingsDto {
   @IsOptional()
   @ValidateNested()
@@ -129,6 +163,16 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => RoutesSettingsDto)
   routes?: RoutesSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ReturnsSettingsDto)
+  returns?: ReturnsSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreditSettingsDto)
+  credit?: CreditSettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

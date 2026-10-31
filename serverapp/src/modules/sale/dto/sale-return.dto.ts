@@ -5,13 +5,13 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
+  Matches,
   IsString,
   MaxLength,
   Min,
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { CURRENCY_CODES } from "src/shared/constants/payment-methods";
 
 const NOTES_MAX = 1000;
@@ -54,7 +54,7 @@ export class CreateSaleReturnDto {
   reason?: string;
 
   @IsOptional()
-  @IsIn(BUSINESS_PAYMENT_METHOD_CODES, {
+  @Matches(/^[A-Z][A-Z0-9_]{1,39}$/, {
     message: "Método de reintegro no reconocido.",
   })
   refundMethod?: string;

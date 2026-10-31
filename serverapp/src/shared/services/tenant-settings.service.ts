@@ -8,11 +8,13 @@ import type { Prisma } from "@prisma/client";
 import {
   AGENCY_KEY_PATTERN,
   COORDINATION_METHODS,
+  CREDIT_CADENCES,
   CURRENCY_VISIBILITY_KEYS,
   DEFAULT_TENANT_SETTINGS,
   FULFILLMENT_TYPES,
   cloneDefaultSettings,
   isCoordinationMethod,
+  isCreditCadence,
   isFulfillmentType,
   normalizeTenantSettings,
   type TenantSettings,
@@ -224,6 +226,79 @@ export class TenantSettingsService {
       }
     }
 
+    if (input.returns !== undefined) {
+      const returns = input.returns as Record<string, unknown>;
+      assertKnownKeys("returns", returns, ["reasons"]);
+      if (returns.reasons !== undefined) {
+        const list = returns.reasons;
+        if (!Array.isArray(list)) {
+          throw new BadRequestException("returns.reasons debe ser una lista.");
+        }
+        const invalid = list.find(
+          (item) => typeof item !== "string" || !item.trim() || item.length > 160,
+        );
+        if (invalid !== undefined) {
+          throw new BadRequestException(
+            "Cada motivo de devolución debe ser un texto de hasta 160 caracteres.",
+          );
+        }
+        result.returns = {
+          reasons: [...new Set((list as string[]).map((item) => item.trim()))],
+        };
+      }
+    }
+
+    if (input.credit !== undefined) {
+      const credit = input.credit as Record<string, unknown>;
+      assertKnownKeys("credit", credit, [
+        "initialPaymentUSD",
+        "cadence",
+        "everyNDays",
+        "monthlyDay",
+      ]);
+      const patchSection: Partial<TenantSettings["credit"]> = {};
+      if (credit.initialPaymentUSD !== undefined) {
+        const raw = credit.initialPaymentUSD;
+        if (raw !== null) {
+          if (typeof raw !== "number" || !Number.isFinite(raw) || raw < 0) {
+            throw new BadRequestException(
+              "credit.initialPaymentUSD debe ser un monto válido o null.",
+            );
+          }
+          patchSection.initialPaymentUSD = Math.round(raw * 100) / 100;
+        } else {
+          patchSection.initialPaymentUSD = null;
+        }
+      }
+      if (credit.cadence !== undefined) {
+        if (!isCreditCadence(credit.cadence)) {
+          throw new BadRequestException(
+            `Cadencia desconocida: "${String(credit.cadence)}". Valores: ${CREDIT_CADENCES.join(", ")}.`,
+          );
+        }
+        patchSection.cadence = credit.cadence;
+      }
+      if (credit.everyNDays !== undefined) {
+        const days = credit.everyNDays;
+        if (typeof days !== "number" || days < 1 || days > 365) {
+          throw new BadRequestException(
+            "credit.everyNDays debe estar entre 1 y 365.",
+          );
+        }
+        patchSection.everyNDays = Math.floor(days);
+      }
+      if (credit.monthlyDay !== undefined) {
+        const day = credit.monthlyDay;
+        if (typeof day !== "number" || day < 1 || day > 28) {
+          throw new BadRequestException(
+            "credit.monthlyDay debe estar entre 1 y 28.",
+          );
+        }
+        patchSection.monthlyDay = Math.floor(day);
+      }
+      result.credit = patchSection;
+    }
+
     return result;
   }
 }
@@ -284,5 +359,11 @@ export function mergeTenantSettings(
     },
     delivery: { ...base.delivery, ...(patch.delivery ?? {}) },
     routes: { ...base.routes, ...(patch.routes ?? {}) },
+    returns: {
+      ...base.returns,
+      ...(patch.returns ?? {}),
+      reasons: patch.returns?.reasons ?? base.returns.reasons,
+    },
+    credit: { ...base.credit, ...(patch.credit ?? {}) },
   });
 }

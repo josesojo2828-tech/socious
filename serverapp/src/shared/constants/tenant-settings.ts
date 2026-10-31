@@ -50,6 +50,16 @@ export interface TenantSettings {
   delivery: { enabled: boolean; feeUSD: number };
   /** Turns on the "Rutas" entry point in the sidebar (S8). */
   routes: { enabled: boolean };
+  /** Enabled return reasons shown as a select on the returns flow (S5). */
+  returns: { reasons: string[] };
+  /** Default terms for credit sales (S3). */
+  credit: {
+    /** Optional down-payment hint in USD; null = no default initial. */
+    initialPaymentUSD: number | null;
+    cadence: CreditCadence;
+    everyNDays: number;
+    monthlyDay: number;
+  };
 }
 
 /**
@@ -76,6 +86,20 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
   shipping: { enabledAgencies: ["ZOOM", "MRW"] },
   delivery: { enabled: true, feeUSD: 0 },
   routes: { enabled: false },
+  returns: {
+    reasons: [
+      "Solo lo estaba probando",
+      "Producto defectuoso",
+      "Talla o medida equivocada",
+      "Se arrepintió de la compra",
+    ],
+  },
+  credit: {
+    initialPaymentUSD: null,
+    cadence: "QUINCENAL",
+    everyNDays: 15,
+    monthlyDay: 1,
+  },
 };
 
 /** Agency keys are `ZOOM`, `MRW`, `DOMEZ`... upper-case, no spaces. */
@@ -90,6 +114,67 @@ export function isCoordinationMethod(
 ): value is CoordinationMethod {
   return (COORDINATION_METHODS as readonly string[]).includes(value as string);
 }
+
+/** How a credit sale is collected (S3 of the sales overhaul). */
+export type CreditCadence =
+  | "QUINCENAL"
+  | "MONTHLY"
+  | "EVERY_N_DAYS"
+  | "FREE";
+
+export const CREDIT_CADENCES: readonly CreditCadence[] = [
+  "QUINCENAL",
+  "MONTHLY",
+  "EVERY_N_DAYS",
+  "FREE",
+];
+
+export function isCreditCadence(value: unknown): value is CreditCadence {
+  return (CREDIT_CADENCES as readonly string[]).includes(value as string);
+}
+
+const asReasonList = (value: unknown, fallback: string[]): string[] => {
+  if (!Array.isArray(value)) return fallback;
+  const reasons = value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0 && item.length <= 160);
+  return [...new Set(reasons)];
+};
+
+const asNullableFee = (
+  value: unknown,
+  fallback: number | null,
+): number | null => {
+  if (value === null) return null;
+  if (typeof value === "number" && Number.isFinite(value) && value >= 0) {
+    return Math.round(value * 100) / 100;
+  }
+  return fallback;
+};
+
+const asCredit = (
+  value: Record<string, unknown>,
+  defaults: TenantSettings["credit"],
+): TenantSettings["credit"] => {
+  const everyNDays =
+    typeof value.everyNDays === "number" && value.everyNDays >= 1
+      ? Math.min(Math.floor(value.everyNDays), 365)
+      : defaults.everyNDays;
+  const monthlyDay =
+    typeof value.monthlyDay === "number" && value.monthlyDay >= 1
+      ? Math.min(Math.floor(value.monthlyDay), 28)
+      : defaults.monthlyDay;
+  return {
+    initialPaymentUSD: asNullableFee(
+      value.initialPaymentUSD,
+      defaults.initialPaymentUSD,
+    ),
+    cadence: isCreditCadence(value.cadence) ? value.cadence : defaults.cadence,
+    everyNDays,
+    monthlyDay,
+  };
+};
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -140,6 +225,8 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
   const shipping = isPlainObject(source.shipping) ? source.shipping : {};
   const delivery = isPlainObject(source.delivery) ? source.delivery : {};
   const routes = isPlainObject(source.routes) ? source.routes : {};
+  const returns = isPlainObject(source.returns) ? source.returns : {};
+  const credit = isPlainObject(source.credit) ? source.credit : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -176,6 +263,10 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
     routes: {
       enabled: asBool(routes.enabled, defaults.routes.enabled),
     },
+    returns: {
+      reasons: asReasonList(returns.reasons, defaults.returns.reasons),
+    },
+    credit: asCredit(credit, defaults.credit),
   };
 }
 

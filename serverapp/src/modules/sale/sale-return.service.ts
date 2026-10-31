@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { PrismaService } from "nestjs-prisma";
 import { SaleStatus } from "@prisma/client";
 import type { Prisma, SaleItem } from "@prisma/client";
@@ -73,6 +74,28 @@ export class SaleReturnService {
   }
 
   async create(scope: SaleScope, saleId: string, data: CreateSaleReturnDto) {
+    if (data.refundMethod) {
+      const isBuiltin = BUSINESS_PAYMENT_METHOD_CODES.includes(
+        data.refundMethod,
+      );
+      const custom =
+        isBuiltin || !scope.organizationId
+          ? null
+          : await this.prisma.tenantPaymentMethod.findFirst({
+              where: {
+                organizationId: scope.organizationId,
+                code: data.refundMethod,
+                active: true,
+              },
+              select: { id: true },
+            });
+      if (!isBuiltin && !custom) {
+        throw new BadRequestException(
+          `Método de reintegro no reconocido: "${data.refundMethod}".`,
+        );
+      }
+    }
+
     return this.prisma.$transaction(async (tx) => {
       const sale = await tx.sale.findFirst({
         where: { id: saleId, ...this.saleScopeWhere(scope.organizationId) },

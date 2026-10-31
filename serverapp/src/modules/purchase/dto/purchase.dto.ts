@@ -6,6 +6,7 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
+  Matches,
   IsString,
   MaxLength,
   Min,
@@ -13,7 +14,6 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import { PaymentStatus, PurchaseStatus } from "@prisma/client";
-import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 
 const NOTES_MAX = 1000;
 
@@ -46,7 +46,7 @@ export class PurchasePaymentInputDto {
   @IsIn(["USD", "VES", "USDT"], { message: "Moneda no soportada." })
   currency: "USD" | "VES" | "USDT";
 
-  @IsIn(BUSINESS_PAYMENT_METHOD_CODES, {
+  @Matches(/^[A-Z][A-Z0-9_]{1,39}$/, {
     message: "Método de pago no reconocido.",
   })
   paymentMethod: string;

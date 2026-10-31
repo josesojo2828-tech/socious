@@ -11,12 +11,17 @@ import type { SidebarSection } from "src/shared/types/dashboard.type";
  */
 const makeService = (
   activeModules: { key: string; name: string; icon: string | null }[] = [],
-  settings: { routes?: { enabled?: boolean } } = { routes: { enabled: false } },
+  settings: { routes?: { enabled?: boolean }; cash?: { shiftControl?: boolean } } = {
+    routes: { enabled: false },
+  },
 ) =>
   new DashboardService({} as any, new PermitModel() as any, {
     listActive: async () => activeModules,
   } as any, {
-    get: jest.fn().mockResolvedValue({ ...settings, routes: settings.routes ?? { enabled: false } }),
+    get: jest.fn().mockResolvedValue({
+      cash: { shiftControl: true, ...(settings.cash ?? {}) },
+      routes: settings.routes ?? { enabled: false },
+    }),
   } as any);
 
 const linksOf = (sections: SidebarSection[]): string[] =>

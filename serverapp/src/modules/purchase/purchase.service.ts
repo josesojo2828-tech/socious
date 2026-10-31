@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, PurchaseStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
@@ -64,7 +65,31 @@ export class PurchaseService {
     return { organizationId, deletedAt: null };
   }
 
+  /** Built-in codes plus the tenant's own active methods (S1). */
+  private async assertPaymentMethod(
+    organizationId: string | null,
+    code: string,
+  ): Promise<void> {
+    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) return;
+    if (!organizationId) {
+      throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
+    }
+    const custom = await this.prisma.tenantPaymentMethod.findFirst({
+      where: { organizationId, code, active: true },
+      select: { id: true },
+    });
+    if (!custom) {
+      throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
+    }
+  }
+
   async create(scope: PurchaseScope, data: CreatePurchaseDto) {
+    for (const payment of data.payments ?? []) {
+      await this.assertPaymentMethod(
+        scope.organizationId,
+        payment.paymentMethod,
+      );
+    }
     if (!data.items?.length) {
       throw new BadRequestException("La compra necesita al menos un artículo.");
     }
@@ -252,6 +277,7 @@ export class PurchaseService {
     id: string,
     data: AddPurchasePaymentDto,
   ) {
+    await this.assertPaymentMethod(scope.organizationId, data.paymentMethod);
     return this.prisma.$transaction(async (tx) => {
       const purchase = await tx.purchase.findFirst({
         where: { id, ...this.scopeWhere(scope.organizationId) },
