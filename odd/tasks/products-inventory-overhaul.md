@@ -65,15 +65,19 @@ keeps working.
 
 | ID  | S#        | Route      | Status | Commit |
 | --- | --------- | ---------- | ------ | ------ |
-| T1  | S5+S2     | inline     | pending | |
-| T2  | S2        | inline     | pending | |
-| T3  | S5        | inline     | pending | |
-| T4  | S1        | inline     | pending | |
-| T5  | S3        | inline     | pending | |
-| T6  | S4        | inline     | pending | |
+| T1  | S5+S2     | inline     | done | a96e08f |
+| T2  | S2        | inline     | done | a96e08f |
+| T3  | S5        | inline     | done | a96e08f |
+| T4  | S1        | inline     | done | 25f5457 |
+| T5  | S3        | inline     | done | 624b71c |
+| T6  | S4        | inline     | done | (this commit) |
 
 ## Log
 
 L1 (user, verbatim): the five numbered requests quoted in S1–S5 above, ending
 with the requested report format: per item, a brief description, complete or
 questions, and how to verify.
+
+L2: all six tasks closed in one session on main. POS sale-lines do not yet
+pick a presentation (stock still decrements the product bulk); that wiring
+is the honest remainder of S4 and was reported to the user as pending.

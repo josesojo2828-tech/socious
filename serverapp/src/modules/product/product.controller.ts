@@ -20,6 +20,11 @@ import {
   ListStockMovementsQueryDto,
   UpdateProductDto,
 } from "./dto/product.dto";
+import { PresentationService } from "./presentation.service";
+import {
+  CreatePresentationDto,
+  DecomposeDto,
+} from "./dto/presentation.dto";
 import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
@@ -36,6 +41,7 @@ export class ProductController {
 
   constructor(
     private readonly productService: ProductService,
+    private readonly presentationService: PresentationService,
     private readonly workspaceContext: WorkspaceContextService,
     private readonly prisma: PrismaService,
   ) {
@@ -171,6 +177,49 @@ export class ProductController {
   ) {
     const scope = await this.resolveScope(request);
     return this.productService.adjustStock(scope, id, body);
+  }
+
+  // Presentations (S4, AVANZADO+): variants with an independent stock.
+  @Get(":id/presentations")
+  @UseGuards(SessionAuthGuard)
+  async listPresentations(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.presentationService.list(scope.organizationId, id);
+  }
+
+  @Post(":id/presentations")
+  @UseGuards(SessionAuthGuard)
+  async createPresentation(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: CreatePresentationDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId) {
+      throw new UnauthorizedException(
+        "Crea una organización para gestionar presentaciones.",
+      );
+    }
+    return this.presentationService.create(scope.organizationId, id, body);
+  }
+
+  @Post(":id/decompose")
+  @UseGuards(SessionAuthGuard)
+  async decompose(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: DecomposeDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId) {
+      throw new UnauthorizedException(
+        "Crea una organización para descomponer stock.",
+      );
+    }
+    return this.presentationService.decompose(scope.organizationId, id, body);
   }
 
   @Patch(":id")

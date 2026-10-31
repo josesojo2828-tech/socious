@@ -4,6 +4,8 @@ import { JwtService } from "@nestjs/jwt";
 import {  Module, forwardRef } from "@nestjs/common";
 import { ProductController } from "./product.controller";
 import { ProductService } from "./product.service";
+import { PresentationService } from "./presentation.service";
+import { PresentationController } from "./presentation.controller";
 
 /** Product catalog with Kardex stock control (S6). */
 @Module({
@@ -11,8 +13,9 @@ import { ProductService } from "./product.service";
     forwardRef(() => PermitModule),
     forwardRef(() => UserModule),
   ],
-  controllers: [ProductController],
+  controllers: [ProductController, PresentationController],
   providers: [ProductService,
+    PresentationService,
     JwtService,
   ],
   exports: [ProductService],

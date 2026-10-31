@@ -61,6 +61,15 @@ const NEW_MODULES = [
     category: "OPERATIONS",
     sortOrder: 70,
   },
+  {
+    key: "PRESENTATIONS",
+    name: "Presentaciones",
+    description:
+      "Variantes de un producto (color, medidas) con stock propio y descomposición.",
+    icon: "package",
+    category: "INVENTORY",
+    sortOrder: 80,
+  },
 ] as const;
 
 const PLAN_MODULES = {
@@ -74,6 +83,7 @@ const PLAN_MODULES = {
     "CATALOG_ONLINE",
     "SHIPPING",
     "ROUTES",
+    "PRESENTATIONS",
   ],
   PREMIUM: [
     "CLIENTS",
@@ -84,6 +94,7 @@ const PLAN_MODULES = {
     "CATALOG_ONLINE",
     "SHIPPING",
     "ROUTES",
+    "PRESENTATIONS",
   ],
 } as const;
 

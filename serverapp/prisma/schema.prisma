@@ -937,6 +937,7 @@ model Product {
   organization      Organization?   @relation(fields: [organizationId], references: [id])
   stockMovements    StockMovement[]
   saleItems         SaleItem[]
+  presentations     ProductPresentation[]
   purchaseItems     PurchaseItem[]
   orderItems        OrderItem[]
   saleReturnItems   SaleReturnItem[]
@@ -1251,6 +1252,31 @@ model PurchasePayment {
 
   @@index([purchaseId])
   @@index([paidAt])
+}
+
+// ======================================
+// PRESENTACIONES (módulo AVANZADO+)
+// ======================================
+
+model ProductPresentation {
+  id             String   @id @default(uuid())
+  productId      String
+  organizationId String?
+  name           String   // "Bolsa 100 g", "Rojo XL"
+  sku            String?
+  barcode        String?
+  color          String?
+  measures       String?  // "10 × 10 × 20 cm"
+  unit           String   @default("UND")
+  stock          Decimal  @default(0.00) @db.Decimal(12, 2)
+  minStock       Decimal  @default(0.00) @db.Decimal(12, 2)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
 
 // ======================================

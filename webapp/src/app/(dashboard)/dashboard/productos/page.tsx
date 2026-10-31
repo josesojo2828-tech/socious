@@ -30,6 +30,8 @@ import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpo
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { BarcodePreview } from "@/features/products/components/BarcodePreview";
 import { generateEan13 } from "@/features/products/lib/barcode";
+import { PresentationsCard } from "@/features/products/components/PresentationsCard";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import {
   BCV_HINT,
@@ -128,6 +130,7 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
   const [priceCurrency, setPriceCurrency] = useState<PriceCurrency>("USD");
+  const [planModules, setPlanModules] = useState<string[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -155,7 +158,7 @@ export default function ProductsPage() {
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [productPage, categoryTree, supplierPage, unitList, ratesData] =
+      const [productPage, categoryTree, supplierPage, unitList, ratesData, settings] =
         await Promise.all([
           apiClient.get<Paged<Product>>(ProductEndpoints.list, {
             params: { limit: 100 },
@@ -174,6 +177,7 @@ export default function ProductsPage() {
             .catch(() => ({
               data: null as ExchangeRates | null,
             })),
+          getTenantSettings().catch(() => null),
         ]);
       setRows(productPage.data.list);
       setCategories(categoryTree.data);
@@ -185,6 +189,7 @@ export default function ProductsPage() {
           rateUsdt: Number(ratesData.data.rateUsdt) || 1,
         });
       }
+      setPlanModules(settings?.planModules ?? []);
     } catch {
       addToast({
         type: "error",
@@ -663,6 +668,10 @@ export default function ProductsPage() {
             </button>
           </div>
         </SectionCard>
+      ) : null}
+
+      {editing && planModules.includes("PRESENTATIONS") ? (
+        <PresentationsCard productId={editing.id} />
       ) : null}
 
       <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
