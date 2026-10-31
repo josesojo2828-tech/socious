@@ -28,6 +28,8 @@ import type {
 } from "@/features/products/types/product.type";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
+import { BarcodePreview } from "@/features/products/components/BarcodePreview";
+import { generateEan13 } from "@/features/products/lib/barcode";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import {
@@ -360,11 +362,24 @@ export default function ProductsPage() {
             </label>
             <label className={label}>
               Código de barras
-              <input
-                className={field}
-                value={form.barcode}
-                onChange={(event) => patchForm({ barcode: event.target.value })}
-              />
+              <div className="flex gap-2">
+                <input
+                  className={field}
+                  value={form.barcode}
+                  onChange={(event) =>
+                    patchForm({ barcode: event.target.value })
+                  }
+                />
+                <button
+                  type="button"
+                  title="Generar un EAN-13 válido"
+                  onClick={() => patchForm({ barcode: generateEan13() })}
+                  className="shrink-0 rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 dark:border-slate-700"
+                >
+                  Generar
+                </button>
+              </div>
+              <BarcodePreview value={form.barcode ?? ""} />
             </label>
             <label className={label}>
               Unidad
