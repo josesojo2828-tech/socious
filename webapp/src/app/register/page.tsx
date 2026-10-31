@@ -16,7 +16,6 @@ import {
   Eye,
   EyeOff,
   UserCircle,
-  Sparkles,
   AlertCircle,
 } from 'lucide-react';
 
@@ -24,6 +23,7 @@ import { apiClient } from '@/shared/api/api.client';
 import { authStorage } from '@/shared/lib/auth.storage';
 import { useToastStore } from '@/shared/store/ui/useToastStore';
 import { useAuthStore } from '@/shared/store/auth/useAuthStore';
+import type { User as SessionUser } from "@/types/backend/schema.types";
 import { RegisterFormData, registerSchema } from '@/features/user/schemas/auth.schema';
 import { useTranslation } from "@/context/i18n.context";
 
@@ -70,7 +70,6 @@ function RegisterFormContent() {
   }, [user, router]);
 
   const refParam = searchParams.get('ref') || '';
-  const isCampusCoupon = !!refParam && refParam.toUpperCase().startsWith('CAMPUS-');
 
   // S7 (legal-compliance): etiqueta de la fecha de nacimiento. La clave debe
   // existir en todos los locales (lo garantiza `register.form.spec.ts`).
@@ -108,26 +107,8 @@ function RegisterFormContent() {
   useEffect(() => {
     if (refParam) {
       setValue('referralCode', refParam);
-      if (refParam.toUpperCase().startsWith('CAMPUS-')) {
-        apiClient
-          .get(`/api/campus/validate-coupon/${refParam}`)
-          .then((res) => {
-            const { email, firstName, lastName } = res.data;
-            if (email) setValue('email', email);
-            if (firstName) setValue('firstName', firstName);
-            if (lastName) setValue('lastName', lastName);
-          })
-          .catch((err) => {
-            console.error('Error al validar cupón de campus:', err);
-            addToast({
-              type: 'error',
-              title: 'Cupón Inválido',
-              message: 'El cupón del Campus no es válido, ya fue utilizado o ha expirado.',
-            });
-          });
-      }
     }
-  }, [refParam, setValue, addToast]);
+  }, [refParam, setValue]);
 
   const onSubmit = async (data: RegisterFormData) => {
     if (!acceptedTerms) {
@@ -139,7 +120,9 @@ function RegisterFormContent() {
     try {
       const response = await apiClient.post<{
         tokens?: { access_token: string; refresh_token: string };
-        user?: any;
+        // The store holds a full User; refreshSession() reloads the complete
+        // record right after, so the registration payload may be partial.
+        user?: SessionUser;
       }>('/api/auth/register', { ...data, acceptedTerms: true });
 
       const { tokens, user: newUser } = response.data || {};
@@ -157,10 +140,6 @@ function RegisterFormContent() {
         useAuthStore.getState().refreshSession().catch(() => {});
       }
 
-      if (data.referralCode?.toUpperCase()?.startsWith('CAMPUS-')) {
-        localStorage.setItem('show_campus_welcome', 'true');
-      }
-
       addToast({
         type: 'success',
         title: t('auth.welcome_title') || '¡Registro exitoso!',
@@ -168,9 +147,11 @@ function RegisterFormContent() {
       });
 
       router.push('/dashboard/subscription');
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      const apiMsg = error?.response?.data?.message || 'Error al completar el registro. Intentalo de nuevo.';
+      const apiMsg =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || 'Error al completar el registro. Intentalo de nuevo.';
       addToast({
         type: 'error',
         title: 'Error de registro',
@@ -194,20 +175,6 @@ function RegisterFormContent() {
         </p>
       </div>
 
-      {/* Campus Active Banner */}
-      {isCampusCoupon && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3.5 text-emerald-600 dark:text-emerald-400 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="p-2.5 bg-emerald-500 text-white rounded-xl shrink-0 shadow-sm">
-            <Sparkles size={20} />
-          </div>
-          <div className="text-left text-xs sm:text-sm">
-            <p className="font-extrabold">Beneficio Nutringest Campus Activo</p>
-            <p className="text-emerald-700 dark:text-emerald-300 font-medium">
-              Obtenés <strong>120 días de acceso PRO gratis</strong> al registrarte con tu perfil de estudiante.
-            </p>
-          </div>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Nombre & Apellido */}
@@ -265,13 +232,8 @@ function RegisterFormContent() {
             <input
               type="email"
               {...register('email')}
-              readOnly={isCampusCoupon}
               placeholder={t('form.placeholders.email') || 'correo@ejemplo.com'}
-              className={`w-full pl-11 pr-4 py-3 border-2 rounded-2xl transition-all outline-none font-medium ${
-                isCampusCoupon
-                  ? 'bg-base-200 border-base-300 text-base-content/50 cursor-not-allowed border-dashed'
-                  : 'bg-base-100 dark:bg-base-200 border-base-300 focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 text-base-content'
-              } ${errors.email ? 'border-error ring-4 ring-error/10' : ''}`}
+              className={`w-full pl-11 pr-4 py-3 border rounded-lg transition-all outline-none font-medium bg-base-100 dark:bg-base-200 border-base-300 focus:border-primary focus:ring-4 focus:ring-primary/10 text-base-content ${errors.email ? 'border-error ring-4 ring-error/10' : ''}`}
             />
           </div>
           {errors.email && <span className="text-error text-xs font-bold ml-1">{errors.email.message}</span>}
@@ -397,12 +359,7 @@ function RegisterFormContent() {
             <input
               type="text"
               {...register('referralCode')}
-              readOnly={isCampusCoupon}
-              className={`w-full pl-11 pr-4 py-3 border-2 border-dashed rounded-2xl transition-all outline-none font-black tracking-wider placeholder:font-medium placeholder:tracking-normal ${
-                isCampusCoupon
-                  ? 'bg-base-200 border-base-300 text-base-content/50 cursor-not-allowed'
-                  : 'bg-base-100 dark:bg-base-200 border-base-300 text-primary focus:bg-base-100 focus:border-primary focus:border-solid'
-              }`}
+              className="w-full pl-11 pr-4 py-3 border rounded-lg transition-all outline-none font-medium bg-base-100 dark:bg-base-200 border-base-300 text-primary focus:border-primary focus:ring-4 focus:ring-primary/10"
               placeholder={t('form.placeholders.referral_code') || 'OPCIONAL'}
             />
           </div>
@@ -418,7 +375,7 @@ function RegisterFormContent() {
                 setAcceptedTerms(e.target.checked);
                 if (e.target.checked) setTermsError(false);
               }}
-              className="w-4 h-4 mt-0.5 rounded border-2 border-base-300 text-primary focus:ring-primary/20 accent-[#5b21b6] cursor-pointer"
+              className="w-4 h-4 mt-0.5 rounded border-2 border-base-300 text-primary focus:ring-primary/20 accent-[var(--color-primary)] cursor-pointer"
             />
             <span className="text-xs text-base-content/70 leading-relaxed font-medium group-hover:text-base-content transition-colors">
               Acepto los{' '}
@@ -429,7 +386,7 @@ function RegisterFormContent() {
               <Link href="/privacy" className="text-primary underline font-bold hover:text-accent">
                 Política de Privacidad
               </Link>{' '}
-              de Nutringest.
+              de Socius.
             </span>
           </label>
           {termsError && (
@@ -445,7 +402,7 @@ function RegisterFormContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-[#5b21b6] hover:bg-[#4c1d95] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+            className="w-full py-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary)] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (
               <>

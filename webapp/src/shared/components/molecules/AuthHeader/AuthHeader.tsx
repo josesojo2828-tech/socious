@@ -24,16 +24,9 @@ export const AuthHeader = () => {
     <header className="w-full bg-base-100/90 backdrop-blur-md border-b border-base-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between z-30 transition-colors">
       {/* Brand Logo */}
       <Link href="/" className="flex items-center gap-2 group transition-transform active:scale-95">
-        <img
-          src="/png/ImagotipoPurpura.png"
-          alt="Nutringest"
-          className="h-8 sm:h-9 w-auto dark:hidden transition-opacity"
-        />
-        <img
-          src="/png/ImagotipoBlanco.png"
-          alt="Nutringest"
-          className="h-8 sm:h-9 w-auto hidden dark:block transition-opacity"
-        />
+        <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          Socius ERP
+        </span>
       </Link>
 
       {/* Header Actions */}

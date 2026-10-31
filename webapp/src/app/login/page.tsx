@@ -40,7 +40,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const isPending = isLoading || isSuccess;
@@ -62,15 +61,7 @@ export default function LoginPage() {
 
       setTimeout(() => {
         const { user } = useAuthStore.getState();
-        const isCampus = localStorage.getItem("show_campus_welcome") === "true";
-        const isPatient = user?.permits?.name === "PATIENT";
-
-        if (isCampus) {
-          localStorage.removeItem("show_campus_welcome");
-          router.push("/campus/bienvenido");
-        } else if (isPatient) {
-          router.push("/dashboard");
-        } else if (!user?.subscriptions?.length) {
+        if (!user?.subscriptions?.length) {
           router.push("/dashboard/subscription");
         } else {
           router.push("/dashboard");
@@ -193,28 +184,12 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Remember Me Row */}
-              <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2.5 cursor-pointer group select-none">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    disabled={isPending}
-                    className="w-4 h-4 rounded border-2 border-base-300 text-primary focus:ring-primary/20 accent-[#5b21b6] cursor-pointer"
-                  />
-                  <span className="text-sm font-medium text-base-content/70 group-hover:text-base-content transition-colors">
-                    Recordarme en este dispositivo
-                  </span>
-                </label>
-              </div>
-
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full py-4 bg-[#5b21b6] hover:bg-[#4c1d95] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-purple-900/20 hover:shadow-xl hover:shadow-purple-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+                  className="w-full py-4 bg-primary hover:bg-primary/90 active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
                 >
                   {isPending ? (
                     <>
