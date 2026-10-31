@@ -22,6 +22,7 @@ import { OrderEndpoints } from "@/features/orders/services/orders.endpoints";
 import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
+import { creditSchedule } from "@/features/sales/lib/credit-schedule";
 import { CREDIT_CADENCE_LABELS, type TenantSettings } from "@/features/settings/types/tenant-settings.type";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import { CashEndpoints } from "@/features/cash/services/cash.endpoints";
@@ -42,12 +43,6 @@ interface PaymentOption {
   code: string;
   label: string;
   currency: "USD" | "VES" | "USDT";
-}
-
-interface CurrencyOption {
-  code: string;
-  label: string;
-  storage: boolean;
 }
 
 interface RateSnapshot {
@@ -186,19 +181,24 @@ export default function PosPage() {
     setCreditInitial(pct > 0 ? initial.toFixed(2) : "");
   }, [mode, settings, totals.totalUSD]);
 
-  const duePreview = useMemo(() => {
-    if (mode !== "credit" || creditCadence === "FREE") return null;
-    const from = new Date();
-    if (creditCadence === "MONTHLY") {
-      const due = new Date(from.getFullYear(), from.getMonth(), creditMonthlyDay);
-      if (due.getTime() <= from.getTime()) due.setMonth(due.getMonth() + 1);
-      return due;
-    }
-    const days = Math.min(Math.max(creditDays, 1), 365);
-    const due = new Date(from);
-    due.setDate(due.getDate() + days);
-    return due;
-  }, [mode, creditCadence, creditDays, creditMonthlyDay]);
+  const schedule = useMemo(
+    () =>
+      creditSchedule({
+        totalUSD: totals.totalUSD,
+        initialUSD: Number(creditInitial) || 0,
+        cadence: creditCadence,
+        everyNDays: creditDays,
+        monthlyDay: creditMonthlyDay,
+        count: 4,
+      }),
+    [
+      totals.totalUSD,
+      creditInitial,
+      creditCadence,
+      creditDays,
+      creditMonthlyDay,
+    ],
+  );
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -778,18 +778,35 @@ export default function PosPage() {
                       />
                     </label>
                   ) : null}
-                  {duePreview ? (
-                    <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
-                      Vence:{" "}
-                      {duePreview.toLocaleDateString("es-VE", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
+                  {schedule.length > 0 ? (
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-amber-700 dark:text-amber-300">
+                        Cómo caen los pagos
+                      </p>
+                      <ul className="mt-1 space-y-0.5">
+                        {schedule.map((entry) => (
+                          <li
+                            key={entry.date.toISOString()}
+                            className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300"
+                          >
+                            <span>
+                              {entry.date.toLocaleDateString("es-VE", {
+                                day: "2-digit",
+                                month: "short",
+                              })}
+                            </span>
+                            <span className="font-semibold">
+                              saldo ${entry.balanceUSD.toFixed(2)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ) : (
                     <p className="text-xs text-slate-500">
-                      Sin fecha fija: se cobra por abonos.
+                      {creditCadence === "FREE"
+                        ? "Sin fechas fijas: se cobra por abonos."
+                        : "El inicial cubre el total: nada pendiente."}
                     </p>
                   )}
                 </div>

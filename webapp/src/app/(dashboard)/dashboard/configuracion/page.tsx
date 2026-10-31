@@ -455,6 +455,7 @@ export default function SettingsPage() {
         </SectionCard>
       ) : null}
 
+      {settings?.manualGrants?.includes("BRANCHES") ? (
       <SectionCard
         icon={<Building2 className="h-5 w-5" />}
         title="Sucursales"
@@ -513,6 +514,7 @@ export default function SettingsPage() {
           </button>
         </div>
       </SectionCard>
+      ) : null}
 
       <SectionCard
         icon={<Sparkles className="h-5 w-5" />}

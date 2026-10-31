@@ -91,6 +91,7 @@ export interface SaleReturnRef {
   totalUSD: string | number;
   issueDate?: string;
   reason?: string | null;
+  items?: { saleItemId: string | null; quantity: string | number }[];
 }
 
 export interface SaleReturn {

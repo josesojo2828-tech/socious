@@ -66,6 +66,9 @@ export default function SuppliersPage() {
     null,
   );
   const [locLabel, setLocLabel] = useState<string>("");
+  const [locPoints, setLocPoints] = useState<
+    { label: string; lat: number; lng: number }[]
+  >([]);
   const [editing, setEditing] = useState<Supplier | null>(null);
 
   const [selected, setSelected] = useState<Supplier | null>(null);
@@ -152,18 +155,15 @@ export default function SuppliersPage() {
             SupplierEndpoints.list,
             payload,
           );
-          // Ubicación en el mismo momento de crear (S5).
-          if (locPick && locLabel.trim()) {
+          // Ubicaciones en el mismo momento de crear — varias (round 2, #2).
+          for (const point of locPoints) {
             await apiClient
-              .post(SupplierEndpoints.locations(created.id), {
-                label: locLabel.trim(),
-                lat: locPick.lat,
-                lng: locPick.lng,
-              })
+              .post(SupplierEndpoints.locations(created.id), point)
               .catch(() => undefined);
           }
           setLocPick(null);
           setLocLabel("");
+          setLocPoints([]);
         }
         addToast({
           type: "success",
@@ -335,46 +335,79 @@ export default function SuppliersPage() {
           </div>
 
           {!editing ? (
-            locPick ? (
-              <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-indigo-200 bg-indigo-50/50 px-3 py-2 text-sm dark:border-indigo-900">
-                <span>
-                  Ubicación: {locLabel || "sin etiqueta"} ·{" "}
-                  <span className="font-mono text-xs">
-                    {locPick.lat.toFixed(5)}, {locPick.lng.toFixed(5)}
-                  </span>
-                </span>
+            <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                Ubicaciones (opcionales, varias)
+              </p>
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                <label className={label}>
+                  Etiqueta
+                  <input
+                    className={field}
+                    value={locLabel}
+                    onChange={(event) => setLocLabel(event.target.value)}
+                    placeholder="Sede principal, Punto de entrega…"
+                  />
+                </label>
                 <button
                   type="button"
+                  disabled={!locPick || !locLabel.trim()}
                   onClick={() => {
+                    if (!locPick || !locLabel.trim()) return;
+                    setLocPoints((current) => [
+                      ...current,
+                      { label: locLabel.trim(), lat: locPick.lat, lng: locPick.lng },
+                    ]);
                     setLocPick(null);
                     setLocLabel("");
                   }}
-                  className="text-xs font-semibold text-indigo-600 hover:underline"
+                  className="h-fit rounded-xl border border-indigo-200 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 disabled:opacity-40 dark:border-indigo-800"
                 >
-                  Quitar
+                  + Agregar punto
                 </button>
               </div>
-            ) : (
-              <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <label className={label}>
-                    Etiqueta de la ubicación (opcional)
-                    <input
-                      className={field}
-                      value={locLabel}
-                      onChange={(event) => setLocLabel(event.target.value)}
-                      placeholder="Sede principal, Punto de entrega…"
-                    />
-                  </label>
-                  <p className="self-end text-xs text-slate-400">
-                    Tocá el mapa para marcar dónde queda este proveedor.
-                  </p>
-                </div>
-                <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
-                  <NutriMapPicker height="220px" onLocationSelect={(lat, lng) => setLocPick({ lat, lng })} />
-                </div>
+              <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+                <NutriMapPicker
+                  height="220px"
+                  lat={locPick?.lat}
+                  lng={locPick?.lng}
+                  onLocationSelect={(lat, lng) => setLocPick({ lat, lng })}
+                />
               </div>
-            )
+              <p className="text-xs text-slate-400">
+                {locPick
+                  ? `Punto marcado: ${locPick.lat.toFixed(5)}, ${locPick.lng.toFixed(5)}`
+                  : "Tocá el mapa para marcar un punto."}
+              </p>
+              {locPoints.length > 0 ? (
+                <ul className="space-y-1">
+                  {locPoints.map((point, index) => (
+                    <li
+                      key={`${point.lat}-${point.lng}-${index}`}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
+                    >
+                      <span>
+                        {point.label}{" "}
+                        <span className="font-mono text-xs text-slate-400">
+                          {point.lat.toFixed(5)}, {point.lng.toFixed(5)}
+                        </span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLocPoints((current) =>
+                            current.filter((_, i) => i !== index),
+                          )
+                        }
+                        className="text-xs font-semibold text-red-500 hover:underline"
+                      >
+                        Quitar
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           ) : null}
 
           <div className="mt-4 flex gap-2">

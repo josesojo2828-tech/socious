@@ -62,6 +62,15 @@ const NEW_MODULES = [
     sortOrder: 70,
   },
   {
+    key: "BRANCHES",
+    name: "Sucursales",
+    description:
+      "Habilita la gestión de subciales; el admin la asigna como grant manual.",
+    icon: "building",
+    category: "OPERATIONS",
+    sortOrder: 100,
+  },
+  {
     key: "NOTIFICATIONS",
     name: "Notificaciones",
     description:

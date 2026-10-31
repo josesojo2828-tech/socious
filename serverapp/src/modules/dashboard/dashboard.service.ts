@@ -220,11 +220,17 @@ export class DashboardService {
                 },
               ]
             : []),
-          {
-            title: settings.cash.shiftControl ? "Caja y turnos" : "Caja",
-            icon: "wallet",
-            link: "/dashboard/caja",
-          },
+          // Sin control de turnos la caja no aparece en el menú (round 2, #4):
+          // el turno siempre está abierto y las ventas no lo necesitan.
+          ...(settings.cash.shiftControl
+            ? [
+                {
+                  title: "Caja y turnos",
+                  icon: "wallet",
+                  link: "/dashboard/caja",
+                },
+              ]
+            : []),
         ];
         sections.push({
           title: "Ventas",

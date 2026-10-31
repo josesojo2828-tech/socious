@@ -587,17 +587,49 @@ export default function SalesPage() {
           }
         >
           <div className="space-y-1 mb-4">
-            {(selected.items ?? []).map((item) => (
-              <SectionRow
-                key={item.id}
-                label={`${item.quantity} × ${item.productName}`}
-                hint={`$${Number(item.unitPriceUSD).toFixed(2)}`}
-              >
-                <span className="text-sm font-medium">
-                  ${Number(item.totalUSD).toFixed(2)}
-                </span>
-              </SectionRow>
-            ))}
+            {(selected.items ?? []).map((item) => {
+              const returnedUSD = (selected.returns ?? []).reduce(
+                (sum, ref) =>
+                  sum +
+                  (ref.items ?? [])
+                    .filter((line) => line.saleItemId === item.id)
+                    .reduce(
+                      (lineSum, line) => lineSum + Number(line.quantity),
+                      0,
+                    ) *
+                    Number(item.unitPriceUSD),
+                0,
+              );
+              const returnedQty = (selected.returns ?? []).reduce(
+                (sum, ref) =>
+                  sum +
+                  (ref.items ?? [])
+                    .filter((line) => line.saleItemId === item.id)
+                    .reduce((lineSum, line) => lineSum + Number(line.quantity), 0),
+                0,
+              );
+              return (
+                <SectionRow
+                  key={item.id}
+                  label={`${item.quantity} × ${item.productName}`}
+                  hint={
+                    returnedQty > 0
+                      ? `$${Number(item.unitPriceUSD).toFixed(2)} · devuelto ${returnedQty} ($${returnedUSD.toFixed(2)})`
+                      : `$${Number(item.unitPriceUSD).toFixed(2)}`
+                  }
+                >
+                  <span
+                    className={
+                      returnedQty > 0
+                        ? "text-sm font-medium text-red-600"
+                        : "text-sm font-medium"
+                    }
+                  >
+                    ${Number(item.totalUSD).toFixed(2)}
+                  </span>
+                </SectionRow>
+              );
+            })}
             <div className="border-t border-slate-100 pt-2 dark:border-slate-800">
               <SectionRow
                 label="Total"

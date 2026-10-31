@@ -40,6 +40,9 @@ const makeController = (
         { id: "a2", key: "MRW", name: "MRW" },
       ]),
     },
+    moduleGrant: {
+      findMany: jest.fn(async () => []),
+    },
     organizationMember: {
       findFirst: jest.fn(async ({ where }: any) => {
         const row = members.find(

@@ -56,6 +56,8 @@ export interface TenantSettings {
    * in higher plans.
    */
   planModules?: string[];
+  /** Manual org grants (e.g. BRANCHES) — admin-assigned, flag-independent. */
+  manualGrants?: string[];
 }
 
 /** A PATCH sends any subset of the sections; the backend merges the rest. */

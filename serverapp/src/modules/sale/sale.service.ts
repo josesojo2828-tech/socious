@@ -385,6 +385,7 @@ export class SaleService {
             totalUSD: true,
             issueDate: true,
             reason: true,
+            items: { select: { saleItemId: true, quantity: true } },
           },
         },
       },

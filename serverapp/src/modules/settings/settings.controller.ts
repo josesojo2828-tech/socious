@@ -93,22 +93,36 @@ export class SettingsController {
    * delivery and routes — for a Básico tenant instead of offering switches
    * that only exist in higher plans.
    */
-  private withPlanModules<T extends object>(
+  private async withPlanModules<T extends object>(
     request: RequestWithUser,
     settings: T,
-  ): T & { planModules: string[] } {
+    organizationId: string | null,
+  ): Promise<T & { planModules: string[]; manualGrants: string[] }> {
     const entitlements = (request.user as { entitlements?: {
       modules?: { key: string }[];
     } })?.entitlements;
     const planModules = entitlements?.modules?.map((m) => m.key) ?? [];
-    return { ...settings, planModules };
+    // Manual org grants are read straight from the table: the entitlement
+    // resolver only includes them when the module-framework flag is on, and
+    // the Sucursales gate must work either way (feedback round 2, #1).
+    const grants = organizationId
+      ? await this.prisma.moduleGrant.findMany({
+          where: { organizationId, status: "ACTIVE" },
+          select: { module: { select: { key: true } } },
+        })
+      : [];
+    return {
+      ...settings,
+      planModules,
+      manualGrants: [...new Set(grants.map((g) => g.module.key))],
+    };
   }
 
   @Get()
   async getSettings(@Req() request: RequestWithUser) {
     const organizationId = await this.resolveOrganizationId(request);
     const settings = await this.tenantSettings.get(organizationId);
-    return this.withPlanModules(request, settings);
+    return this.withPlanModules(request, settings, organizationId);
   }
 
   /**
@@ -163,6 +177,6 @@ export class SettingsController {
 
     await this.assertCanEdit(request, organizationId);
     const settings = await this.tenantSettings.update(organizationId, body);
-    return this.withPlanModules(request, settings);
+    return this.withPlanModules(request, settings, organizationId);
   }
 }

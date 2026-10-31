@@ -63,3 +63,21 @@ L2: all six work units closed across commits 2a908f2, cb5deba, 136c12a and
 this one. Purchase payments still accept built-in codes even when disabled
 (sale-side enforcement only); POS Pedido requires the ORDERS module (Avanzado+)
 per the plan matrix.
+
+## Round 2
+
+S11: "lo de subcursales debe estar oculto, solo se habilita por permiso que
+asigna el admin" — BRANCHES module seeded (no plan includes it); the settings
+Sucursales card renders only when the org holds an ACTIVE manual BRANCHES
+grant (read straight from moduleGrant so the framework flag does not matter);
+assign via POST /api/modules/grants { moduleKey: "BRANCHES", organizationId }.
+S12: "La ubicacion del proveedor al crear pueden ser varias" — the create
+form accumulates labeled points before creating the supplier.
+S13: "En el pago a credito de la app debe salir como serian los pagos…
+mostrar cada cuanto caeran los pagos" — creditSchedule lib + the POS panel
+shows the next four falling dates with the outstanding balance.
+S14: "Aun veo la CAJA en el sidebar" — the caja entry is now REMOVED when
+shiftControl is off (verified live: false → no /dashboard/caja).
+S15: "De la venta, en los productos se deben de marcar lo que fue devuelto,
+en la misma fila del producto" — returns expose their lines and each item
+row shows "devuelto X (USD)" in red.
