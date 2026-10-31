@@ -19,7 +19,8 @@ import type { Product } from "@/features/products/types/product.type";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
 import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
-import { PaymentMethodEndpoints } from "@/features/payment-method/services/payment-method.endpoints";
+import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
+import { CREDIT_CADENCE_LABELS, type TenantSettings } from "@/features/settings/types/tenant-settings.type";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import { CashEndpoints } from "@/features/cash/services/cash.endpoints";
 import type { CashShift } from "@/features/cash/types/cash.type";
@@ -82,6 +83,15 @@ export default function PosPage() {
   const [clientId, setClientId] = useState<string>("");
   const [methodCode, setMethodCode] = useState<string>("");
   const [currency, setCurrency] = useState<"USD" | "VES" | "USDT">("USD");
+  const [mode, setMode] = useState<"now" | "credit">("now");
+  const [creditCadence, setCreditCadence] =
+    useState<TenantSettings["credit"]["cadence"]>("QUINCENAL");
+  const [creditInitial, setCreditInitial] = useState<string>("");
+  const [pickProduct, setPickProduct] = useState<Product | null>(null);
+  const [settings, setSettings] = useState<TenantSettings | null>(null);
+  const [pickPresentations, setPickPresentations] = useState<
+    { id: string; name: string; stock?: string | number }[]
+  >([]);
   const [amount, setAmount] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
 
@@ -114,7 +124,7 @@ export default function PosPage() {
           apiClient.get<Paged<Client>>(ClientEndpoints.list, {
             params: { limit: 100 },
           }),
-          apiClient.get<PaymentOption[]>(PaymentMethodEndpoints.options),
+          apiClient.get<PaymentOption[]>(TenantPaymentMethodEndpoints.posOptions),
           apiClient.get<CurrencyOption[]>(ExchangeEndpoints.currencies),
           apiClient
             .get<RateSnapshot>(ExchangeEndpoints.latest)
@@ -133,6 +143,13 @@ export default function PosPage() {
         setRates(rateView.data);
         setShift(currentShift);
         setShiftControl(settings.cash.shiftControl);
+        setSettings(settings);
+        setCreditCadence(settings.credit?.cadence ?? "QUINCENAL");
+        setCreditInitial(
+          settings.credit?.initialPaymentUSD != null
+            ? String(settings.credit.initialPaymentUSD)
+            : "",
+        );
 
         const firstMethod = optionList.data[0];
         if (firstMethod) {
@@ -189,7 +206,34 @@ export default function PosPage() {
       });
       return;
     }
-    setCart((current) => addToCart(current, product));
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<
+          { id: string; name: string; stock: string | number; active: boolean }[]
+        >(ProductEndpoints.presentations(product.id));
+        const active = (Array.isArray(data) ? data : []).filter(
+          (row) => row.active,
+        );
+        if (active.length > 0) {
+          setPickPresentations(active);
+          setPickProduct(product);
+          return;
+        }
+      } catch {
+        // No presentations endpoint answer: sell bulk.
+      }
+      setCart((current) => addToCart(current, product));
+    })();
+  };
+
+  const pickPresentation = (presentation: { id: string; name: string }) => {
+    if (pickProduct) {
+      setCart((current) =>
+        addToCart(current, pickProduct, 1, presentation),
+      );
+    }
+    setPickProduct(null);
+    setPickPresentations([]);
   };
 
   const handleSubmit = async (): Promise<void> => {
@@ -204,26 +248,57 @@ export default function PosPage() {
 
     const paymentAmount = Number(amount);
     const method = methods.find((option) => option.code === methodCode);
-    if (!method || !Number.isFinite(paymentAmount) || paymentAmount <= 0) {
-      addToast({
-        type: "warning",
-        title: "Punto de venta",
-        message: "Revisá el monto y el medio de cobro.",
-      });
-      return;
-    }
 
-    const payload = buildPosPayload({
+    let payloadInput: Parameters<typeof buildPosPayload>[0] = {
       cart,
       ...(clientId ? { clientId } : {}),
       ...(shift?.id ? { cashShiftId: shift.id } : {}),
       notes,
-      payment: {
-        amountOriginal: paymentAmount,
-        currency,
-        paymentMethod: method.code,
-      },
-    });
+    };
+
+    if (mode === "credit") {
+      if (!Number.isFinite(paymentAmount) || paymentAmount < 0) {
+        addToast({
+          type: "warning",
+          title: "Crédito",
+          message: "El pago inicial no puede ser negativo.",
+        });
+        return;
+      }
+      payloadInput = {
+        ...payloadInput,
+        credit: { cadence: creditCadence },
+        // A zero initial sells the whole amount on credit (no payment row).
+        ...(paymentAmount > 0 && method
+          ? {
+              payment: {
+                amountOriginal: paymentAmount,
+                currency,
+                paymentMethod: method.code,
+              },
+            }
+          : {}),
+      };
+    } else {
+      if (!method || !Number.isFinite(paymentAmount) || paymentAmount <= 0) {
+        addToast({
+          type: "warning",
+          title: "Punto de venta",
+          message: "Revisá el monto y el medio de cobro.",
+        });
+        return;
+      }
+      payloadInput = {
+        ...payloadInput,
+        payment: {
+          amountOriginal: paymentAmount,
+          currency,
+          paymentMethod: method.code,
+        },
+      };
+    }
+
+    const payload = buildPosPayload(payloadInput);
 
     setBusy(true);
     try {
@@ -234,7 +309,10 @@ export default function PosPage() {
       addToast({
         type: "success",
         title: "Venta registrada",
-        message: `${data.saleNumber} por ${currency} ${paymentAmount.toFixed(2)}.`,
+        message:
+          mode === "credit"
+            ? `${data.saleNumber} a crédito (${CREDIT_CADENCE_LABELS[creditCadence]}).`
+            : `${data.saleNumber} por ${currency} ${paymentAmount.toFixed(2)}.`,
       });
       setCart([]);
       setNotes("");
@@ -249,6 +327,58 @@ export default function PosPage() {
       setBusy(false);
     }
   };
+
+  if (pickProduct) {
+    return (
+      <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/40 p-4">
+        <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-900">
+          <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+            {pickProduct.name}
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Elegí la presentación a vender.
+          </p>
+          <ul className="mt-3 space-y-1">
+            {pickPresentations.map((row) => (
+              <li key={row.id}>
+                <button
+                  type="button"
+                  onClick={() => pickPresentation(row)}
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-left text-sm hover:bg-indigo-50 dark:border-slate-700"
+                >
+                  {row.name}{" "}
+                  <span className="text-xs text-slate-400">
+                    · stock {Number(row.stock)}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            onClick={() => {
+              setCart((current) => addToCart(current, pickProduct));
+              setPickProduct(null);
+              setPickPresentations([]);
+            }}
+            className="mt-3 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-500 dark:border-slate-600"
+          >
+            Vender a granel (stock del producto)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setPickProduct(null);
+              setPickPresentations([]);
+            }}
+            className="mt-2 w-full text-center text-xs text-slate-400 hover:text-slate-600"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -344,7 +474,7 @@ export default function PosPage() {
               <div className="space-y-2">
                 {cart.map((line) => (
                   <div
-                    key={line.productId}
+                    key={`${line.productId}:${line.presentationId ?? ""}`}
                     className="flex items-center gap-2 rounded-lg bg-slate-50 px-2 py-1.5 dark:bg-slate-800"
                   >
                     <div className="flex-1 min-w-0">
@@ -361,7 +491,12 @@ export default function PosPage() {
                       className="rounded p-1 hover:bg-slate-200 dark:hover:bg-slate-700"
                       onClick={() =>
                         setCart((current) =>
-                          changeQuantity(current, line.productId, line.quantity - 1),
+                          changeQuantity(
+                            current,
+                            line.productId,
+                            line.quantity - 1,
+                            line.presentationId,
+                          ),
                         )
                       }
                     >
@@ -374,7 +509,12 @@ export default function PosPage() {
                       className="rounded p-1 hover:bg-slate-200 dark:hover:bg-slate-700"
                       onClick={() =>
                         setCart((current) =>
-                          changeQuantity(current, line.productId, line.quantity + 1),
+                          changeQuantity(
+                            current,
+                            line.productId,
+                            line.quantity + 1,
+                            line.presentationId,
+                          ),
                         )
                       }
                     >
@@ -388,7 +528,13 @@ export default function PosPage() {
                       aria-label="Quitar"
                       className="rounded p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                       onClick={() =>
-                        setCart((current) => removeFromCart(current, line.productId))
+                        setCart((current) =>
+                          removeFromCart(
+                            current,
+                            line.productId,
+                            line.presentationId,
+                          ),
+                        )
                       }
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -408,6 +554,16 @@ export default function PosPage() {
                       ${totals.totalUSD.toFixed(2)}
                     </span>
                   </SectionRow>
+                  {rates && settings?.currencies ? (
+                    <p className="text-[11px] text-slate-400 text-right">
+                      {settings.currencies.showVES
+                        ? `≈ ${(totals.totalUSD * rates.rateBcv).toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs · `
+                        : ""}
+                      {settings.currencies.showUSDT && rates.rateUsdt
+                        ? `≈ ${((totals.totalUSD * rates.rateBcv) / rates.rateUsdt).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT`
+                        : ""}
+                    </p>
+                  ) : null}
                 </div>
               </div>
             )}
@@ -435,20 +591,81 @@ export default function PosPage() {
                 </select>
               </label>
 
-              <label className="block text-xs text-slate-500">
-                Medio de cobro
-                <select
-                  value={methodCode}
-                  onChange={(event) => handleMethodChange(event.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
-                >
-                  {methods.map((method) => (
-                    <option key={method.code} value={method.code}>
-                      {method.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="flex gap-2">
+                {(
+                  [
+                    ["now", "Pagar ahora"],
+                    ["credit", "Crédito"],
+                  ] as const
+                ).map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setMode(key)}
+                    className={
+                      mode === key
+                        ? "flex-1 rounded-xl bg-indigo-600 px-3 py-2 text-xs font-semibold text-white"
+                        : "flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-500 dark:border-slate-600"
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {mode === "credit" ? (
+                <div className="space-y-2 rounded-xl border border-amber-200 bg-amber-50/50 p-3 dark:border-amber-900/50 dark:bg-amber-950/20">
+                  <label className="block text-xs text-slate-500">
+                    Pago inicial ahora (opcional)
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={creditInitial}
+                      onChange={(event) => setCreditInitial(event.target.value)}
+                      placeholder="0 = todo a crédito"
+                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                    />
+                  </label>
+                  <label className="block text-xs text-slate-500">
+                    Forma de cobro
+                    <select
+                      value={creditCadence}
+                      onChange={(event) =>
+                        setCreditCadence(
+                          event.target.value as TenantSettings["credit"]["cadence"],
+                        )
+                      }
+                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                    >
+                      {(
+                        Object.keys(CREDIT_CADENCE_LABELS) as Array<
+                          keyof typeof CREDIT_CADENCE_LABELS
+                        >
+                      ).map((key) => (
+                        <option key={key} value={key}>
+                          {CREDIT_CADENCE_LABELS[key]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              ) : (
+                <label className="block text-xs text-slate-500">
+                  Medio de cobro
+                  <select
+                    value={methodCode}
+                    onChange={(event) => handleMethodChange(event.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  >
+                    {methods.map((method) => (
+                      <option key={method.code} value={method.code}>
+                        {method.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <label className="block text-xs text-slate-500">

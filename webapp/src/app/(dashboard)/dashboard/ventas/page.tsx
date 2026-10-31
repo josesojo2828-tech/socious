@@ -29,6 +29,7 @@ import {
   returnableQuantity,
 } from "@/features/sales/lib/sales-list";
 import { todayISO } from "@/features/cash/lib/cash-form";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 
 interface Paged<T> {
   list: T[];
@@ -89,10 +90,18 @@ export default function SalesPage() {
   const [returning, setReturning] = useState<boolean>(false);
   const [returnQtys, setReturnQtys] = useState<Record<string, number>>({});
   const [returnReason, setReturnReason] = useState<string>("");
+  const [returnReasons, setReturnReasons] = useState<string[]>([]);
+  const [reasonChoice, setReasonChoice] = useState<string>("");
   const [returnable, setReturnable] = useState<Record<string, number>>({});
 
   const [report, setReport] = useState<SalesReport | null>(null);
   const [reportOpen, setReportOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    void getTenantSettings()
+      .then((current) => setReturnReasons(current.returns?.reasons ?? []))
+      .catch(() => setReturnReasons([]));
+  }, []);
 
   const loadList = useCallback(
     async (targetPage = page, filters?: { q?: string; paymentStatus?: string; from?: string; to?: string }) => {
@@ -142,6 +151,7 @@ export default function SalesPage() {
     setReturning(false);
     setReturnQtys({});
     setReturnReason("");
+      setReasonChoice("");
   }, []);
 
   const loadReport = useCallback(async () => {
@@ -260,6 +270,7 @@ export default function SalesPage() {
     setReturnable(remaining);
     setReturnQtys({});
     setReturnReason("");
+      setReasonChoice("");
     setReturning(true);
   }, []);
 
@@ -283,7 +294,10 @@ export default function SalesPage() {
       try {
         const { data } = await apiClient.post<{ returnNumber: string }>(
           SaleEndpoints.createReturn(selected.id),
-          buildReturnPayload(selections, returnReason),
+          buildReturnPayload(
+            selections,
+            reasonChoice === "__other__" ? returnReason : reasonChoice,
+          ),
         );
         addToast({
           type: "success",
@@ -718,13 +732,37 @@ export default function SalesPage() {
                     </div>
                   );
                 })}
-                <input
-                  type="text"
-                  value={returnReason}
-                  onChange={(event) => setReturnReason(event.target.value)}
-                  placeholder="Motivo (opcional)"
-                  className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-900"
-                />
+                {returnReasons.length > 0 ? (
+                  <select
+                    value={reasonChoice}
+                    onChange={(event) => {
+                      setReasonChoice(event.target.value);
+                      if (event.target.value !== "__other__") {
+                        setReturnReason(event.target.value);
+                      } else {
+                        setReturnReason("");
+                      }
+                    }}
+                    className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-900"
+                  >
+                    <option value="">Motivo (opcional)</option>
+                    {returnReasons.map((reason) => (
+                      <option key={reason} value={reason}>
+                        {reason}
+                      </option>
+                    ))}
+                    <option value="__other__">Otro…</option>
+                  </select>
+                ) : null}
+                {returnReasons.length === 0 || reasonChoice === "__other__" ? (
+                  <input
+                    type="text"
+                    value={returnReason}
+                    onChange={(event) => setReturnReason(event.target.value)}
+                    placeholder="Motivo (opcional)"
+                    className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-900"
+                  />
+                ) : null}
                 <div className="flex gap-2">
                   <button
                     type="button"

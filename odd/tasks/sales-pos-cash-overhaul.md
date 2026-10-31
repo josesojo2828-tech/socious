@@ -68,12 +68,12 @@ presentation.
 
 | ID | S# | Status | Commit |
 | -- | -- | ------ | ------ |
-| T1 | S4 | pending | |
-| T2 | S5 | pending | |
-| T3 | S2 | pending | |
-| T4 | S1 | pending | |
-| T5 | S3 | pending | |
-| T6 | S6 | pending | |
+| T1 | S4 | done | a43696f |
+| T2 | S5 | done | a43696f + this |
+| T3 | S2 | done | this |
+| T4 | S1 | done | a43696f + this |
+| T5 | S3 | done | a43696f + this |
+| T6 | S6 | done | a43696f + this |
 
 ## Log
 
@@ -81,3 +81,8 @@ L1 (user, verbatim): the five numbered requests quoted in S1–S5 plus the
 prior promise "dale a eso que tienes del POS" (presentation-aware selling).
 Report format requested per item: brief description, complete or questions,
 how to verify.
+
+L2: all six units closed. Presentation sales skip the Kardex (presentations
+have no StockMovement rows in v1) and use the product's sale price. The
+credit modal uses the single payment method + currency the cashier picks
+for the initial payment; cadence options mirror the settings defaults.

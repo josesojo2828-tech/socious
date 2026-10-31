@@ -11,6 +11,9 @@ import type {
 
 export interface CartLine {
   productId: string;
+  /** Selling a presentation (S6): the variant's stock is the one that moves. */
+  presentationId?: string | null;
+  presentationName?: string | null;
   productName: string;
   /** Unit price WITHOUT tax, exactly like the product card shows. */
   unitPriceUSD: number;
@@ -36,26 +39,37 @@ const toNumber = (value: string | number | null | undefined): number => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-/** Adds a product; repeating it increments the existing line (never dups). */
+/** Same product AND same presentation = same line (bulk vs variants). */
+function sameLine(item: CartLine, line: CartLine): boolean {
+  return (
+    item.productId === line.productId &&
+    (item.presentationId ?? null) === (line.presentationId ?? null)
+  );
+}
+
+/** Adds a product or presentation; repeating it increments (never dups). */
 export function addToCart(
   cart: CartLine[],
   product: ProductPicker,
   quantity = 1,
+  presentation?: { id: string; name: string },
 ): CartLine[] {
   const safeQuantity = Math.max(1, Math.trunc(quantity) || 1);
   const line: CartLine = {
     productId: product.id,
-    productName: product.name,
+    presentationId: presentation?.id ?? null,
+    presentationName: presentation?.name ?? null,
+    productName: presentation ? presentation.name : product.name,
     unitPriceUSD: toNumber(product.salePriceUSD),
     taxRate: toNumber(product.taxRate),
     quantity: safeQuantity,
   };
 
-  const existing = cart.find((item) => item.productId === line.productId);
+  const existing = cart.find((item) => sameLine(item, line));
   if (!existing) return [...cart, line];
 
   return cart.map((item) =>
-    item.productId === line.productId
+    sameLine(item, line)
       ? { ...item, quantity: item.quantity + safeQuantity }
       : item,
   );
@@ -66,20 +80,32 @@ export function changeQuantity(
   cart: CartLine[],
   productId: string,
   quantity: number,
+  presentationId?: string | null,
 ): CartLine[] {
+  const matches = (item: CartLine) =>
+    item.productId === productId &&
+    (item.presentationId ?? null) === (presentationId ?? null);
   if (!Number.isFinite(quantity) || quantity <= 0) {
-    return cart.filter((item) => item.productId !== productId);
+    return cart.filter((item) => !matches(item));
   }
 
   return cart.map((item) =>
-    item.productId === productId
-      ? { ...item, quantity: Math.trunc(quantity) }
-      : item,
+    matches(item) ? { ...item, quantity: Math.trunc(quantity) } : item,
   );
 }
 
-export function removeFromCart(cart: CartLine[], productId: string): CartLine[] {
-  return cart.filter((item) => item.productId !== productId);
+export function removeFromCart(
+  cart: CartLine[],
+  productId: string,
+  presentationId?: string | null,
+): CartLine[] {
+  return cart.filter(
+    (item) =>
+      !(
+        item.productId === productId &&
+        (item.presentationId ?? null) === (presentationId ?? null)
+      ),
+  );
 }
 
 export function lineTotal(line: CartLine): number {
@@ -133,6 +159,11 @@ export interface PosPayloadInput {
   clientId?: string;
   cashShiftId?: string;
   notes?: string;
+  credit?: {
+    cadence: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
+    everyNDays?: number;
+    monthlyDay?: number;
+  };
   payment?: {
     amountOriginal: number;
     currency: "USD" | "VES" | "USDT";
@@ -145,6 +176,7 @@ export interface PosPayloadInput {
 export function buildPosPayload(input: PosPayloadInput): CreateSalePayload {
   const items: SaleItemInput[] = input.cart.map((line) => ({
     productId: line.productId,
+    ...(line.presentationId ? { presentationId: line.presentationId } : {}),
     productName: line.productName,
     quantity: line.quantity,
     unitPriceUSD: line.unitPriceUSD,
@@ -162,6 +194,17 @@ export function buildPosPayload(input: PosPayloadInput): CreateSalePayload {
 
   return {
     items,
+    ...(input.credit
+      ? {
+          creditCadence: input.credit.cadence,
+          ...(input.credit.everyNDays
+            ? { creditEveryNDays: input.credit.everyNDays }
+            : {}),
+          ...(input.credit.monthlyDay
+            ? { creditMonthlyDay: input.credit.monthlyDay }
+            : {}),
+        }
+      : {}),
     ...(payment ? { payments: [payment] } : {}),
     ...(input.clientId ? { clientId: input.clientId } : {}),
     ...(input.cashShiftId ? { cashShiftId: input.cashShiftId } : {}),

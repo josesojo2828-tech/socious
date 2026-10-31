@@ -163,3 +163,32 @@ describe("pos-form (S6)", () => {
     });
   });
 });
+
+describe("presentations and credit (sales overhaul)", () => {
+  const product = {
+    id: "prod-1",
+    name: "Pan",
+    salePriceUSD: 2,
+    taxRate: 0,
+  };
+
+  it("keeps bulk and presentation lines apart", () => {
+    let cart = addToCart([], product as any);
+    cart = addToCart(cart, product as any, 1, { id: "pres-1", name: "Bolsa 100 g" });
+    expect(cart).toHaveLength(2);
+    expect(cart[1].presentationId).toBe("pres-1");
+    expect(cart[1].productName).toBe("Bolsa 100 g");
+  });
+
+  it("sends presentationId and credit terms in the payload", () => {
+    const cart = addToCart([], product as any, 2, { id: "pres-1", name: "Bolsa" });
+    const payload = buildPosPayload({
+      cart,
+      credit: { cadence: "QUINCENAL" },
+      payment: { amountOriginal: 1, currency: "USD", paymentMethod: "CASH_USD" },
+    });
+    expect(payload.items[0].presentationId).toBe("pres-1");
+    expect(payload.creditCadence).toBe("QUINCENAL");
+    expect(payload.payments).toHaveLength(1);
+  });
+});

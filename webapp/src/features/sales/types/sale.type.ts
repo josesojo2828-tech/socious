@@ -61,6 +61,8 @@ export interface SalePaymentInput {
 
 export interface SaleItemInput {
   productId?: string;
+  /** Sale of a presentation: its stock is the one that decrements (S6). */
+  presentationId?: string;
   productName: string;
   quantity: number;
   unitPriceUSD: number;
@@ -75,6 +77,10 @@ export interface CreateSalePayload {
   cashShiftId?: string;
   discountUSD?: number;
   notes?: string;
+  /** Credit terms (S3): the backend computes dueDate from the cadence. */
+  creditCadence?: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
+  creditEveryNDays?: number;
+  creditMonthlyDay?: number;
 }
 
 export interface SaleReturn {

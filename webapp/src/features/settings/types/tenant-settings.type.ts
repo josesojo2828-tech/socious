@@ -29,6 +29,15 @@ export interface TenantSettings {
   shipping: { enabledAgencies: string[] };
   delivery: { enabled: boolean; feeUSD: number };
   routes: { enabled: boolean };
+  /** Enabled return reasons (S5 of the sales overhaul). */
+  returns: { reasons: string[] };
+  /** Default terms for credit sales (S3). */
+  credit: {
+    initialPaymentUSD: number | null;
+    cadence: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
+    everyNDays: number;
+    monthlyDay: number;
+  };
   /**
    * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
    * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the
@@ -53,6 +62,16 @@ export const COORDINATION_LABELS: Record<CoordinationMethod, string> = {
   WHATSAPP: "WhatsApp",
   PHONE: "Teléfono",
   EMAIL: "Correo",
+};
+
+export const CREDIT_CADENCE_LABELS: Record<
+  "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE",
+  string
+> = {
+  QUINCENAL: "Cada 15 días",
+  MONTHLY: "Una vez al mes",
+  EVERY_N_DAYS: "Cada X días",
+  FREE: "Libre (por abonos)",
 };
 
 export const CURRENCY_LABELS: Record<CurrencyVisibilityKey, string> = {

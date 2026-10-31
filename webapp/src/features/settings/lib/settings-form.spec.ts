@@ -29,6 +29,13 @@ const base: TenantSettings = {
   shipping: { enabledAgencies: ["ZOOM", "MRW"] },
   delivery: { enabled: true, feeUSD: 3.5 },
   routes: { enabled: false },
+  returns: { reasons: ["Solo lo estaba probando"] },
+  credit: {
+    initialPaymentUSD: null,
+    cadence: "QUINCENAL",
+    everyNDays: 15,
+    monthlyDay: 1,
+  },
 };
 
 describe("settings-form (S4)", () => {

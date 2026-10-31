@@ -39,6 +39,12 @@ export function applySettingsPatch(
     },
     delivery: { ...current.delivery, ...(patch.delivery ?? {}) },
     routes: { ...current.routes, ...(patch.routes ?? {}) },
+    returns: {
+      ...current.returns,
+      ...(patch.returns ?? {}),
+      reasons: patch.returns?.reasons ?? current.returns.reasons,
+    },
+    credit: { ...current.credit, ...(patch.credit ?? {}) },
   };
 }
 
