@@ -172,7 +172,6 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                         onClick={() => set("security")}
                         className="w-full justify-start text-left gap-3 text-xs font-bold rounded-lg"
                         variant={section === "security" ? "primary" : "ghost"}
-                        data-tour="profile-security"
                     >
                         <Key size={16} /> Seguridad & Contraseña
                     </Button>
@@ -180,7 +179,6 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                         onClick={() => set("notifications")}
                         className="w-full justify-start text-left gap-3 text-xs font-bold rounded-lg"
                         variant={section === "notifications" ? "primary" : "ghost"}
-                        data-tour="profile-notifications"
                     >
                         <Bell size={16} /> Notificaciones
                     </Button>

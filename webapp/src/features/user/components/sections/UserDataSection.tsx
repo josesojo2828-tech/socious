@@ -19,7 +19,7 @@ export const UserDataSection = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Datos Personales */}
-      <div className="bg-base-100 rounded-3xl p-6 sm:p-8 shadow-sm border border-base-300/80" data-tour="profile-defaults">
+      <div className="bg-base-100 rounded-3xl p-6 sm:p-8 shadow-sm border border-base-300/80">
         <div className="flex items-center gap-3 border-b border-base-300 pb-4 mb-6">
           <div className="p-2.5 rounded-2xl bg-primary/10 text-primary shrink-0">
             <User className="w-5 h-5" />

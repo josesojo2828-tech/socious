@@ -192,7 +192,7 @@ export default function WalletPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* Card #1: Métodos de Pago */}
-        <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 flex flex-col justify-between hover:border-primary/50 transition-all" data-tour="wallet-methods">
+        <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 flex flex-col justify-between hover:border-primary/50 transition-all">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2 text-xs font-bold text-base-content/70">
               <CreditCard className="w-4 h-4 text-primary" />
@@ -221,7 +221,7 @@ export default function WalletPage() {
         </div>
 
         {/* Card #2: Saldo Billetera */}
-        <div className="bg-base-200 text-base-content rounded-2xl p-6 relative overflow-hidden shadow-sm border border-base-300 flex flex-col justify-between" data-tour="wallet-balance">
+        <div className="bg-base-200 text-base-content rounded-2xl p-6 relative overflow-hidden shadow-sm border border-base-300 flex flex-col justify-between">
           <div className="absolute -top-12 -right-12 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex justify-between items-start relative z-10">
@@ -257,7 +257,7 @@ export default function WalletPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Card: Suscripción Actual */}
-        <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 flex flex-col justify-between space-y-6" data-tour="wallet-subscription">
+        <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 flex flex-col justify-between space-y-6">
           <div className="flex justify-between items-start border-b border-base-300/50 pb-4">
             <div>
               <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export default function WalletPage() {
         </div>
 
         {/* Card: Resumen de Facturación (Estilo Factura / Ticket) */}
-        <div className="bg-base-200 text-base-content rounded-2xl p-6 sm:p-7 shadow-sm border border-base-300 flex flex-col justify-between relative overflow-hidden" data-tour="wallet-billing">
+        <div className="bg-base-200 text-base-content rounded-2xl p-6 sm:p-7 shadow-sm border border-base-300 flex flex-col justify-between relative overflow-hidden">
           <div className="flex items-center justify-between border-b border-base-300 pb-4">
             <div className="flex items-center gap-2">
               <Receipt className="w-5 h-5 text-success" />
@@ -375,7 +375,7 @@ export default function WalletPage() {
       {/* ========================================================================= */}
       {/* FILA 3: GRAFICOS (VOLUMEN Y ESTADO) */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" data-tour="wallet-charts">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Gráfico #1: Volumen de Transacciones */}
         <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 space-y-4">
@@ -431,7 +431,7 @@ export default function WalletPage() {
       <div className="space-y-8">
 
         {/* Tabla #1: Métodos de Pago */}
-        <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm overflow-hidden p-6 space-y-4" data-tour="wallet-methods-table">
+        <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm overflow-hidden p-6 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-base-300 pb-4">
             <div>
               <h3 className="text-base font-bold text-base-content flex items-center gap-2">
@@ -474,7 +474,7 @@ export default function WalletPage() {
         </div>
 
         {/* Tabla #2: Historial de Pagos / Transacciones */}
-        <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm overflow-hidden space-y-0" data-tour="wallet-history">
+        <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm overflow-hidden space-y-0">
           <div className="p-6 border-b border-base-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-base font-bold text-base-content flex items-center gap-2">

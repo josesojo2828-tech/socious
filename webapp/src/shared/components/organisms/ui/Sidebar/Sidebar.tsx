@@ -17,7 +17,6 @@ import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
 import { clsx } from "clsx";
 import { useTranslation } from "@/context/i18n.context";
-import { Image } from "@/shared/components/atoms/Image";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import { slugify } from "@/shared/lib/utils";
 import type { SidebarProps } from "./Sidebar.types";
@@ -347,59 +346,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
           </div>
 
           {/* Nav Items */}
-          <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto" data-tour="sidebar">
-            {/* CTA Destacado: Consulta de Bolsillo */}
-            {!isPatient && (
-              !isCollapsed ? (
-                <div className="mb-5 px-1">
-                  <InternalLink
-                    href="/dashboard/consulta-bolsillo"
-                    onClick={close}
-                    className={clsx(
-                      "relative overflow-hidden group flex items-center justify-between p-3 rounded-2xl transition-all duration-200",
-                      "bg-emerald-500/15 hover:bg-emerald-500/25 text-white border border-emerald-500/30 hover:border-emerald-400/50 shadow-sm backdrop-blur-xs active:scale-[0.98]",
-                      pathname === "/dashboard/consulta-bolsillo" && "bg-emerald-500/30 border-emerald-400 ring-1 ring-emerald-400 shadow-md shadow-emerald-950/30"
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
-                        <LucideIcons.Zap size={17} className="text-emerald-300" />
-                      </div>
-                      <div className="truncate">
-                        <p className="text-xs font-bold tracking-tight leading-tight text-white flex items-center gap-1.5">
-                          Consulta de Bolsillo
-                        </p>
-                        <p className="text-[10px] text-emerald-200/80 font-medium leading-none mt-0.5 truncate">
-                          Atención express en 3 pasos
-                        </p>
-                      </div>
-                    </div>
-                    <span className="shrink-0 ml-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md bg-emerald-500/20 border border-emerald-400/30 text-emerald-300">
-                      EXPRESS
-                    </span>
-                  </InternalLink>
-                </div>
-              ) : (
-                <div className="mb-5 flex justify-center">
-                  <InternalLink
-                    href="/dashboard/consulta-bolsillo"
-                    onClick={close}
-                    title="Consulta de Bolsillo (Express)"
-                    className={clsx(
-                      "relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 group",
-                      "bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 hover:border-emerald-400/50 text-emerald-300 hover:text-white active:scale-95",
-                      pathname === "/dashboard/consulta-bolsillo" && "bg-emerald-500/30 border-emerald-400 text-white ring-1 ring-emerald-400 shadow-sm"
-                    )}
-                  >
-                    <LucideIcons.Zap size={18} className="text-emerald-300 group-hover:scale-110 transition-transform" />
-                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-indigo-950"></span>
-                    </span>
-                  </InternalLink>
-                </div>
-              )
-            )}
-
+          <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
             {(sidebar || []).map((section, idx) => {
               const items = section?.items || [];
               if (!items || items.length === 0) return null;
@@ -419,7 +366,6 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                     '/dashboard/condiments',
                     '/dashboard/institutional',
                     '/dashboard/subscription',
-                    '/dashboard/consulta-bolsillo',
                     '/dashboard/organization',
                     '/dashboard/community',
                     '/dashboard/campus',
@@ -458,7 +404,6 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
               return (
                 <div
                   className="mb-6"
-                  data-tour={`sidebar-section-${slugify(section?.title || "")}`}
                   key={section?.icon || section?.title || idx}
                 >
                   <SidebarSection

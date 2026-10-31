@@ -24,7 +24,6 @@ export function PremiumHubShowcase() {
                 {!isPRO && (
                 <Link
                     href="/dashboard/campus"
-                    data-tour="hub-campus"
                     className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
@@ -50,7 +49,6 @@ export function PremiumHubShowcase() {
                 {!isPRO && (
                 <Link
                     href="/dashboard/community"
-                    data-tour="hub-community"
                     className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
@@ -75,7 +73,6 @@ export function PremiumHubShowcase() {
                 {/* 3. Base de Alimentos (Tabla/General) */}
                 <Link
                     href="/dashboard/foods"
-                    data-tour="hub-foods"
                     className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
@@ -99,7 +96,6 @@ export function PremiumHubShowcase() {
                 {/* 4. Alimentos de Intercambio (Raciones) */}
                 <Link
                     href="/dashboard/exchange-food"
-                    data-tour="hub-exchange"
                     className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image
@@ -123,7 +119,6 @@ export function PremiumHubShowcase() {
                 {/* 5. Marketplace */}
                 <Link
                     href="/dashboard/marketplace"
-                    data-tour="hub-marketplace"
                     className="group relative h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-900/20 flex flex-col justify-end p-4 bg-slate-900"
                 >
                     <Image

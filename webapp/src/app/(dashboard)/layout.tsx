@@ -13,12 +13,6 @@ import { useDashbaordStore } from "@/features/dashboard/hooks/useDashboardUI";
 import { useTranslation } from "@/context/i18n.context";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import { FeedbackDrawer } from "@/shared/components/organisms/ui/Sidebar/FeedbackDrawer";
-import { PageGuide } from "@/components/ui/page-guide";
-import { type TourStep } from "@/components/ui/guided-tour";
-import { resolveTour } from "@/components/ui/tour-routes";
-import { WALLET_TOUR_STEPS } from "@/features/user/components/wallet/walletTourSteps";
-import { PROFILE_TOUR_STEPS } from "@/features/user/components/profile/profileTourSteps";
-import { cn, slugify } from "@/shared/lib/utils";
 import { ComponentStackBoundary } from "@/shared/components/providers/ComponentStackBoundary";
 
 const isTokenExpired = (token: string): boolean => {
@@ -66,97 +60,6 @@ export default function DashboardLayout({
     const { t } = useTranslation();
     const userName = user?.email || "Usuario";
 
-    // Explicit allowlist: only the exact routes below own a tour. Every other
-    // `/dashboard/**` route (subroutes, CRUD, adoption, patients, …) gets `null`
-    // so the dashboard walkthrough never leaks into them. The dashboard tour is
-    // additionally role-gated to nutritionists (see `resolveTour`).
-    const tour = useMemo(
-        () => resolveTour(pathname, user, activeWorkspace?.type === 'ORGANIZATION'),
-        [pathname, user, activeWorkspace?.type],
-    );
-
-    const tourSteps = useMemo<TourStep[] | null>(() => {
-        if (!tour) return null;
-        if (tour.kind === "profile") return PROFILE_TOUR_STEPS;
-        if (tour.kind === "wallet") return WALLET_TOUR_STEPS;
-        const steps: TourStep[] = [
-            {
-                title: "¡Bienvenido a tu panel!",
-                body: "Te muestro en 20 segundos dónde está cada cosa. Puedes cerrar la guía cuando quieras.",
-                mood: "wave",
-            },
-            {
-                target: '[data-tour="header-notifications"]',
-                title: "Tus notificaciones",
-                body: "Aquí te avisamos de turnos, vencimientos y novedades. El puntito verde marca las que todavía no has leído.",
-                mood: "thinking",
-            },
-            {
-                target: '[data-tour="header-profile"]',
-                title: "Tu perfil",
-                body: "Desde acá entrás a tu perfil, cambiás de espacio de trabajo y cerrás sesión.",
-                mood: "happy",
-            },
-            {
-                target: '[data-tour="sidebar"]',
-                title: "Tu menú de navegación",
-                body: "Toda la plataforma se organiza desde acá. Las secciones que ves dependen de tu plan.",
-                mood: "presenting",
-            },
-        ];
-
-        (sidebar || []).forEach((section) => {
-            const rawTitle = section?.title || "";
-            if (!rawTitle) return;
-            steps.push({
-                target: `[data-tour="sidebar-section-${slugify(rawTitle)}"]`,
-                title: t(rawTitle),
-                body: "Los accesos de esta sección.",
-                mood: "pointing",
-            });
-        });
-
-        steps.push(
-            {
-                target: '[data-tour="hub-campus"]',
-                title: "Campus Nutringest",
-                body: "Pasantías & formación: 120 días de acceso PRO gratis para estudiantes.",
-                mood: "pointing",
-            },
-            {
-                target: '[data-tour="hub-community"]',
-                title: "Comunidad Nutringest",
-                body: "La red de nutricionistas para conectar y compartir.",
-                mood: "pointing",
-            },
-            {
-                target: '[data-tour="hub-foods"]',
-                title: "Base de Alimentos",
-                body: "La tabla nutricional general de referencia.",
-                mood: "pointing",
-            },
-            {
-                target: '[data-tour="hub-exchange"]',
-                title: "Alimentos de Intercambio",
-                body: "Raciones por grupos y gramajes.",
-                mood: "pointing",
-            },
-            {
-                target: '[data-tour="hub-marketplace"]',
-                title: "Marketplace",
-                body: "Cursos, ebooks, templates y más.",
-                mood: "pointing",
-            },
-            {
-                title: "¡Eso es todo!",
-                body: "Ya conocés lo esencial de tu panel. Si te perdés, tocá el botón de la guía cuando quieras.",
-                mood: "celebrate",
-            },
-        );
-
-        return steps;
-    }, [sidebar, t, tour]);
-
     useEffect(() => {
         let isMounted = true;
 
@@ -195,7 +98,7 @@ export default function DashboardLayout({
     }, [refreshSession, logout]);
 
     useEffect(() => {
-        if (isPatient && (pathname?.startsWith('/dashboard/subscription') || pathname?.startsWith('/dashboard/consulta-bolsillo'))) {
+        if (isPatient && pathname?.startsWith('/dashboard/subscription')) {
             router.replace('/dashboard');
             return;
         }
@@ -242,12 +145,6 @@ export default function DashboardLayout({
                         </main>
                     </div>
 
-                    {!isPatient && tour && tourSteps && (
-                        <PageGuide
-                            steps={tourSteps}
-                            storageKey={tour.storageKey}
-                        />
-                    )}
                 </div>
             </FeedbackDrawer>
         </ComponentStackBoundary>

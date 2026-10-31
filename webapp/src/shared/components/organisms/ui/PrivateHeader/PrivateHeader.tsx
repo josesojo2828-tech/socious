@@ -117,7 +117,7 @@ export const PrivateHeader = () => {
         )}
 
         {/* Dropdown de Notificaciones */}
-        <div className="relative" ref={notifRef} data-tour="header-notifications">
+        <div className="relative" ref={notifRef}>
           <Button
             variant="ghost"
             onClick={() => {
@@ -171,7 +171,7 @@ export const PrivateHeader = () => {
         <div className="h-6 w-px bg-white/20 dark:bg-indigo-500/20 hidden md:block"></div>
 
         {/* Dropdown de Usuario */}
-        <div className="relative" ref={profileRef} data-tour="header-profile">
+        <div className="relative" ref={profileRef}>
           <Button
             onClick={() => {
               setIsProfileOpen(!isProfileOpen);
