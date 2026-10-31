@@ -30,6 +30,16 @@ import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpo
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { BarcodePreview } from "@/features/products/components/BarcodePreview";
 import { generateEan13 } from "@/features/products/lib/barcode";
+import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
+import {
+  BCV_HINT,
+  PRICE_CURRENCY_LABELS,
+  convertFromUSD,
+  convertToUSD,
+  priceEquivalents,
+  type ExchangeRates,
+  type PriceCurrency,
+} from "@/features/products/lib/price-currency";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import {
@@ -117,6 +127,8 @@ export default function ProductsPage() {
   const [rows, setRows] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
+  const [priceCurrency, setPriceCurrency] = useState<PriceCurrency>("USD");
+  const [rates, setRates] = useState<ExchangeRates | null>(null);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
@@ -143,7 +155,7 @@ export default function ProductsPage() {
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [productPage, categoryTree, supplierPage, unitList] =
+      const [productPage, categoryTree, supplierPage, unitList, ratesData] =
         await Promise.all([
           apiClient.get<Paged<Product>>(ProductEndpoints.list, {
             params: { limit: 100 },
@@ -157,11 +169,22 @@ export default function ProductsPage() {
           apiClient
             .get<UnitOfMeasure[]>(UnitEndpoints.list)
             .catch(() => ({ data: [] as UnitOfMeasure[] })),
+          apiClient
+            .get<ExchangeRates>(ExchangeEndpoints.latest)
+            .catch(() => ({
+              data: null as ExchangeRates | null,
+            })),
         ]);
       setRows(productPage.data.list);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
+      if (ratesData.data?.rateBcv) {
+        setRates({
+          rateBcv: Number(ratesData.data.rateBcv),
+          rateUsdt: Number(ratesData.data.rateUsdt) || 1,
+        });
+      }
     } catch {
       addToast({
         type: "error",
@@ -405,42 +428,96 @@ export default function ProductsPage() {
               </select>
             </label>
             <label className={label}>
-              Costo USD
-              <input
-                type="number"
-                min={0}
-                step="0.01"
+              Moneda de los precios
+              <select
                 className={field}
-                value={form.costPriceUSD}
+                value={priceCurrency}
                 onChange={(event) =>
-                  patchForm({ costPriceUSD: Number(event.target.value) })
+                  setPriceCurrency(event.target.value as PriceCurrency)
                 }
-              />
+              >
+                {(Object.keys(PRICE_CURRENCY_LABELS) as PriceCurrency[]).map(
+                  (currency) => (
+                    <option key={currency} value={currency}>
+                      {PRICE_CURRENCY_LABELS[currency]}
+                    </option>
+                  ),
+                )}
+              </select>
+              {priceCurrency !== "USD" ? (
+                <span className="mt-1 block text-xs text-amber-600">
+                  {BCV_HINT}
+                </span>
+              ) : null}
             </label>
             <label className={label}>
-              Precio de venta USD
+              Costo ({priceCurrency})
               <input
                 type="number"
                 min={0}
                 step="0.01"
                 className={field}
-                value={form.salePriceUSD}
-                onChange={(event) =>
-                  patchForm({ salePriceUSD: Number(event.target.value) })
-                }
-              />
-            </label>
-            <label className={label}>
-              Precio mayorista USD
-              <input
-                type="number"
-                min={0}
-                step="0.01"
-                className={field}
-                value={form.wholesalePriceUSD ?? ""}
+                value={convertFromUSD(form.costPriceUSD, priceCurrency, rates)}
                 onChange={(event) =>
                   patchForm({
-                    wholesalePriceUSD: Number(event.target.value) || undefined,
+                    costPriceUSD: convertToUSD(
+                      Number(event.target.value),
+                      priceCurrency,
+                      rates,
+                    ),
+                  })
+                }
+              />
+              <span className="mt-1 block text-xs text-slate-400">
+                {priceEquivalents(form.costPriceUSD, rates)}
+              </span>
+            </label>
+            <label className={label}>
+              Precio de venta ({priceCurrency})
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                className={field}
+                value={convertFromUSD(form.salePriceUSD, priceCurrency, rates)}
+                onChange={(event) =>
+                  patchForm({
+                    salePriceUSD: convertToUSD(
+                      Number(event.target.value),
+                      priceCurrency,
+                      rates,
+                    ),
+                  })
+                }
+              />
+              <span className="mt-1 block text-xs text-slate-400">
+                {priceEquivalents(form.salePriceUSD, rates)}
+              </span>
+            </label>
+            <label className={label}>
+              Precio mayorista ({priceCurrency})
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                className={field}
+                value={
+                  form.wholesalePriceUSD === undefined
+                    ? ""
+                    : convertFromUSD(
+                        form.wholesalePriceUSD,
+                        priceCurrency,
+                        rates,
+                      )
+                }
+                onChange={(event) =>
+                  patchForm({
+                    wholesalePriceUSD:
+                      convertToUSD(
+                        Number(event.target.value),
+                        priceCurrency,
+                        rates,
+                      ) || undefined,
                   })
                 }
               />
