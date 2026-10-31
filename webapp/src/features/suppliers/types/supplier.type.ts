@@ -14,6 +14,14 @@ export interface Supplier {
   organizationId?: string | null;
 }
 
+/** Payable balance of one supplier (GET /api/suppliers/:id/balance). */
+export interface SupplierBalance {
+  supplierId: string;
+  totalUSD: number;
+  paidUSD: number;
+  currentBalanceUSD: number;
+}
+
 /** A map-picked point of the supplier (CRM S3). */
 export interface SupplierLocation {
   id: string;

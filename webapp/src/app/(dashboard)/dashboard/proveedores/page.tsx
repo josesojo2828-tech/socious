@@ -1,91 +1,61 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Factory, Loader2, Plus, Search, Trash2, Wallet } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2, Plus, Search } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
-import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
-import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
-import { SupplierLocationsCard } from "@/features/suppliers/components/SupplierLocationsCard";
-import dynamic from "next/dynamic";
-
-const NutriMapPicker = dynamic(
-  () => import("@/features/user/components/map/NutriMapPicker"),
-  { ssr: false },
-);
-import type { Supplier } from "@/features/suppliers/types/supplier.type";
+import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
+import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import {
-  buildSupplierPayload,
-  toSupplierForm,
-  validateSupplierForm,
-  type SupplierForm,
-} from "@/features/suppliers/lib/supplier-form";
+  BRASS_DOT,
+  CARD,
+  CARD_HEADER,
+  CTA_BRASS,
+  EYEBROW,
+  GLASS,
+  PAGE_TITLE,
+  TABLE_HEAD,
+  TABLE_ROW,
+} from "@/shared/lib/maison-style";
+import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
+import {
+  filterSuppliers,
+  sumPendingBalance,
+} from "@/features/suppliers/lib/supplier-list";
+import type { Supplier } from "@/features/suppliers/types/supplier.type";
 
 interface Paged<T> {
   list: T[];
   total: number;
 }
 
-interface SupplierBalance {
-  supplierId: string;
-  totalUSD: number;
-  paidUSD: number;
-  currentBalanceUSD: number;
+function formatUSD(value: number): string {
+  return `$${value.toFixed(2)}`;
 }
 
-const EMPTY_FORM: SupplierForm = {
-  name: "",
-  taxId: "",
-  contactName: "",
-  email: "",
-  phone: "",
-  address: "",
-  city: "",
-  state: "",
-  notes: "",
-  isActive: true,
-};
-
-function apiMessage(error: unknown, fallback: string): string {
-  const maybe = error as { response?: { data?: { message?: string } } };
-  return maybe?.response?.data?.message || fallback;
-}
-
-/** Supplier directory (S8): CRUD plus the payable balance. */
+/**
+ * Supplier directory (makeover S1): Maison table + summary strip + search.
+ * The create/edit form and the detail drawer moved to their own routes:
+ * `/proveedores/nuevo` and `/proveedores/[id]`.
+ */
 export default function SuppliersPage() {
+  const router = useRouter();
   const { addToast } = useToastStore();
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
   const [rows, setRows] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [busy, setBusy] = useState<boolean>(false);
-
   const [query, setQuery] = useState<string>("");
-  const [form, setForm] = useState<SupplierForm>(EMPTY_FORM);
-  const [creating, setCreating] = useState<boolean>(false);
-  const [locPick, setLocPick] = useState<{ lat: number; lng: number } | null>(
-    null,
-  );
-  const [locLabel, setLocLabel] = useState<string>("");
-  const [locPoints, setLocPoints] = useState<
-    { label: string; lat: number; lng: number }[]
-  >([]);
-  const [editing, setEditing] = useState<Supplier | null>(null);
-
-  const [selected, setSelected] = useState<Supplier | null>(null);
-  const [balance, setBalance] = useState<SupplierBalance | null>(null);
-
-  const load = useCallback(async () => {
-    const { data } = await apiClient.get<Paged<Supplier>>(
-      SupplierEndpoints.list,
-      { params: { limit: 100 } },
-    );
-    setRows(data.list);
-  }, []);
 
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      await load();
+      const { data } = await apiClient.get<Paged<Supplier>>(
+        SupplierEndpoints.list,
+        { params: { limit: 100 } },
+      );
+      setRows(data.list);
     } catch {
       addToast({
         type: "error",
@@ -95,129 +65,15 @@ export default function SuppliersPage() {
     } finally {
       setLoading(false);
     }
-  }, [load, addToast]);
+  }, [addToast]);
 
   useEffect(() => {
     void bootstrap();
   }, [bootstrap]);
 
-  async function run(action: () => Promise<void>): Promise<void> {
-    setBusy(true);
-    try {
-      await action();
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const openDetail = useCallback(async (supplier: Supplier) => {
-    setSelected(supplier);
-    try {
-      const { data } = await apiClient.get<SupplierBalance>(
-        SupplierEndpoints.balance(supplier.id),
-      );
-      setBalance(data);
-    } catch {
-      setBalance(null);
-    }
-  }, []);
-
-  const patchForm = (patch: Partial<SupplierForm>) =>
-    setForm((current) => ({ ...current, ...patch }));
-
-  const startCreate = () => {
-    setEditing(null);
-    setForm(EMPTY_FORM);
-    setCreating(true);
-    setSelected(null);
-  };
-
-  const startEdit = (supplier: Supplier) => {
-    setEditing(supplier);
-    setForm(toSupplierForm(supplier));
-    setCreating(true);
-  };
-
-  const submitForm = async (): Promise<void> => {
-    const validation = validateSupplierForm(form);
-    if (validation) {
-      addToast({ type: "warning", title: "Proveedores", message: validation });
-      return;
-    }
-
-    await run(async () => {
-      const payload = buildSupplierPayload(form);
-      try {
-        if (editing) {
-          await apiClient.patch(SupplierEndpoints.detail(editing.id), payload);
-        } else {
-          const { data: created } = await apiClient.post<{ id: string }>(
-            SupplierEndpoints.list,
-            payload,
-          );
-          // Ubicaciones en el mismo momento de crear — varias (round 2, #2).
-          for (const point of locPoints) {
-            await apiClient
-              .post(SupplierEndpoints.locations(created.id), point)
-              .catch(() => undefined);
-          }
-          setLocPick(null);
-          setLocLabel("");
-          setLocPoints([]);
-        }
-        addToast({
-          type: "success",
-          title: "Proveedores",
-          message: editing ? "Proveedor actualizado." : "Proveedor creado.",
-        });
-        setCreating(false);
-        setEditing(null);
-        await load();
-      } catch (error) {
-        addToast({
-          type: "error",
-          title: "Proveedores",
-          message: apiMessage(error, "No se pudo guardar el proveedor."),
-        });
-      }
-    });
-  };
-
-  const handleDelete = () =>
-    run(async () => {
-      if (!selected) return;
-      const confirmed = window.confirm(
-        `¿Eliminar ${selected.name}? Si tiene compras el backend lo va a negar.`,
-      );
-      if (!confirmed) return;
-      try {
-        await apiClient.delete(SupplierEndpoints.detail(selected.id));
-        addToast({
-          type: "success",
-          title: "Proveedores",
-          message: "Proveedor eliminado.",
-        });
-        setSelected(null);
-        await load();
-      } catch (error) {
-        addToast({
-          type: "error",
-          title: "Proveedores",
-          message: apiMessage(error, "No se pudo eliminar."),
-        });
-      }
-    });
-
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    if (!term) return rows;
-    return rows.filter((supplier) =>
-      [supplier.name, supplier.taxId ?? "", supplier.contactName ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(term),
-    );
-  }, [rows, query]);
+  const filtered = filterSuppliers(rows, query);
+  const totalPending = sumPendingBalance(rows);
+  const activeCount = rows.filter((supplier) => supplier.isActive).length;
 
   if (loading) {
     return (
@@ -227,347 +83,156 @@ export default function SuppliersPage() {
     );
   }
 
-  const field =
-    "w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800";
-  const label = "block text-xs text-slate-500";
-
   return (
-    <div className="px-4 py-6 space-y-4">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-            Proveedores
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {rows.length} en el directorio · la deuda sale de las compras.
+    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      {/* ===== Encabezado estilo mockup: eyebrow + título + CTA ===== */}
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className={EYEBROW}>
+            <span className="truncate max-w-[180px]">
+              {activeWorkspace?.name ?? "Socius ERP"}
+            </span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span>Directorio</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span>{rows.length} proveedor{rows.length === 1 ? "" : "es"}</span>
+          </div>
+          <h1 className={PAGE_TITLE}>Proveedores</h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            Contacto, saldo por pagar y ubicaciones en un solo lugar.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={startCreate}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white"
+
+        <InternalLink
+          href="/dashboard/proveedores/nuevo"
+          className={`${CTA_BRASS} px-4 py-2.5 text-sm no-underline`}
         >
           <Plus className="h-4 w-4" /> Nuevo proveedor
-        </button>
+        </InternalLink>
       </header>
 
-      {creating ? (
-        <SectionCard
-          icon={<Factory className="h-5 w-5" />}
-          title={editing ? `Editar ${editing.name}` : "Nuevo proveedor"}
-          description="Nombre y contacto: lo mínimo para comprar."
-        >
-          <div className="grid gap-3 sm:grid-cols-3">
-            <label className={label}>
-              Nombre *
-              <input
-                className={field}
-                value={form.name}
-                onChange={(event) => patchForm({ name: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Contacto
-              <input
-                className={field}
-                value={form.contactName ?? ""}
-                onChange={(event) => patchForm({ contactName: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Documento
-              <input
-                className={field}
-                value={form.taxId ?? ""}
-                onChange={(event) => patchForm({ taxId: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Teléfono
-              <input
-                className={field}
-                value={form.phone ?? ""}
-                onChange={(event) => patchForm({ phone: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Correo
-              <input
-                type="email"
-                className={field}
-                value={form.email ?? ""}
-                onChange={(event) => patchForm({ email: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Ciudad
-              <input
-                className={field}
-                value={form.city ?? ""}
-                onChange={(event) => patchForm({ city: event.target.value })}
-              />
-            </label>
-            <label className={`${label} sm:col-span-2`}>
-              Ubicación
-              <input
-                className={field}
-                value={form.address ?? ""}
-                onChange={(event) => patchForm({ address: event.target.value })}
-              />
-            </label>
-            <label className={label}>
-              Estado
-              <input
-                className={field}
-                value={form.state ?? ""}
-                onChange={(event) => patchForm({ state: event.target.value })}
-              />
-            </label>
-            <label className={`${label} sm:col-span-3`}>
-              Notas
-              <textarea
-                rows={2}
-                className={field}
-                value={form.notes ?? ""}
-                onChange={(event) => patchForm({ notes: event.target.value })}
-              />
-            </label>
-          </div>
+      {/* ===== Franja de resumen (agregados reales del listado) ===== */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className={`rounded-3xl p-5 ${GLASS}`}>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Proveedores
+          </p>
+          <p className="mt-2 font-mono text-2xl tabular-nums text-[#111018] dark:text-slate-100">
+            {rows.length}
+          </p>
+        </div>
+        <div className={`rounded-3xl p-5 ${GLASS}`}>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Activos
+          </p>
+          <p className="mt-2 font-mono text-2xl tabular-nums text-[#111018] dark:text-slate-100">
+            {activeCount}
+          </p>
+        </div>
+        <div className={`rounded-3xl p-5 ${GLASS}`}>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Por pagar
+          </p>
+          <p className="mt-2 font-mono text-2xl tabular-nums text-amber-600 dark:text-amber-400">
+            {formatUSD(totalPending)}
+          </p>
+        </div>
+      </div>
 
-          {!editing ? (
-            <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                Ubicaciones (opcionales, varias)
-              </p>
-              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-                <label className={label}>
-                  Etiqueta
-                  <input
-                    className={field}
-                    value={locLabel}
-                    onChange={(event) => setLocLabel(event.target.value)}
-                    placeholder="Sede principal, Punto de entrega…"
-                  />
-                </label>
-                <button
-                  type="button"
-                  disabled={!locPick || !locLabel.trim()}
-                  onClick={() => {
-                    if (!locPick || !locLabel.trim()) return;
-                    setLocPoints((current) => [
-                      ...current,
-                      { label: locLabel.trim(), lat: locPick.lat, lng: locPick.lng },
-                    ]);
-                    setLocPick(null);
-                    setLocLabel("");
-                  }}
-                  className="h-fit rounded-xl border border-indigo-200 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 disabled:opacity-40 dark:border-indigo-800"
-                >
-                  + Agregar punto
-                </button>
-              </div>
-              <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
-                <NutriMapPicker
-                  height="220px"
-                  lat={locPick?.lat}
-                  lng={locPick?.lng}
-                  onLocationSelect={(lat, lng) => setLocPick({ lat, lng })}
-                />
-              </div>
-              <p className="text-xs text-slate-400">
-                {locPick
-                  ? `Punto marcado: ${locPick.lat.toFixed(5)}, ${locPick.lng.toFixed(5)}`
-                  : "Tocá el mapa para marcar un punto."}
-              </p>
-              {locPoints.length > 0 ? (
-                <ul className="space-y-1">
-                  {locPoints.map((point, index) => (
-                    <li
-                      key={`${point.lat}-${point.lng}-${index}`}
-                      className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
-                    >
-                      <span>
-                        {point.label}{" "}
-                        <span className="font-mono text-xs text-slate-400">
-                          {point.lat.toFixed(5)}, {point.lng.toFixed(5)}
-                        </span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setLocPoints((current) =>
-                            current.filter((_, i) => i !== index),
-                          )
-                        }
-                        className="text-xs font-semibold text-red-500 hover:underline"
-                      >
-                        Quitar
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-          ) : null}
-
-          <div className="mt-4 flex gap-2">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void submitForm()}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-            >
-              {editing ? "Guardar cambios" : "Crear proveedor"}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setCreating(false);
-                setEditing(null);
-              }}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm dark:border-slate-600"
-            >
-              Cancelar
-            </button>
-          </div>
-        </SectionCard>
-      ) : null}
-
-      <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
-        <Search className="h-4 w-4 text-slate-400" />
+      {/* ===== Búsqueda ===== */}
+      <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${GLASS}`}>
+        <Search className="h-4 w-4 shrink-0 text-slate-400" />
         <input
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Buscar por nombre, contacto o documento"
-          className="w-full bg-transparent text-sm outline-none"
+          className="w-full bg-transparent text-sm outline-none text-[#111018] dark:text-slate-100 placeholder:text-slate-400"
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-          <table className="w-full text-sm">
+      {/* ===== Tabla Maison ===== */}
+      <div className={`rounded-xl overflow-hidden ${CARD}`}>
+        <div className={CARD_HEADER}>
+          <h3 className="font-semibold text-[15px] tracking-tight text-[#111018] dark:text-slate-100">
+            Directorio
+          </h3>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            {filtered.length} / {rows.length}
+          </span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-400 dark:border-slate-700">
-                <th className="px-4 py-2">Proveedor</th>
-                <th className="px-4 py-2">Contacto</th>
-                <th className="px-4 py-2">Teléfono</th>
-                <th className="px-4 py-2 text-right">Debe</th>
-                <th className="px-4 py-2" />
+              <tr className={TABLE_HEAD}>
+                <th className="px-5 py-3 font-medium">Proveedor</th>
+                <th className="px-5 py-3 font-medium">Contacto</th>
+                <th className="px-5 py-3 font-medium">Correo</th>
+                <th className="px-5 py-3 font-medium">Teléfono</th>
+                <th className="px-5 py-3 font-medium text-right">Saldo</th>
               </tr>
             </thead>
-            <tbody>
-              {filtered.map((supplier) => (
-                <tr
-                  key={supplier.id}
-                  className={`border-b border-slate-100 last:border-0 dark:border-slate-800 ${
-                    selected?.id === supplier.id
-                      ? "bg-indigo-50 dark:bg-indigo-950"
-                      : ""
-                  }`}
-                >
-                  <td className="px-4 py-2">
-                    <p className="font-medium">{supplier.name}</p>
-                    {!supplier.isActive ? (
-                      <span className="text-[10px] uppercase text-slate-400">
-                        inactivo
-                      </span>
-                    ) : null}
-                  </td>
-                  <td className="px-4 py-2 text-xs">
-                    {supplier.contactName ?? "—"}
-                  </td>
-                  <td className="px-4 py-2 text-xs">{supplier.phone ?? "—"}</td>
-                  <td className="px-4 py-2 text-right text-xs">
-                    ${Number(supplier.currentBalanceUSD).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2 text-right">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => void openDetail(supplier)}
-                        className="rounded px-2 py-1 text-xs font-medium text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950"
-                      >
-                        Ver
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Editar"
-                        onClick={() => startEdit(supplier)}
-                        className="rounded p-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            <tbody className="text-sm">
+              {filtered.map((supplier) => {
+                const pending = Number(supplier.currentBalanceUSD ?? 0);
+                return (
+                  <tr
+                    key={supplier.id}
+                    className={`${TABLE_ROW} cursor-pointer`}
+                    onClick={() => router.push(`/dashboard/proveedores/${supplier.id}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        router.push(`/dashboard/proveedores/${supplier.id}`);
+                      }
+                    }}
+                    tabIndex={0}
+                  >
+                    <td className="px-5 py-3">
+                      <p className="font-medium text-[#111018] dark:text-slate-100">
+                        {supplier.name}
+                      </p>
+                      {!supplier.isActive ? (
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-slate-400">
+                          inactivo
+                        </span>
+                      ) : null}
+                    </td>
+                    <td className="px-5 py-3 text-xs text-slate-500 dark:text-slate-400">
+                      {supplier.contactName ?? "—"}
+                    </td>
+                    <td className="px-5 py-3 text-xs text-slate-500 dark:text-slate-400">
+                      {supplier.email ?? "—"}
+                    </td>
+                    <td className="px-5 py-3 text-xs text-slate-500 dark:text-slate-400">
+                      {supplier.phone ?? "—"}
+                    </td>
+                    <td
+                      className={`px-5 py-3 text-right font-mono text-xs tabular-nums font-medium ${
+                        pending > 0
+                          ? "text-amber-600 dark:text-amber-400"
+                          : "text-slate-500 dark:text-slate-400"
+                      }`}
+                    >
+                      {formatUSD(pending)}
+                    </td>
+                  </tr>
+                );
+              })}
               {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
-                    Sin proveedores para esa búsqueda.
+                <tr className={TABLE_ROW}>
+                  <td
+                    colSpan={5}
+                    className="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400"
+                  >
+                    {rows.length === 0
+                      ? "Todavía no hay proveedores: cree el primero desde el botón superior."
+                      : "Sin proveedores para esa búsqueda."}
                   </td>
                 </tr>
               ) : null}
             </tbody>
           </table>
         </div>
-
-        <aside className="space-y-4">
-          {selected ? (
-            <>
-              <SectionCard
-                icon={<Wallet className="h-5 w-5" />}
-                title="Cuenta por pagar"
-                description={`${selected.name} · ${selected.contactName ?? "sin contacto"}`}
-              >
-                {balance ? (
-                  <div className="space-y-1">
-                    <SectionRow label="Total comprado">
-                      <span>${Number(balance.totalUSD).toFixed(2)}</span>
-                    </SectionRow>
-                    <SectionRow label="Pagado">
-                      <span>${Number(balance.paidUSD).toFixed(2)}</span>
-                    </SectionRow>
-                    <SectionRow label="Pendiente">
-                      <span className="font-semibold text-amber-600">
-                        ${Number(balance.currentBalanceUSD).toFixed(2)}
-                      </span>
-                    </SectionRow>
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500">Sin saldo cargado.</p>
-                )}
-              </SectionCard>
-
-              <SupplierLocationsCard supplierId={selected.id} />
-
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => void handleDelete()}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-red-300 px-3 py-1.5 text-sm text-red-600 disabled:opacity-40"
-              >
-                <Trash2 className="h-4 w-4" /> Eliminar
-              </button>
-            </>
-          ) : (
-            <SectionCard
-              icon={<Factory className="h-5 w-5" />}
-              title="Resumen"
-              description="Elegí un proveedor de la lista para ver su deuda."
-            >
-              <SectionRow label="En el directorio">
-                <span className="font-semibold">{rows.length}</span>
-              </SectionRow>
-              <SectionRow label="Activos">
-                <span className="font-semibold">
-                  {rows.filter((supplier) => supplier.isActive).length}
-                </span>
-              </SectionRow>
-            </SectionCard>
-          )}
-        </aside>
       </div>
     </div>
   );
