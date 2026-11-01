@@ -117,9 +117,9 @@ cobrar/pagar, rutas — same Maison treatment.
 | T2 | S1,S3 | delegated (clientes) | pending | |
 | T3 | S1,S3 | delegated (proveedores) | pending | |
 | T4 | S1,S4 | delegated (compras) | done | 4a7484b |
-| T5 | S6-S8,S10 | backend foundation (parent) | pending | |
-| T6 | S6-S8,S10 | delegated (producto/POS UI) | pending | |
-| T7 | S9 | delegated (ofertas UI) | pending | |
+| T5 | S6-S8,S10 | backend foundation (parent) | done | b727918 |
+| T6 | S6-S8,S10 | delegated (producto/POS UI) | done | (this) |
+| T7 | S9 | delegated (ofertas UI) | done | (this) |
 
 ## Log
 
@@ -128,3 +128,8 @@ vistas, para este nuevo estilo… mejorar los cruds… tabla… resumen…
 formulario de crear editar y ficha en una única pagina… eliminar" plus the
 fichas emphasis (productos/cliente/proveedores), the pre-filled presentation
 form with color, and the purchase screen with drafts.
+
+L2: S6–S10 closed (backend b727918 + two frontend units). Upload gotcha:
+apiClient defaults to JSON Content-Type — multipart needs the explicit
+header. Variant prefill resets isPublic (create would bypass the plan gate).
+S11 storefront offer display and S5 screen restyles remain open.
