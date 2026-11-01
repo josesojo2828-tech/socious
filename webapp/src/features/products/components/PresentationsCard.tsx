@@ -13,6 +13,10 @@ import {
   type PresentationDraft,
 } from "../lib/presentation-prefill";
 import {
+  parsePresentationSalePrice,
+  presentationPriceLabel,
+} from "../lib/presentation-price";
+import {
   buildImageUploadForm,
   canUploadImage,
   publicFileUrl,
@@ -28,6 +32,8 @@ export interface ProductPresentation {
   color: string | null;
   measures: string | null;
   unit: string;
+  /** Own price; null = hereda el precio del producto. */
+  salePriceUSD?: string | number | null;
   stock: string | number;
   minStock: string | number;
   active: boolean;
@@ -115,6 +121,7 @@ export function PresentationsCard({
     }
     setSaving(true);
     try {
+      const salePriceUSD = parsePresentationSalePrice(draft.salePrice);
       await apiClient.post(ProductEndpoints.presentations(productId), {
         name: draft.name.trim(),
         ...(draft.sku.trim() ? { sku: draft.sku.trim() } : {}),
@@ -123,6 +130,8 @@ export function PresentationsCard({
         color: draft.color.trim() || undefined,
         measures: draft.measures.trim() || undefined,
         stock: Number(draft.stock) || 0,
+        // Empty input → omitted → the presentation inherits the product price.
+        ...(salePriceUSD !== null ? { salePriceUSD } : {}),
       });
       // Stay open on the ficha so the merchant can add the next color.
       setDraft(product ? presentationPrefillFromProduct(product) : EMPTY_PRESENTATION_DRAFT);
@@ -287,6 +296,10 @@ export function PresentationsCard({
                     <p className="text-xs text-slate-400">
                       Stock: {Number(row.stock)} {row.unit}
                       {row.sku ? ` · ${row.sku}` : ""}
+                      {" · "}
+                      <span title="Precio de venta de la presentación">
+                        {presentationPriceLabel(row.salePriceUSD)}
+                      </span>
                     </p>
                     {imageLimit !== undefined &&
                     ((row.images?.length ?? 0) > 0 ||
@@ -449,6 +462,20 @@ export function PresentationsCard({
                     setDraft((c) => ({ ...c, stock: event.target.value }))
                   }
                   className={`mt-1 w-24 font-mono tabular-nums ${INPUT}`}
+                />
+              </label>
+              <label className={LABEL_SM}>
+                Precio de venta
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={draft.salePrice}
+                  onChange={(event) =>
+                    setDraft((c) => ({ ...c, salePrice: event.target.value }))
+                  }
+                  placeholder="Vacío = hereda"
+                  className={`mt-1 w-28 font-mono tabular-nums ${INPUT}`}
                 />
               </label>
               <button

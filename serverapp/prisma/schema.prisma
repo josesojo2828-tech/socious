@@ -989,6 +989,7 @@ enum StockMovementType {
 }
 
 model StockMovement {
+  presentationId String?  // venta/anulación de una presentación (libro por variante)
   id             String            @id @default(uuid())
   productId      String
   organizationId String?
@@ -1003,6 +1004,7 @@ model StockMovement {
   createdAt      DateTime          @default(now())
 
   product        Product           @relation(fields: [productId], references: [id])
+  presentation   ProductPresentation? @relation(fields: [presentationId], references: [id], onDelete: SetNull)
   organization   Organization?     @relation(fields: [organizationId], references: [id])
   createdBy      User?             @relation("CreatedStockMovementRecords", fields: [createdById], references: [id])
   branchId       String?
@@ -1010,6 +1012,7 @@ model StockMovement {
 
   @@index([organizationId])
   @@index([productId])
+  @@index([presentationId])
   @@index([createdAt])
 }
 
@@ -1313,6 +1316,7 @@ model ProductPresentation {
   color          String?
   measures       String?  // "10 × 10 × 20 cm"
   unit           String   @default("UND")
+  salePriceUSD   Decimal? @db.Decimal(14, 2) // null = hereda el precio del producto
   stock          Decimal  @default(0.00) @db.Decimal(12, 2)
   minStock       Decimal  @default(0.00) @db.Decimal(12, 2)
   active         Boolean  @default(true)
@@ -1322,6 +1326,7 @@ model ProductPresentation {
   product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   saleItems      SaleItem[]
   images         PresentationImage[]
+  stockMovements StockMovement[]
 
   @@index([productId])
 }

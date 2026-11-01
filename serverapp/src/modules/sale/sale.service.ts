@@ -550,16 +550,32 @@ export class SaleService {
         if (item.presentationId) {
           const presentation = await tx.productPresentation.findFirst({
             where: { id: item.presentationId },
-            select: { id: true, stock: true },
+            select: { id: true, name: true, stock: true },
           });
           if (presentation) {
+            const previousStock = Number(presentation.stock ?? 0);
+            const nextStock = round2(
+              previousStock + Number(item.quantity),
+            );
+
+            await tx.stockMovement.create({
+              data: {
+                productId: item.productId,
+                presentationId: item.presentationId,
+                organizationId: scope.organizationId,
+                createdById: scope.createdById ?? null,
+                type: "RETURN",
+                quantity: Number(item.quantity),
+                previousStock,
+                newStock: nextStock,
+                reference: sale.saleNumber,
+                notes: `Anulación de venta (presentación ${presentation.name})`,
+              },
+            });
+
             await tx.productPresentation.update({
               where: { id: item.presentationId },
-              data: {
-                stock: round2(
-                  Number(presentation.stock ?? 0) + Number(item.quantity),
-                ),
-              },
+              data: { stock: nextStock },
             });
           }
           continue;
@@ -631,7 +647,7 @@ export class SaleService {
 
     for (const input of inputs) {
       const quantity = Number(input.quantity);
-      const unitPriceUSD = Number(input.unitPriceUSD);
+      let unitPriceUSD = Number(input.unitPriceUSD);
       const discountUSD = Number(input.discountUSD ?? 0);
       const taxRate = Number(input.taxRate ?? 0);
 
@@ -643,7 +659,13 @@ export class SaleService {
       if (presentationId) {
         const presentation = await tx.productPresentation.findFirst({
           where: { id: presentationId },
-          select: { id: true, productId: true, name: true, stock: true },
+          select: {
+            id: true,
+            productId: true,
+            name: true,
+            stock: true,
+            salePriceUSD: true,
+          },
         });
         if (!presentation) {
           throw new NotFoundException("La presentación no existe.");
@@ -660,6 +682,11 @@ export class SaleService {
         }
         productId = presentation.productId;
         productName = presentation.name;
+        // Backend authority: a presentation with its own price dictates it;
+        // an inheriting one (null) trusts the client figure as before.
+        if (presentation.salePriceUSD != null) {
+          unitPriceUSD = Number(presentation.salePriceUSD);
+        }
       }
 
       if (productId && !presentationId) {
@@ -750,17 +777,35 @@ export class SaleService {
     for (const item of items) {
       if (!item.productId || item.isService) continue;
 
-      // Presentation sale: its own stock is the one that moves; the product
-      // bulk and the Kardex stay untouched (v1 — presentations have no rows).
+      // Presentation sale: its own stock is the one that moves (the product
+      // bulk stays untouched), and the Kardex books a row per presentation.
       if (item.presentationId) {
         const presentation = await tx.productPresentation.findFirst({
           where: { id: item.presentationId },
-          select: { id: true, stock: true },
+          select: { id: true, name: true, stock: true },
         });
         if (presentation) {
+          const previousStock = Number(presentation.stock ?? 0);
+          const nextStock = round2(previousStock - item.quantity);
+
+          await tx.stockMovement.create({
+            data: {
+              productId: item.productId,
+              presentationId: item.presentationId,
+              organizationId: scope.organizationId,
+              createdById: scope.createdById ?? null,
+              type: "SALE",
+              quantity: item.quantity,
+              previousStock,
+              newStock: nextStock,
+              reference,
+              notes: `Venta de presentación ${presentation.name}`,
+            },
+          });
+
           await tx.productPresentation.update({
             where: { id: item.presentationId },
-            data: { stock: round2(Number(presentation.stock ?? 0) - item.quantity) },
+            data: { stock: nextStock },
           });
         }
         continue;

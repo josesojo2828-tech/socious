@@ -104,7 +104,12 @@ export default function PosPage() {
   const [pickProduct, setPickProduct] = useState<Product | null>(null);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
   const [pickPresentations, setPickPresentations] = useState<
-    { id: string; name: string; stock?: string | number }[]
+    {
+      id: string;
+      name: string;
+      stock?: string | number;
+      salePriceUSD?: string | number | null;
+    }[]
   >([]);
   const [amount, setAmount] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
@@ -251,7 +256,13 @@ export default function PosPage() {
     void (async () => {
       try {
         const { data } = await apiClient.get<
-          { id: string; name: string; stock: string | number; active: boolean }[]
+          {
+            id: string;
+            name: string;
+            stock: string | number;
+            active: boolean;
+            salePriceUSD?: string | number | null;
+          }[]
         >(ProductEndpoints.presentations(product.id));
         const active = (Array.isArray(data) ? data : []).filter(
           (row) => row.active,
@@ -268,7 +279,11 @@ export default function PosPage() {
     })();
   };
 
-  const pickPresentation = (presentation: { id: string; name: string }) => {
+  const pickPresentation = (presentation: {
+    id: string;
+    name: string;
+    salePriceUSD?: string | number | null;
+  }) => {
     if (pickProduct) {
       setCart((current) =>
         addToCart(current, pickProduct, 1, presentation),
@@ -459,6 +474,9 @@ export default function PosPage() {
                   {row.name}{" "}
                   <span className="text-xs text-slate-400">
                     · stock {Number(row.stock)}
+                    {row.salePriceUSD != null
+                      ? ` · $${Number(row.salePriceUSD).toFixed(2)}`
+                      : ` · $${Number(pickProduct.salePriceUSD).toFixed(2)}`}
                   </span>
                 </button>
               </li>

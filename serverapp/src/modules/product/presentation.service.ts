@@ -60,6 +60,7 @@ export class PresentationService {
         unit: dto.unit?.trim() || "UND",
         stock: dto.stock ?? 0,
         minStock: dto.minStock ?? 0,
+        salePriceUSD: dto.salePriceUSD ?? null,
       },
     });
   }
@@ -99,6 +100,10 @@ export class PresentationService {
         ...(dto.unit !== undefined ? { unit: dto.unit.trim() } : {}),
         ...(dto.minStock !== undefined ? { minStock: dto.minStock } : {}),
         ...(dto.active !== undefined ? { active: dto.active } : {}),
+        // null clears the own price so the presentation inherits again.
+        ...(dto.salePriceUSD !== undefined
+          ? { salePriceUSD: dto.salePriceUSD }
+          : {}),
       },
     });
   }

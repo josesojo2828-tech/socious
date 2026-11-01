@@ -36,6 +36,10 @@ const makeTx = () => ({
     findFirst: jest.fn().mockResolvedValue(null),
     update: jest.fn(),
   },
+  productPresentation: {
+    findFirst: jest.fn().mockResolvedValue(null),
+    update: jest.fn(),
+  },
   stockMovement: {
     create: jest.fn((args: any) => Promise.resolve({ id: "m-1", ...args.data })),
   },
@@ -168,6 +172,105 @@ describe("SaleService", () => {
         reference: "VTA-00001",
       });
       expect(tx.product.update.mock.calls[0][0].data.stock).toBe(47);
+    });
+
+    it("books the presentation stock in the kardex with its own row", async () => {
+      const { service, tx } = makeService();
+      tx.productPresentation.findFirst.mockResolvedValue({
+        id: "pres-1",
+        productId: "prod-1",
+        name: "Bolsa 100 g",
+        stock: "10.00",
+        salePriceUSD: null,
+      });
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              presentationId: "pres-1",
+              productName: "Bolsa 100 g",
+              quantity: 2,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(tx.stockMovement.create).toHaveBeenCalledTimes(1);
+      expect(tx.stockMovement.create.mock.calls[0][0].data).toMatchObject({
+        productId: "prod-1",
+        presentationId: "pres-1",
+        type: "SALE",
+        quantity: 2,
+        previousStock: 10,
+        newStock: 8,
+        reference: "VTA-00001",
+        notes: "Venta de presentación Bolsa 100 g",
+      });
+      expect(tx.productPresentation.update.mock.calls[0][0].data.stock).toBe(8);
+      // The product bulk never moves on a presentation sale.
+      expect(tx.product.update).not.toHaveBeenCalled();
+    });
+
+    it("forces the presentation price when it has its own", async () => {
+      const { service, tx } = makeService();
+      tx.productPresentation.findFirst.mockResolvedValue({
+        id: "pres-1",
+        productId: "prod-1",
+        name: "Bolsa 100 g",
+        stock: "10.00",
+        salePriceUSD: "3.50",
+      });
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              presentationId: "pres-1",
+              productName: "Bolsa 100 g",
+              quantity: 2,
+              // The client lies: the backend authority overrides it.
+              unitPriceUSD: 99,
+            },
+          ],
+        },
+      );
+
+      expect(tx.saleItem.create.mock.calls[0][0].data.unitPriceUSD).toBe(3.5);
+      expect(tx.sale.create.mock.calls[0][0].data.subtotalUSD).toBe(7);
+    });
+
+    it("keeps the client price when the presentation inherits it", async () => {
+      const { service, tx } = makeService();
+      tx.productPresentation.findFirst.mockResolvedValue({
+        id: "pres-1",
+        productId: "prod-1",
+        name: "Bolsa 100 g",
+        stock: "10.00",
+        salePriceUSD: null,
+      });
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              presentationId: "pres-1",
+              productName: "Bolsa 100 g",
+              quantity: 1,
+              unitPriceUSD: 2.25,
+            },
+          ],
+        },
+      );
+
+      expect(tx.saleItem.create.mock.calls[0][0].data.unitPriceUSD).toBe(2.25);
     });
 
     it("refuses to sell more than the available stock", async () => {
@@ -573,6 +676,48 @@ describe("SaleService", () => {
         reference: "VTA-00001",
       });
       expect(tx.sale.update.mock.calls[0][0].data.status).toBe("CANCELLED");
+    });
+
+    it("restores the presentation stock through the kardex", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        totalUSD: "7.00",
+        clientId: null,
+        organizationId: ORG_A,
+        items: [
+          {
+            productId: "prod-1",
+            presentationId: "pres-1",
+            productName: "Bolsa 100 g",
+            quantity: "2.00",
+          },
+        ],
+      });
+      tx.salePayment.aggregate.mockResolvedValue({ _sum: { amountUSD: "0" } });
+      tx.productPresentation.findFirst.mockResolvedValue({
+        id: "pres-1",
+        name: "Bolsa 100 g",
+        stock: "8.00",
+      });
+
+      await service.cancel({ organizationId: ORG_A, createdById: "u-1" }, "s-1");
+
+      expect(tx.stockMovement.create).toHaveBeenCalledTimes(1);
+      expect(tx.stockMovement.create.mock.calls[0][0].data).toMatchObject({
+        productId: "prod-1",
+        presentationId: "pres-1",
+        type: "RETURN",
+        quantity: 2,
+        previousStock: 8,
+        newStock: 10,
+        reference: "VTA-00001",
+        notes: "Anulación de venta (presentación Bolsa 100 g)",
+      });
+      expect(tx.productPresentation.update.mock.calls[0][0].data.stock).toBe(10);
+      expect(tx.product.update).not.toHaveBeenCalled();
     });
   });
 });

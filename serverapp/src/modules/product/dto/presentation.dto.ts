@@ -47,6 +47,12 @@ export class CreatePresentationDto {
   @IsNumber()
   @Min(0)
   minStock?: number;
+
+  /** Own sale price; omit it (or null) to inherit the product price. */
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  salePriceUSD?: number;
 }
 
 export class UpdatePresentationDto {
@@ -88,6 +94,15 @@ export class UpdatePresentationDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  /**
+   * Own sale price; null clears it so the presentation inherits the product
+   * price again. `@IsOptional` accepts null as well as undefined.
+   */
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  salePriceUSD?: number | null;
 }
 
 export class DecomposeDto {

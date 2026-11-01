@@ -17,6 +17,8 @@ const makeService = () => {
         productId: "prod-1",
         name: "Bolsa 100 g",
         stock: { value: 0 },
+        // `ownPresentation` walks the relation to check the tenant.
+        product: { organizationId: "org-1", deletedAt: null },
       },
     ] as any[],
   };
@@ -100,6 +102,42 @@ describe("PresentationService", () => {
     });
     expect(created.organizationId).toBe("org-1");
     expect(state.presentations).toHaveLength(2);
+  });
+
+  it("stores an own sale price when provided and inherits when omitted", async () => {
+    const { service, state } = makeService();
+    const priced = await service.create("org-1", "prod-1", {
+      name: "Bolsa 250 g",
+      salePriceUSD: 3.5,
+    });
+    expect(priced.salePriceUSD).toBe(3.5);
+
+    const inheriting = await service.create("org-1", "prod-1", {
+      name: "Bolsa 500 g",
+    });
+    expect(inheriting.salePriceUSD).toBeNull();
+  });
+
+  it("updates the own sale price and clears it back to inherit with null", async () => {
+    const { service, state } = makeService();
+    const priced = await service.update("org-1", "pres-1", {
+      salePriceUSD: 2.75,
+    });
+    expect(priced.salePriceUSD).toBe(2.75);
+
+    const cleared = await service.update("org-1", "pres-1", {
+      salePriceUSD: null,
+    });
+    expect(cleared.salePriceUSD).toBeNull();
+  });
+
+  it("leaves the sale price untouched when the patch omits it", async () => {
+    const { service } = makeService();
+    await service.update("org-1", "pres-1", { salePriceUSD: 4 });
+    const renamed = await service.update("org-1", "pres-1", {
+      name: "Bolsa 100 g Roja",
+    });
+    expect(renamed.salePriceUSD).toBe(4);
   });
 
   it("decomposes bulk stock into the presentation", async () => {

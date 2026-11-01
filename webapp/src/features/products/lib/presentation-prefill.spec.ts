@@ -35,6 +35,8 @@ describe("presentationPrefillFromProduct", () => {
       color: "",
       measures: "",
       stock: "0",
+      // Inheriting the product price is the default for a new presentation.
+      salePrice: "",
     });
   });
 
@@ -65,6 +67,8 @@ describe("EMPTY_PRESENTATION_DRAFT", () => {
       color: "",
       measures: "",
       stock: "0",
+      // No own price: the presentation inherits the product price.
+      salePrice: "",
     });
   });
 });

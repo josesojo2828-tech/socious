@@ -29,6 +29,16 @@ export interface ProductPicker {
   taxRate: string | number;
 }
 
+export interface PresentationPicker {
+  id: string;
+  name: string;
+  /**
+   * Own price of the presentation; null/undefined means "inherits the
+   * product price". The API sends Prisma Decimals as strings.
+   */
+  salePriceUSD?: string | number | null;
+}
+
 export function roundMoney(value: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -38,6 +48,17 @@ const toNumber = (value: string | number | null | undefined): number => {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 };
+
+/** The presentation price wins over the product price when it exists. */
+function lineUnitPrice(
+  product: ProductPicker,
+  presentation?: PresentationPicker,
+): number {
+  if (presentation && presentation.salePriceUSD != null && presentation.salePriceUSD !== "") {
+    return toNumber(presentation.salePriceUSD);
+  }
+  return toNumber(product.salePriceUSD);
+}
 
 /** Same product AND same presentation = same line (bulk vs variants). */
 function sameLine(item: CartLine, line: CartLine): boolean {
@@ -52,7 +73,7 @@ export function addToCart(
   cart: CartLine[],
   product: ProductPicker,
   quantity = 1,
-  presentation?: { id: string; name: string },
+  presentation?: PresentationPicker,
 ): CartLine[] {
   const safeQuantity = Math.max(1, Math.trunc(quantity) || 1);
   const line: CartLine = {
@@ -60,7 +81,7 @@ export function addToCart(
     presentationId: presentation?.id ?? null,
     presentationName: presentation?.name ?? null,
     productName: presentation ? presentation.name : product.name,
-    unitPriceUSD: toNumber(product.salePriceUSD),
+    unitPriceUSD: lineUnitPrice(product, presentation),
     taxRate: toNumber(product.taxRate),
     quantity: safeQuantity,
   };

@@ -13,6 +13,8 @@ export interface PresentationDraft {
   color: string;
   measures: string;
   stock: string;
+  /** "" = hereda el precio del producto (no own price). */
+  salePrice: string;
 }
 
 /** Blank draft for the standalone (no product) usage of the card. */
@@ -24,12 +26,14 @@ export const EMPTY_PRESENTATION_DRAFT: PresentationDraft = {
   color: "",
   measures: "",
   stock: "0",
+  salePrice: "",
 };
 
 /**
  * Prefill copied from the product: identity stays, color/measures start empty
  * (the fields they change), and the barcode stays empty because the merchant
- * decides whether the presentation gets its own code.
+ * decides whether the presentation gets its own code. The sale price also
+ * starts empty: inheriting the product price is the default behavior.
  */
 export function presentationPrefillFromProduct(
   product: Product,
@@ -42,5 +46,6 @@ export function presentationPrefillFromProduct(
     color: "",
     measures: "",
     stock: "0",
+    salePrice: "",
   };
 }

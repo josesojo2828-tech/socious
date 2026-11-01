@@ -192,6 +192,30 @@ describe("presentations and credit (sales overhaul)", () => {
     expect(payload.creditCadence).toBe("QUINCENAL");
     expect(payload.payments).toHaveLength(1);
   });
+
+  it("prices the line with the presentation's own price when it has one", () => {
+    const cart = addToCart([], product, 1, {
+      id: "pres-1",
+      name: "Bolsa 100 g",
+      salePriceUSD: "2.50",
+    });
+    expect(cart[0].unitPriceUSD).toBe(2.5);
+  });
+
+  it("falls back to the product price when the presentation inherits it", () => {
+    const inheriting = addToCart([], product, 1, {
+      id: "pres-1",
+      name: "Bolsa 100 g",
+      salePriceUSD: null,
+    });
+    expect(inheriting[0].unitPriceUSD).toBe(2);
+
+    const noField = addToCart([], product, 1, {
+      id: "pres-1",
+      name: "Bolsa 100 g",
+    });
+    expect(noField[0].unitPriceUSD).toBe(2);
+  });
 });
 
 describe("creditInitialPayment (regresión: ventas a crédito no pagadas)", () => {
