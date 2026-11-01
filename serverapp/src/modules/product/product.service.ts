@@ -74,6 +74,7 @@ export class ProductService {
     if (query.status) filters.push({ status: query.status });
     if (query.categoryId) filters.push({ categoryId: query.categoryId });
     if (query.supplierId) filters.push({ supplierId: query.supplierId });
+    if (query.variantOfId) filters.push({ variantOfId: query.variantOfId });
     if (query.isPublic !== undefined) filters.push({ isPublic: query.isPublic });
 
     if (query.lowStock) {
@@ -129,8 +130,27 @@ export class ProductService {
   async getOne(scope: ProductScope, id: string) {
     const product = await this.prisma.product.findFirst({
       where: { id, ...this.scopeWhere(scope.organizationId) },
-      include: {images: { orderBy: { position: "asc" } },
-         category: true, supplier: true },
+      include: {
+        images: { orderBy: { position: "asc" } },
+        category: true,
+        supplier: true,
+        variants: {
+          select: {
+            id: true,
+            name: true,
+            sku: true,
+            stock: true,
+            unit: true,
+            isService: true,
+            images: {
+              orderBy: { position: "asc" },
+              take: 1,
+              select: { key: true },
+            },
+          },
+          orderBy: { name: "asc" },
+        },
+      },
     });
 
     if (!product) throw new NotFoundException("Producto no encontrado.");
@@ -166,6 +186,7 @@ export class ProductService {
           imageUrl: data.imageUrl?.trim() || null,
           categoryId: data.categoryId ?? null,
           supplierId: data.supplierId ?? null,
+          variantOfId: data.variantOfId ?? null,
           organizationId: scope.organizationId,
         },
       });

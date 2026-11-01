@@ -40,6 +40,18 @@ export interface Product {
   imageUrl?: string | null;
   categoryId?: string | null;
   supplierId?: string | null;
+  /** Padre cuando este producto es una variante/copia (round 5, #3). */
+  variantOfId?: string | null;
+  /** Sub-productos devueltos por el detalle (round 5, #3). */
+  variants?: {
+    id: string;
+    name: string;
+    sku: string;
+    stock: string | number;
+    unit: string;
+    isService: boolean;
+    images: { key: string }[];
+  }[];
   organizationId?: string | null;
   /** Detail route only (S8); ordered by `position`. */
   images?: ProductImage[];

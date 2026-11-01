@@ -28,6 +28,8 @@ export interface ProductForm {
   imageUrl?: string;
   categoryId?: string;
   supplierId?: string;
+  /** Set by the variant copy route; sent only on create. */
+  variantOfId?: string;
 }
 
 /** Blank form for the create route. */
@@ -82,6 +84,7 @@ export function toForm(product: Product): ProductForm {
     status: product.status,
     categoryId: product.categoryId ?? "",
     supplierId: product.supplierId ?? "",
+    variantOfId: product.variantOfId ?? undefined,
   };
 }
 
@@ -138,6 +141,7 @@ export function buildProductPayload(
   };
 
   if (mode === "create") {
+    if (form.variantOfId) payload.variantOfId = form.variantOfId;
     payload.stock = form.isService ? 0 : Number(form.stock) || 0;
   }
 

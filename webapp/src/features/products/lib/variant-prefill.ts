@@ -24,6 +24,9 @@ export function variantPrefillFromProduct(product: Product): ProductForm {
     barcode: "",
     stock: 0,
     isPublic: false,
+    // Una variante es un sub-producto con stock propio: jamás servicio.
+    isService: false,
+    variantOfId: product.id,
   };
 }
 

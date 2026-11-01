@@ -111,6 +111,12 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   supplierId?: string;
+
+  /** Sub-producto: variante/copiado de otro (round 5, #3). */
+  @IsOptional()
+  @IsString()
+  variantOfId?: string;
+
 }
 
 export class UpdateProductDto {
@@ -218,6 +224,11 @@ export class ListProductsQueryDto {
   @IsOptional()
   @IsString()
   supplierId?: string;
+
+  /** Children of a product (variants), round 5 #3. */
+  @IsOptional()
+  @IsString()
+  variantOfId?: string;
 
   /** Only products flagged for the public cart. */
   @IsOptional()

@@ -33,6 +33,7 @@ import type {
 import { PRODUCT_STATUS_OPTIONS } from "@/features/products/lib/product-form";
 import { BarcodePreview } from "@/features/products/components/BarcodePreview";
 import { PresentationsCard } from "@/features/products/components/PresentationsCard";
+import { publicFileUrl } from "@/features/products/lib/product-images";
 import { ProductImagesCard } from "@/features/products/components/ProductImagesCard";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 
@@ -446,6 +447,60 @@ export default function ProductDetailPage() {
           imageLimit={imageLimits?.variant}
         />
       ) : null}
+
+      {/* Sub-productos / variantes (round 5, #3): copias con stock e imagen propios */}
+      <section className={`rounded-2xl ${CARD}`}>
+        <div className={CARD_HEADER}>
+          <h2 className="font-semibold text-[15px] tracking-tight text-[#111018] dark:text-slate-100">
+            Variantes
+          </h2>
+          <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-[0.14em]">
+            {(product.variants ?? []).length} sub-producto(s)
+          </span>
+        </div>
+        {(product.variants ?? []).length === 0 ? (
+          <p className="px-5 py-4 text-sm text-slate-500 dark:text-slate-400">
+            Sin variantes todavía — usá el botón Crear variante para copiar
+            este producto (tallas, colores…) con su propio stock, imagen y
+            precios.
+          </p>
+        ) : (
+          <ul className="divide-y divide-[#1b1d21]/8 dark:divide-white/5">
+            {(product.variants ?? []).map((variant) => (
+              <li key={variant.id}>
+                <a
+                  href={`/dashboard/productos/${variant.id}`}
+                  className="flex items-center gap-3 px-5 py-2.5 hover:bg-[#1a2a46]/[0.03] dark:hover:bg-white/5 transition-colors no-underline"
+                >
+                  <span className="w-9 h-9 rounded-lg overflow-hidden bg-[#1a2a46]/5 dark:bg-white/5 flex items-center justify-center shrink-0">
+                    {variant.images?.[0]?.key ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={publicFileUrl(variant.images[0].key)}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold text-[#1a2a46]/40 dark:text-white/40">
+                        {variant.name.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block text-sm font-medium text-[#111018] dark:text-slate-100 truncate">
+                      {variant.name}
+                    </span>
+                    <span className="block font-mono text-[11px] text-slate-500 dark:text-slate-400">
+                      {variant.sku} · stock {Number(variant.stock)} {variant.unit}
+                      {variant.isService ? " · servicio" : ""}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

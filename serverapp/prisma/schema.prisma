@@ -936,6 +936,7 @@ model Product {
   sku               String          // Código interno / SKU
   barcode           String?         // Código de barras
   color             String?         // Color del producto (hex o nombre, S6)
+  variantOfId       String?         // Sub-producto: copia/variante de este (round 5, #3)
   name              String
   description       String?
   costPriceUSD      Decimal         @default(0.00) @db.Decimal(14, 2)
@@ -964,6 +965,8 @@ model Product {
   presentations     ProductPresentation[]
   images            ProductImage[]
   offerLinks        OfferProduct[]
+  variantOf         Product?        @relation("ProductVariants", fields: [variantOfId], references: [id], onDelete: SetNull)
+  variants          Product[]       @relation("ProductVariants")
   purchaseItems     PurchaseItem[]
   orderItems        OrderItem[]
   saleReturnItems   SaleReturnItem[]
