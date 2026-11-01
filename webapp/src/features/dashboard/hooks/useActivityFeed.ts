@@ -49,9 +49,10 @@ export const useActivityFeed = () => {
       }
       setNextCursor(result.nextCursor);
       cursorRef.current = result.nextCursor;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching activity feed:', err);
-      setError(err?.response?.data?.message || 'Error al obtener el feed de actividad');
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || 'Error al obtener el feed de actividad');
     } finally {
       setLoading(false);
       setLoadingMore(false);

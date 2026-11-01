@@ -36,7 +36,7 @@ export interface ActionsCrud {
     icon: string;
     link: string;
     key?: string;
-    form?: any;
+    form?: Record<string, unknown>;
     action?: 'modal' | 'redirect';
 }
 
@@ -46,7 +46,7 @@ export interface ActionsCrud {
 
 export interface FieldDefinition {
   label: string;      // Clave de traducción para el título (ej: 'user.email')
-  value: any;         // El valor real del objeto (ej: user.email)
+  value: unknown;     // El valor real del objeto (ej: user.email)
   formatter?: string; // Opcional: Para usar tu helper 'formatValue' (ej: 'date')
   className?: string; // Opcional: Clases de Tailwind específicas (ej: 'text-lg font-bold')
 }
@@ -62,7 +62,7 @@ export interface CardDefinition {
 export interface RenderPieChart {
     id: string;
     title: string;
-    data: any;
+    data: Array<Record<string, unknown>>;
     keyLabel: string;
     keyValue: string;
     type?: 'doughnut' | 'pie';

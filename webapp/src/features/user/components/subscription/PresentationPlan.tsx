@@ -17,7 +17,7 @@ interface PresentationPlanProps {
 }
 
 export function PresentationPlan({ entity, Reload }: PresentationPlanProps) {
-    const { SetAutoRenew } = useUserSubscription({});
+    const { SetAutoRenew } = useUserSubscription();
     const { openModal } = useModalStore();
     const { user } = useAuthStore();
     const { t } = useTranslation();

@@ -73,12 +73,13 @@ export function UpdateUserSubscriptionModal({
       await useAuthStore.getState().refreshSession();
       closeModal();
       if (onSuccess) onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error al actualizar la suscripción del usuario:", err);
-      const errMsg =
-        err?.response?.data?.message ||
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      const errMsg: unknown =
+        raw ||
         "Ocurrió un error al actualizar la suscripción.";
-      setErrorMsg(Array.isArray(errMsg) ? errMsg[0] : errMsg);
+      setErrorMsg((Array.isArray(errMsg) ? errMsg[0] : errMsg) as string);
     } finally {
       setSubmitting(false);
     }

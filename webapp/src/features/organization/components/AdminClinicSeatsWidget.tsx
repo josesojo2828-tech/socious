@@ -31,14 +31,15 @@ export function AdminClinicSeatsWidget() {
         addToast({
           type: 'success',
           title: 'Capacidad Actualizada',
-          message: `La clínica ${selectedOrgName} ahora cuenta con ${newSeats} cupos de nutricionista.`,
+          message: `La clínica ${selectedOrgName} ahora cuenta con ${newSeats} cupos de colaborador.`,
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
       addToast({
         type: 'error',
         title: 'Error al actualizar cupos',
-        message: err?.response?.data?.message || 'No se pudo actualizar la capacidad de la organización.',
+        message: e?.response?.data?.message || 'No se pudo actualizar la capacidad de la organización.',
       });
     } finally {
       setLoading(false);
@@ -54,7 +55,7 @@ export function AdminClinicSeatsWidget() {
             Gestión Manual de Cupos por Clínica (Superadmin)
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Ajustá manualmente la capacidad de nutricionistas (`maxSeats`) para cualquier organización o cliente enterprise.
+            Ajustá manualmente la capacidad de colaboradores (`maxSeats`) para cualquier organización o cliente enterprise.
           </p>
         </div>
         <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center gap-1.5 shrink-0">

@@ -33,6 +33,31 @@ interface CountryPhoneInputProps {
   id?: string;
 }
 
+/** Extrae prefijo internacional + dígitos de un valor E.164/suelto.
+ *  `code` indefinido significa "no tocar el prefijo seleccionado". */
+function parsePhoneValue(value: string, countries: EnabledCountry[]): { code?: string; number: string } {
+  if (!value) return { number: '' };
+
+  const trimmed = value.trim();
+  if (!trimmed) return { number: '' };
+
+  // Prefijos más largos primero para matchear el más específico.
+  const sorted = [...countries].sort((a, b) => b.phoneCode.length - a.phoneCode.length);
+  const matched = sorted.find((c) => trimmed.startsWith(c.phoneCode));
+
+  if (matched) {
+    return { code: matched.phoneCode, number: trimmed.slice(matched.phoneCode.length).replace(/\D/g, '') };
+  }
+  if (trimmed.startsWith('+')) {
+    const codeMatch = trimmed.match(/^(\+\d{1,4})/);
+    if (codeMatch) {
+      return { code: codeMatch[1], number: trimmed.slice(codeMatch[1].length).replace(/\D/g, '') };
+    }
+    return { number: trimmed.replace(/\D/g, '') };
+  }
+  return { number: trimmed.replace(/\D/g, '') };
+}
+
 export default function CountryPhoneInput({
   value = '',
   onChange,
@@ -65,39 +90,18 @@ export default function CountryPhoneInput({
     };
   }, []);
 
-  // Sync internal state when prop `value` changes
-  useEffect(() => {
-    if (!value) {
-      setLocalNumber('');
-      return;
+  // Sincroniza estado interno cuando cambia la prop `value` o `countries`.
+  // Se ajusta en render (patrón de react.dev) en lugar de un effect con
+  // setState síncrono; `prevSync` null reproduce la corrida inicial al montar.
+  const [prevSync, setPrevSync] = useState<{ value: string; countries: EnabledCountry[] } | null>(null);
+  if (prevSync === null || value !== prevSync.value || countries !== prevSync.countries) {
+    setPrevSync({ value, countries });
+    const parsed = parsePhoneValue(value, countries);
+    if (parsed.code !== undefined) {
+      setSelectedPhoneCode(parsed.code);
     }
-
-    const trimmed = value.trim();
-    if (!trimmed) {
-      setLocalNumber('');
-      return;
-    }
-
-    // Sort countries by phoneCode length descending to match longer prefixes first
-    const sorted = [...countries].sort((a, b) => b.phoneCode.length - a.phoneCode.length);
-    const matched = sorted.find((c) => trimmed.startsWith(c.phoneCode));
-
-    if (matched) {
-      setSelectedPhoneCode(matched.phoneCode);
-      const numberPart = trimmed.slice(matched.phoneCode.length).replace(/\D/g, '');
-      setLocalNumber(numberPart);
-    } else if (trimmed.startsWith('+')) {
-      const codeMatch = trimmed.match(/^(\+\d{1,4})/);
-      if (codeMatch) {
-        setSelectedPhoneCode(codeMatch[1]);
-        setLocalNumber(trimmed.slice(codeMatch[1].length).replace(/\D/g, ''));
-      } else {
-        setLocalNumber(trimmed.replace(/\D/g, ''));
-      }
-    } else {
-      setLocalNumber(trimmed.replace(/\D/g, ''));
-    }
-  }, [value, countries]);
+    setLocalNumber(parsed.number);
+  }
 
   const handlePhoneCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCode = e.target.value;

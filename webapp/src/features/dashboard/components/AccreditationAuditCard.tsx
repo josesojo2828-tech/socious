@@ -82,7 +82,7 @@ export function AccreditationAuditCard({
         title: status === "VERIFIED" ? "¡Acreditación Aprobada!" : "Acreditación Rechazada",
         message:
           status === "VERIFIED"
-            ? "El nutricionista ahora luce la insignia oficial de Verificado."
+            ? "El usuario ahora luce la insignia oficial de Verificado."
             : "Se registró el rechazo con el motivo especificado.",
       });
 
@@ -90,8 +90,9 @@ export function AccreditationAuditCard({
       setRejectionReason("");
       fetchAccreditation();
       if (onStatusUpdated) onStatusUpdated();
-    } catch (err: any) {
-      const msg = err?.response?.data?.message || "Error al procesar la revisión.";
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      const msg = e?.response?.data?.message || "Error al procesar la revisión.";
       addToast({
         type: "error",
         title: "Error de auditoría",

@@ -83,8 +83,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Error sending Telegram alert via API route:", err);
-    return NextResponse.json({ success: false, error: err?.message }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

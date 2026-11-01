@@ -36,8 +36,9 @@ export function UniversityFormModal({ university, onClose, onSuccess }: Universi
         await apiClient.post("/api/universities", payload);
       }
       onSuccess();
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al guardar la universidad");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || "Error al guardar la universidad");
     } finally {
       setSaving(false);
     }

@@ -14,7 +14,7 @@ interface FetchParams {
 }
 
 export const useAdminCrud = (entity: string) => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
@@ -61,7 +61,13 @@ export const useAdminCrud = (entity: string) => {
     setError(null);
 
     try {
-      const response = await apiClient.get<any>(endpoint, {
+      const response = await apiClient.get<{
+        list?: Array<Record<string, unknown>>;
+        total?: number;
+        totalPages?: number;
+        currentPage?: number;
+        limit?: number;
+      }>(endpoint, {
         params: {
           page: params.page,
           limit: params.limit,
@@ -82,9 +88,10 @@ export const useAdminCrud = (entity: string) => {
       setTotalPages(resData.totalPages ?? 1);
       setCurrentPage(resData.currentPage ?? 1);
       setLimit(resData.limit ?? 10);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Error fetching entity ${entity}:`, err);
-      setError(err?.response?.data?.message || 'Error al conectar con el servidor');
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || 'Error al conectar con el servidor');
     } finally {
       setLoading(false);
     }

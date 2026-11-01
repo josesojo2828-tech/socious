@@ -3,7 +3,7 @@ import { FORMATTER_TYPE } from "@/types/requets";
 import { FC, ReactNode } from "react";
 
 interface ExtractValueProps {
-    object: any;
+    object: unknown;
     value: string;
     formatter?: FORMATTER_TYPE | string;
 }
@@ -16,8 +16,8 @@ export const ExtractValue: FC<ExtractValueProps> = ({ object, value, formatter }
 
     // 1. Navegamos dinámicamente sin importar cuan largo sea el path
     // Usamos ?. para evitar crash si una propiedad intermedia no existe
-    const result = value.split('.').reduce((acc, currentKey) => {
-        return acc ? acc[currentKey] : undefined;
+    const result = value.split('.').reduce((acc: unknown, currentKey: string) => {
+        return acc ? (acc as Record<string, unknown>)[currentKey] : undefined;
     }, object);
 
     // 2. Si es un Array (ej: tags), lo renderizamos como etiquetas/badges
@@ -62,10 +62,10 @@ export const ExtractValue: FC<ExtractValueProps> = ({ object, value, formatter }
         return <>{getFormattedValue(result, formatter, t)}</>;
     }
 
-    return <>{result}</>;
+    return <>{result as ReactNode}</>;
 }
 
-const getTranslatedValue = (value: any, t: (key: string) => string): string => {
+const getTranslatedValue = (value: unknown, t: (key: string) => string): string => {
     const strVal = String(value);
     const lowerVal = strVal.toLowerCase();
     
@@ -123,13 +123,13 @@ const getStatusColorClass = (value: string): string => {
     }
 };
 
-const getFormattedValue = (value: any, formatter: string, t: (key: string) => string): ReactNode => {
-    if (value === null || value === undefined) return value;
+const getFormattedValue = (value: unknown, formatter: string, t: (key: string) => string): ReactNode => {
+    if (value === null || value === undefined) return null;
 
     switch (formatter) {
         case 'date':
             // Ajusta 'es-ES' según tu i18n context si es necesario
-            return new Date(value).toLocaleDateString('es-ES', {
+            return new Date(value as string | number | Date).toLocaleDateString('es-ES', {
                 year: 'numeric', month: 'short', day: 'numeric'
             });
 
@@ -156,10 +156,10 @@ const getFormattedValue = (value: any, formatter: string, t: (key: string) => st
             return String(value).charAt(0).toUpperCase() + String(value).slice(1);
 
         case 'email':
-            return <a href={`mailto:${value}`} className="text-emerald-500 hover:underline">{value}</a>;
+            return <a href={`mailto:${value}`} className="text-emerald-500 hover:underline">{value as ReactNode}</a>;
 
         case 'username':
-            return <span className="font-semibold text-base-content">@{value}</span>;
+            return <span className="font-semibold text-base-content">@{value as ReactNode}</span>;
 
         // Casos visuales (Badges)
         case 'badge':
@@ -172,7 +172,7 @@ const getFormattedValue = (value: any, formatter: string, t: (key: string) => st
         case 'status':
         case 'status_badge':
             return (
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wide ${getStatusColorClass(value)}`}>
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wide ${getStatusColorClass(value as string)}`}>
                     {getTranslatedValue(value, t)}
                 </span>
             );
@@ -197,6 +197,6 @@ const getFormattedValue = (value: any, formatter: string, t: (key: string) => st
             );
 
         default:
-            return value;
+            return value as ReactNode;
     }
 };

@@ -20,7 +20,7 @@ export function UserPaymentMethodsSection() {
   const methods = user?.paymentMethods || [];
 
   const openPaymentMethodForm = (element: string, cb: () => void) => {
-    const handleFormSubmit = (data: any) => {
+    const handleFormSubmit = (data: unknown) => {
       SendForm({
         path: UserEndpoints.actions.createPaymentMethod(element),
         data,
@@ -115,7 +115,7 @@ export function UserPaymentMethodsSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {methods.map((method: any) => (
+            {methods.map((method) => (
               <div key={method.id} className="rounded-xl overflow-hidden border border-base-300 shadow-xs">
                 <FichaPaymentMethod
                   id={method.id}

@@ -1,6 +1,6 @@
 import type { IActivityLog } from '@/types/backend/activity.type';
 
-export type I18nFn = (path: string, params?: Record<string, string | number>) => any;
+export type I18nFn = (path: string, params?: Record<string, string | number>) => string;
 
 /**
  * Taxonomy categories emitted by the backend (`EventCategory` in

@@ -11,7 +11,7 @@ import { SelectRequest as SelectRequestConfig } from '@/types/backend/form';
 import { Spinner } from '@/shared/components/atoms/Spinner';
 import { apiClient } from '@/shared/api/api.client';
 
-interface SelectRequestProps {
+export interface SelectRequestProps {
   /** Configuración que viene del backend */
   config: SelectRequestConfig & { 
     label: string; 
@@ -73,7 +73,7 @@ export const SelectRequest = ({ config, value, onChange, error }: SelectRequestP
     const fetchSuggestions = async () => {
       setIsLoading(true);
       try {
-        const response = await apiClient.get<any>(config.path!, {
+        const response = await apiClient.get<{ list?: Array<{ label: string; value: string }> }>(config.path!, {
           params: {
             payload: config.payload,
             param: debouncedQuery

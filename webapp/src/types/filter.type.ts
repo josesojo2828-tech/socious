@@ -7,7 +7,7 @@ export type SelectOption = {
 };
 
 export interface BaseFilterOptions {
-    query?: any; // Para mantener los valores seleccionados (req.query)
+    query?: Record<string, unknown>; // Para mantener los valores seleccionados (req.query)
 }
 
 export interface FilterOption {
@@ -22,7 +22,7 @@ export interface FilterField {
     label?: string;      // Etiqueta visible (opcional)
     placeholder?: string;
     options?: FilterOption[]; // Solo para selects
-    value?: string | number | any; // El valor actual (para mantenerlo seleccionado tras recargar)
+    value?: string | number; // El valor actual (para mantenerlo seleccionado tras recargar)
     width?: string;      // Clase para el ancho (ej: 'col-span-2')
 }
 
@@ -115,7 +115,7 @@ export interface TransactionFilterOptions extends BaseFilterOptions {
 export interface UserFilterOptions {
     statusOptions?: { label: string, value: string }[];
     permitOptions?: { label: string, value: string }[];
-    query?: any; // Recibimos el @Query() del controlador para persistir los valores
+    query?: Record<string, unknown>; // Recibimos el @Query() del controlador para persistir los valores
 }
 
 

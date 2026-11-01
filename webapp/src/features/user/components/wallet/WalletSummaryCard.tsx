@@ -42,7 +42,7 @@ export const WalletSummaryCard = ({ onReportPayment }: WalletSummaryCardProps) =
     }, []);
 
     const handleReportClick = () => {
-        const callback = (param: any) => {
+        const callback = (param: unknown) => {
             closeModal();
             window.location.reload();
         };

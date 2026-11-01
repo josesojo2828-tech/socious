@@ -17,11 +17,11 @@ export default function PaymentMethodPage() {
     openModal(<FichaPaymentMethod id={id} HandleDelete={HandleDelete} HandleUpdate={HandleUpdate} />)
   }
 
-  const HandleSpecifyCreate = async (data: any, cb: () => void) => {
+  const HandleSpecifyCreate = async (data: unknown, cb: () => void) => {
     openModal(<CreateCustomPaymentMethod cb={cb} setElementToForm={(element) => OpenForm(element, cb)} />)
   }
 
-  const OpenForm = (element: any, cb: () => void) => {
+  const OpenForm = (element: string, cb: () => void) => {
     if (element === "Binance") openModal(<BinanceForm onSubmit={(data) => SendForm({ path: UserEndpoints.actions.createPaymentMethod(element), data, cb: () => { closeModal(); cb(); } })} />);
     else if (element === "PayPal") openModal(<PaypalForm onSubmit={(data) => SendForm({ path: UserEndpoints.actions.createPaymentMethod(element), data, cb: () => { closeModal(); cb(); } })} />);
     else if (element === "PagoMobil") openModal(<PagoMovilForm onSubmit={(data) => SendForm({ path: UserEndpoints.actions.createPaymentMethod(element), data, cb: () => { closeModal(); cb(); } })} />);

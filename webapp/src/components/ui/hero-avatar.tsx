@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Avatar, type AvatarMood } from "./avatar";
 import {
@@ -67,11 +67,15 @@ export function HeroAvatar({
   const [mood, setMood] = useState<AvatarMood>(propMood || initialMood);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
-  useEffect(() => {
+  // Patrón "adjust state when a prop changes" (react.dev): se compara el prop
+  // con el previo en render, sin setState dentro de un effect.
+  const [prevPropMood, setPrevPropMood] = useState(propMood);
+  if (propMood !== prevPropMood) {
+    setPrevPropMood(propMood);
     if (propMood) {
       setMood(propMood);
     }
-  }, [propMood]);
+  }
 
   const currentMsg = MOOD_MESSAGES[mood] || MOOD_MESSAGES.welcome;
 

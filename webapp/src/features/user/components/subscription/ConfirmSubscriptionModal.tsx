@@ -75,7 +75,7 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
     setSubmitting(true);
     setErrorMsg(null);
     try {
-      const payload: any = {
+      const payload: { planId: string; autoRenew: boolean; organizationId?: string } = {
         planId: plan.id,
         autoRenew: autoRenew,
       };
@@ -90,10 +90,11 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
       await useAuthStore.getState().refreshSession();
       closeModal();
       if (Reload) Reload();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error al crear suscripción:", err);
-      const errMsg = err?.response?.data?.message || "Ocurrió un error al procesar tu suscripción. Inténtalo de nuevo.";
-      setErrorMsg(Array.isArray(errMsg) ? errMsg[0] : errMsg);
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      const errMsg: unknown = raw || "Ocurrió un error al procesar tu suscripción. Inténtalo de nuevo.";
+      setErrorMsg((Array.isArray(errMsg) ? errMsg[0] : errMsg) as string);
     } finally {
       setSubmitting(false);
     }

@@ -1,29 +1,25 @@
 'use client';
 
-import { DefTable } from '@/types/backend/table.type';
+import { DefTable, TableRow } from '@/types/backend/table.type';
 import { Table } from '@/shared/components/organisms/Table';
-import { Button } from '@/shared/components/atoms/Button';
-import { useTranslation } from '@/context/i18n.context';
-import { Pagination } from '../../molecules/Pagination';
-import { Plus, Search } from 'lucide-react';
-import { useState, ReactNode } from 'react';
-import { ActionsType } from '@/types/requets';
 import { useModalStore } from '@/shared/store/ui/useModalStore';
 import NoResults from '../crud/NotResultFound';
+import { ActionsType } from '@/types/requets';
+import type { ReactNode } from 'react';
 
-interface DynamicTableProps {
-  tableDef: DefTable;
-  onAction?: (actionKey: string, item: any) => void;
+interface DynamicTableProps<T> {
+  tableDef: DefTable<T>;
+  onAction?: (actionKey: string, item: T) => void;
   actions: ActionsType;
   isLoading?: boolean;
 
-  renderCell?: (field: string, entity: any) => ReactNode | undefined;
+  renderCell?: (field: string, entity: T) => ReactNode | undefined;
 
   /** Extra action buttons rendered in each row's actions column */
-  extraActions?: (item: any, openModal: (view: ReactNode) => void) => ReactNode;
+  extraActions?: (item: T, openModal: (view: ReactNode) => void) => ReactNode;
 
   // Handlers
-  handleAction?: (actionKey: string, item: any) => void;
+  handleAction?: (actionKey: string, item: T) => void;
   handleSearch?: (search: string) => void;
   handleCreate?: () => void;
 
@@ -33,11 +29,9 @@ interface DynamicTableProps {
   handleChangePage?: (page: number) => void;
 }
 
-export const DynamicTable = ({ handleCreate, tableDef, actions, isLoading, handleChangePage, handleNext, handlePrev, handleAction, handleSearch, renderCell, extraActions }: DynamicTableProps) => {
+export const DynamicTable = <T,>({ tableDef, actions, isLoading, handleChangePage, handleNext, handlePrev, handleAction, handleSearch, renderCell, extraActions }: DynamicTableProps<T>) => {
 
-  // const { t } = useTranslation();
-  const [search, setSearch] = useState('');
-  const { closeModal, openModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   return (
     <div>
@@ -50,8 +44,7 @@ export const DynamicTable = ({ handleCreate, tableDef, actions, isLoading, handl
         <Table
           data={tableDef.list}
           columns={tableDef.columns}
-          keyExtractor={(item) => item.id}
-          zebra
+          keyExtractor={(item) => (item as unknown as TableRow).id}
           onRowClick={() => {}}
           onAction={handleAction}
           actions={actions}

@@ -70,8 +70,9 @@ export function PermitDetailModal({ permit, groups, onClose, onSuccess }: Permit
         list: Array.from(selected),
       });
       onSuccess();
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al guardar los cambios");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || "Error al guardar los cambios");
     } finally {
       setSaving(false);
     }
@@ -82,8 +83,9 @@ export function PermitDetailModal({ permit, groups, onClose, onSuccess }: Permit
     try {
       await apiClient.delete(`/api/permit/${permit.id}`);
       onSuccess();
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al eliminar el rol");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || "Error al eliminar el rol");
       setSaving(false);
     }
   };

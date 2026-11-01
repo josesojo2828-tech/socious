@@ -78,8 +78,9 @@ export function PermitFormModal({ permit, groups, onClose, onSuccess }: PermitFo
         await apiClient.post("/api/permit", payload);
       }
       onSuccess();
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al guardar el rol");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || "Error al guardar el rol");
     } finally {
       setSaving(false);
     }
@@ -114,7 +115,7 @@ export function PermitFormModal({ permit, groups, onClose, onSuccess }: PermitFo
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ej: Nutricionista Senior"
+            placeholder="Ej: Administrador Senior"
             className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm text-slate-800"
           />
         </div>

@@ -26,8 +26,8 @@ const REGISTER_DIR = path.dirname(fileURLToPath(import.meta.url));
 const readRepoFile = (...segments: string[]): string =>
   readFileSync(path.join(REGISTER_DIR, ...segments), 'utf8');
 
-const esForm = JSON.parse(readRepoFile('..', '..', 'i18n', 'es', 'form.json')) as Record<string, any>;
-const notEnForm = JSON.parse(readRepoFile('..', '..', 'i18n', 'not_en', 'form.json')) as Record<string, any>;
+const esForm = JSON.parse(readRepoFile('..', '..', 'i18n', 'es', 'form.json')) as Record<string, unknown>;
+const notEnForm = JSON.parse(readRepoFile('..', '..', 'i18n', 'not_en', 'form.json')) as Record<string, unknown>;
 
 const KEY_PATH = 'form.labels.birth_date';
 const KEY_SEGMENTS = ['labels', 'birth_date'];
@@ -37,22 +37,22 @@ const KEY_SEGMENTS = ['labels', 'birth_date'];
  * busca en el idioma activo, luego en `es`, y si no encuentra la clave
  * devuelve el PATH original (que es exactamente el bug reportado).
  */
-const RESOURCES: Record<string, Record<string, any>> = {
+const RESOURCES: Record<string, Record<string, unknown>> = {
   es: { form: esForm },
   not_en: { form: notEnForm },
 };
 
-const resolveIn = (resource: Record<string, any> | undefined, keyPath: string): string | undefined => {
+const resolveIn = (resource: Record<string, unknown> | undefined, keyPath: string): string | undefined => {
   if (!resource) return undefined;
 
   const [fileName, ...keys] = keyPath.split('.');
-  let value: any = resource[fileName];
+  let value: unknown = resource[fileName];
 
   for (const key of keys) {
-    if (value === undefined || value === null || value[key] === undefined) {
+    if (value === undefined || value === null || (value as Record<string, unknown>)[key] === undefined) {
       return undefined;
     }
-    value = value[key];
+    value = (value as Record<string, unknown>)[key];
   }
 
   return typeof value === 'string' ? value : undefined;
@@ -63,13 +63,13 @@ const translate = (language: string, keyPath: string): string =>
 
 describe('register — guardián de la clave form.labels.birth_date', () => {
   it('la locale es define form.labels.birth_date', () => {
-    const label = esForm?.labels?.birth_date;
+    const label = resolveIn(RESOURCES.es, KEY_PATH);
     expect(typeof label).toBe('string');
     expect(label?.trim().length).toBeGreaterThan(0);
   });
 
   it('la locale not_en define form.labels.birth_date', () => {
-    const label = notEnForm?.labels?.birth_date;
+    const label = resolveIn(RESOURCES.not_en, KEY_PATH);
     expect(typeof label).toBe('string');
     expect(label?.trim().length).toBeGreaterThan(0);
   });

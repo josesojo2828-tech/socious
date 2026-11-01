@@ -1,11 +1,12 @@
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { AlertTriangle, CheckCircle, Info, Trash2 } from "lucide-react";
-import { NotificationItemModal } from "./modal/NotificationItemModal";
+import type { MouseEvent } from "react";
+import { NotificationItemModal, type NotificationView } from "./modal/NotificationItemModal";
 import { Button } from "@/shared/components/atoms/Button";
 import { Text } from "@/shared/components/atoms/Text";
 
 interface ItemNotificationProps {
-    notif: any,
+    notif: NotificationView,
     markAsRead: (id: string) => void,
 }
 
@@ -13,7 +14,7 @@ export function ItemNotification({ notif, markAsRead }: ItemNotificationProps) {
 
     const { openModal } = useModalStore();
 
-    const deleteNotification = (id: number, e: any) => {
+    const deleteNotification = (id: number, e: MouseEvent) => {
         // e.stopPropagation();
         // setNotifications(notifications.filter(n => n.id !== id));
     };

@@ -96,8 +96,9 @@ export default function ResetPasswordPage() {
         message: "Ya puedes iniciar sesión con tu nueva contraseña.",
       });
       setTimeout(() => router.push("/login"), 2000);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al restablecer la contraseña. Verifica el código.");
+    } catch (err: unknown) {
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      setError((Array.isArray(raw) ? raw[0] : raw) as string || "Error al restablecer la contraseña. Verifica el código.");
     } finally {
       setIsLoading(false);
     }

@@ -2,7 +2,7 @@ import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 
 interface ReportErrorParams {
   error: Error | string;
-  errorInfo?: Record<string, any>;
+  errorInfo?: Record<string, unknown>;
   source?: string;
 }
 

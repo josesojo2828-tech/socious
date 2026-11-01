@@ -34,8 +34,9 @@ export default function ForgotPasswordPage() {
     try {
       await apiClient.post("/api/auth/forgot-password", { email });
       setStep("sent");
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Error al enviar el código de recuperación.");
+    } catch (err: unknown) {
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      setError((Array.isArray(raw) ? raw[0] : raw) as string || "Error al enviar el código de recuperación.");
     } finally {
       setIsLoading(false);
     }

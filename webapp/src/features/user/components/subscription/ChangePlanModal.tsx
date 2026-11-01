@@ -5,7 +5,7 @@ import { useModalStore } from '@/shared/store/ui/useModalStore';
 import { useAuthStore } from '@/shared/store/auth/useAuthStore';
 import { apiClient } from '@/shared/api/api.client';
 import { SubscriptionPlanEndpoints } from '@/features/subscription/services/subscription.endpoints';
-import { SubscriptionPlan } from '@/types/backend/schema.types';
+import { SubscriptionPlan, User } from '@/types/backend/schema.types';
 import { Shield, Check, Loader2, ArrowUpCircle, AlertTriangle, Wallet, DollarSign, Calendar, Clock } from 'lucide-react';
 import { Button } from '@/shared/components/atoms/Button';
 
@@ -43,7 +43,9 @@ export function ChangePlanModal({ currentPlanId, onSuccess }: ChangePlanModalPro
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
 
-  const walletBalance = Number(user?.wallet?.balance ?? (user as any)?.walletBalance ?? 0);
+  // La sesión legada puede traer `walletBalance` plano en lugar de `wallet.balance`.
+  const legacyUser = user as (User & { walletBalance?: number }) | null;
+  const walletBalance = Number(user?.wallet?.balance ?? legacyUser?.walletBalance ?? 0);
 
   // 1. Fetch available plans on mount
   useEffect(() => {
@@ -87,11 +89,12 @@ export function ChangePlanModal({ currentPlanId, onSuccess }: ChangePlanModalPro
         if (!active) return;
         setPreviewData(res.data?.data || res.data);
       })
-      .catch((err: any) => {
+      .catch((err: unknown) => {
         if (!active) return;
         console.error('Error al calcular prorrateo:', err);
-        const msg = err?.response?.data?.message || 'Error al obtener la vista previa del cambio de plan.';
-        setPreviewError(Array.isArray(msg) ? msg[0] : msg);
+        const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+        const msg: unknown = raw || 'Error al obtener la vista previa del cambio de plan.';
+        setPreviewError((Array.isArray(msg) ? msg[0] : msg) as string);
       })
       .finally(() => {
         if (active) setPreviewLoading(false);
@@ -126,10 +129,11 @@ export function ChangePlanModal({ currentPlanId, onSuccess }: ChangePlanModalPro
       await useAuthStore.getState().refreshSession();
       closeModal();
       if (onSuccess) onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error al cambiar de plan:', err);
-      const msg = err?.response?.data?.message || 'Ocurrió un error al procesar el cambio de plan.';
-      setSubmitError(Array.isArray(msg) ? msg[0] : msg);
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      const msg: unknown = raw || 'Ocurrió un error al procesar el cambio de plan.';
+      setSubmitError((Array.isArray(msg) ? msg[0] : msg) as string);
     } finally {
       setSubmitting(false);
     }

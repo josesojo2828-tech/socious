@@ -2,7 +2,7 @@
 export interface RenderPieChartDto {
     title: string;
     type: 'pie' | 'doughnut';
-    data: any[];
+    data: Array<Record<string, unknown>>;
     keyLabel: string;
     keyValue: string;
 }

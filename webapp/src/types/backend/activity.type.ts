@@ -5,7 +5,7 @@ export interface IActivityLog {
   description?: string | null;
   ipAddress?: string | null;
   userAgent?: string | null;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   /** Taxonomy event name; `null` on legacy/fallback rows. */
   eventName?: string | null;
   /** Taxonomy category (e.g. `clinical`, `auth.session`); `null` on legacy rows. */

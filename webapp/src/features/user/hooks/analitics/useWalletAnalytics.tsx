@@ -1,5 +1,6 @@
 import { apiClient } from '@/shared/api/api.client';
 import { useEffect, useState } from 'react';
+import type { BarChartDataDto, WalletMetricsDto } from '@/types/backend/user-analitics';
 
 export interface MonthlyHistoryData {
     title: string;
@@ -13,7 +14,7 @@ export interface MonthlyHistoryData {
 
 export interface StatusChartData {
     title: string;
-    type: string;
+    type: 'pie' | 'doughnut';
     keyLabel: string;
     keyValue: string;
     data: { status: string; count: number }[];
@@ -23,13 +24,13 @@ export interface StatusChartData {
 interface AsyncState<T> {
     data: T | null;
     loading: boolean;
-    error: any;
+    error: unknown;
 }
 
 export const useWalletAnalytics = () => {
     // Estado para Gráfico de Volumen
-    const [volumeChart, setVolumeChart] = useState({ data: null, loading: true, error: null });
-    const [wallet, setWallet] = useState<AsyncState<any>>({ data: null, loading: true, error: null });
+    const [volumeChart, setVolumeChart] = useState<AsyncState<BarChartDataDto>>({ data: null, loading: true, error: null });
+    const [wallet, setWallet] = useState<AsyncState<WalletMetricsDto>>({ data: null, loading: true, error: null });
 
     // 2. Aquí aplicamos el tipado correcto <AsyncState<MonthlyHistoryData>>
     const [monthlyHistory, setMonthlyHistory] = useState<AsyncState<MonthlyHistoryData>>({
@@ -50,7 +51,7 @@ export const useWalletAnalytics = () => {
             try {
                 const response = await apiClient.get('/api/user/analytics/dashboard/wallet');
                 setWallet({ data: response.data.data, loading: false, error: null });
-            } catch (error: any) {
+            } catch (error) {
                 setWallet({ data: null, loading: false, error: error });
             }
         };
@@ -59,7 +60,7 @@ export const useWalletAnalytics = () => {
             try {
                 const response = await apiClient.get('/api/user/analytics/charts/transactions-volume');
                 setVolumeChart({ data: response.data.data, loading: false, error: null });
-            } catch (error: any) {
+            } catch (error) {
                 setVolumeChart({ data: null, loading: false, error: error });
             }
         };
@@ -68,7 +69,7 @@ export const useWalletAnalytics = () => {
             try {
                 const response = await apiClient.get('/api/user/analytics/charts/monthly-history');
                 setMonthlyHistory({ data: response.data.data, loading: false, error: null });
-            } catch (error: any) {
+            } catch (error) {
                 setMonthlyHistory({ data: null, loading: false, error: error });
             }
         };
@@ -77,7 +78,7 @@ export const useWalletAnalytics = () => {
             try {
                 const response = await apiClient.get('/api/user/analytics/charts/status-distribution');
                 setStatusChart({ data: response.data.data, loading: false, error: null });
-            } catch (error: any) {
+            } catch (error) {
                 setStatusChart({ data: null, loading: false, error: error });
             }
         };

@@ -4,23 +4,25 @@ import { apiClient } from "@/shared/api/api.client";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { User } from "@/types/backend/schema.types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const useLocationUser = (user: User | null) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [location, setLocation] = useState<{ lat: number, lng: number } | null>(null);
 
-    useEffect(() => {
+    // Patrón "adjust state when a prop changes" (react.dev): se refleja el
+    // perfil del usuario en `location` comparando el usuario previo en render,
+    // sin setState dentro de un effect. `undefined` inicial reproduce la
+    // primera corrida del effect al montar.
+    const [prevUser, setPrevUser] = useState<User | null | undefined>(undefined);
+    if (user !== prevUser) {
+        setPrevUser(user);
         if (user && user.nutritionistProfile) {
             const { lat, lng } = user.nutritionistProfile;
-            if (typeof lat === 'number' && typeof lng === 'number') {
-                setLocation({ lat, lng });
-            } else {
-                setLocation(null);
-            }
+            setLocation(typeof lat === 'number' && typeof lng === 'number' ? { lat, lng } : null);
         }
-    }, [user])
+    }
 
     const { addToast } = useToastStore();
 

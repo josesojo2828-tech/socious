@@ -21,8 +21,10 @@ export function FichaPaymentMethod({ id, HandleDelete, HandleUpdate }: FichaPaym
 
     const getMetaInfo = () => {
         try {
-            const details = entity?.details as any;
-            const innerDetails = details?.dateails || details?.details || details || {};
+            // `details` es JSON libre; los campos se leen como string con
+            // fallbacks, conservando el runtime anterior.
+            const details = entity?.details as Record<string, unknown> | undefined;
+            const innerDetails = (details?.dateails || details?.details || details || {}) as Record<string, string | undefined>;
             const code = entity?.paymentMethod?.code;
 
             if (code === 'CARD') {

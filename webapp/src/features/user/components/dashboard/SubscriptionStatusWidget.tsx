@@ -48,9 +48,12 @@ export function SubscriptionStatusWidget() {
             await apiClient.post('/api/user/subscription/renew-now');
             await useWorkspaceStore.getState().fetchWorkspaces();
             await useAuthStore.getState().refreshSession();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error al renovar suscripción:', err);
-            const msg = err?.response?.data?.message || err?.message || 'Error al intentar renovar la suscripción.';
+            const responseMessage = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+            const msg = (Array.isArray(responseMessage) ? responseMessage[0] : responseMessage) as string ||
+                (err instanceof Error ? err.message : null) ||
+                'Error al intentar renovar la suscripción.';
             setErrorMsg(msg);
         } finally {
             setLoading(false);

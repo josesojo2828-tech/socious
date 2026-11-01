@@ -1,6 +1,7 @@
 import { CreditCard, Plus } from "lucide-react";
+import type { IPaymentMethod } from "@/types/backend/schema.types";
 
-export const AddMethodButton = ({ method }: { method: any }) => (
+export const AddMethodButton = ({ method }: { method: Pick<IPaymentMethod, 'code' | 'name' | 'description'> }) => (
     <button className="flex items-center gap-4 p-4 w-full bg-base-100 border border-base-200 rounded-xl hover:border-primary/50 hover:shadow-md transition-all text-left group">
         <div
             className="w-12 h-12 rounded-full flex items-center justify-center bg-base-200 text-base-content group-hover:bg-primary group-hover:text-primary-content transition-colors shrink-0"

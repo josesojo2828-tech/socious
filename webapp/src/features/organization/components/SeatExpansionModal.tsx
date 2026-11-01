@@ -6,7 +6,7 @@ import { useToastStore } from '@/shared/store/ui/useToastStore';
 import { organizationService } from '../services/organization.service';
 import { CLINIC_BILLING_CONFIG } from '../config/billing.config';
 
-const SEAT_UNIT_PRICE = CLINIC_BILLING_CONFIG.extraSeatPrice; // USD / mes por nutricionista adicional
+const SEAT_UNIT_PRICE = CLINIC_BILLING_CONFIG.extraSeatPrice; // USD / mes por colaborador adicional
 
 interface SeatExpansionModalProps {
   orgId: string;
@@ -43,16 +43,17 @@ export function SeatExpansionModal({
         addToast({
           type: 'success',
           title: '¡Capacidad Ampliada!',
-          message: `Se agregaron ${additionalSeats} cupos adicionales. Nueva capacidad: ${newCapacity} nutricionistas. Se cobrará en tu próxima renovación.`,
+          message: `Se agregaron ${additionalSeats} cupos adicionales. Nueva capacidad: ${newCapacity} colaboradores. Se cobrará en tu próxima renovación.`,
         });
         if (onSuccess) onSuccess(newCapacity);
         onClose();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
       addToast({
         type: 'error',
         title: 'Error al actualizar capacidad',
-        message: err?.response?.data?.message || 'No se pudo completar el aumento de capacidad.',
+        message: e?.response?.data?.message || 'No se pudo completar el aumento de capacidad.',
       });
     } finally {
       setLoading(false);
@@ -85,7 +86,7 @@ export function SeatExpansionModal({
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Agrega más licencias para nutricionistas a tu clínica en tiempo real.
+                Agrega más licencias para colaboradores a tu clínica en tiempo real.
               </p>
             </div>
           </div>

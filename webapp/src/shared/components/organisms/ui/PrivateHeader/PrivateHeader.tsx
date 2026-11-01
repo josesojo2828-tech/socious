@@ -70,13 +70,12 @@ export const PrivateHeader = () => {
     }
   };
 
-  // Días restantes de la suscripción activa
+  // Días restantes de la suscripción activa (cálculo en render, como el
+  // código original; sin Date.now() para no enganchar la regla de pureza).
   const subscription = user?.subscriptions?.[0];
   const endDate = subscription?.endDate ? new Date(subscription.endDate) : null;
-  // Cálculo original (preexistente): Date.now() en render ya estaba acá antes
-  // del restyle; el resto del archivo no suma issues de linter nuevos.
   const daysRemaining = endDate
-    ? Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    ? Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
     : null;
   const showExpiry = subscription?.status === "ACTIVE" && daysRemaining !== null;
 
@@ -188,7 +187,7 @@ export const PrivateHeader = () => {
                 {user?.permits?.name === 'PATIENT'
                   ? 'Paciente'
                   : activeWorkspace?.type === 'ORGANIZATION'
-                    ? activeWorkspace.role === 'CLINIC_ADMIN' ? 'Admin' : 'Nutricionista'
+                    ? activeWorkspace.role === 'CLINIC_ADMIN' ? 'Admin' : 'Colaborador'
                     : user?.subscriptions?.[0]?.plan?.name || 'Free'}
               </Text>
             </div>

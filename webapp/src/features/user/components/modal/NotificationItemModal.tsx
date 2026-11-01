@@ -10,8 +10,23 @@ import { Text } from "@/shared/components/atoms/Text";
 
 import { useNotifications } from '@/features/user/hooks/useNotifications';
 
+/** Vista de notificación que consumen ItemNotification y este modal.
+ *  La API entrega `Notification` de schema.types (asignable a este shape);
+ *  `time` es display-only y puede faltar. */
+export interface NotificationView {
+    id: string;
+    title: string;
+    message: string;
+    type: string;
+    read: boolean;
+    entityId?: string | null;
+    entityType?: string | null;
+    createdAt?: string | Date | null;
+    time?: string;
+}
+
 interface NotificationItemModalProps {
-    notification: any;
+    notification: NotificationView;
     markAsRead: (id: string) => void;
 }
 
@@ -52,12 +67,13 @@ export function NotificationItemModal({ notification, markAsRead }: Notification
             if (accept) {
                 router.push(`/dashboard/institutional/${notification.entityId}`);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
+            const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
             addToast({
                 type: 'error',
                 title: 'Error',
-                message: err?.response?.data?.message || 'No se pudo procesar la respuesta.',
+                message: (Array.isArray(raw) ? raw[0] : raw) as string || 'No se pudo procesar la respuesta.',
             });
         } finally {
             setIsResponding(false);
@@ -88,12 +104,13 @@ export function NotificationItemModal({ notification, markAsRead }: Notification
             if (accept) {
                 router.push('/dashboard');
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
+            const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
             addToast({
                 type: 'error',
                 title: 'Error',
-                message: err?.response?.data?.message || 'No se pudo procesar la respuesta.',
+                message: (Array.isArray(raw) ? raw[0] : raw) as string || 'No se pudo procesar la respuesta.',
             });
         } finally {
             setIsResponding(false);

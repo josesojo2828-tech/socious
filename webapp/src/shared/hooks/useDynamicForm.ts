@@ -15,7 +15,7 @@ interface UseDynamicFormProps {
     onSuccessRedirect?: string;
 
     /** Callback opcional para ejecutar algo extra al terminar (ej: cerrar un modal) */
-    onSuccess?: (data: any) => void;
+    onSuccess?: (data: unknown) => void;
 }
 
 export function useDynamicForm({ endpoint, onSuccessRedirect, onSuccess }: UseDynamicFormProps) {
@@ -43,7 +43,7 @@ export function useDynamicForm({ endpoint, onSuccessRedirect, onSuccess }: UseDy
 
     // 2. Envío Genérico con Mutation
     const mutation = useMutation({
-        mutationFn: async (formData: any) => {
+        mutationFn: async (formData: unknown) => {
             if (!formStructure) throw new Error("Form structure not loaded");
 
             const { data } = await apiClient.request({
@@ -66,9 +66,10 @@ export function useDynamicForm({ endpoint, onSuccessRedirect, onSuccess }: UseDy
                 router.push(onSuccessRedirect);
             }
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             console.error("Error submitting form:", error);
-            const msg = error.response?.data?.message || 'Hubo un problema al guardar los datos.';
+            const err = error as { response?: { data?: { message?: string } }; message?: string };
+            const msg = err?.response?.data?.message || 'Hubo un problema al guardar los datos.';
 
             addToast({
                 type: 'error',
@@ -78,7 +79,7 @@ export function useDynamicForm({ endpoint, onSuccessRedirect, onSuccess }: UseDy
         }
     });
 
-    const submitForm = useCallback((formData: any) => {
+    const submitForm = useCallback((formData: unknown) => {
         mutation.mutate(formData);
     }, [mutation]);
 

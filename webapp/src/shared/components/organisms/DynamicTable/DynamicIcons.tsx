@@ -1,4 +1,4 @@
-import { icons } from 'lucide-react';
+import { icons, HelpCircle } from 'lucide-react';
 import { FC } from 'react';
 
 // 1. Extraemos dinámicamente los nombres de los iconos validos de Lucide
@@ -31,7 +31,7 @@ export const DynamicIcon: FC<DynamicIconProps> = ({
     if (!LucideIcon) {
         console.warn(`DynamicIcon: El icono '${name}' no existe en lucide-react.`);
         // Retorna un icono por defecto o null
-        const FallbackIcon = (icons as any).HelpCircle;
+        const FallbackIcon = HelpCircle;
         return <FallbackIcon size={size} color="gray" className={className} />;
     }
 

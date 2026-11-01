@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Skeleton } from "../../atoms/Skeleton";
-import { Spinner } from "../../atoms/Spinner";
 import { FormSkeleton } from "./FormSkeleton";
 import { GetFormByPath } from "@/shared/service/form.service";
-import { Form } from "@/types/backend/form";
+import { Form, FormElement } from "@/types/backend/form";
 import { DynamicForm } from "./DynamicForm";
 import { useHandleForm } from "@/shared/hooks/useHandlerForm";
 
@@ -13,7 +11,7 @@ import { FormErrorBoundary } from "./FormErrorBoundary";
 
 interface DynamicRenderFormProps {
     path: string;
-    cb: (param: any) => void;
+    cb: (param: unknown) => void;
     pathSend?: string;
 }
 
@@ -46,14 +44,14 @@ export function DynamicRenderForm({ path, cb, pathSend }: DynamicRenderFormProps
         };
     }, [path]);
 
-    const callback = (data: any) => {
+    const callback = (data: unknown) => {
         cb(data);
     };
 
-    const cleanAndTransformPayload = (payloadData: any, elements: any[]) => {
+    const cleanAndTransformPayload = (payloadData: Record<string, unknown>, elements: FormElement[]) => {
         const cleaned = { ...payloadData };
         
-        const traverse = (els: any[]) => {
+        const traverse = (els: FormElement[]) => {
             els.forEach(el => {
                 if ('elements' in el) {
                     traverse(el.elements);
@@ -68,7 +66,7 @@ export function DynamicRenderForm({ path, cb, pathSend }: DynamicRenderFormProps
                     }
                     
                     // 2. Convertir campos numéricos a números
-                    if (el.type === 'number' || el.controlType === 'number') {
+                    if (('type' in el && el.type === 'number') || (el.controlType as string) === 'number') {
                         const num = Number(val);
                         if (!isNaN(num)) {
                             cleaned[name] = num;
@@ -84,7 +82,7 @@ export function DynamicRenderForm({ path, cb, pathSend }: DynamicRenderFormProps
         return cleaned;
     };
 
-    const HabdleSubmit = (data: any) => {
+    const HabdleSubmit = (data: Record<string, unknown>) => {
         if (form) {
             const cleanedData = cleanAndTransformPayload(data, form.inputs);
             SendForm({

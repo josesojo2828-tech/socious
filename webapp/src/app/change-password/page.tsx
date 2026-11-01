@@ -71,10 +71,11 @@ export default function ChangePasswordPage() {
         try {
             await changePassword(oldPassword, newPassword);
             router.push("/dashboard");
-        } catch (err: any) {
+        } catch (err: unknown) {
+            const responseMessage = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
             const message =
-                err?.response?.data?.message ||
-                err?.message ||
+                (Array.isArray(responseMessage) ? responseMessage[0] : responseMessage) as string ||
+                (err instanceof Error ? err.message : null) ||
                 "Error al cambiar la contraseña";
             setError(message);
         } finally {

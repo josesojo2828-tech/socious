@@ -11,13 +11,14 @@ export default function AcceptInvitePage() {
   const router = useRouter();
   const token = searchParams.get('token');
 
-  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'no-token'>('loading');
+  // Estado inicial derivado del token (patrón "you might not need an effect"
+  // para sincronizar con props): sin token no hay nada que procesar.
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'no-token'>(token ? 'loading' : 'no-token');
   const [clinicName, setClinicName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (!token) {
-      setStatus('no-token');
       return;
     }
 

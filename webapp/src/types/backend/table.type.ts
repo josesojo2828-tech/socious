@@ -12,10 +12,16 @@ export interface Column {
 }
 
 // ---------------------- TABLES ---------------------- //
-export interface DefTable {
+/**
+ * A table row as served by the CRUD list endpoints: an object with dynamic
+ * columns plus the `id` used for row keys and actions.
+ */
+export type TableRow = Record<string, unknown> & { id: string | number };
+
+export interface DefTable<T = TableRow> {
     title: string,
     total: number,
-    list: any[],
+    list: T[],
     columns: Column[],
     limit: number,
     currentPage: number,

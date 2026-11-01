@@ -36,7 +36,7 @@ export function UserWalletSection() {
           Información de Transacciones
         </h3>
         <p className="text-xs text-base-content/70 leading-relaxed">
-          Los fondos recargados en tu billetera te permiten renovar tu suscripción a Nutringest, agregar licencias para nutricionistas adicionales y contratar servicios enterprise de forma automática sin interrupción.
+          Los fondos recargados en tu billetera te permiten renovar tu suscripción a Nutringest, agregar licencias para usuarios adicionales y contratar servicios enterprise de forma automática sin interrupción.
         </p>
       </div>
     </div>

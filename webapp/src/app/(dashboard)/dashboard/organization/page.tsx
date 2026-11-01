@@ -13,7 +13,8 @@ interface Member {
   userId: string;
   role: string;
   colorHex: string;
-  status: string;
+  /** El endpoint puede omitirlo; se trata como inactivo. */
+  status?: string;
   user: {
     id: string;
     firstName: string;
@@ -35,7 +36,7 @@ function NutritionistTeamView() {
     setIsLoading(true);
     try {
       const data = await organizationService.getClinicDetails(targetOrgWorkspace.id);
-      setMembers((data as any)?.members || []);
+      setMembers(data.members || []);
     } catch (e) {
       console.error('Error al cargar equipo:', e);
     } finally {
@@ -69,7 +70,7 @@ function NutritionistTeamView() {
           <h1 className="text-2xl font-bold">Equipo de la Clínica</h1>
         </div>
         <p className="text-indigo-100 text-sm">
-          Nutricionistas que forman parte de {targetOrgWorkspace.name}
+          Miembros que forman parte de {targetOrgWorkspace.name}
         </p>
       </div>
 

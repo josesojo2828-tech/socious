@@ -60,7 +60,7 @@ export const ClinicManagementPage: React.FC = () => {
     setIsLoading(true);
     try {
       const data = await organizationService.getClinicDetails(targetOrgWorkspace.id);
-      setClinic(data as any);
+      setClinic(data as unknown as ClinicDetails);
     } catch (e) {
       console.error('Error al cargar la clínica:', e);
     } finally {
@@ -87,7 +87,7 @@ export const ClinicManagementPage: React.FC = () => {
         };
       });
     } catch (e) {
-      console.error('Error al cambiar el color del nutricionista:', e);
+      console.error('Error al cambiar el color del colaborador:', e);
     }
   };
 
@@ -103,8 +103,9 @@ export const ClinicManagementPage: React.FC = () => {
       setInviteEmail('');
       setIsInviteModalOpen(false);
       fetchClinicDetails();
-    } catch (err: any) {
-      setInviteError(err.response?.data?.message || 'Error al invitar al profesional');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setInviteError(e?.response?.data?.message || 'Error al invitar al profesional');
     }
   };
 
@@ -116,8 +117,9 @@ export const ClinicManagementPage: React.FC = () => {
     try {
       await apiClient.delete(`/api/organizations/${clinic.id}/members/${member.id}`);
       fetchClinicDetails();
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Error al eliminar al profesional');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      alert(e?.response?.data?.message || 'Error al eliminar al profesional');
     }
   };
 
@@ -134,7 +136,7 @@ export const ClinicManagementPage: React.FC = () => {
         </div>
         <h2 className="text-xl font-bold text-slate-900">Gestión de Clínica B2B</h2>
         <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-          Actualmente estás en el contexto <strong className="text-slate-700 font-semibold">"Consulta Personal"</strong>. Seleccioná una clínica en el desplegable superior de workspaces para gestionar los nutricionistas y la agenda compartida.
+          Actualmente estás en el contexto <strong className="text-slate-700 font-semibold">«Consulta Personal»</strong>. Seleccioná una clínica en el desplegable superior de workspaces para gestionar los colaboradores y la agenda compartida.
         </p>
       </div>
     );
@@ -165,7 +167,7 @@ export const ClinicManagementPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Gestión de nutricionistas, asignación de colores de agenda y ficha operativa.
+                Gestión de colaboradores, asignación de colores de agenda y ficha operativa.
               </p>
             </div>
           </div>
@@ -173,7 +175,7 @@ export const ClinicManagementPage: React.FC = () => {
           {/* Seat Capacity Gauge */}
           <div className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl min-w-[240px] space-y-2">
             <div className="flex justify-between items-center text-xs font-bold">
-              <span className="text-slate-500">Cupos de Nutris:</span>
+              <span className="text-slate-500">Cupos del Equipo:</span>
               <span className="text-slate-900 font-extrabold">{activeSeats} / {maxSeats}</span>
             </div>
             <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
@@ -211,7 +213,7 @@ export const ClinicManagementPage: React.FC = () => {
           }`}
         >
           <CalendarIcon className="w-4 h-4" />
-          Agenda Coloreada Multi-Nutri
+          Agenda Coloreada del Equipo
         </button>
 
         <button
@@ -235,7 +237,7 @@ export const ClinicManagementPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Nutricionistas y Personal de la Clínica
+                Colaboradores y Personal de la Clínica
               </h3>
               <p className="text-xs text-slate-500">
                 Visualizá el perfil operativo, asigná colores para el calendario y gestioná el equipo.
@@ -248,7 +250,7 @@ export const ClinicManagementPage: React.FC = () => {
               className="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
-              Invitar Nutricionista ({activeSeats}/{maxSeats})
+              Invitar Colaborador ({activeSeats}/{maxSeats})
             </button>
           </div>
 
@@ -291,7 +293,7 @@ export const ClinicManagementPage: React.FC = () => {
                             ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                             : 'bg-slate-100 text-slate-700 border border-slate-200'
                         }`}>
-                          {m.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Nutricionista'}
+                          {m.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Colaborador'}
                         </span>
                       </td>
 
@@ -348,7 +350,7 @@ export const ClinicManagementPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="w-full max-w-2xl bg-base-100 text-base-content rounded-3xl border border-base-300 shadow-2xl p-6 sm:p-8 space-y-4 max-h-[85vh] overflow-y-auto">
             <h3 className="text-lg font-extrabold text-base-content">
-              Invitar Nutricionista a la Clínica
+              Invitar Colaborador a la Clínica
             </h3>
             <p className="text-xs text-base-content/70 leading-relaxed">
               El profesional recibirá acceso a los pacientes y agenda de la clínica manteniendo su cuenta personal independiente.
@@ -368,7 +370,7 @@ export const ClinicManagementPage: React.FC = () => {
                 <input
                   type="email"
                   required
-                  placeholder="nutricionista@ejemplo.com"
+                  placeholder="colaborador@ejemplo.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-2xl border border-base-300 bg-base-200 focus:bg-base-100 text-xs text-base-content focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
@@ -384,7 +386,7 @@ export const ClinicManagementPage: React.FC = () => {
                   onChange={(e) => setInviteRole(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-2xl border border-base-300 bg-base-200 focus:bg-base-100 text-xs text-base-content focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                 >
-                  <option value="NUTRITIONIST">Nutricionista Profesional</option>
+                  <option value="NUTRITIONIST">Colaborador</option>
                   <option value="CLINIC_ADMIN">Administrador de Clínica</option>
                   <option value="RECEPTIONIST">Recepción / Secretaria</option>
                 </select>

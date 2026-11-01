@@ -28,7 +28,7 @@ export function useExchangeRate() {
       const res = await apiClient.get<ExchangeRate>('/api/exchange/bcv');
       setRate(res.data.rate);
       setError(null);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error fetching exchange rate:', err);
       setError('Error al obtener tasa de cambio');
     } finally {

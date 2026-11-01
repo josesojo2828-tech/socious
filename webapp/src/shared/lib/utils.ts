@@ -14,14 +14,15 @@ export function slugify(value: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function ensureString(val: any): string {
+export function ensureString(val: unknown): string {
   if (val === null || val === undefined) return '';
   if (typeof val === 'string') return val;
   if (typeof val === 'object') {
-    if (typeof val.title === 'string') return val.title;
-    if (typeof val.description === 'string') return val.description;
-    if (typeof val.label === 'string') return val.label;
-    if (typeof val.name === 'string') return val.name;
+    const record = val as Record<string, unknown>;
+    if (typeof record.title === 'string') return record.title;
+    if (typeof record.description === 'string') return record.description;
+    if (typeof record.label === 'string') return record.label;
+    if (typeof record.name === 'string') return record.name;
     try {
       return JSON.stringify(val);
     } catch {

@@ -50,9 +50,10 @@ export function TransactionConfirmModal({
         status: targetStatus,
       });
       onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
       setError(
-        err?.response?.data?.message ||
+        e?.response?.data?.message ||
           "Ocurrió un error al procesar el cambio de estado de la transacción."
       );
     } finally {

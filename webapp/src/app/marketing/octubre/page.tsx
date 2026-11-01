@@ -1241,7 +1241,7 @@ export default function MarketingPlaybookPage() {
                 <Target className="w-6 h-6 text-indigo-600" /> Guía de Trabajo Operativo para el Equipo de Marketing
               </h2>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
-                Este playbook ha sido estructurado para ser una <strong className="font-semibold text-slate-900">herramienta de producción diaria</strong>. Alineado 100% con el código auditado de Nutringest, elimina la duda de <em>"¿qué publicamos hoy?"</em> y entrega a cada rol la información exacta necesaria para producir sin fricción.
+                Este playbook ha sido estructurado para ser una <strong className="font-semibold text-slate-900">herramienta de producción diaria</strong>. Alineado 100% con el código auditado de Nutringest, elimina la duda de <em>&quot;¿qué publicamos hoy?&quot;</em> y entrega a cada rol la información exacta necesaria para producir sin fricción.
               </p>
 
               {/* ROLE WORKFLOW CARDS */}
@@ -1282,7 +1282,7 @@ export default function MarketingPlaybookPage() {
                   </div>
                   <h3 className="text-base font-bold text-slate-900 mb-1">4. Community Manager</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Responde a los comentarios y DMs (palabras clave "PLAN", "ISAK", "PERFIL", "INSTITUCIONAL") utilizando los Scripts de Respuesta Rápida.
+                    Responde a los comentarios y DMs (palabras clave &quot;PLAN&quot;, &quot;ISAK&quot;, &quot;PERFIL&quot;, &quot;INSTITUCIONAL&quot;) utilizando los Scripts de Respuesta Rápida.
                   </p>
                 </div>
               </div>
@@ -1299,7 +1299,7 @@ export default function MarketingPlaybookPage() {
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
                     <span className="text-sky-600 font-bold block mb-1">Paso 2: Copiado</span>
-                    <p className="text-slate-600">Haz clic en <strong>"Copiar Brief Completo"</strong> para transferir la pauta al diseñador o creador.</p>
+                    <p className="text-slate-600">Haz clic en <strong>&quot;Copiar Brief Completo&quot;</strong> para transferir la pauta al diseñador o creador.</p>
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
                     <span className="text-emerald-700 font-bold block mb-1">Paso 3: Grabación</span>
@@ -1416,7 +1416,7 @@ export default function MarketingPlaybookPage() {
                           🎯 Ángulo Comunicacional:
                         </span>
                         <p className="text-xs text-indigo-900 font-medium italic leading-relaxed">
-                          "{pillar.commAngle}"
+                          &quot;{pillar.commAngle}&quot;
                         </p>
                       </div>
                     </div>
@@ -1436,7 +1436,7 @@ export default function MarketingPlaybookPage() {
                   <FileText className="w-5 h-5 text-indigo-600" /> 10 Briefs de Contenido Listos para Ejecutar
                 </h2>
                 <p className="text-slate-600 text-xs sm:text-sm mt-1">
-                  Cada brief incluye paquete de 3 formatos, Guion paso a paso de grabación, Botón "Copiar Brief Completo" y Badges de Checklist.
+                  Cada brief incluye paquete de 3 formatos, Guion paso a paso de grabación, Botón &quot;Copiar Brief Completo&quot; y Badges de Checklist.
                 </p>
               </div>
 
@@ -1663,7 +1663,7 @@ export default function MarketingPlaybookPage() {
                               1. Hook Inicial (0-5s)
                             </span>
                             <p className="text-slate-900 font-semibold italic">
-                              "{brief.reel.hook}"
+                              &quot;{brief.reel.hook}&quot;
                             </p>
                           </div>
 

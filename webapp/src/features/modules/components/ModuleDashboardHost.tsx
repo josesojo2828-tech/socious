@@ -1,7 +1,7 @@
 'use client';
 
 import type { LucideIcon } from 'lucide-react';
-import { getModuleDashboard } from '../registry';
+import { MODULE_DASHBOARDS } from '../registry';
 import { useModuleDashboard } from '../hooks/useModuleDashboard';
 import type { ModuleScope } from '../types';
 import { ModuleFallback } from './ModuleFallback';
@@ -40,7 +40,9 @@ export function ModuleDashboardHost({
   description,
   icon,
 }: ModuleDashboardHostProps) {
-  const Component = getModuleDashboard(moduleKey);
+  // Lectura directa del registro estático (misma semántica que getModuleDashboard;
+  // la regla de React trata una llamada a función como "componente creado en render").
+  const Component = MODULE_DASHBOARDS[moduleKey];
   const { payload, loading, error, refetch } = useModuleDashboard({
     moduleKey,
     scope,

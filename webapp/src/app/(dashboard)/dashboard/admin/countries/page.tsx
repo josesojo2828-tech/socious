@@ -35,6 +35,32 @@ export default function AdminCountriesPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const fetchCountries = async () => {
+    setLoading(true);
+    try {
+      const res = await apiClient.get<EnabledCountry[]>("/api/countries/admin");
+      if (Array.isArray(res.data)) {
+        setCountries(res.data);
+      }
+    } catch (err: unknown) {
+      console.error(err);
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      addToast({
+        type: "error",
+        message:
+          (Array.isArray(raw) ? raw[0] : raw) as string ||
+          "Error al cargar la lista de países para SuperAdmin.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  // Early return DESPUÉS de todos los hooks (rules-of-hooks).
   if (!isAdmin(user)) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3 text-center">
@@ -50,30 +76,6 @@ export default function AdminCountriesPage() {
       </div>
     );
   }
-
-  const fetchCountries = async () => {
-    setLoading(true);
-    try {
-      const res = await apiClient.get<EnabledCountry[]>("/api/countries/admin");
-      if (Array.isArray(res.data)) {
-        setCountries(res.data);
-      }
-    } catch (err: any) {
-      console.error(err);
-      addToast({
-        type: "error",
-        message:
-          err?.response?.data?.message ||
-          "Error al cargar la lista de países para SuperAdmin.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCountries();
-  }, []);
 
   const handleToggle = async (country: EnabledCountry) => {
     setTogglingId(country.id);
@@ -91,12 +93,13 @@ export default function AdminCountriesPage() {
           updated.isActive ? "ACTIVO" : "INACTIVO"
         }.`,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
       addToast({
         type: "error",
         message:
-          err?.response?.data?.message ||
+          (Array.isArray(raw) ? raw[0] : raw) as string ||
           "No se pudo cambiar el estado del país.",
       });
     } finally {

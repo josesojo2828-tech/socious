@@ -46,7 +46,7 @@ export function cleanRecommendationsToPlainText(raw?: string | null): string {
 /**
  * Extrae los metadatos de distribución embebidos en el texto de recomendaciones si existen.
  */
-export function extractDistributionMetadata<T = any>(raw?: string | null): T | null {
+export function extractDistributionMetadata<T = unknown>(raw?: string | null): T | null {
     if (!raw || typeof raw !== 'string') return null;
     const match = raw.match(/<!--NUTRINGEST_DISTRIBUTION:([\s\S]*?)-->/);
     if (!match || !match[1]) return null;
@@ -62,7 +62,7 @@ export function extractDistributionMetadata<T = any>(raw?: string | null): T | n
  * Adjunta metadatos de distribución serializados en formato de comentario HTML a un texto plano.
  * Si el texto o metadatos no son válidos, maneja el caso de forma segura.
  */
-export function attachDistributionMetadata(plainText: string, metadata: any): string {
+export function attachDistributionMetadata(plainText: string, metadata: unknown): string {
     const clean = cleanRecommendationsToPlainText(plainText);
     if (!metadata) return clean;
     const serialized = typeof metadata === 'string' ? metadata : JSON.stringify(metadata);

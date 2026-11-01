@@ -1,11 +1,11 @@
-import { useFormContext, Controller } from 'react-hook-form';
+import { useFormContext, Controller, RegisterOptions } from 'react-hook-form';
 import { FormInputType } from '@/types/backend/form';
 import { Input } from '@/shared/components/atoms/Input';
 import { Textarea } from '@/shared/components/atoms/Textarea';
 import { Checkbox } from '@/shared/components/atoms/Checkbox';
 import { Select } from '@/shared/components/molecules/form/Select';
 import { FormField } from '@/shared/components/molecules/form/FormField';
-import { SelectRequest } from './SelectRequest';
+import { SelectRequest, SelectRequestProps } from './SelectRequest';
 import { useTranslation } from '@/context/i18n.context';
 import { ensureString } from '@/shared/lib/utils';
 import { MarkdownEditor } from './MarkdownEditor';
@@ -46,7 +46,7 @@ export const InputRenderer = ({ field }: InputRendererProps) => {
   const errorMessage = errors[field.name]?.message as string | undefined;
 
   // Reglas de validación dinámicas basadas en los DTOs/esquemas del backend
-  const rules: any = {
+  const rules: RegisterOptions = {
     required: field.required ? t('form.validation_errors.required') : false,
   };
 
@@ -176,7 +176,7 @@ export const InputRenderer = ({ field }: InputRendererProps) => {
               <Select
                 ref={ref}
                 variant='bordered'
-                options={(field.options || []).map((opt: any) => ({ ...opt, label: ensureString(t(opt.label)) }))}
+                options={(field.options || []).map((opt) => ({ ...opt, label: ensureString(t(opt.label)) }))}
                 value={value}
                 onChange={onChange}
                 disabled={field.disabled}
@@ -221,8 +221,8 @@ export const InputRenderer = ({ field }: InputRendererProps) => {
             rules={rules}
             defaultValue={field.value || ''}
             render={({ field: { onChange, value } }) => (
-               <SelectRequest
-                 config={field as any}
+                 <SelectRequest
+                   config={field as unknown as SelectRequestProps['config']}
                  value={value} // Pasamos el ID actual
                  onChange={onChange} // RHF recibe el nuevo ID
                  error={errorMessage}

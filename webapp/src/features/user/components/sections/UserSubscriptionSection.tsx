@@ -28,7 +28,7 @@ export function UserSubscriptionSection() {
         </div>
 
         {sub ? (
-          <PresentationPlan entity={sub as any} Reload={() => window.location.reload()} />
+          <PresentationPlan entity={sub} Reload={() => window.location.reload()} />
         ) : (
           <div className="p-8 text-center bg-base-200 rounded-xl border border-base-300 space-y-3">
             <Award className="w-10 h-10 text-primary mx-auto" />

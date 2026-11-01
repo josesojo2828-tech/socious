@@ -7,6 +7,7 @@ import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { ConfirmSubscriptionModal } from "./ConfirmSubscriptionModal";
 import { useExchangeRate } from "@/shared/hooks/useExchangeRate";
 import { normalizePlanContent } from "@/shared/authz";
+import type { SubscriptionPlan } from "@/types/backend/schema.types";
 
 const DEFAULT_COLORS = { bg: "#ffffff", text: "#1e293b", accent: "#4338ca", badge: "#4338ca" };
 const FEATURED_DEFAULT = { bg: "#1e1b4b", text: "#ffffff", accent: "#4338ca", badge: "#4338ca" };
@@ -33,7 +34,7 @@ export function ScreenPlans({ Reload }: { Reload?: () => void }) {
     const featuredPlan = visiblePlans.find(p => p.featured === true) || null;
     const standardPlans = visiblePlans.filter(p => !p.featured);
 
-    const handleSelectPlan = (plan: any) => {
+    const handleSelectPlan = (plan: SubscriptionPlan) => {
         openModal(<ConfirmSubscriptionModal plan={plan} Reload={Reload} />, { size: 'sm' });
     };
 
@@ -128,7 +129,7 @@ export function ScreenPlans({ Reload }: { Reload?: () => void }) {
     );
 }
 
-function FeaturedCard({ plan, billingCycle, onSelect }: { plan: any; billingCycle: 'MONTHLY' | 'YEARLY'; onSelect: (p: any) => void }) {
+function FeaturedCard({ plan, billingCycle, onSelect }: { plan: SubscriptionPlan; billingCycle: 'MONTHLY' | 'YEARLY'; onSelect: (p: SubscriptionPlan) => void }) {
     const { t } = useTranslation();
     const { rate } = useExchangeRate();
     const c = plan.colorTheme || FEATURED_DEFAULT;

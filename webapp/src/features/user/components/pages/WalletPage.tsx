@@ -35,6 +35,7 @@ import { PaypalForm } from '../payment-method/forms/PaypalForm';
 import { PagoMovilForm } from '../payment-method/forms/PagoMovilForm';
 import { useHandleForm } from '@/shared/hooks/useHandlerForm';
 import { ChangePlanModal } from '../subscription/ChangePlanModal';
+import type { User, IUserPaymentMethod } from '@/types/backend/schema.types';
 
 export default function WalletPage() {
   const { user, refreshSession } = useAuthStore();
@@ -49,8 +50,11 @@ export default function WalletPage() {
   const [renewSuccess, setRenewSuccess] = useState<string | null>(null);
 
   const subscription = user?.subscriptions?.[0] || null;
-  const paymentMethodsList = (user as any)?.paymentMethods || (user as any)?.payment_methods || [];
-  const walletBalance = wallet.data?.balance ?? (user as any)?.wallet?.balance ?? 0;
+  // The session payload may still deliver the legacy snake_case key; keep both
+  // shapes without falling back to `any`.
+  const userWithLegacyKeys = user as (User & { payment_methods?: IUserPaymentMethod[] }) | null;
+  const paymentMethodsList = userWithLegacyKeys?.paymentMethods || userWithLegacyKeys?.payment_methods || [];
+  const walletBalance = wallet.data?.balance ?? userWithLegacyKeys?.wallet?.balance ?? 0;
 
   const planName = subscription?.plan?.name || 'Plan Personal';
   const subStatus: string = subscription?.status || 'INACTIVE';
@@ -74,9 +78,10 @@ export default function WalletPage() {
       await useWorkspaceStore.getState().fetchWorkspaces();
       await useAuthStore.getState().refreshSession();
       setRenewSuccess('¡Suscripción renovada con éxito!');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error al renovar suscripción:', err);
-      const msg = err?.response?.data?.message || err?.message || 'Error al intentar renovar la suscripción.';
+      const responseMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      const msg = responseMessage || (err instanceof Error ? err.message : null) || 'Error al intentar renovar la suscripción.';
       setRenewError(msg);
     } finally {
       setRenewLoading(false);
@@ -106,7 +111,7 @@ export default function WalletPage() {
   const billingCycle = 'MONTHLY';
 
   const openPaymentMethodForm = (element: string, cb: () => void) => {
-    const handleFormSubmit = (data: any) => {
+    const handleFormSubmit = (data: unknown) => {
       SendForm({
         path: UserEndpoints.actions.createPaymentMethod(element),
         data,
@@ -264,7 +269,7 @@ export default function WalletPage() {
                 <CreditCard className="w-5 h-5 text-primary" />
                 <h3 className="text-lg font-black text-base-content">{planName}</h3>
               </div>
-              <p className="text-xs text-base-content/70 mt-0.5">Plan personal de nutrición.</p>
+              <p className="text-xs text-base-content/70 mt-0.5">Plan personal.</p>
             </div>
             <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold border ${subStatus === 'ACTIVE'
               ? 'bg-success/10 text-success border-success/30'
@@ -392,9 +397,9 @@ export default function WalletPage() {
               </div>
             ) : volumeChart.data ? (
               <BarChart
-                title={(volumeChart.data as any).title || 'Volumen de Transacciones'}
-                labels={(volumeChart.data as any).labels || []}
-                values={(volumeChart.data as any).values || []}
+                title={volumeChart.data.title || 'Volumen de Transacciones'}
+                labels={volumeChart.data.labels || []}
+                values={volumeChart.data.values || []}
               />
             ) : (
               <EmptyChart message="Sin histórico de transacciones registrado" />
@@ -415,8 +420,8 @@ export default function WalletPage() {
               <div className="flex items-center justify-center h-full text-xs text-base-content/50">
                 <RefreshCw className="w-5 h-5 animate-spin mr-2 text-primary" /> Cargando gráfico...
               </div>
-            ) : statusChart.data && (statusChart.data as any).data?.length > 0 ? (
-              <PieChart config={statusChart.data as any} />
+            ) : statusChart.data && statusChart.data.data?.length > 0 ? (
+              <PieChart config={{ id: 'status-distribution', ...statusChart.data }} />
             ) : (
               <EmptyChart message="Sin distribución de estados disponible" />
             )}
@@ -460,7 +465,7 @@ export default function WalletPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {paymentMethodsList.map((method: any) => (
+              {paymentMethodsList.map((method) => (
                 <div key={method.id} className="rounded-xl overflow-hidden border border-base-300 shadow-xs">
                   <FichaPaymentMethod
                     id={method.id}
@@ -500,7 +505,7 @@ export default function WalletPage() {
               <FileText className="w-8 h-8 text-base-content/30 mx-auto mb-2" />
               <p className="text-xs font-bold text-base-content">No hay pagos o reportes registrados</p>
               <p className="text-[11px] text-base-content/50 mt-0.5">
-                Haz clic en "Reportar Pago" para registrar una nueva transferencia o Pago Móvil.
+                Haz clic en &quot;Reportar Pago&quot; para registrar una nueva transferencia o Pago Móvil.
               </p>
             </div>
           ) : (
@@ -516,7 +521,7 @@ export default function WalletPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-base-300/50 text-base-content font-medium">
-                  {history.data.map((tx: any) => {
+                  {history.data.map((tx) => {
                     const txDate = tx.createdAt ? new Date(tx.createdAt).toLocaleDateString() : '-';
                     const methodName = tx.paymentMethod?.paymentMethod?.name || tx.method || 'Transferencia/Pago';
                     const refCode = tx.referenceCode || tx.reference || '#n/a';

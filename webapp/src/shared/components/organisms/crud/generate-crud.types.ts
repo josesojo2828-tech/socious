@@ -25,7 +25,7 @@ export interface GenerateCrudProps {
     object: string,
     title?: string;
 
-    renderCell?: (field: string, entity: any) => ReactNode;
+    renderCell?: (field: string, entity: unknown) => ReactNode;
 
     handlers?: {
         create?: (data: unknown, cb: () => void) => Promise<unknown>;
@@ -42,7 +42,7 @@ export interface GenerateCrudProps {
      * The third argument lets the callback refresh the current list after a
      * server-side change (e.g. archiving a row so it leaves the active tab).
      */
-    extraActions?: (item: any, openModal: (view: ReactNode) => void, reload?: () => void) => ReactNode;
+    extraActions?: (item: unknown, openModal: (view: ReactNode) => void, reload?: () => void) => ReactNode;
     /** User permits for gating extraActions (e.g., ['PATIENT_DELETE']) */
     userPermits?: string[];
     /** External modal opener (from useModalStore) */

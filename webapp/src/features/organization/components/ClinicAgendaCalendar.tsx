@@ -180,7 +180,7 @@ export const ClinicAgendaCalendar: React.FC = () => {
                 )}
 
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-400 font-medium">Nutricionista Atendiente:</span>
+                  <span className="text-slate-400 font-medium">Colaborador Atendiente:</span>
                   <span className="font-bold" style={{ color: app.colorHex }}>
                     {app.nutritionistName}
                   </span>

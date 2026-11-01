@@ -13,7 +13,7 @@ export const useHandleForm = () => {
         formPath,
         cb 
     }: { 
-        data: any; 
+        data: unknown; 
         path: string; 
         method?: "POST" | "PUT" | "PATCH"; 
         formPath?: string;
@@ -37,8 +37,9 @@ export const useHandleForm = () => {
             
             if (cb) cb();
             return response.data;
-        } catch (error: any) {
-            const errorMsg = error?.response?.data?.message || error?.message || 'Error temporal';
+        } catch (error: unknown) {
+            const err = error as { response?: { data?: { message?: string } }; message?: string };
+            const errorMsg = err?.response?.data?.message || err?.message || 'Error temporal';
             addToast({ type: 'error', message: errorMsg });
         }
     }

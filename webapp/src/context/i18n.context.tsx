@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useSyncExternalStore, useCallback } from 'react';
 
 // Importamos estáticamente el español (default) para evitar parpadeos
 import authEs from '@/i18n/es/auth.json';
@@ -23,7 +23,7 @@ import landingEn from '@/i18n/not_en/landing.json';
 import clinicalEn from '@/i18n/not_en/clinical.json';
 
 // Mapa de recursos (simulando tu estructura de backend)
-const RESOURCES: Record<string, any> = {
+const RESOURCES: Record<string, Record<string, unknown>> = {
     es: {
         common: commonEs,
         auth: authEs,
@@ -51,33 +51,51 @@ const RESOURCES: Record<string, any> = {
 // Mapeamos 'en' a 'not_en' por conveniencia
 RESOURCES['en'] = RESOURCES['not_en'];
 
+/** Lee el idioma persistido; en el servidor siempre 'es' (evita mismatch de hidratación). */
+const getStoredLanguage = (): string => {
+    const stored = localStorage.getItem('lang');
+    return stored && RESOURCES[stored] ? stored : 'es';
+};
+
+/** Sin eventos externos: setLanguage persiste y recarga la página. */
+const subscribeToLanguage = () => () => { };
+
 type I18nContextType = {
     language: string;
     setLanguage: (lang: string) => void;
-    t: (key: string, params?: Record<string, string | number>) => any;
+    t: (key: string, params?: Record<string, string | number>) => string;
     isLoaded: boolean;
 };
 
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
-    const [language, setLanguageState] = useState('es');
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    useEffect(() => {
-        const stored = localStorage.getItem('lang');
-        if (stored && RESOURCES[stored]) {
-            setLanguageState(stored);
-        }
-        setIsLoaded(true);
-    }, []);
+    // Los JSON se importan estáticamente, así que las traducciones siempre están listas.
+    const language = useSyncExternalStore(subscribeToLanguage, getStoredLanguage, () => 'es');
+    const isLoaded = true;
 
     const setLanguage = (lang: string) => {
         if (RESOURCES[lang]) {
-            setLanguageState(lang);
             localStorage.setItem('lang', lang);
             window.location.reload();
         }
+    };
+
+    /** Desciende por un árbol de traducción replicando el loop original:
+     *  raíz falsy se devuelve tal cual; rama ausente → undefined; null a mitad
+     *  de camino lanza (el catch externo de `t` devuelve la clave cruda). */
+    const descend = (root: unknown, keys: string[]): unknown => {
+        let node: unknown = root;
+        if (!node) return node;
+        for (const key of keys) {
+            if (node === null || node === undefined) {
+                throw new TypeError(`Cannot read properties of ${String(node)}`);
+            }
+            const value = (node as Record<string, unknown>)[key];
+            if (value === undefined) return undefined;
+            node = value;
+        }
+        return node;
     };
 
     // La función mágica que imita a tu backend: 'sidebar.menu.dashboard' con fallback robusto a español
@@ -92,30 +110,11 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
             const jsonKeys = parts.slice(1); // key
 
             // 2. Buscamos en el idioma actual y en español (fallback)
-            let translation = RESOURCES[language]?.[fileName];
-            let fallbackTranslation = RESOURCES['es']?.[fileName];
-
-            // 3. Navegamos en el objeto del idioma seleccionado
-            if (translation) {
-                for (const key of jsonKeys) {
-                    if (translation[key] === undefined) {
-                        translation = undefined;
-                        break;
-                    }
-                    translation = translation[key];
-                }
-            }
+            let translation: unknown = descend(RESOURCES[language]?.[fileName], jsonKeys);
 
             // 4. Si no se encontró en el idioma seleccionado, navegamos en español
-            if (translation === undefined && fallbackTranslation) {
-                translation = fallbackTranslation;
-                for (const key of jsonKeys) {
-                    if (translation[key] === undefined) {
-                        translation = undefined;
-                        break;
-                    }
-                    translation = translation[key];
-                }
+            if (translation === undefined) {
+                translation = descend(RESOURCES['es']?.[fileName], jsonKeys);
             }
 
             // 5. Si no se encontró en ninguno, retornamos la clave original
@@ -125,30 +124,36 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             if (typeof translation === 'string' && params) {
+                let resolved: string = translation;
                 Object.entries(params).forEach(([key, value]) => {
-                    translation = (translation as string).replace(`{${key}}`, String(value));
+                    resolved = resolved.replace(`{${key}}`, String(value));
                 });
+                translation = resolved;
             }
 
             if (typeof translation !== 'string') {
                 if (Array.isArray(translation)) {
-                    return translation;
+                    // El contrato público es string; en runtime se devuelve el
+                    // array tal cual (React lo renderiza) para no cambiar el
+                    // comportamiento previo.
+                    return translation as unknown as string;
                 }
                 if (translation && typeof translation === 'object') {
-                    if ('title' in translation && typeof (translation as any).title === 'string') {
-                        return (translation as any).title;
+                    const record = translation as Record<string, unknown>;
+                    if (typeof record.title === 'string') {
+                        return record.title;
                     }
-                    if ('label' in translation && typeof (translation as any).label === 'string') {
-                        return (translation as any).label;
+                    if (typeof record.label === 'string') {
+                        return record.label;
                     }
-                    if ('description' in translation && typeof (translation as any).description === 'string') {
-                        return (translation as any).description;
+                    if (typeof record.description === 'string') {
+                        return record.description;
                     }
                 }
                 return path;
             }
 
-            return translation as string;
+            return translation;
 
         } catch (error) {
             return path;

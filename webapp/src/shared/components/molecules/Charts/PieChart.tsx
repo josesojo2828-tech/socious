@@ -14,8 +14,8 @@ export const PieChart = ({ config, className }: PieChartProps) => {
   // El backend envía 'data' como array de objetos.
   // keyLabel y keyValue nos dicen qué propiedades usar.
   
-  const labels = config.data.map((item: any) => item[config.keyLabel]);
-  const values = config.data.map((item: any) => item[config.keyValue]);
+  const labels = config.data.map((item) => item[config.keyLabel] as string);
+  const values = config.data.map((item) => item[config.keyValue] as number);
 
   const chartData = {
     labels,

@@ -17,9 +17,10 @@ export const useUserDetail = (userId: string | undefined) => {
         `${DashboardEndpoints.api.userDetail}/${userId}`,
       );
       setUserDetail(response.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching user detail:", err);
-      setError(err?.response?.data?.message || 'Error al obtener la ficha del usuario');
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || 'Error al obtener la ficha del usuario');
     } finally {
       setLoading(false);
     }

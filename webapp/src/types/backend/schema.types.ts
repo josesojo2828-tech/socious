@@ -595,7 +595,7 @@ export interface Menu {
   prepTime?: number | null;
   difficulty?: string | null;
   importedFromId?: string | null;
-  importedFrom?: any;
+  importedFrom?: Menu | null;
 
   createdAt: Date | string;
   updatedAt: Date | string;

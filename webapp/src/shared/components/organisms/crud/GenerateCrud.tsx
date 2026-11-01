@@ -78,10 +78,11 @@ export function GenerateCrud<T>({
     const HandleChangePage = (p: number) => ChangePage(p);
 
     // ------ ACTIONS ------ //
-    const HandleAction = (actionKey: string, item: Record<string, unknown>) => {
-        if (actionKey === 'view') ViewExecute(item.id as string)
-        else if (actionKey === 'update') UpdateExecute(item.id as string);
-        else if (actionKey === 'delete') ExecuteDelete(item.id as string);
+    const HandleAction = (actionKey: string, item: unknown) => {
+        const id = (item as { id?: string }).id as string;
+        if (actionKey === 'view') ViewExecute(id)
+        else if (actionKey === 'update') UpdateExecute(id);
+        else if (actionKey === 'delete') ExecuteDelete(id);
     }
     const HandleSearch = () => { }
     const HandleDelete = (id: string) => ManagementDelte(path.delete(id));

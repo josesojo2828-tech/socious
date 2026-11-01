@@ -6,13 +6,14 @@ import { User } from "lucide-react";
 export const UserDataSection = () => {
   const { user, updateStorageUser } = useAuthStore();
 
-  const SaveDataUser = (data: any) => {
+  const SaveDataUser = (data: unknown) => {
     if (!user) return;
-    let newUser = { ...user };
-    newUser.firstName = data.firstName;
-    newUser.lastName = data.lastName;
-    newUser.username = data.username;
-    newUser.email = data.email;
+    const form = data as { firstName?: string; lastName?: string; username?: string; email?: string };
+    const newUser = { ...user };
+    newUser.firstName = form.firstName as string;
+    newUser.lastName = form.lastName as string;
+    newUser.username = form.username as string;
+    newUser.email = form.email as string;
     updateStorageUser(newUser);
   };
 

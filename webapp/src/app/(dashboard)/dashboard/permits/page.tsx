@@ -30,6 +30,16 @@ interface PermissionGroup {
   permissions: PermissionItem[];
 }
 
+/** Fila de /api/permit tal como la consume esta pantalla. */
+type PermitRow = {
+  id: string;
+  name: string;
+  description?: string;
+  list: string[];
+  createdAt?: string;
+  _count?: { users?: number };
+};
+
 export default function PermitsPage() {
   const { user } = useAuthStore();
   const canCreate = user?.permits?.list?.includes("PERMIT_PERMIT_CREATED");
@@ -72,7 +82,7 @@ export default function PermitsPage() {
     );
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: PermitRow) => {
     openModal(
       <PermitFormModal
         permit={item}
@@ -83,7 +93,7 @@ export default function PermitsPage() {
     );
   };
 
-  const handleDetail = (item: any) => {
+  const handleDetail = (item: PermitRow) => {
     openModal(
       <PermitDetailModal
         permit={item}
@@ -95,7 +105,7 @@ export default function PermitsPage() {
     );
   };
 
-  const handleDelete = (item: any) => {
+  const handleDelete = (item: PermitRow) => {
     openModal(
       <DeleteAlert
         isOpen={true}
@@ -195,7 +205,9 @@ export default function PermitsPage() {
                   </td>
                 </tr>
               ) : (
-                data.map((item: any) => (
+                data.map((raw) => {
+                  const item = raw as PermitRow;
+                  return (
                   <tr
                     key={item.id}
                     className="hover:bg-base-200/50 transition-colors cursor-pointer"
@@ -264,7 +276,8 @@ export default function PermitsPage() {
                       </div>
                     </td>
                   </tr>
-                ))
+                  );
+                })
               )}
             </tbody>
           </table>

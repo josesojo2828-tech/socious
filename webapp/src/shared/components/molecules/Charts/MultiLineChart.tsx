@@ -1,6 +1,7 @@
 'use client';
 
 import { Line } from 'react-chartjs-2';
+import type { ScriptableContext } from 'chart.js';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -77,7 +78,7 @@ export const MultyLineChart = ({
             label: ds.label,
             data: ds.data,
             borderColor: ds.color,
-            backgroundColor: (context: any) => {
+            backgroundColor: (context: ScriptableContext<'line'>) => {
                 if (!ds.fill) return 'transparent'; // Sin relleno
                 
                 // Gradiente suave solo si tiene relleno activado

@@ -39,8 +39,9 @@ export const ArchiveConfirmModal = ({
       });
       onSuccess?.();
       onClose();
-    } catch (err: any) {
-      const msg = err?.response?.data?.message || 'Error al archivar paciente';
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      const msg = e?.response?.data?.message || 'Error al archivar paciente';
       addToast({ type: 'error', title: 'Error', message: msg });
       setIsLoading(false);
     }

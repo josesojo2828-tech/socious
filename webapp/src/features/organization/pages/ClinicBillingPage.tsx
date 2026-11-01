@@ -31,7 +31,7 @@ import { organizationService, ClinicDetails, ClinicMember } from '../services/or
 import { SeatExpansionModal } from '../components/SeatExpansionModal';
 import { FichaPaymentMethod } from '@/features/user/components/payment-method/FichaPaymentMethod';
 import { apiClient } from '@/shared/api/api.client';
-import { Subscription, Transaction } from '@/types/backend/schema.types';
+import { Subscription } from '@/types/backend/schema.types';
 import {
   BillingHistoryResult,
   Invoice,
@@ -45,6 +45,19 @@ import { EmptyChart } from '@/shared/components/molecules/Empty/EmptyChat';
 
 const DEFAULT_CLINIC_PLAN_PRICE = CLINIC_BILLING_CONFIG.defaultPlanPrice;
 const EXTRA_SEAT_PRICE = CLINIC_BILLING_CONFIG.extraSeatPrice;
+
+/** Fila del historial de pagos (/api/user/analytics/tables/payments). */
+interface PaymentHistoryRow {
+  id: string;
+  createdAt?: string | Date | null;
+  paymentMethod?: { paymentMethod?: { name?: string } } | null;
+  method?: string;
+  referenceCode?: string | null;
+  reference?: string;
+  amount?: number | string;
+  amountUsd?: number | string;
+  status?: string;
+}
 
 const INVOICE_LINE_TYPE_LABELS: Record<InvoiceLineType, string> = {
   BASE_PLAN: 'Plan Base',
@@ -60,9 +73,9 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
   const [clinic, setClinic] = useState<ClinicDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [paymentMethodsList, setPaymentMethodsList] = useState<any[]>([]);
-  const [walletData, setWalletData] = useState<any | null>(null);
+  const [transactions, setTransactions] = useState<PaymentHistoryRow[]>([]);
+  const [paymentMethodsList, setPaymentMethodsList] = useState<Array<{ id: string }>>([]);
+  const [walletData, setWalletData] = useState<{ balance?: string | number } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSeatModalOpen, setIsSeatModalOpen] = useState(false);
 
@@ -91,11 +104,14 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
       const details = await organizationService.getClinicDetails(orgId);
       setClinic(details);
 
-      // 2. Métodos de pago del nutricionista sesionado (NO los globales de la plataforma)
-      const sessionUserMethods = (user as any)?.paymentMethods || (user as any)?.payment_methods || [];
+      // 2. Métodos de pago del colaborador sesionado (NO los globales de la plataforma)
+      const sessionUserMethods =
+        (user as unknown as { paymentMethods?: Array<{ id: string }> } | null)?.paymentMethods ||
+        (user as unknown as { payment_methods?: Array<{ id: string }> } | null)?.payment_methods ||
+        [];
       setPaymentMethodsList(sessionUserMethods);
 
-      // 3. Saldo de billetera del nutricionista sesionado
+      // 3. Saldo de billetera del colaborador sesionado
       try {
         const wRes = await apiClient.get('/api/user/analytics/dashboard/wallet');
         if (wRes.data?.data) {
@@ -130,7 +146,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
         setInvoices([]);
       }
 
-      // 5. Historial de pagos del nutricionista sesionado (/api/user/analytics/tables/payments)
+      // 5. Historial de pagos del colaborador sesionado (/api/user/analytics/tables/payments)
       try {
         const txRes = await apiClient.get('/api/user/analytics/tables/payments');
         const list = txRes.data?.data || txRes.data?.list || txRes.data;
@@ -160,7 +176,9 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
   }, [orgId]);
 
   // Cálculos dinámicos
-  const rawBalance = walletData?.balance ?? (user as any)?.wallet?.balance;
+  const rawBalance =
+    walletData?.balance ??
+    (user as unknown as { wallet?: { balance?: string | number } } | null)?.wallet?.balance;
   const walletBalance = isNaN(Number(rawBalance)) ? 0 : Number(rawBalance || 0);
 
   const activeSeats = clinic?.members?.length || 0;
@@ -242,7 +260,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
     openModal(<DynamicRenderForm cb={callback} path={UserEndpoints.form.wallet.report} />);
   };
 
-  // Acción Invitar Nutricionista
+  // Acción Invitar Colaborador
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!clinic) return;
@@ -256,14 +274,15 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
       setInviteEmail('');
       setIsInviteModalOpen(false);
       fetchData();
-    } catch (err: any) {
-      setInviteError(err.response?.data?.message || 'Error al enviar invitación al profesional');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setInviteError(e?.response?.data?.message || 'Error al enviar invitación al profesional');
     } finally {
       setInviteLoading(false);
     }
   };
 
-  // Acción Dar de Baja Nutricionista
+  // Acción Dar de Baja Colaborador
   const handleRemoveMember = async (member: ClinicMember) => {
     if (!clinic) return;
     if (!confirm(`¿Estás seguro de dar de baja a ${member.user.firstName} ${member.user.lastName}?`)) {
@@ -272,8 +291,9 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
     try {
       await apiClient.delete(`/api/organizations/${clinic.id}/members/${member.id}`);
       fetchData();
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Error al eliminar al profesional');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      alert(e?.response?.data?.message || 'Error al eliminar al profesional');
     }
   };
 
@@ -294,14 +314,14 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Facturación & Billetera de la Clínica
+              Facturación &amp; Billetera de la Clínica
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200">
               {subscription?.plan?.badge || 'Clínica Pro'}
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Gestión consolidada de métodos de pago, billetera digital, suscripción activa y nutricionistas.
+            Gestión consolidada de métodos de pago, billetera digital, suscripción activa y colaboradores.
           </p>
         </div>
       </div>
@@ -369,12 +389,12 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           </button>
         </div>
 
-        {/* Card #3: Capacidad Nutricionistas */}
+        {/* Card #3: Capacidad de Colaboradores */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between hover:border-indigo-200 transition-all">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
               <Users className="w-4 h-4 text-indigo-600" />
-              <span>Capacidad de Nutricionistas</span>
+              <span>Capacidad de Colaboradores</span>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200">
               ${EXTRA_SEAT_PRICE}/mes por extra
@@ -384,7 +404,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           <div className="my-3 space-y-2">
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-500 font-medium">Ocupación de Asientos:</span>
-              <strong className="text-slate-900 font-black text-sm">{activeSeats} / {maxSeats} Nutris</strong>
+              <strong className="text-slate-900 font-black text-sm">{activeSeats} / {maxSeats} Cupos</strong>
             </div>
 
             <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
@@ -418,7 +438,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                 <CreditCard className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-lg font-black text-slate-900">{planName}</h3>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">Plan institucional para clínicas y equipos de nutrición.</p>
+              <p className="text-xs text-slate-500 mt-0.5">Plan institucional para clínicas y equipos de trabajo.</p>
             </div>
             <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold border ${
               subStatus === 'ACTIVE'
@@ -493,7 +513,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                 {/* Ítem 1: Plan Base (estimado) */}
                 <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
                   <div>
-                    <span className="text-white font-bold block">{planName} (Hasta {baseSeatsIncluded} Nutris)</span>
+                    <span className="text-white font-bold block">{planName} (Hasta {baseSeatsIncluded} cupos)</span>
                     <span className="text-[11px] text-slate-400">Cargo recurrente mensual base</span>
                   </div>
                   <span className="font-mono text-sm font-bold text-white">${basePlanPrice.toFixed(2)} USD</span>
@@ -503,7 +523,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                 <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
                   <div>
                     <span className="text-white font-bold block">
-                      Nutricionistas Adicionales ({extraSeats} extra)
+                      Colaboradores Adicionales ({extraSeats} extra)
                     </span>
                     <span className="text-[11px] text-slate-400">
                       {extraSeats > 0
@@ -558,9 +578,9 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
               </div>
             ) : volumeChart.data ? (
               <BarChart
-                title={(volumeChart.data as any).title || 'Volumen de Transacciones'}
-                labels={(volumeChart.data as any).labels || []}
-                values={(volumeChart.data as any).values || []}
+                title={volumeChart.data.title || 'Volumen de Transacciones'}
+                labels={volumeChart.data.labels || []}
+                values={volumeChart.data.values || []}
               />
             ) : (
               <EmptyChart message="Sin histórico de transacciones registrado" />
@@ -581,8 +601,8 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
               <div className="flex items-center justify-center h-full text-xs text-slate-400">
                 <RefreshCw className="w-5 h-5 animate-spin mr-2 text-indigo-600" /> Cargando gráfico...
               </div>
-            ) : statusChart.data && (statusChart.data as any).data?.length > 0 ? (
-              <PieChart config={statusChart.data as any} />
+            ) : statusChart.data && statusChart.data.data?.length > 0 ? (
+              <PieChart config={{ id: 'status-distribution', ...statusChart.data }} />
             ) : (
               <EmptyChart message="Sin distribución de estados disponible" />
             )}
@@ -592,7 +612,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
       </div>
 
       {/* ========================================================================= */}
-      {/* FILA 4: 3 TABLAS (MÉTODOS DE PAGO, PAGOS Y NUTRICIONISTAS) */}
+      {/* FILA 4: 3 TABLAS (MÉTODOS DE PAGO, PAGOS Y COLABORADORES) */}
       {/* ========================================================================= */}
       <div className="space-y-8">
         
@@ -626,7 +646,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {paymentMethodsList.map((method: any) => (
+              {paymentMethodsList.map((method) => (
                 <div key={method.id} className="rounded-xl overflow-hidden border border-slate-200 shadow-xs">
                   <FichaPaymentMethod
                     id={method.id}
@@ -666,7 +686,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
               <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
               <p className="text-xs font-bold text-slate-700">No hay pagos o reportes registrados</p>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Haz clic en "Reportar Pago" para registrar una nueva transferencia o Pago Móvil.
+                Haz clic en «Reportar Pago» para registrar una nueva transferencia o Pago Móvil.
               </p>
             </div>
           ) : (
@@ -682,7 +702,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
-                  {transactions.map((tx: any) => {
+                  {transactions.map((tx) => {
                     const txDate = tx.createdAt ? new Date(tx.createdAt).toLocaleDateString() : '-';
                     const methodName = tx.paymentMethod?.paymentMethod?.name || tx.method || 'Transferencia/Pago';
                     const refCode = tx.referenceCode || tx.reference || '#n/a';
@@ -722,13 +742,13 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           )}
         </div>
 
-        {/* Tabla #3: Nutricionistas de la Clínica */}
+        {/* Tabla #3: Colaboradores de la Clínica */}
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden space-y-0">
           <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <Users className="w-4 h-4 text-indigo-600" />
-                Nutricionistas del Equipo ({activeSeats}/{maxSeats})
+                Colaboradores del Equipo ({activeSeats}/{maxSeats})
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 Lista de profesionales registrados y autorizados en la plataforma de la clínica.
@@ -740,16 +760,16 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
               className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shrink-0"
             >
               <UserPlus className="w-4 h-4" />
-              Invitar Nutricionista
+              Invitar Colaborador
             </button>
           </div>
 
           {!clinic?.members || clinic.members.length === 0 ? (
             <div className="py-12 text-center bg-slate-50/50">
               <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-              <p className="text-xs font-bold text-slate-700">No hay nutricionistas registrados en el equipo</p>
+              <p className="text-xs font-bold text-slate-700">No hay colaboradores registrados en el equipo</p>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Haz clic en "Invitar Nutricionista" para enviar una invitación por correo electrónico.
+                Haz clic en «Invitar Colaborador» para enviar una invitación por correo electrónico.
               </p>
             </div>
           ) : (
@@ -771,7 +791,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                         {member.user.firstName} {member.user.lastName}
                       </td>
                       <td className="px-6 py-4 text-slate-600">
-                        {member.user.email} {(member.user as any).username ? <span className="text-[11px] text-slate-400 font-mono">(@{(member.user as any).username})</span> : null}
+                        {member.user.email} {(member.user as unknown as { username?: string }).username ? <span className="text-[11px] text-slate-400 font-mono">(@{(member.user as unknown as { username?: string }).username})</span> : null}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
@@ -779,11 +799,14 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                             ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                             : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                         }`}>
-                          {member.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Nutricionista'}
+                          {member.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Colaborador'}
                         </span>
                       </td>
                       <td className="px-6 py-4 font-mono text-slate-500">
-                        {(member as any).createdAt || (member as any).joinedAt ? new Date((member as any).createdAt || (member as any).joinedAt).toLocaleDateString() : 'Activo'}
+                        {(() => {
+                          const joined = (member as unknown as { createdAt?: string; joinedAt?: string }).createdAt || (member as unknown as { createdAt?: string; joinedAt?: string }).joinedAt;
+                          return joined ? new Date(joined).toLocaleDateString() : 'Activo';
+                        })()}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -805,7 +828,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
       </div>
 
       {/* ========================================================================= */}
-      {/* MODALES: AMPLIACIÓN DE CUPOS E INVITACIÓN DE NUTRICIONISTAS */}
+      {/* MODALES: AMPLIACIÓN DE CUPOS E INVITACIÓN DE COLABORADORES */}
       {/* ========================================================================= */}
       
       {/* Modal 1: Expansion de Cupos */}
@@ -821,7 +844,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
         }}
       />
 
-      {/* Modal 2: Invitar Nutricionista */}
+      {/* Modal 2: Invitar Colaborador */}
       {isInviteModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-base-100 text-base-content rounded-3xl p-6 max-w-2xl w-full shadow-2xl border border-base-300 space-y-6 max-h-[85vh] overflow-y-auto">
@@ -831,7 +854,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                   <UserPlus className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   Invitar Profesional
                 </h3>
-                <p className="text-xs text-base-content/70 mt-0.5">Envia un acceso para sumar un nutricionista a tu clínica.</p>
+                <p className="text-xs text-base-content/70 mt-0.5">Envía un acceso para sumar un colaborador a tu clínica.</p>
               </div>
               <button
                 onClick={() => setIsInviteModalOpen(false)}
@@ -855,7 +878,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                   <input
                     type="email"
                     required
-                    placeholder="ejemplo@nutricionista.com"
+                    placeholder="ejemplo@correo.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-base-300 bg-base-200 focus:bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-base-content font-medium"
@@ -867,10 +890,10 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
                 <label className="block font-bold text-base-content mb-1">Rol en la Clínica</label>
                 <select
                   value={inviteRole}
-                  onChange={(e) => setInviteRole(e.target.value as any)}
+                  onChange={(e) => setInviteRole(e.target.value as 'NUTRITIONIST' | 'ADMIN')}
                   className="w-full px-3 py-2.5 rounded-xl border border-base-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-base-content font-medium bg-base-200 focus:bg-base-100"
                 >
-                  <option value="NUTRITIONIST">Nutricionista (Acceso Estándar)</option>
+                  <option value="NUTRITIONIST">Colaborador (Acceso Estándar)</option>
                   <option value="ADMIN">Administrador de Clínica (Acceso Completo)</option>
                 </select>
               </div>

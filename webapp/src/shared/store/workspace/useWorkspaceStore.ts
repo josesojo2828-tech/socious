@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { apiClient } from '@/shared/api/api.client';
 import { ACCESS_KEYS, normalizePlanContent } from '@/shared/authz';
-import { User } from '@/types/backend/schema.types';
+import { Subscription, User } from '@/types/backend/schema.types';
 
 export type WorkspaceType = 'PERSONAL' | 'ORGANIZATION' | 'PATIENT_NUTRITIONIST';
 
@@ -63,7 +63,19 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         set({ isLoading: true });
         try {
           const response = await apiClient.get('/api/organizations/my-workspaces');
-        const orgs: WorkspaceItem[] = (response.data || []).map((org: any) => ({
+        interface MyWorkspaceOrg {
+          id: string;
+          slug?: string;
+          name: string;
+          userRole?: string;
+          userColorHex?: string;
+          logoUrl?: string;
+          maxSeats?: number;
+          requiresSubscription?: boolean;
+          subscriptionStatus?: WorkspaceItem['subscriptionStatus'];
+          subscriptionEndDate?: string;
+        }
+        const orgs: WorkspaceItem[] = (response.data || []).map((org: MyWorkspaceOrg) => ({
           id: org.id,
           slug: org.slug,
           name: org.name,
@@ -80,10 +92,10 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           // Entitlement-driven: the personal workspace is covered when the user
           // has an active personal plan granting a stable premium machine key.
           // Plan DISPLAY names are never used for gating.
-          const currentUser = user !== undefined ? user : require('../auth/useAuthStore').useAuthStore.getState().user;
+          const currentUser = user !== undefined ? user : (await import('../auth/useAuthStore')).useAuthStore.getState().user;
           const personalPlanGrants = (currentUser?.subscriptions ?? [])
-            .filter((sub: any) => sub.organizationId === null && sub.status === 'ACTIVE')
-            .flatMap((sub: any) => normalizePlanContent(sub.plan?.content).grants);
+            .filter((sub: Subscription) => sub.organizationId === null && sub.status === 'ACTIVE')
+            .flatMap((sub: Subscription) => normalizePlanContent(sub.plan?.content).grants);
 
           const hasPersonalPlan =
             personalPlanGrants.includes(ACCESS_KEYS.PREMIUM) ||

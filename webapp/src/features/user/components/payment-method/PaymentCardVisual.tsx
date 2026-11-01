@@ -1,7 +1,15 @@
 import { Wallet } from "lucide-react";
+import type { IUserPaymentMethod } from "@/types/backend/schema.types";
 
 
-export const PaymentCardVisual = ({ method }: { method: any }) => {
+export const PaymentCardVisual = ({ method }: { method: IUserPaymentMethod }) => {
+    // `details` es JSON libre; se leen los campos display (cast de tipos solamente).
+    const details = method.details as {
+        last4?: string;
+        email?: string;
+        holder?: string;
+        expiry?: string;
+    };
     const cardStyle = {
         background: `linear-gradient(135deg, ${method.paymentMethod.colorStart || '#333'} 0%, ${method.paymentMethod.colorEnd || '#000'} 100%)`,
         color: method.paymentMethod.colorText || '#fff'
@@ -32,22 +40,22 @@ export const PaymentCardVisual = ({ method }: { method: any }) => {
             <div className="z-10 mt-4">
                 {isCard ? (
                     <div className="font-mono text-xl md:text-2xl tracking-widest opacity-90 drop-shadow-md truncate">
-                        •••• •••• •••• {method.details.last4}
+                        •••• •••• •••• {details.last4}
                     </div>
                 ) : (
-                    <div className="font-medium text-lg opacity-90">{method.details.email}</div>
+                    <div className="font-medium text-lg opacity-90">{details.email}</div>
                 )}
             </div>
 
             <div className="flex justify-between items-end z-10 mt-auto">
                 <div className="flex flex-col">
                     <span className="text-[10px] uppercase opacity-70 tracking-wider">Titular</span>
-                    <span className="font-medium text-sm tracking-wide truncate max-w-[120px]">{method.details.holder || 'Usuario'}</span>
+                    <span className="font-medium text-sm tracking-wide truncate max-w-[120px]">{details.holder || 'Usuario'}</span>
                 </div>
                 {isCard ? (
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] uppercase opacity-70 tracking-wider">Vence</span>
-                        <span className="font-medium text-sm tracking-wide">{method.details.expiry}</span>
+                        <span className="font-medium text-sm tracking-wide">{details.expiry}</span>
                     </div>
                 ) : (
                     <span className="font-bold text-lg opacity-80">{method.paymentMethod.name}</span>

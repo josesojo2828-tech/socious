@@ -2,7 +2,7 @@ import { Column } from "./backend/table.type";
 import { FilterConfig } from "./filter.type";
 
 export interface ReponseStrucTable <T>{
-    actions: any,
+    actions: ActionsType,
     columns: Column[];
     currentPage: number;
     currentQuery: { lang: string };
@@ -12,7 +12,7 @@ export interface ReponseStrucTable <T>{
     
     list: T[];
     pageTitle: string;
-    sortParams: any;
+    sortParams: Record<string, unknown>;
 
     lang: string;    
     limit: number;

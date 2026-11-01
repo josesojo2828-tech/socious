@@ -1,6 +1,12 @@
 import { Check, X } from "lucide-react";
+import type { SubscriptionPlan, SubscriptionPlanContent } from "@/types/backend/schema.types";
 
-export const PlanCard = ({ plan, isCurrent, isPopular }: { plan: any, isCurrent: any, isPopular: any }) => {
+/** PlanCard also renders the optional `limitations` bullets the API may include. */
+type PlanCardPlan = Omit<SubscriptionPlan, "content"> & {
+  content: SubscriptionPlanContent & { limitations?: string[] };
+};
+
+export const PlanCard = ({ plan, isCurrent, isPopular }: { plan: PlanCardPlan, isCurrent: boolean, isPopular: boolean }) => {
   return (
     <div className={`relative flex flex-col p-6 rounded-2xl transition-all duration-300 ${isCurrent ? 'bg-base-100 border-2 border-primary shadow-lg ring-4 ring-primary/5' : 'bg-base-100 border border-base-200 hover:border-base-300 hover:shadow-md'}`}>
       
@@ -29,7 +35,7 @@ export const PlanCard = ({ plan, isCurrent, isPopular }: { plan: any, isCurrent:
       </div>
 
       <div className="flex-1 space-y-3 mb-8">
-        {plan.content.features.map((feature: any, idx: any) => (
+        {plan.content.features.map((feature, idx) => (
           <div key={idx} className="flex items-start gap-3 text-sm">
             <div className="mt-0.5 p-0.5 rounded-full bg-success/10 text-success">
               <Check size={12} strokeWidth={3} />
@@ -37,7 +43,7 @@ export const PlanCard = ({ plan, isCurrent, isPopular }: { plan: any, isCurrent:
             <span className="text-base-content/80">{feature}</span>
           </div>
         ))}
-        {plan.content.limitations?.map((limit: any, idx: any) => (
+        {plan.content.limitations?.map((limit, idx) => (
           <div key={`lim-${idx}`} className="flex items-start gap-3 text-sm opacity-50">
             <div className="mt-0.5 p-0.5 rounded-full bg-base-300 text-base-content/50">
               <X size={12} strokeWidth={3} />

@@ -1,11 +1,11 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 interface StatCardProps {
     title: string;
-    value: any;
+    value: ReactNode;
     subtext: string;
-    icon: any;
-    trend: any
+    icon: ReactNode;
+    trend: 'up' | 'down' | 'neutral'
 }
 
 export const StatCard: FC<StatCardProps> = ({ title, value, subtext, icon, trend }) => (
@@ -22,4 +22,3 @@ export const StatCard: FC<StatCardProps> = ({ title, value, subtext, icon, trend
     </div>
   </div>
 );
-

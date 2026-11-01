@@ -1,18 +1,14 @@
-import { ReactNode } from 'react';
 import { cn } from '@/shared/lib/utils';
-import { Skeleton } from '@/shared/components/atoms/Skeleton';
 import { TableProps } from './Table.types';
 import { useTranslation } from '@/context/i18n.context';
 import { ExtractValue } from '../DynamicTable/StractValue';
 import { TableActions } from './TableActions';
+import type { TableRow } from '@/types/backend/table.type';
 
 export const Table = <T,>({
   data,
   columns,
   actions,
-  zebra = true,
-  compact = false,
-  stickyHeader = false,
   className,
   onAction,
   renderCell,
@@ -21,18 +17,6 @@ export const Table = <T,>({
 }: TableProps<T>) => {
 
   const { t } = useTranslation();
-
-  const renderLoading = () => {
-    return Array.from({ length: 5 }).map((_, index) => (
-      <tr key={`skeleton-${index}`}>
-        {columns.map((_, colIndex) => (
-          <td key={`cell-skeleton-${colIndex}`}>
-            <Skeleton variant="text" className="h-4 w-full opacity-50" />
-          </td>
-        ))}
-      </tr>
-    ));
-  };
 
   return (
     <div className={cn('table-scroll-container w-full overflow-x-auto bg-base-100', className)}>
@@ -54,10 +38,10 @@ export const Table = <T,>({
 
         <tbody className='divide-y divide-base-200 text-sm'>
           {
-            data.map((entity: any) => (
-              <tr key={`row-${entity.id}`}>
+            data.map((entity) => (
+              <tr key={`row-${(entity as unknown as TableRow).id}`}>
                 {columns.map(col => (
-                  <td key={`${entity.id}-${col.field}-${col.formatter || 'default'}`}>
+                  <td key={`${(entity as unknown as TableRow).id}-${col.field}-${col.formatter || 'default'}`}>
                     {renderCell?.(col.field, entity) ?? <ExtractValue formatter={col.formatter} value={col.field} object={entity} />}
                   </td>
                 ))}

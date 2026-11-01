@@ -78,8 +78,12 @@ export default function AdminSettingsPage() {
     const fetchCms = async () => {
       setLoadingCms(true);
       try {
-        const res = await apiClient.get<any>("/api/cms");
-        const list: CmsItem[] = res.data?.data || res.data?.items || (Array.isArray(res.data) ? res.data : []);
+        const res = await apiClient.get<CmsItem[] | { data?: CmsItem[]; items?: CmsItem[] }>("/api/cms");
+        const body = res.data;
+        const list: CmsItem[] =
+          (body && !Array.isArray(body) && body.data) ||
+          (body && !Array.isArray(body) && body.items) ||
+          (Array.isArray(body) ? body : []);
         const mapped: Record<string, CmsItem> = {};
         list.forEach((item) => {
           if (item.key) {
@@ -110,10 +114,11 @@ export default function AdminSettingsPage() {
         description: "Días de suscripción de prueba asignados a los usuarios registrados",
       });
       setGeneralFeedback({ type: "success", msg: "Días de prueba guardados correctamente." });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
       setGeneralFeedback({
         type: "error",
-        msg: err?.response?.data?.message || "Error al guardar la configuración.",
+        msg: (Array.isArray(raw) ? raw[0] : raw) as string || "Error al guardar la configuración.",
       });
     } finally {
       setSavingGeneral(false);
@@ -193,10 +198,11 @@ export default function AdminSettingsPage() {
         }
       }
       setCmsFeedback({ type: "success", msg: "Contenido corporativo guardado exitosamente." });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
       setCmsFeedback({
         type: "error",
-        msg: err?.response?.data?.message || "Error al actualizar el contenido CMS.",
+        msg: (Array.isArray(raw) ? raw[0] : raw) as string || "Error al actualizar el contenido CMS.",
       });
     } finally {
       setSavingCms(false);

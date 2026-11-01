@@ -8,20 +8,24 @@ import { ensureString } from "@/shared/lib/utils";
 
 interface Props {
     config: FilterConfig | null;
-    currentFilters: Record<string, any>;
-    onFilter: (newFilters: Record<string, any>) => void;
+    currentFilters: Record<string, unknown>;
+    onFilter: (newFilters: Record<string, unknown>) => void;
 }
 
 export const DynamicFilter = ({ config, currentFilters, onFilter }: Props) => {
     const { t } = useTranslation();
-    const [localFilters, setLocalFilters] = useState<Record<string, any>>({});
+    const [localFilters, setLocalFilters] = useState<Record<string, unknown>>({});
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
+    // Patrón "adjust state when props change" (react.dev): sincroniza los filtros
+    // locales cuando cambia la identidad de currentFilters, sin un effect.
+    const [prevCurrentFilters, setPrevCurrentFilters] = useState(currentFilters);
+    if (currentFilters !== prevCurrentFilters) {
+        setPrevCurrentFilters(currentFilters);
         if (currentFilters) {
             setLocalFilters(currentFilters);
         }
-    }, [currentFilters]);
+    }
 
     useEffect(() => {
         return () => {
@@ -31,7 +35,7 @@ export const DynamicFilter = ({ config, currentFilters, onFilter }: Props) => {
 
     if (!config || !config.fields || config.fields.length === 0) return null;
 
-    const handleChange = (field: FilterField, value: any) => {
+    const handleChange = (field: FilterField, value: string) => {
         const newFilters = { ...localFilters, [field.name]: value };
 
         if (value === '' || value === null || value === undefined) {
@@ -88,7 +92,7 @@ export const DynamicFilter = ({ config, currentFilters, onFilter }: Props) => {
                                     type="text"
                                     name={field.name}
                                     placeholder={ensureString(t(field.placeholder || 'Buscar...'))}
-                                    value={localFilters[field.name] || ''}
+                                    value={(localFilters[field.name] as string) || ''}
                                     onChange={(e) => handleChange(field, e.target.value)}
                                     className="w-full pl-4 pr-10 py-2.5 text-sm text-base-content rounded-xl border border-base-300 bg-base-100/80 hover:border-base-300 focus:bg-base-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all"
                                 />
@@ -106,7 +110,7 @@ export const DynamicFilter = ({ config, currentFilters, onFilter }: Props) => {
                             <div className="relative w-full">
                                 <select
                                     name={field.name}
-                                    value={localFilters[field.name] || ''}
+                                    value={(localFilters[field.name] as string) || ''}
                                     onChange={(e) => handleChange(field, e.target.value)}
                                     className="w-full pl-3 pr-8 py-2.5 text-sm text-base-content rounded-xl border border-base-300 bg-base-100/80 hover:border-base-300 focus:bg-base-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none cursor-pointer transition-all"
                                 >
@@ -126,7 +130,7 @@ export const DynamicFilter = ({ config, currentFilters, onFilter }: Props) => {
                                 <input
                                     type="date"
                                     name={field.name}
-                                    value={localFilters[field.name] || ''}
+                                    value={(localFilters[field.name] as string) || ''}
                                     onChange={(e) => handleChange(field, e.target.value)}
                                     className="w-full pl-3 pr-3 py-2.5 text-sm text-base-content rounded-xl border border-base-300 bg-base-100/80 hover:border-base-300 focus:bg-base-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all"
                                 />

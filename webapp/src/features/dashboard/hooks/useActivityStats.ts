@@ -31,9 +31,10 @@ export const useActivityStats = (filters?: ActivityStatsFilters) => {
         params,
       });
       setStats(response.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching activity stats:', err);
-      setError(err?.response?.data?.message || 'Error al obtener estadísticas de actividad');
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e?.response?.data?.message || 'Error al obtener estadísticas de actividad');
     } finally {
       setLoading(false);
     }

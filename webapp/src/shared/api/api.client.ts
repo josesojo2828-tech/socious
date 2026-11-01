@@ -42,7 +42,9 @@ apiClient.interceptors.request.use((config) => {
 }, (error) => Promise.reject(error));
 
 // Interceptor de Petición: Solo añade el token y el header de workspace activo, y desduplica /api/api/
-apiClient.interceptors.request.use((config) => {
+// Import dinámico (en vez de `require`) para no romper el ciclo de módulos con el store;
+// axios encadena los interceptores con promesas, así que el header se resuelve antes de salir.
+apiClient.interceptors.request.use(async (config) => {
     if (config.url && config.url.startsWith('/api/api/')) {
         config.url = config.url.replace(/^\/api\/api\//, '/api/');
     }
@@ -53,14 +55,14 @@ apiClient.interceptors.request.use((config) => {
     }
 
     try {
-        const { useWorkspaceStore } = require('../store/workspace/useWorkspaceStore');
+        const { useWorkspaceStore } = await import('../store/workspace/useWorkspaceStore');
         const activeWorkspace = useWorkspaceStore.getState().activeWorkspace;
         // Only send workspace header for organization workspaces
         if (activeWorkspace?.type === 'ORGANIZATION' && activeWorkspace?.id) {
             config.headers['X-Workspace-Id'] = activeWorkspace.id;
         }
         // Don't send header for personal workspace — backend will treat absence as null
-    } catch (e) {
+    } catch {
         // Fallback silencioso
     }
 
@@ -71,10 +73,10 @@ apiClient.interceptors.request.use((config) => {
 let isRefreshing = false;
 let failedQueue: Array<{
     resolve: (token: string) => void;
-    reject: (error: any) => void;
+    reject: (error: unknown) => void;
 }> = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
     failedQueue.forEach((prom) => {
         if (error) {
             prom.reject(error);
@@ -187,7 +189,7 @@ apiClient.interceptors.response.use(
         }
 
         // Manejo de suscripción vencida (403 SUBSCRIPTION_EXPIRED_BLOCKED)
-        const resData: any = error.response?.data;
+        const resData = error.response?.data as { code?: string; message?: string } | undefined;
         if (status === 403 && (resData?.code === 'SUBSCRIPTION_EXPIRED_BLOCKED' || resData?.message?.includes('suscripción'))) {
             useToastStore.getState().addToast({
                 type: 'error',

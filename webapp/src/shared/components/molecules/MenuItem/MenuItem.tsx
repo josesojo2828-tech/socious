@@ -2,6 +2,22 @@ import { cn } from '@/shared/lib/utils';
 import { Icon } from '@/shared/components/atoms/Icon';
 import { InternalLink } from '@/shared/components/atoms/InternalLink';
 import { MenuItemProps } from './MenuItem.types';
+import type { ReactNode } from 'react';
+
+interface InnerContentProps {
+  IconComponent?: MenuItemProps['icon'];
+  label: ReactNode;
+  endContent?: ReactNode;
+}
+
+// Declarado fuera del render: crear componentes durante el render resetea su estado.
+const InnerContent = ({ IconComponent, label, endContent }: InnerContentProps) => (
+  <>
+    {IconComponent && <Icon icon={IconComponent} size="sm" />}
+    <span className="flex-1 text-start">{label}</span>
+    {endContent && <span>{endContent}</span>}
+  </>
+);
 
 export const MenuItem = ({
   label,
@@ -22,23 +38,15 @@ export const MenuItem = ({
     disabled ? 'opacity-50 pointer-events-none' : ''
   );
 
-  const InnerContent = () => (
-    <>
-      {IconComponent && <Icon icon={IconComponent} size="sm" />}
-      <span className="flex-1 text-start">{label}</span>
-      {endContent && <span>{endContent}</span>}
-    </>
-  );
-
   return (
     <li className={cn(disabled && 'disabled', className)}>
       {href ? (
         <InternalLink href={href} className={contentClasses}>
-          <InnerContent />
+          <InnerContent IconComponent={IconComponent} label={label} endContent={endContent} />
         </InternalLink>
       ) : (
         <button onClick={onClick} className={contentClasses} disabled={disabled}>
-          <InnerContent />
+          <InnerContent IconComponent={IconComponent} label={label} endContent={endContent} />
         </button>
       )}
     </li>

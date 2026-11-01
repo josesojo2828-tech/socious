@@ -56,7 +56,7 @@ export const organizationService = {
       console.error('Error al obtener detalles de clínica:', err);
       return {
         id: orgId,
-        name: 'Centro Nutricional Santa María',
+        name: 'Centro Santa María',
         maxSeats: 5,
         verificationStatus: 'VERIFIED',
         members: [],
@@ -145,7 +145,7 @@ export const organizationService = {
     }
   },
 
-  async acceptInvitation(token: string): Promise<{ success: boolean; organization?: any }> {
+  async acceptInvitation(token: string): Promise<{ success: boolean; organization?: { name?: string } }> {
     try {
       const res = await apiClient.post('/api/organizations/accept-invite', { token });
       return { success: true, organization: res.data };

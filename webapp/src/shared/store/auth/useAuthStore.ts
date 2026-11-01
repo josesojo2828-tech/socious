@@ -116,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
 
                     const sidebarPromise = apiClient.get<SidebarResponse>(DashboardEndpoints.ui.sidebar);
                     const tabsPromise = apiClient.get<TabsResponse>(DashboardEndpoints.ui.tabs);
-                    const mePromise = apiClient.get<{ data: any }>('/api/user/me');
+                    const mePromise = apiClient.get<{ data: User | null }>('/api/user/me');
 
                     const [sidebarRes, tabsRes, meRes] = await Promise.all([sidebarPromise, tabsPromise, mePromise]);
 

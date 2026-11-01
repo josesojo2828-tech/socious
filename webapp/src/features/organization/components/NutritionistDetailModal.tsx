@@ -18,7 +18,8 @@ interface Member {
   userId: string;
   role: string;
   colorHex: string;
-  status: string;
+  /** El endpoint puede omitir el estado del miembro. */
+  status?: string;
   createdAt?: string;
   user: {
     id: string;
@@ -77,8 +78,8 @@ export const NutritionistDetailModal: React.FC<NutritionistDetailModalProps> = (
     try {
       const res = await apiClient.get(`/api/organizations/${orgId}/members/${member.id}/summary`);
       setSummary(res.data);
-    } catch (err: any) {
-      console.error('Error al cargar ficha del nutricionista:', err);
+    } catch (err: unknown) {
+      console.error('Error al cargar ficha del colaborador:', err);
       setError('No se pudo cargar la información operativa del profesional.');
     } finally {
       setIsLoading(false);
@@ -131,8 +132,9 @@ export const NutritionistDetailModal: React.FC<NutritionistDetailModalProps> = (
       await apiClient.delete(`/api/organizations/${orgId}/members/${member.id}`);
       onUpdateMember();
       onClose();
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Error al remover al profesional');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      alert(e?.response?.data?.message || 'Error al remover al profesional');
     } finally {
       setIsUpdating(false);
     }
@@ -173,7 +175,7 @@ export const NutritionistDetailModal: React.FC<NutritionistDetailModalProps> = (
                     : 'bg-base-200 text-base-content/70 border border-base-300'
                 }`}
               >
-                {memberData.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Nutricionista'}
+                {memberData.role === 'CLINIC_ADMIN' ? 'Administrador' : 'Colaborador'}
               </span>
             </div>
             <p className="text-xs text-base-content/70 flex items-center gap-1.5 mt-1">

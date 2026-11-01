@@ -2,7 +2,7 @@
 
 import { useMemo, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { Form, FormElement, FormSection } from '@/types/backend/form';
+import { Form, FormElement, FormInputType, FormSection } from '@/types/backend/form';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputRenderer } from './InputRenderer';
 import { useTranslation } from '@/context/i18n.context';
@@ -10,7 +10,7 @@ import { ensureString } from '@/shared/lib/utils';
 
 interface DynamicFormProps {
   formData: Form;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: Record<string, unknown>) => void;
   isLoading?: boolean;
 }
 
@@ -20,7 +20,7 @@ export const DynamicForm = ({ formData, onSubmit, isLoading }: DynamicFormProps)
 
   // 1. Calcular Default Values
   const defaultValues = useMemo(() => {
-    const values: Record<string, any> = {};
+    const values: Record<string, unknown> = {};
 
     const extractValues = (elements: FormElement[]) => {
       elements.forEach(el => {
@@ -118,7 +118,7 @@ export const DynamicForm = ({ formData, onSubmit, isLoading }: DynamicFormProps)
     // Configurar dinámicamente etiquetas y placeholders según el tipo de meta
     if (['startValue', 'targetValue', 'currentValue'].includes(element.name)) {
       if (watchedType === 'OTHER' || watchedType === 'HABIT') return null;
-      const field = { ...element } as any;
+      const field = { ...element } as unknown as FormInputType & { label?: string; placeholder?: string };
       
       if (watchedType === 'HABIT') {
         if (field.name === 'startValue') {

@@ -11,7 +11,7 @@ export function PremiumHubShowcase() {
     }
 
     // Determinar plan del usuario
-    const activeSub = user?.subscriptions?.find((s: any) => s.status === 'ACTIVE') || user?.subscriptions?.[0];
+    const activeSub = user?.subscriptions?.find((s) => s.status === 'ACTIVE') || user?.subscriptions?.[0];
     const planName = (activeSub?.plan?.name || '').toUpperCase();
     const isPRO = planName === 'PRO';
 

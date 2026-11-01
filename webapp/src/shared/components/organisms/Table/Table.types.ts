@@ -44,9 +44,9 @@ export interface TableProps<T> {
   /** Evento al hacer click en una fila */
   onRowClick?: (item: T) => void;
 
-  onAction?: (actionKey: string, item: any) => void;
+  onAction?: (actionKey: string, item: T) => void;
 
-  renderCell?: (field: string, entity: any) => ReactNode | undefined;
+  renderCell?: (field: string, entity: T) => ReactNode | undefined;
 
   /** Extra action buttons rendered in the actions column */
   extraActions?: (item: T, openModal: (view: React.ReactNode) => void) => ReactNode;

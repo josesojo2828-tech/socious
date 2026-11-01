@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, XCircle, Loader2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -14,17 +14,12 @@ type Status = "loading" | "success" | "error";
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const token = searchParams.get("token");
   const [status, setStatus] = useState<Status>("loading");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const token = searchParams.get("token");
-    if (!token) {
-      setStatus("error");
-      setMessage("Token de verificación no encontrado.");
-      return;
-    }
+    if (!token) return;
 
     apiClient
       .post("/api/auth/verify-email", { token })
@@ -34,12 +29,17 @@ function VerifyEmailContent() {
       })
       .catch((err) => {
         setStatus("error");
+        const raw: unknown = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
         setMessage(
-          err?.response?.data?.message ||
+          (Array.isArray(raw) ? raw[0] : raw) as string ||
             "El token es inválido o expiró. Probá registrarte de nuevo.",
         );
       });
-  }, [searchParams]);
+  }, [token]);
+
+  // Sin token el resultado es error; se deriva en render (sin setState en effect).
+  const effectiveStatus: Status = token ? status : "error";
+  const effectiveMessage = token ? message : "Token de verificación no encontrado.";
 
   return (
     <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -52,14 +52,14 @@ function VerifyEmailContent() {
         </h1>
       </div>
 
-      {status === "loading" && (
+      {effectiveStatus === "loading" && (
         <div className="text-center space-y-6 py-16">
           <Loader2 size={48} className="animate-spin text-emerald-600 mx-auto" />
           <p className="text-slate-500 font-medium">Verificando tu correo...</p>
         </div>
       )}
 
-      {status === "success" && (
+      {effectiveStatus === "success" && (
         <div className="text-center space-y-6 py-8">
           <div className="mx-auto w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center">
             <CheckCircle2 size={40} className="text-emerald-600" />
@@ -68,7 +68,7 @@ function VerifyEmailContent() {
             <h2 className="text-3xl font-black tracking-tight text-slate-900">
               ¡Email verificado!
             </h2>
-            <p className="text-slate-500 font-medium leading-relaxed">{message}</p>
+            <p className="text-slate-500 font-medium leading-relaxed">{effectiveMessage}</p>
           </div>
           <div className="pt-4">
             <Link href="/login">
@@ -81,7 +81,7 @@ function VerifyEmailContent() {
         </div>
       )}
 
-      {status === "error" && (
+      {effectiveStatus === "error" && (
         <div className="text-center space-y-6 py-8">
           <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
             <XCircle size={40} className="text-red-500" />
@@ -90,7 +90,7 @@ function VerifyEmailContent() {
             <h2 className="text-3xl font-black tracking-tight text-slate-900">
               Error de verificación
             </h2>
-            <p className="text-slate-500 font-medium leading-relaxed">{message}</p>
+            <p className="text-slate-500 font-medium leading-relaxed">{effectiveMessage}</p>
           </div>
           <div className="pt-4">
             <Link href="/register">
