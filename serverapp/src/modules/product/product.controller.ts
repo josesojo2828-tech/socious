@@ -149,6 +149,9 @@ export class ProductController {
         ...row,
         salePriceUSD: discountedPrice(Number(row.salePriceUSD), percent),
         offerPercent: percent,
+        // Precio de lista original (S11): la tienda lo muestra tachado
+        // junto al ya-descontado `salePriceUSD`, sin hacer cuentas abajo.
+        listPriceUSD: Number(row.salePriceUSD),
       };
     });
 

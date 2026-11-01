@@ -14,6 +14,7 @@ import {
 import { PrismaService } from "nestjs-prisma";
 import { OfferService } from "./offer.service";
 import { CreateOfferDto, UpdateOfferDto } from "./dto/offer.dto";
+import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
@@ -65,6 +66,25 @@ export class OfferController {
   async list(@Req() request: RequestWithUser) {
     const organizationId = await this.requireOrg(request);
     return this.offers.list(organizationId);
+  }
+
+  /**
+   * Ofertas activas de una tienda (S11): consumo anónimo del storefront
+   * `/shop/[slug]`. Una tienda desconocida o inactiva contesta lista vacía
+   * — nunca 404 — para que la página distinga "sin ofertas" de "sin tienda"
+   * por su propia ruta de configuración.
+   */
+  @Public()
+  @Get("public/:slug")
+  async listPublic(@Param("slug") slug: string) {
+    const organization = await this.prisma.organization.findUnique({
+      where: { slug },
+      select: { id: true, status: true },
+    });
+    if (!organization || organization.status !== "ACTIVE") {
+      return { list: [] };
+    }
+    return { list: await this.offers.listPublic(organization.id) };
   }
 
   @Get(":id")

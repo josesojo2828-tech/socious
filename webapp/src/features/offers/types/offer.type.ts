@@ -58,3 +58,26 @@ export interface UpdateOfferPayload {
 
 /** Badge shown by the list for a row at a given instant. */
 export type OfferStatus = "Vencida" | "Inactiva" | "Activa";
+
+/**
+ * Row of GET /api/offers/public/:slug (S11): only active, unexpired offers
+ * of an ACTIVE shop, already filtered and ordered by the backend, with the
+ * product count the storefront shows under the slogan.
+ */
+export interface PublicOffer {
+  id: string;
+  name: string;
+  slogan: string | null;
+  /** MinIO key of the banner; render via /api/file/public/<key>. */
+  bannerKey: string | null;
+  /** ISO instant; the offer form stores the chosen day at UTC midnight. */
+  expiresAt: string;
+  /** % de descuento sobre los productos de la oferta (0–100). */
+  discountPercent: number;
+  _count: { items: number };
+}
+
+/** Body of GET /api/offers/public/:slug — `list` is empty for a shop with no visible offers. */
+export interface PublicOffersResponse {
+  list: PublicOffer[];
+}

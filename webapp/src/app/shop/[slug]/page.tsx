@@ -32,9 +32,28 @@ import {
   removeFromCart,
   type CartLine,
 } from "@/features/sales/lib/pos-form";
+import { OfferEndpoints } from "@/features/offers/services/offers.endpoints";
+import {
+  offerExpiresLabel,
+  offerPercentLabel,
+} from "@/features/offers/lib/offer-storefront";
+import { offerBannerSrc } from "@/features/offers/lib/offer-banner";
+import type { PublicOffersResponse } from "@/features/offers/types/offer.type";
+
+/**
+ * Catalog row as the public endpoint returns it once the server has applied
+ * the active offers (S11): `salePriceUSD` is ALREADY discounted, and a row
+ * inside an offer also carries the percent plus the untouched list price to
+ * strike through. The cart keeps reading `salePriceUSD`, so no price math
+ * happens here.
+ */
+type CatalogProduct = PublicProduct & {
+  offerPercent?: number;
+  listPriceUSD?: number;
+};
 
 interface CatalogResponse {
-  list: PublicProduct[];
+  list: CatalogProduct[];
   total: number;
 }
 
@@ -65,7 +84,8 @@ export default function ShopPage() {
   const slug = params?.slug ?? "";
 
   const [config, setConfig] = useState<CheckoutConfig | null>(null);
-  const [products, setProducts] = useState<PublicProduct[]>([]);
+  const [products, setProducts] = useState<CatalogProduct[]>([]);
+  const [offers, setOffers] = useState<PublicOffersResponse["list"]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [storeMissing, setStoreMissing] = useState<boolean>(false);
 
@@ -82,15 +102,21 @@ export default function ShopPage() {
     void (async () => {
       setLoading(true);
       try {
-        const [configResponse, catalog] = await Promise.all([
+        // Las ofertas no pueden tumbar la tienda: si su feed falla, la
+        // página sigue mostrando catálogo y carrito sin la sección (S11).
+        const [configResponse, catalog, offersResponse] = await Promise.all([
           apiClient.get<CheckoutConfig>(CheckoutEndpoints.config(slug)),
           apiClient.get<CatalogResponse>(CheckoutEndpoints.catalog, {
             params: { organization: slug },
           }),
+          apiClient
+            .get<PublicOffersResponse>(OfferEndpoints.public(slug))
+            .catch(() => null),
         ]);
         if (cancelled) return;
         setConfig(configResponse.data);
         setProducts(catalog.data.list);
+        setOffers(offersResponse?.data.list ?? []);
         if (catalog.data.list.length > 0) {
           setForm((current) => ({
             ...current,
@@ -214,11 +240,67 @@ export default function ShopPage() {
         </p>
       </header>
 
+      {offers.length > 0 ? (
+        <section aria-labelledby="shop-offers" className="mb-6">
+          <p id="shop-offers" className="text-xs uppercase text-slate-400">
+            Ofertas
+          </p>
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            {offers.map((offer) => {
+              const expiry = offerExpiresLabel(offer.expiresAt);
+              const chip = offerPercentLabel(offer.discountPercent);
+              return (
+                <article
+                  key={offer.id}
+                  className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+                >
+                  {offer.bannerKey ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={offerBannerSrc(offer.bannerKey)}
+                      alt=""
+                      className="h-24 w-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden
+                      className="h-24 w-full bg-gradient-to-r from-indigo-500 to-sky-400"
+                    />
+                  )}
+                  <div className="flex items-start justify-between gap-2 p-4">
+                    <div className="min-w-0">
+                      <h2 className="text-sm font-medium text-slate-800">
+                        {offer.name}
+                      </h2>
+                      {offer.slogan ? (
+                        <p className="mt-0.5 text-xs text-slate-400">
+                          {offer.slogan}
+                        </p>
+                      ) : null}
+                      <p className="mt-2 text-xs text-slate-500">
+                        {expiry ? `${expiry} · ` : ""}
+                        {offer._count.items} producto(s)
+                      </p>
+                    </div>
+                    {chip ? (
+                      <span className="shrink-0 rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+                        {chip}
+                      </span>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {products.map((product) => {
             const line = cart.find((item) => item.productId === product.id);
             const out = Number(product.stock) <= 0;
+            const offerPercent = product.offerPercent ?? 0;
             return (
               <article
                 key={product.id}
@@ -237,8 +319,22 @@ export default function ShopPage() {
                 </h2>
                 <p className="mt-1 text-xs text-slate-400">{product.sku}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-sm font-semibold">
-                    ${Number(product.salePriceUSD).toFixed(2)}
+                  <span className="flex items-baseline gap-2">
+                    <span className="text-sm font-semibold">
+                      ${Number(product.salePriceUSD).toFixed(2)}
+                    </span>
+                    {offerPercent > 0 ? (
+                      <>
+                        <span className="rounded-full bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-700">
+                          {offerPercentLabel(offerPercent)}
+                        </span>
+                        {typeof product.listPriceUSD === "number" ? (
+                          <span className="text-xs text-slate-400 line-through">
+                            ${product.listPriceUSD.toFixed(2)}
+                          </span>
+                        ) : null}
+                      </>
+                    ) : null}
                   </span>
                   {line ? (
                     <div className="flex items-center gap-2">

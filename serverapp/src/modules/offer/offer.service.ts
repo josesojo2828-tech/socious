@@ -25,6 +25,31 @@ export class OfferService {
     });
   }
 
+  /**
+   * Storefront feed (S11): only offers the visitor may still see — active,
+   * unexpired, soonest deadline first — with just the display fields the
+   * shop renders plus how many products each offer covers.
+   */
+  listPublic(organizationId: string) {
+    return this.prisma.offer.findMany({
+      where: {
+        organizationId,
+        active: true,
+        expiresAt: { gte: new Date() },
+      },
+      orderBy: { expiresAt: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slogan: true,
+        bannerKey: true,
+        expiresAt: true,
+        discountPercent: true,
+        _count: { select: { items: true } },
+      },
+    });
+  }
+
   async getOne(organizationId: string, id: string) {
     const offer = await this.prisma.offer.findFirst({
       where: { id, organizationId },
