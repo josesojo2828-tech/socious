@@ -1,16 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2, Plus, Search } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
 import {
   balanceState,
   portfolioSummary,
 } from "@/features/clients/lib/client-form";
+import { buildListParams } from "@/features/clients/lib/client-list";
 import {
   BRASS_DOT,
   CTA_BRASS,
@@ -26,6 +28,7 @@ import {
 interface Paged<T> {
   list: T[];
   total: number;
+  totalPages: number;
 }
 
 const TONE_CLASS: Record<string, string> = {
@@ -34,50 +37,60 @@ const TONE_CLASS: Record<string, string> = {
   over: "text-red-600 dark:text-red-400",
 };
 
-/** Client CRM list (S1 + S3): Maison table, real summary strip, search. */
+/** Client CRM list (S1 + S3): Maison table, page-scoped summary, search. */
 export default function ClientsPage() {
   const { addToast } = useToastStore();
 
   const [rows, setRows] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  /** Real pagination: the backend pages with `page`+`limit:25`. */
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  /** `searchInput` paints the box instantly; `query` commits after 300ms. */
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState<string>("");
 
-  const load = useCallback(async () => {
-    const { data } = await apiClient.get<Paged<Client>>(ClientEndpoints.list, {
-      params: { limit: 100 },
-    });
-    setRows(data.list);
-  }, []);
-
+  // Debounce the search term; every commit restarts the list at page 1.
   useEffect(() => {
-    const bootstrap = async () => {
-      setLoading(true);
+    const timer = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Server-side list: the `q` search travels in the request, not a useMemo.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
       try {
-        await load();
+        const { data } = await apiClient.get<Paged<Client>>(
+          ClientEndpoints.list,
+          { params: buildListParams({ page, q: query }) },
+        );
+        if (cancelled) return;
+        setRows(data.list ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(Math.max(1, data.totalPages ?? 1));
       } catch {
-        addToast({
-          type: "error",
-          title: "Clientes",
-          message: "No se pudo cargar la cartera.",
-        });
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Clientes",
+            message: "No se pudo cargar la cartera.",
+          });
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
+    })();
+    return () => {
+      cancelled = true;
     };
-    void bootstrap();
-  }, [load, addToast]);
+  }, [addToast, page, query]);
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    if (!term) return rows;
-    return rows.filter((client) =>
-      [client.name, client.taxId ?? "", client.phone ?? "", client.email ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(term),
-    );
-  }, [rows, query]);
-
+  // Summary strip aggregates, computed only from the rows on this page.
   const summary = portfolioSummary(rows);
 
   if (loading) {
@@ -98,7 +111,7 @@ export default function ClientsPage() {
             <span className={BRASS_DOT} />
             <span>Clientes</span>
             <span className={BRASS_DOT} />
-            <span className="truncate">{rows.length} en cartera</span>
+            <span className="truncate">{total} en cartera</span>
           </div>
           <h1 className={PAGE_TITLE}>Clientes</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -113,12 +126,12 @@ export default function ClientsPage() {
         </Link>
       </header>
 
-      {/* Franja de resumen con agregados reales (S1) */}
+      {/* Franja de resumen: agregados de las filas de ESTA página (S1) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {[
-          { label: "Total clientes", value: String(summary.total) },
-          { label: "Activos", value: String(summary.active) },
-          { label: "Con saldo", value: String(summary.withBalance) },
+          { label: "En la página", value: String(summary.total) },
+          { label: "Activos en página", value: String(summary.active) },
+          { label: "Con saldo en página", value: String(summary.withBalance) },
         ].map((stat) => (
           <div key={stat.label} className={`rounded-2xl px-5 py-4 ${GLASS}`}>
             <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
@@ -137,7 +150,7 @@ export default function ClientsPage() {
             Cartera
           </h3>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {filtered.length} / {rows.length}
+            {rows.length} de {total}
           </span>
         </div>
 
@@ -146,8 +159,8 @@ export default function ClientsPage() {
           <Search className="h-4 w-4 text-slate-400 shrink-0" />
           <input
             type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Buscar por nombre, documento, correo o teléfono"
             className="w-full bg-transparent text-sm outline-none text-[#111018] dark:text-slate-100 placeholder:text-slate-400"
           />
@@ -164,7 +177,7 @@ export default function ClientsPage() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filtered.map((client) => {
+              {rows.map((client) => {
                 const state = balanceState(
                   Number(client.currentBalanceUSD),
                   Number(client.creditLimitUSD),
@@ -200,21 +213,27 @@ export default function ClientsPage() {
                   </tr>
                 );
               })}
-              {filtered.length === 0 ? (
+              {rows.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
                     className="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400"
                   >
-                    {rows.length === 0
-                      ? "Todavía no hay clientes: creá el primero con “Nuevo cliente”."
-                      : "Sin clientes para esa búsqueda."}
+                    {query.trim()
+                      ? "Sin clientes para esa búsqueda."
+                      : "Todavía no hay clientes: creá el primero con “Nuevo cliente”."}
                   </td>
                 </tr>
               ) : null}
             </tbody>
           </table>
         </div>
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, Search } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
+import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import {
   BRASS_DOT,
   CARD,
@@ -20,7 +21,7 @@ import {
 } from "@/shared/lib/maison-style";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import {
-  filterSuppliers,
+  buildListParams,
   sumPendingBalance,
 } from "@/features/suppliers/lib/supplier-list";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
@@ -28,6 +29,7 @@ import type { Supplier } from "@/features/suppliers/types/supplier.type";
 interface Paged<T> {
   list: T[];
   total: number;
+  totalPages: number;
 }
 
 function formatUSD(value: number): string {
@@ -35,9 +37,9 @@ function formatUSD(value: number): string {
 }
 
 /**
- * Supplier directory (makeover S1): Maison table + summary strip + search.
- * The create/edit form and the detail drawer moved to their own routes:
- * `/proveedores/nuevo` and `/proveedores/[id]`.
+ * Supplier directory (makeover S1): Maison table + page-scoped summary +
+ * search. The create/edit form and the detail drawer moved to their own
+ * routes: `/proveedores/nuevo` and `/proveedores/[id]`.
  */
 export default function SuppliersPage() {
   const router = useRouter();
@@ -46,32 +48,54 @@ export default function SuppliersPage() {
 
   const [rows, setRows] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  /** Real pagination: the backend pages with `page`+`limit:25`. */
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  /** `searchInput` paints the box instantly; `query` commits after 300ms. */
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState<string>("");
 
-  const bootstrap = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await apiClient.get<Paged<Supplier>>(
-        SupplierEndpoints.list,
-        { params: { limit: 100 } },
-      );
-      setRows(data.list);
-    } catch {
-      addToast({
-        type: "error",
-        title: "Proveedores",
-        message: "No se pudo cargar el directorio.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [addToast]);
-
+  // Debounce the search term; every commit restarts the list at page 1.
   useEffect(() => {
-    void bootstrap();
-  }, [bootstrap]);
+    const timer = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  const filtered = filterSuppliers(rows, query);
+  // Server-side list: the `q` search travels in the request, not a useMemo.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<Paged<Supplier>>(
+          SupplierEndpoints.list,
+          { params: buildListParams({ page, q: query }) },
+        );
+        if (cancelled) return;
+        setRows(data.list ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(Math.max(1, data.totalPages ?? 1));
+      } catch {
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Proveedores",
+            message: "No se pudo cargar el directorio.",
+          });
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [addToast, page, query]);
+
+  // Summary strip aggregates, computed only from the rows on this page.
   const totalPending = sumPendingBalance(rows);
   const activeCount = rows.filter((supplier) => supplier.isActive).length;
 
@@ -95,7 +119,7 @@ export default function SuppliersPage() {
             <span className={BRASS_DOT} aria-hidden />
             <span>Directorio</span>
             <span className={BRASS_DOT} aria-hidden />
-            <span>{rows.length} proveedor{rows.length === 1 ? "" : "es"}</span>
+            <span>{total} proveedor{total === 1 ? "" : "es"}</span>
           </div>
           <h1 className={PAGE_TITLE}>Proveedores</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -111,11 +135,11 @@ export default function SuppliersPage() {
         </InternalLink>
       </header>
 
-      {/* ===== Franja de resumen (agregados reales del listado) ===== */}
+      {/* ===== Franja de resumen: agregados de las filas de ESTA página ===== */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className={`rounded-3xl p-5 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Proveedores
+            En la página
           </p>
           <p className="mt-2 font-mono text-2xl tabular-nums text-[#111018] dark:text-slate-100">
             {rows.length}
@@ -123,7 +147,7 @@ export default function SuppliersPage() {
         </div>
         <div className={`rounded-3xl p-5 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Activos
+            Activos en página
           </p>
           <p className="mt-2 font-mono text-2xl tabular-nums text-[#111018] dark:text-slate-100">
             {activeCount}
@@ -131,7 +155,7 @@ export default function SuppliersPage() {
         </div>
         <div className={`rounded-3xl p-5 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Por pagar
+            Por pagar (página)
           </p>
           <p className="mt-2 font-mono text-2xl tabular-nums text-amber-600 dark:text-amber-400">
             {formatUSD(totalPending)}
@@ -144,8 +168,8 @@ export default function SuppliersPage() {
         <Search className="h-4 w-4 shrink-0 text-slate-400" />
         <input
           type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
           placeholder="Buscar por nombre, contacto o documento"
           className="w-full bg-transparent text-sm outline-none text-[#111018] dark:text-slate-100 placeholder:text-slate-400"
         />
@@ -158,7 +182,7 @@ export default function SuppliersPage() {
             Directorio
           </h3>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {filtered.length} / {rows.length}
+            {rows.length} de {total}
           </span>
         </div>
         <div className="overflow-x-auto">
@@ -173,7 +197,7 @@ export default function SuppliersPage() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filtered.map((supplier) => {
+              {rows.map((supplier) => {
                 const pending = Number(supplier.currentBalanceUSD ?? 0);
                 return (
                   <tr
@@ -218,21 +242,27 @@ export default function SuppliersPage() {
                   </tr>
                 );
               })}
-              {filtered.length === 0 ? (
+              {rows.length === 0 ? (
                 <tr className={TABLE_ROW}>
                   <td
                     colSpan={5}
                     className="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400"
                   >
-                    {rows.length === 0
-                      ? "Todavía no hay proveedores: cree el primero desde el botón superior."
-                      : "Sin proveedores para esa búsqueda."}
+                    {query.trim()
+                      ? "Sin proveedores para esa búsqueda."
+                      : "Todavía no hay proveedores: cree el primero desde el botón superior."}
                   </td>
                 </tr>
               ) : null}
             </tbody>
           </table>
         </div>
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

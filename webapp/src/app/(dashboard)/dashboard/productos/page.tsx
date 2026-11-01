@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -17,6 +17,7 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
+import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import {
   BRASS_DOT,
   CARD,
@@ -41,12 +42,14 @@ import {
   stockAfter,
   type StockAdjustType,
 } from "@/features/products/lib/product-form";
+import { buildListParams } from "@/features/products/lib/product-list";
 import { summarizeProducts } from "@/features/products/lib/product-summary";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 
 interface Paged<T> {
   list: T[];
   total: number;
+  totalPages: number;
 }
 
 function apiMessage(error: unknown, fallback: string): string {
@@ -98,58 +101,78 @@ export default function ProductsPage() {
   /** S10: the Tienda column exists only for plans with CATALOG_ONLINE. */
   const [catalogOnline, setCatalogOnline] = useState<boolean>(false);
 
+  /** Real pagination: the backend pages with `page`+`limit:25` (25 per page). */
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  /** `searchInput` paints the box instantly; `query` commits after 300ms. */
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
+  /** Bumped after a mutation so the current page reloads without a full boot. */
+  const [reloadToken, setReloadToken] = useState<number>(0);
 
   const [adjustingId, setAdjustingId] = useState<string | null>(null);
   const [adjustType, setAdjustType] = useState<StockAdjustType>("IN");
   const [adjustQty, setAdjustQty] = useState<string>("0");
   const [adjustReference, setAdjustReference] = useState<string>("");
 
-  const load = useCallback(async () => {
-    const { data } = await apiClient.get<Paged<Product>>(ProductEndpoints.list, {
-      params: { limit: 100 },
-    });
-    setRows(data.list);
+  useEffect(() => {
+    void getTenantSettings()
+      .then((settings) =>
+        setCatalogOnline(
+          (settings?.planModules ?? []).includes("CATALOG_ONLINE"),
+        ),
+      )
+      .catch(() => setCatalogOnline(false));
   }, []);
 
-  const bootstrap = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [, settings] = await Promise.all([
-        load(),
-        getTenantSettings().catch(() => null),
-      ]);
-      setCatalogOnline(
-        (settings?.planModules ?? []).includes("CATALOG_ONLINE"),
-      );
-    } catch {
-      addToast({
-        type: "error",
-        title: "Inventario",
-        message: "No se pudo cargar el catálogo.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [addToast, load]);
-
+  // Debounce the search term; every commit restarts the list at page 1.
   useEffect(() => {
-    void bootstrap();
-  }, [bootstrap]);
+    const timer = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    return rows.filter((product) => {
-      if (statusFilter && product.status !== statusFilter) return false;
-      if (!term) return true;
-      return [product.name, product.sku, product.barcode ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(term);
-    });
-  }, [rows, query, statusFilter]);
+  // Server-side list: page + filters live in the request, not in a useMemo.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<Paged<Product>>(
+          ProductEndpoints.list,
+          {
+            params: buildListParams({
+              page,
+              q: query,
+              status: statusFilter,
+            }),
+          },
+        );
+        if (cancelled) return;
+        setRows(data.list ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(Math.max(1, data.totalPages ?? 1));
+      } catch (error) {
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Inventario",
+            message: apiMessage(error, "No se pudo cargar el catálogo."),
+          });
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [addToast, page, query, statusFilter, reloadToken]);
 
+  // Summary strip aggregates, computed only from the rows on this page.
   const summary = useMemo(() => summarizeProducts(rows), [rows]);
 
   const submitAdjust = async (product: Product): Promise<void> => {
@@ -182,7 +205,7 @@ export default function ProductsPage() {
       setAdjustingId(null);
       setAdjustQty("0");
       setAdjustReference("");
-      await load();
+      setReloadToken((token) => token + 1);
     } catch (error) {
       addToast({
         type: "error",
@@ -236,19 +259,19 @@ export default function ProductsPage() {
 
   const stats = [
     {
-      label: "Total productos",
+      label: "En la página",
       value: summary.total,
       icon: Package,
       tone: "text-[#111018] dark:text-slate-100",
     },
     {
-      label: "Activos",
+      label: "Activos en página",
       value: summary.active,
       icon: ShieldCheck,
       tone: "text-emerald-600 dark:text-emerald-400",
     },
     {
-      label: "Stock bajo",
+      label: "Stock bajo en página",
       value: summary.lowStock,
       icon: Layers,
       tone:
@@ -269,7 +292,7 @@ export default function ProductsPage() {
             <span className={BRASS_DOT} />
             <span>Catálogo</span>
             <span className={BRASS_DOT} />
-            <span className="font-mono">{rows.length} en total</span>
+            <span className="font-mono">{total} en total</span>
           </div>
           <h1 className={PAGE_TITLE}>Productos y servicios</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -305,15 +328,18 @@ export default function ProductsPage() {
           <Search className="h-4 w-4 text-slate-400" />
           <input
             type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Nombre, SKU o código"
             className="w-56 bg-transparent text-sm outline-none"
           />
         </div>
         <select
           value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value)}
+          onChange={(event) => {
+            setStatusFilter(event.target.value);
+            setPage(1);
+          }}
           className={`w-auto ${INPUT}`}
         >
           <option value="">Todos los estados</option>
@@ -325,8 +351,9 @@ export default function ProductsPage() {
         </select>
       </div>
 
-      <div className={`overflow-x-auto ${CARD}`}>
-        <table className="w-full text-sm">
+      <div className={CARD}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
           <thead>
             <tr className={`${TABLE_HEAD} text-left`}>
               <th className="px-4 py-3 font-medium">Producto</th>
@@ -341,7 +368,7 @@ export default function ProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((product) => {
+            {rows.map((product) => {
               const low = isLowStock(product);
               const badge = statusBadge(product.status);
               return (
@@ -478,7 +505,7 @@ export default function ProductsPage() {
               );
             })}
 
-            {filtered.length === 0 ? (
+            {rows.length === 0 ? (
               <tr>
                 <td
                   colSpan={catalogOnline ? 7 : 6}
@@ -490,6 +517,13 @@ export default function ProductsPage() {
             ) : null}
           </tbody>
         </table>
+        </div>
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+        />
       </div>
 
       <p className="flex items-center gap-2 text-xs text-slate-400">

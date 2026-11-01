@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Supplier } from "../types/supplier.type";
-import { filterSuppliers, sumPendingBalance } from "./supplier-list";
+import { buildListParams, filterSuppliers, sumPendingBalance } from "./supplier-list";
 
 const row = (overrides: Partial<Supplier> = {}): Supplier => ({
   id: "s-1",
@@ -58,5 +58,30 @@ describe("supplier-list (makeover T3)", () => {
 
   it("returns 0 for an empty directory", () => {
     expect(sumPendingBalance([])).toBe(0);
+  });
+});
+
+describe("supplier-list buildListParams (list pagination)", () => {
+  it("defaults to page 1 with the page size of 25", () => {
+    expect(buildListParams({})).toEqual({ page: 1, limit: 25 });
+  });
+
+  it("passes an explicit page through", () => {
+    expect(buildListParams({ page: 5 }).page).toBe(5);
+    expect(buildListParams({ page: 5 }).limit).toBe(25);
+  });
+
+  it("includes a trimmed q and omits empty or whitespace-only q", () => {
+    expect(buildListParams({ q: "  norte  " }).q).toBe("norte");
+    expect(buildListParams({ q: "" })).not.toHaveProperty("q");
+    expect(buildListParams({ q: "   " })).not.toHaveProperty("q");
+  });
+
+  it("combines page and q for a filtered request", () => {
+    expect(buildListParams({ page: 2, q: "norte" })).toEqual({
+      page: 2,
+      limit: 25,
+      q: "norte",
+    });
   });
 });
