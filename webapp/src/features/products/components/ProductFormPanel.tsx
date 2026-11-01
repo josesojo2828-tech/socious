@@ -370,14 +370,8 @@ export function ProductFormPanel({
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          <input
-            type="checkbox"
-            checked={form.isService}
-            onChange={(event) => patchForm({ isService: event.target.checked })}
-          />
-          Es un servicio (sin control de stock)
-        </label>
+        {/* Servicios: fuera del formulario (S2 del feedback) — crear es
+            siempre producto; en edición se conserva el valor original. */}
         <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
