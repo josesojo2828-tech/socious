@@ -26,6 +26,8 @@ export interface Offer {
   bannerKey: string | null;
   /** ISO instant; the form stores the chosen day at UTC midnight. */
   expiresAt: string;
+  /** % de descuento sobre los productos de la oferta (0–100). */
+  discountPercent: number;
   active: boolean;
   createdAt: string;
   items: OfferItem[];
@@ -37,6 +39,7 @@ export interface CreateOfferPayload {
   slogan?: string;
   bannerKey?: string;
   expiresAt: string;
+  discountPercent: number;
   items: string[];
 }
 
@@ -49,6 +52,7 @@ export interface UpdateOfferPayload {
   slogan: string;
   bannerKey: string;
   expiresAt: string;
+  discountPercent: number;
   items: string[];
 }
 

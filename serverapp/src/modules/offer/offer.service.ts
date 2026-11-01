@@ -55,6 +55,7 @@ export class OfferService {
         name: dto.name.trim(),
         slogan: dto.slogan?.trim() || null,
         bannerKey: dto.bannerKey?.trim() || null,
+        discountPercent: Math.min(100, Math.max(0, Math.round(dto.discountPercent ?? 0))),
         expiresAt: new Date(dto.expiresAt),
         items: { create: productIds.map((productId) => ({ productId })) },
       },
@@ -88,6 +89,12 @@ export class OfferService {
             expiresAt: new Date(dto.expiresAt),
           }),
           ...(dto.active !== undefined && { active: dto.active }),
+          ...(dto.discountPercent !== undefined && {
+            discountPercent: Math.min(
+              100,
+              Math.max(0, Math.round(dto.discountPercent)),
+            ),
+          }),
         },
         include: { items: { include: { product: PRODUCT_SELECT } } },
       });

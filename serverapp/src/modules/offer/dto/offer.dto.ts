@@ -3,9 +3,12 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsNumber,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
 } from "class-validator";
 
 export class CreateOfferDto {
@@ -23,6 +26,12 @@ export class CreateOfferDto {
   @IsString()
   @MaxLength(200)
   bannerKey?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  discountPercent?: number;
 
   @IsDateString()
   expiresAt: string;
@@ -48,6 +57,12 @@ export class UpdateOfferDto {
   @IsString()
   @MaxLength(200)
   bannerKey?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  discountPercent?: number;
 
   @IsOptional()
   @IsDateString()

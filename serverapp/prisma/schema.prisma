@@ -1360,6 +1360,7 @@ model Offer {
   name           String
   slogan         String?
   bannerKey      String?  // imagen tipo banner (S9)
+  discountPercent Int     @default(0) // % de descuento sobre los productos (D2)
   expiresAt      DateTime // fecha límite
   active         Boolean  @default(true)
   createdAt      DateTime @default(now())

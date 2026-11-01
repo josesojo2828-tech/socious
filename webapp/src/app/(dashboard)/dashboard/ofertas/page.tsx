@@ -252,7 +252,14 @@ export default function OffersPage() {
                   return (
                     <tr key={offer.id} className={TABLE_ROW}>
                       <td className="px-4 py-2.5 font-medium text-[#111018] dark:text-slate-100">
-                        {offer.name}
+                        <span className="inline-flex items-center gap-2">
+                          {offer.name}
+                          {(offer.discountPercent ?? 0) > 0 ? (
+                            <span className="rounded-full bg-[#b2944a]/15 border border-[#b2944a]/40 px-2 py-0.5 text-[10px] font-bold text-[#8e7538] dark:text-[#d8c084]">
+                              −{offer.discountPercent}%
+                            </span>
+                          ) : null}
+                        </span>
                       </td>
                       <td className="max-w-[220px] truncate px-4 py-2.5 text-slate-500 dark:text-slate-400">
                         {offer.slogan || "—"}

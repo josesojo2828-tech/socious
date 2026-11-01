@@ -226,6 +226,22 @@ export function OfferFormCard({ offer }: OfferFormCardProps) {
         </label>
       </section>
 
+        <section>
+          <label className={LABEL_SM}>
+            Descuento sobre los productos (%)
+            <input
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              value={form.discountPercent}
+              onChange={(event) => patch({ discountPercent: event.target.value })}
+              placeholder="0 = sin descuento"
+              className={`mt-1 ${INPUT} font-mono tabular-nums`}
+            />
+          </label>
+        </section>
+
       <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">

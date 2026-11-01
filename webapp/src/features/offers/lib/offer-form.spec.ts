@@ -21,6 +21,7 @@ const validForm = (): OfferForm => ({
   bannerKey: "offer_123.png",
   expiresAt: "2026-10-20",
   productIds: ["p1", "p2"],
+  discountPercent: "0",
 });
 
 describe("localDateOnly / formatOfferDate", () => {
@@ -44,7 +45,8 @@ describe("emptyOfferForm / offerToForm", () => {
       bannerKey: "",
       expiresAt: "",
       productIds: [],
-    });
+    
+    discountPercent: "0",});
   });
 
   it("prefills the form from an offer, keeping the calendar day and product ids", () => {
@@ -63,12 +65,15 @@ describe("emptyOfferForm / offerToForm", () => {
           product: { id: "prod-1", name: "Café", sku: "CAF-1" },
         },
       ],
-    });
+    
+      discountPercent: 0,
+  });
     expect(form).toEqual({
       name: "Black Friday",
       slogan: "",
       bannerKey: "",
       expiresAt: "2026-11-28",
+      discountPercent: "0",
       productIds: ["prod-1"],
     });
   });
@@ -159,7 +164,9 @@ describe("buildOfferCreatePayload", () => {
       bannerKey: "offer_123.png",
       expiresAt: "2026-10-20T00:00:00.000Z",
       items: ["p1", "p2"],
-    });
+    
+    discountPercent: 0,
+  });
   });
 
   it("omits blank optional fields instead of sending empty strings", () => {
@@ -180,7 +187,9 @@ describe("buildOfferUpdatePayload", () => {
       bannerKey: "offer_123.png",
       expiresAt: "2026-10-20T00:00:00.000Z",
       items: ["p1", "p2"],
-    });
+    
+    discountPercent: 0,
+  });
 
     const cleared = validForm();
     cleared.slogan = " ";
@@ -189,6 +198,7 @@ describe("buildOfferUpdatePayload", () => {
       name: "Semana del cliente",
       slogan: "",
       bannerKey: "",
+      discountPercent: 0,
       expiresAt: "2026-10-20T00:00:00.000Z",
       items: ["p1", "p2"],
     });
@@ -239,5 +249,19 @@ describe("offerStatus", () => {
     expect(
       offerStatus({ expiresAt: "2026-10-14T00:00:00.000Z", active: false }, NOW),
     ).toBe("Vencida");
+  });
+});
+
+describe("discount percent", () => {
+  it("validates 0–100 and rejects the rest", () => {
+    expect(validateOfferForm({ ...validForm(), discountPercent: "25" }, new Date("2026-10-01"))).toBeNull();
+    expect(validateOfferForm({ ...validForm(), discountPercent: "-1" }, new Date("2026-10-01"))).toMatch(/entre 0 y 100/);
+    expect(validateOfferForm({ ...validForm(), discountPercent: "101" }, new Date("2026-10-01"))).toMatch(/entre 0 y 100/);
+  });
+
+  it("carries the percent in create and update payloads", () => {
+    const form = { ...validForm(), discountPercent: "15" };
+    expect(buildOfferCreatePayload(form).discountPercent).toBe(15);
+    expect(buildOfferUpdatePayload(form).discountPercent).toBe(15);
   });
 });

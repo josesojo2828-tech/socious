@@ -10,6 +10,7 @@ import type { Prisma } from "@prisma/client";
 import { ExchangeService } from "../exchange/exchange.service";
 import { SaleService } from "../sale/sale.service";
 import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
+import { activeOfferPercentMap, discountedPrice } from "src/shared/utils/offer-price";
 import { ShippingAgencyService } from "../shipping/shipping-agency.service";
 import {
   COORDINATION_METHODS,
@@ -132,6 +133,11 @@ export class OrderService {
     });
 
     const byId = new Map(products.map((product) => [product.id, product]));
+    const offerPercentMap = await activeOfferPercentMap(
+      this.prisma,
+      organization.id,
+      [...byId.keys()],
+    );
 
     const resolved: ResolvedOrderItem[] = data.items.map((item) => {
       const product = byId.get(item.productId);
@@ -150,7 +156,10 @@ export class OrderService {
       }
 
       const quantity = Number(item.quantity);
-      const priceUSD = Number(product.salePriceUSD);
+      const priceUSD = discountedPrice(
+        Number(product.salePriceUSD),
+        offerPercentMap.get(product.id) ?? 0,
+      );
       return {
         productId: product.id,
         productName: product.name,

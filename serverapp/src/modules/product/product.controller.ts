@@ -33,6 +33,10 @@ import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
 import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
+import {
+  activeOfferPercentMap,
+  discountedPrice,
+} from "src/shared/utils/offer-price";
 import type { RequestWithUser } from "src/shared/types/server.type";
 
 /**
@@ -132,7 +136,23 @@ export class ProductController {
       }),
     ]);
 
-    return { list, total };
+    // Ofertas con descuento real (D2): el mismo precio que pagará el carrito.
+    const percentMap = await activeOfferPercentMap(
+      this.prisma,
+      organization.id,
+      list.map((row) => row.id),
+    );
+    const decorated = list.map((row) => {
+      const percent = percentMap.get(row.id) ?? 0;
+      if (!percent) return { ...row, offerPercent: 0 };
+      return {
+        ...row,
+        salePriceUSD: discountedPrice(Number(row.salePriceUSD), percent),
+        offerPercent: percent,
+      };
+    });
+
+    return { list: decorated, total };
   }
 
   @Get()

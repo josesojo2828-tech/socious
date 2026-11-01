@@ -54,6 +54,7 @@ const makeTx = () => ({
   },
   saleService: { create: jest.fn() },
   stockMovement: { create: jest.fn() },
+  offerProduct: { findMany: jest.fn(async () => []) },
 });
 
 const makeService = (settings: any = DEFAULT_SETTINGS) => {

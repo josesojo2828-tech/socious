@@ -22,6 +22,8 @@ export interface OfferForm {
   bannerKey: string;
   /** `yyyy-mm-dd` from the date input; "" = untouched. */
   expiresAt: string;
+  /** % de descuento (string del input,0–100). */
+  discountPercent: string;
   productIds: string[];
 }
 
@@ -45,7 +47,14 @@ export function formatOfferDate(iso: string): string {
 }
 
 export function emptyOfferForm(): OfferForm {
-  return { name: "", slogan: "", bannerKey: "", expiresAt: "", productIds: [] };
+  return {
+    name: "",
+    slogan: "",
+    bannerKey: "",
+    expiresAt: "",
+    discountPercent: "0",
+    productIds: [],
+  };
 }
 
 /** Edit-mode prefill from the detail response. */
@@ -55,6 +64,7 @@ export function offerToForm(offer: Offer): OfferForm {
     slogan: offer.slogan ?? "",
     bannerKey: offer.bannerKey ?? "",
     expiresAt: offer.expiresAt.slice(0, 10),
+    discountPercent: String(offer.discountPercent ?? 0),
     productIds: offer.items.map((item) => item.productId),
   };
 }
@@ -74,6 +84,10 @@ export function validateOfferForm(form: OfferForm, now: Date): string | null {
     return `El slogan no puede superar ${OFFER_SLOGAN_MAX} caracteres.`;
   }
   if (!form.expiresAt) return "La fecha de vencimiento es obligatoria.";
+  const pct = Number(form.discountPercent);
+  if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
+    return "El descuento debe estar entre 0 y 100.";
+  }
   if (
     !/^\d{4}-\d{2}-\d{2}$/.test(form.expiresAt) ||
     Number.isNaN(new Date(form.expiresAt).getTime())
@@ -100,6 +114,7 @@ export function buildOfferCreatePayload(form: OfferForm): CreateOfferPayload {
     ...(bannerKey ? { bannerKey } : {}),
     // Date-only strings parse as UTC midnight per ES2015+.
     expiresAt: new Date(form.expiresAt).toISOString(),
+    discountPercent: Math.round(Number(form.discountPercent) || 0),
     items: [...form.productIds],
   };
 }
@@ -115,6 +130,7 @@ export function buildOfferUpdatePayload(form: OfferForm): UpdateOfferPayload {
     slogan: form.slogan.trim(),
     bannerKey: form.bannerKey.trim(),
     expiresAt: new Date(form.expiresAt).toISOString(),
+    discountPercent: Math.round(Number(form.discountPercent) || 0),
     items: [...form.productIds],
   };
 }
