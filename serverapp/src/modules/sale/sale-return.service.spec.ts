@@ -305,3 +305,30 @@ describe("SaleReturnService", () => {
     );
   });
 });
+
+describe("SaleReturnService — refundMethod vs métodos deshabilitados", () => {
+  it("rejects a refund method the tenant disabled", async () => {
+    const { service } = makeService({}, {
+      cash: { shiftControl: true },
+      payments: { disabledCodes: ["CASH_USD"] },
+    });
+
+    await expect(
+      service.create({ organizationId: ORG_A }, "sale-1", {
+        items: [{ saleItemId: "li-1", quantity: 1 }],
+        refundMethod: "CASH_USD",
+      }),
+    ).rejects.toThrow(/deshabilitado/);
+  });
+
+  it("accepts a builtin refund method that is still enabled", async () => {
+    const { service } = makeService();
+
+    await expect(
+      service.create({ organizationId: ORG_A }, "sale-1", {
+        items: [{ saleItemId: "li-1", quantity: 1 }],
+        refundMethod: "CASH_USD",
+      }),
+    ).resolves.toBeDefined();
+  });
+});

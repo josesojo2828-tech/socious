@@ -78,6 +78,14 @@ export class SaleReturnService {
       const isBuiltin = BUSINESS_PAYMENT_METHOD_CODES.includes(
         data.refundMethod,
       );
+      if (isBuiltin && scope.organizationId) {
+        const settings = await this.tenantSettings.get(scope.organizationId);
+        if (settings.payments?.disabledCodes?.includes(data.refundMethod)) {
+          throw new BadRequestException(
+            `El método "${data.refundMethod}" está deshabilitado en la configuración.`,
+          );
+        }
+      }
       const custom =
         isBuiltin || !scope.organizationId
           ? null
