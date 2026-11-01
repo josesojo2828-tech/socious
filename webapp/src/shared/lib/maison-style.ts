@@ -28,7 +28,7 @@ export const EYEBROW =
 
 /** Título display de página. */
 export const PAGE_TITLE =
-  "text-3xl sm:text-4xl font-semibold tracking-tight leading-none text-[#111018] dark:text-slate-50";
+  "font-display text-3xl sm:text-4xl font-semibold leading-none text-[#111018] dark:text-slate-50";
 
 /** Punto de latón (separadores tipo divider-dot del mockup). */
 export const BRASS_DOT =

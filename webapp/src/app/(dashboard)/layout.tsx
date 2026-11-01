@@ -157,7 +157,7 @@ export default function DashboardLayout({
                     <div className="flex flex-col flex-1 min-w-0 md:overflow-hidden">
 
                         {/* A. Header Fijo Superior */}
-                        <header className="h-16 border-b border-[#e5e7ec] bg-white z-30 sticky top-0 flex-shrink-0 print:hidden dark:bg-[#111317] dark:border-[#22252c]">
+                        <header className="h-16 border-b border-[#1a2a46]/10 bg-[#f0ede4] z-30 sticky top-0 flex-shrink-0 print:hidden dark:bg-[#111527] dark:border-white/10">
                             <PrivateHeader />
                         </header>
 

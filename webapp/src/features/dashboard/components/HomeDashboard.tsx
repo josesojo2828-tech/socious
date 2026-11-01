@@ -247,7 +247,7 @@ export default function HomeDashboard() {
       {/* Título sobre el fondo de la página */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-[#1b1d21] dark:text-slate-100">
+          <h1 className="font-display text-3xl font-semibold text-[#111018] dark:text-slate-50">
             Dashboard
           </h1>
           <p className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 mt-1">

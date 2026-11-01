@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+// Display serif self-hosted (sin red en runtime): Fraunces como en el mockup.
+import "@fontsource/fraunces/latin-500.css";
+import "@fontsource/fraunces/latin-500-italic.css";
+import "@fontsource/fraunces/latin-600.css";
 import { ModalRoot } from "@/shared/components/organisms/Modal";
 import { ToastRegion } from "@/shared/components/organisms/ToastRegion/ToastRegion";
 import { I18nProvider } from "@/context/i18n.context";

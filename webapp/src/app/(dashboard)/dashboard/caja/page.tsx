@@ -390,7 +390,7 @@ export default function CashPage() {
                   : "Sin cajas"}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-none text-[#111018] dark:text-slate-50">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none text-[#111018] dark:text-slate-50">
             Caja
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">

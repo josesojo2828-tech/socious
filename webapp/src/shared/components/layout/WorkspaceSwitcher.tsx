@@ -35,7 +35,7 @@ export const WorkspaceSwitcher: React.FC = () => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Cambiar espacio de trabajo"
-        className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-300/40 bg-indigo-900/10 hover:bg-indigo-900/15 text-indigo-950 dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20 dark:text-white backdrop-blur-md shadow-xs transition-all text-xs font-semibold group"
+        className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl border border-[#1a2a46]/15 bg-[#1a2a46]/[0.06] hover:bg-[#1a2a46]/10 text-[#1a2a46] dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20 dark:text-[#e6e1d5] backdrop-blur-md shadow-xs transition-all text-xs font-semibold group"
       >
         <span
           className="w-2.5 h-2.5 rounded-full shadow-sm animate-pulse shrink-0"
@@ -44,7 +44,7 @@ export const WorkspaceSwitcher: React.FC = () => {
         
         <span className="flex items-center gap-1.5">
           {activeWorkspace.type === 'ORGANIZATION' ? (
-            <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-200 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[#1a2a46] dark:text-[#e6e1d5] group-hover:text-[#111018] dark:group-hover:text-white transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m3 0h1m-1-4h.01M9 16h.01M9 12h.01M9 8h.01M15 16h.01M15 12h.01M15 8h.01" />
             </svg>
           ) : (
@@ -52,12 +52,12 @@ export const WorkspaceSwitcher: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           )}
-          <span className="hidden md:inline-block max-w-[130px] truncate text-indigo-950 dark:text-slate-100 font-bold dark:font-semibold">{activeWorkspace.name}</span>
+          <span className="hidden md:inline-block max-w-[130px] truncate text-indigo-950 dark:text-slate-100 font-semibold">{activeWorkspace.name}</span>
         </span>
 
         <div className="hidden md:inline-block">
           {activeWorkspace.role ? (
-            <span className="px-1.5 py-0.5 text-[10px] uppercase font-extrabold tracking-wider rounded bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-200 border border-indigo-500/30 dark:border-indigo-400/30">
+            <span className="px-1.5 py-0.5 text-[10px] uppercase font-extrabold tracking-wider rounded bg-indigo-500/15 dark:bg-indigo-500/20 text-[#1a2a46] dark:text-[#e6e1d5] border border-indigo-500/30 dark:border-indigo-400/30">
               {activeWorkspace.role.replace('CLINIC_', '')}
             </span>
           ) : (
@@ -67,7 +67,7 @@ export const WorkspaceSwitcher: React.FC = () => {
           )}
         </div>
 
-        <svg className={`w-3.5 h-3.5 text-indigo-700 dark:text-indigo-200 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className={`w-3.5 h-3.5 text-[#1a2a46] dark:text-[#e6e1d5] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>

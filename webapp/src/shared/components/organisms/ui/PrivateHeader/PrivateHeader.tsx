@@ -81,7 +81,7 @@ export const PrivateHeader = () => {
   const showExpiry = subscription?.status === "ACTIVE" && daysRemaining !== null;
 
   return (
-    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-transparent text-[#171a1f] dark:text-[#e7eaef]">
+    <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-transparent text-[#1a2a46] dark:text-[#e6e1d5]">
 
       {/* Izquierda: Toggle Menu + Workspace Switcher */}
       <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ export const PrivateHeader = () => {
           className="hover:bg-[#f1f2f5] text-[#575d67] border-0 p-2 dark:hover:bg-[#1b1e24] dark:text-[#9aa1ad]"
           onClick={handleToggle}
         >
-          <Menu size={22} className="text-[#575d67] dark:text-[#c9ced6]" />
+          <Menu size={22} className="text-[#1a2a46]/70 dark:text-[#c9ced6]" />
         </Button>
 
         {!isPatient && <WorkspaceSwitcher />}
@@ -109,7 +109,7 @@ export const PrivateHeader = () => {
                 ? "bg-red-500/90 text-white border-red-400/50 animate-pulse"
                 : daysRemaining <= 5
                   ? "bg-amber-400/90 text-black border-amber-300/50"
-                  : "bg-[#f1f2f5] text-[#575d67] border-[#e5e7ec] dark:bg-[#1b1e24] dark:text-[#c9ced6] dark:border-[#2a2e36]"
+                  : "bg-[#1a2a46]/[0.05] text-[#1a2a46]/70 border-[#1a2a46]/15 dark:bg-white/5 dark:text-[#c9ced6] dark:border-white/10"
             }`}
             title={`Tu suscripción vence en ${daysRemaining} ${daysRemaining === 1 ? "día" : "días"}`}
           >
@@ -126,7 +126,7 @@ export const PrivateHeader = () => {
               setIsNotifOpen(!isNotifOpen);
               setIsProfileOpen(false); // Cerrar el otro por si acaso
             }}
-            className={`relative text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] border-0 transition-all dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white ${isNotifOpen ? 'bg-[#e6f0f4] text-[#1d6f8c] dark:bg-[#12262e] dark:text-[#5aa8c2]' : ''}`}
+            className={`relative text-[#575d67] hover:bg-[#f1f2f5] hover:text-[#171a1f] border-0 transition-all dark:text-[#9aa1ad] dark:hover:bg-[#1b1e24] dark:hover:text-white ${isNotifOpen ? 'bg-[#b2944a]/12 text-[#8e7538] dark:bg-[#b2944a]/20 dark:text-[#d8c084]' : ''}`}
           >
             <Bell size={20} />
             {unreadCount > 0 && (
@@ -170,7 +170,7 @@ export const PrivateHeader = () => {
         </div>
 
         {/* Separador */}
-        <div className="h-6 w-px bg-[#e5e7ec] dark:bg-[#22252c] hidden md:block"></div>
+        <div className="h-6 w-px bg-[#1a2a46]/10 dark:bg-white/10 hidden md:block"></div>
 
         {/* Dropdown de Usuario */}
         <div className="relative" ref={profileRef}>
@@ -180,11 +180,11 @@ export const PrivateHeader = () => {
               setIsNotifOpen(false); // Cerrar el otro por si acaso
             }}
             variant="ghost"
-            className="hover:bg-[#f1f2f5] text-[#171a1f] dark:hover:bg-[#1b1e24] dark:text-[#e7eaef] border-0 px-2 gap-3 rounded-[7px]"
+            className="hover:bg-[#1a2a46]/[0.05] text-[#111018] dark:hover:bg-[#1b1e24] dark:text-[#e7eaef] border-0 px-2 gap-3 rounded-[7px]"
           >
             <div className="text-right hidden md:block">
-              <Text as={'p'} className="text-sm font-semibold text-[#171a1f] dark:text-white leading-none">@{user?.username}</Text>
-              <Text as={'p'} className="text-[10px] font-bold text-[#1d6f8c] dark:text-[#5aa8c2] uppercase tracking-wider mt-1">
+              <Text as={'p'} className="text-sm font-semibold text-[#111018] dark:text-white leading-none">@{user?.username}</Text>
+              <Text as={'p'} className="text-[10px] font-bold text-[#8e7538] dark:text-[#d8c084] uppercase tracking-wider mt-1">
                 {user?.permits?.name === 'PATIENT'
                   ? 'Paciente'
                   : activeWorkspace?.type === 'ORGANIZATION'
