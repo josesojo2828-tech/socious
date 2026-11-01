@@ -5,6 +5,7 @@ import { AlertCircle, ArrowDownRight, ArrowUpRight, Loader2, RefreshCw } from "l
 import { apiClient } from "@/shared/api/api.client";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
 import { OrderEndpoints } from "@/features/orders/services/orders.endpoints";
+import { PurchaseEndpoints } from "@/features/purchases/services/purchases.endpoints";
 import {
   buildWeekHeat,
   isoDaysAgo,
@@ -18,6 +19,17 @@ import {
  * Panel del dashboard con datos reales (nada de pronósticos): KPIs del día,
  * saldo por cobrar, pedidos y el mapa de calor de ventas por día.
  */
+
+interface PurchasesReportSlice {
+  openItems: {
+    id: string;
+    purchaseNumber: string;
+    issueDate: string;
+    totalUSD: number;
+    daysOverdue: number;
+    supplier: { id: string; name: string } | null;
+  }[];
+}
 
 interface SalesReportSlice {
   issued: { count: number; totalUSD: number };
@@ -97,6 +109,9 @@ export default function HomeDashboard() {
   const [openItems, setOpenItems] = useState<SalesReportSlice["openItems"]>([]);
   const [pendingOrders, setPendingOrders] = useState(0);
   const [recentOrders, setRecentOrders] = useState<OrderRow[]>([]);
+  const [apItems, setApItems] = useState<PurchasesReportSlice["openItems"]>(
+    [],
+  );
   const [heat, setHeat] = useState<WeekHeat | null>(null);
 
   const load = useCallback(async () => {
@@ -106,8 +121,14 @@ export default function HomeDashboard() {
       const today = localDayKey(new Date());
       const yesterday = isoDaysAgo(1);
 
-      const [todayReport, yesterdayReport, arReport, pendingRes, ordersRes] =
-        await Promise.all([
+      const [
+        todayReport,
+        yesterdayReport,
+        arReport,
+        apReport,
+        pendingRes,
+        ordersRes,
+      ] = await Promise.all([
           apiClient
             .get<SalesReportSlice>(
               `${SaleEndpoints.report}?from=${today}&to=${today}`,
@@ -120,6 +141,9 @@ export default function HomeDashboard() {
             .then((r) => r.data),
           apiClient
             .get<SalesReportSlice>(SaleEndpoints.report)
+            .then((r) => r.data),
+          apiClient
+            .get<PurchasesReportSlice>(PurchaseEndpoints.report)
             .then((r) => r.data),
           apiClient
             .get<{ total: number }>(OrderEndpoints.list, {
@@ -169,6 +193,12 @@ export default function HomeDashboard() {
       );
       setOpenItems(
         [...arReport.openItems].sort(
+          (a, b) =>
+            new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
+        ),
+      );
+      setApItems(
+        [...apReport.openItems].sort(
           (a, b) =>
             new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
         ),
@@ -241,6 +271,7 @@ export default function HomeDashboard() {
   ];
 
   const arTop = openItems.slice(0, 5);
+  const apTop = apItems.slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -403,6 +434,52 @@ export default function HomeDashboard() {
               )}
             </div>
           </div>
+          {/* Cuentas por pagar (feedback dashboard #1) */}
+          <section>
+            <div className="flex items-baseline justify-between mb-4">
+              <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-50">
+                Cuentas por pagar
+              </h2>
+              <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-slate-500 dark:text-slate-400">
+                proveedores · recientes
+              </span>
+            </div>
+            <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
+              {apTop.length === 0 ? (
+                <p className="px-5 py-6 text-sm text-[#1b1d21]/55 dark:text-slate-400 text-center">
+                  Sin deudas con proveedores.
+                </p>
+              ) : (
+                <ul className="divide-y divide-[#1b1d21]/12 dark:divide-white/10">
+                  {apTop.map((item) => (
+                    <li
+                      key={item.id}
+                      className="px-5 py-3 flex items-center gap-3"
+                    >
+                      <span className="font-mono text-[12px] tnum text-[#1b1d21]/75 dark:text-slate-300 w-24 shrink-0">
+                        {item.purchaseNumber}
+                      </span>
+                      <span className="flex-1 min-w-0 text-[13px] truncate text-[#1b1d21] dark:text-slate-100">
+                        {item.supplier?.name ?? "Sin proveedor"}
+                      </span>
+                      <span
+                        className={`font-mono text-[11px] tnum ${
+                          item.daysOverdue > 0
+                            ? "text-[#c63749]"
+                            : "text-[#1b1d21]/55 dark:text-slate-400"
+                        }`}
+                      >
+                        {item.daysOverdue > 0 ? `${item.daysOverdue}d` : "al día"}
+                      </span>
+                      <span className="font-mono text-[12px] tnum font-medium text-right w-20">
+                        {usd(item.totalUSD)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </section>
         </section>
 
         <section className="xl:col-span-5 space-y-6">
