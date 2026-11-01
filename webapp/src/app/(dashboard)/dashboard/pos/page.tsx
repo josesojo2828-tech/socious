@@ -628,6 +628,14 @@ export default function PosPage() {
                         Sin stock
                       </span>
                     )}
+                    {product.color ? (
+                      <span
+                        aria-label={`Color ${product.color}`}
+                        title={product.color}
+                        className="absolute top-2 right-2 h-4 w-4 rounded-full border-2 border-white/80 shadow-sm dark:border-slate-900/60"
+                        style={{ backgroundColor: product.color }}
+                      />
+                    ) : null}
                   </div>
                   <div className="flex items-start justify-between gap-2 px-1">
                     <div className="min-w-0">
@@ -711,14 +719,26 @@ export default function PosPage() {
               </p>
             ) : (
               <div className="space-y-2">
-                {cart.map((line) => (
-                  <div
-                    key={`${line.productId}:${line.presentationId ?? ""}`}
-                    className="flex items-center gap-2.5 p-2 rounded-2xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-[#1a2a46] text-[#f0ede4] flex items-center justify-center text-sm font-semibold shrink-0">
-                      {line.productName.trim().charAt(0).toUpperCase() || "?"}
-                    </div>
+                {cart.map((line) => {
+                  // The cart keeps no color: read it from the loaded catalog.
+                  const lineColor = products.find(
+                    (item) => item.id === line.productId,
+                  )?.color;
+                  return (
+                    <div
+                      key={`${line.productId}:${line.presentationId ?? ""}`}
+                      className="flex items-center gap-2.5 p-2 rounded-2xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <div className="relative w-10 h-10 rounded-xl bg-[#1a2a46] text-[#f0ede4] flex items-center justify-center text-sm font-semibold shrink-0">
+                        {line.productName.trim().charAt(0).toUpperCase() || "?"}
+                        {lineColor ? (
+                          <span
+                            aria-hidden
+                            className="absolute -right-1 -top-1 h-3 w-3 rounded-full border border-white dark:border-slate-900"
+                            style={{ backgroundColor: lineColor }}
+                          />
+                        ) : null}
+                      </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] leading-tight text-[#111018] dark:text-slate-100 truncate">
                         {line.productName}
@@ -786,8 +806,9 @@ export default function PosPage() {
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             )}
 

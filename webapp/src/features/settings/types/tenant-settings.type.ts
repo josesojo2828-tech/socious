@@ -58,6 +58,12 @@ export interface TenantSettings {
   planModules?: string[];
   /** Manual org grants (e.g. BRANCHES) — admin-assigned, flag-independent. */
   manualGrants?: string[];
+  /**
+   * Per-plan image slots (S8), server-computed from the subscription because
+   * modules cannot tell Avanzado from Premium: Básico 1/1 · Avanzado 3/2 ·
+   * Premium 5/3 (product/variant). Absent when the settings read fails.
+   */
+  imageLimits?: { product: number; variant: number };
 }
 
 /** A PATCH sends any subset of the sections; the backend merges the rest. */

@@ -75,6 +75,16 @@ describe("product-form (S7)", () => {
       expect(payload.stock).toBe(0);
       expect(payload.isService).toBe(true);
     });
+
+    it("passes the color through trimmed (S6)", () => {
+      expect(buildProductPayload(form({ color: "  #c87878 " }), "create").color)
+        .toBe("#c87878");
+    });
+
+    it("sends color as null when the form leaves it empty (S6)", () => {
+      expect(buildProductPayload(form({ color: "" }), "create").color).toBeNull();
+      expect(buildProductPayload(form({ color: undefined }), "update").color).toBeNull();
+    });
   });
 
   describe("isLowStock", () => {
@@ -154,6 +164,7 @@ describe("product-form (S7)", () => {
         sku: "ARROZ-1K",
         name: "Arroz 1kg",
         barcode: "4006381333931",
+        color: "",
         description: "largo",
         costPriceUSD: 1,
         salePriceUSD: 2,
@@ -177,6 +188,11 @@ describe("product-form (S7)", () => {
       expect(form.supplierId).toBe("");
       expect(form.description).toBe("");
       expect(form.barcode).toBe("");
+    });
+
+    it("maps the stored color, or empty when the product has none (S6)", () => {
+      expect(toForm(product({ color: "#1a2a46" })).color).toBe("#1a2a46");
+      expect(toForm(product()).color).toBe("");
     });
   });
 

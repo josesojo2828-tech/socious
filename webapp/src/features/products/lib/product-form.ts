@@ -12,6 +12,8 @@ export interface ProductForm {
   sku: string;
   name: string;
   barcode?: string;
+  /** CSS color (`#rrggbb` or a short name); empty = sin color (S6). */
+  color?: string;
   description?: string;
   costPriceUSD: number;
   salePriceUSD: number;
@@ -33,6 +35,7 @@ export const EMPTY_PRODUCT_FORM: ProductForm = {
   sku: "",
   name: "",
   barcode: "",
+  color: "",
   description: "",
   costPriceUSD: 0,
   salePriceUSD: 0,
@@ -61,6 +64,7 @@ export function toForm(product: Product): ProductForm {
     sku: product.sku,
     name: product.name,
     barcode: product.barcode ?? "",
+    color: product.color ?? "",
     description: product.description ?? "",
     costPriceUSD: Number(product.costPriceUSD),
     salePriceUSD: Number(product.salePriceUSD),
@@ -114,6 +118,7 @@ export function buildProductPayload(
     sku: form.sku.trim(),
     name: form.name.trim(),
     barcode: trim(form.barcode) ?? null,
+    color: trim(form.color) ?? null,
     description: trim(form.description) ?? null,
     costPriceUSD: Number(form.costPriceUSD) || 0,
     salePriceUSD: Number(form.salePriceUSD) || 0,

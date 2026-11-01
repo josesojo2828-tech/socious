@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Boxes, Loader2, Package, Plus, Trash2, X } from "lucide-react";
+import { Boxes, ImagePlus, Loader2, Package, Plus, Trash2, X } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
@@ -12,7 +12,12 @@ import {
   presentationPrefillFromProduct,
   type PresentationDraft,
 } from "../lib/presentation-prefill";
-import type { Product } from "../types/product.type";
+import {
+  buildImageUploadForm,
+  canUploadImage,
+  publicFileUrl,
+} from "../lib/product-images";
+import type { Product, ProductImage } from "../types/product.type";
 
 export interface ProductPresentation {
   id: string;
@@ -26,6 +31,8 @@ export interface ProductPresentation {
   stock: string | number;
   minStock: string | number;
   active: boolean;
+  /** Variant image slots (S8), ordered by position. */
+  images?: ProductImage[];
 }
 
 function apiMessage(error: unknown, fallback: string): string {
@@ -44,9 +51,12 @@ function apiMessage(error: unknown, fallback: string): string {
 export function PresentationsCard({
   productId,
   product,
+  imageLimit,
 }: {
   productId: string;
   product?: Product;
+  /** Plan slots from `GET /api/settings` → `imageLimits.variant` (S8). */
+  imageLimit?: number;
 }) {
   const { addToast } = useToastStore();
   const [rows, setRows] = useState<ProductPresentation[]>([]);
@@ -56,6 +66,8 @@ export function PresentationsCard({
     product ? presentationPrefillFromProduct(product) : EMPTY_PRESENTATION_DRAFT,
   );
   const [saving, setSaving] = useState<boolean>(false);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [deletingImageId, setDeletingImageId] = useState<string | null>(null);
   const [decomposeQty, setDecomposeQty] = useState<string>("");
   const [decomposeTarget, setDecomposeTarget] = useState<string>("");
 
@@ -141,6 +153,76 @@ export function PresentationsCard({
     }
   };
 
+  /** Multipart upload → the KEY is persisted on the presentation (S8). */
+  const uploadImage = async (
+    presentation: ProductPresentation,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    const file = event.target.files?.[0];
+    // Reset so picking the same file again re-triggers the change event.
+    event.target.value = "";
+    if (!file || imageLimit === undefined) return;
+    const count = presentation.images?.length ?? 0;
+    if (!canUploadImage(count, imageLimit)) {
+      addToast({
+        type: "warning",
+        title: "Imágenes",
+        message: `Tu plan permite ${imageLimit} imagen(es) por variante.`,
+      });
+      return;
+    }
+    setUploadingId(presentation.id);
+    try {
+      const { data } = await apiClient.post<{ key: string }>(
+        ProductEndpoints.fileUpload,
+        buildImageUploadForm(file),
+        // The instance default is application/json: without this override
+        // axios would serialize the FormData as JSON and drop the file.
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+      await apiClient.post(
+        ProductEndpoints.presentationImages(presentation.id),
+        { key: data.key },
+      );
+      addToast({
+        type: "success",
+        title: "Imágenes",
+        message: `Imagen agregada a ${presentation.name}.`,
+      });
+      await fetchList();
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Imágenes",
+        message: apiMessage(error, "No se pudo subir la imagen."),
+      });
+    } finally {
+      setUploadingId(null);
+    }
+  };
+
+  const removeImage = async (
+    presentation: ProductPresentation,
+    image: ProductImage,
+  ): Promise<void> => {
+    if (!window.confirm("¿Eliminar esta imagen de la variante?")) return;
+    setDeletingImageId(image.id);
+    try {
+      await apiClient.delete(
+        ProductEndpoints.presentationImageDetail(image.id),
+      );
+      await fetchList();
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Imágenes",
+        message: apiMessage(error, "No se pudo eliminar la imagen."),
+      });
+    } finally {
+      setDeletingImageId(null);
+    }
+  };
+
   const decompose = async (event: React.FormEvent) => {
     event.preventDefault();
     const quantity = Number(decomposeQty);
@@ -206,6 +288,60 @@ export function PresentationsCard({
                       Stock: {Number(row.stock)} {row.unit}
                       {row.sku ? ` · ${row.sku}` : ""}
                     </p>
+                    {imageLimit !== undefined &&
+                    ((row.images?.length ?? 0) > 0 ||
+                      canUploadImage(row.images?.length ?? 0, imageLimit)) ? (
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        {(row.images ?? []).map((image) => (
+                          <span
+                            key={image.id}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[#1b1d21]/12 bg-white/70 py-0.5 pl-0.5 pr-1 dark:border-white/10 dark:bg-slate-950/40"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={publicFileUrl(image.key)}
+                              alt=""
+                              className="h-7 w-7 rounded-md object-cover"
+                            />
+                            <button
+                              type="button"
+                              aria-label={`Eliminar imagen de ${row.name}`}
+                              disabled={deletingImageId === image.id}
+                              onClick={() => void removeImage(row, image)}
+                              className="rounded p-0.5 text-slate-400 transition-colors hover:text-red-500 disabled:opacity-50"
+                            >
+                              {deletingImageId === image.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <X className="h-3 w-3" />
+                              )}
+                            </button>
+                          </span>
+                        ))}
+                        {canUploadImage(row.images?.length ?? 0, imageLimit) ? (
+                          <label className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-dashed border-[#1a2a46]/25 px-2 py-1 text-[11px] text-slate-500 transition-colors hover:border-[#b2944a] hover:text-[#b2944a] dark:border-white/20 dark:text-slate-400">
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/jpg,image/webp"
+                              className="sr-only"
+                              disabled={uploadingId !== null}
+                              onChange={(event) => void uploadImage(row, event)}
+                            />
+                            {uploadingId === row.id ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Subiendo…
+                              </>
+                            ) : (
+                              <>
+                                <ImagePlus className="h-3.5 w-3.5" />
+                                Imagen {row.images?.length ?? 0}/{imageLimit}
+                              </>
+                            )}
+                          </label>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                   <button
                     type="button"

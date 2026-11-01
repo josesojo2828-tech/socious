@@ -42,6 +42,7 @@ import {
   type StockAdjustType,
 } from "@/features/products/lib/product-form";
 import { summarizeProducts } from "@/features/products/lib/product-summary";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 
 interface Paged<T> {
   list: T[];
@@ -94,6 +95,8 @@ export default function ProductsPage() {
   const [rows, setRows] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
+  /** S10: the Tienda column exists only for plans with CATALOG_ONLINE. */
+  const [catalogOnline, setCatalogOnline] = useState<boolean>(false);
 
   const [query, setQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -113,7 +116,13 @@ export default function ProductsPage() {
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      await load();
+      const [, settings] = await Promise.all([
+        load(),
+        getTenantSettings().catch(() => null),
+      ]);
+      setCatalogOnline(
+        (settings?.planModules ?? []).includes("CATALOG_ONLINE"),
+      );
     } catch {
       addToast({
         type: "error",
@@ -182,6 +191,38 @@ export default function ProductsPage() {
       });
     } finally {
       setBusy(false);
+    }
+  };
+
+  /**
+   * Publish toggle (S10): optimistic flip, the backend answer wins — a plan
+   * without CATALOG_ONLINE rejects isPublic=true with a 403 whose message
+   * reaches the merchant through the toast and rolls the row back.
+   */
+  const togglePublic = async (
+    product: Product,
+    next: boolean,
+  ): Promise<void> => {
+    const snapshot = rows;
+    setRows(
+      rows.map((row) =>
+        row.id === product.id ? { ...row, isPublic: next } : row,
+      ),
+    );
+    try {
+      await apiClient.patch(ProductEndpoints.detail(product.id), {
+        isPublic: next,
+      });
+    } catch (error) {
+      setRows(snapshot);
+      addToast({
+        type: "error",
+        title: "Tienda",
+        message: apiMessage(
+          error,
+          "No se pudo actualizar la visibilidad en la tienda.",
+        ),
+      });
     }
   };
 
@@ -293,6 +334,9 @@ export default function ProductsPage() {
               <th className="px-4 py-3 font-medium text-right">Precio</th>
               <th className="px-4 py-3 font-medium text-right">Stock</th>
               <th className="px-4 py-3 font-medium">Estado</th>
+              {catalogOnline ? (
+                <th className="px-4 py-3 font-medium">Tienda</th>
+              ) : null}
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -339,6 +383,20 @@ export default function ProductsPage() {
                     <td className="px-4 py-3">
                       <span className={badge.className}>{badge.label}</span>
                     </td>
+                    {catalogOnline ? (
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          aria-label={`Visible en la tienda: ${product.name}`}
+                          checked={product.isPublic}
+                          onClick={(event) => event.stopPropagation()}
+                          onChange={(event) =>
+                            void togglePublic(product, event.target.checked)
+                          }
+                          className="h-4 w-4 cursor-pointer accent-[#b2944a]"
+                        />
+                      </td>
+                    ) : null}
                     <td className="px-4 py-3 text-right">
                       <button
                         type="button"
@@ -358,7 +416,7 @@ export default function ProductsPage() {
                   {adjustingId === product.id ? (
                     <tr>
                       <td
-                        colSpan={6}
+                        colSpan={catalogOnline ? 7 : 6}
                         className="bg-[#1a2a46]/[0.03] px-4 py-3 dark:bg-white/5"
                       >
                         <div className="flex flex-wrap items-end gap-3">
@@ -423,7 +481,7 @@ export default function ProductsPage() {
             {filtered.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={catalogOnline ? 7 : 6}
                   className="px-4 py-6 text-center text-slate-500 dark:text-slate-400"
                 >
                   Sin productos para ese filtro.

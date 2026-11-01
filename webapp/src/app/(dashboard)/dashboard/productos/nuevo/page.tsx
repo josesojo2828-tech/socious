@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -14,11 +14,12 @@ import {
   PAGE_TITLE,
 } from "@/shared/lib/maison-style";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
-import type { Category } from "@/features/products/types/product.type";
+import type { Category, Product } from "@/features/products/types/product.type";
 import {
   buildProductPayload,
   type ProductForm,
 } from "@/features/products/lib/product-form";
+import { variantPrefillFromProduct } from "@/features/products/lib/variant-prefill";
 import { ProductFormPanel } from "@/features/products/components/ProductFormPanel";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
@@ -39,21 +40,41 @@ function apiMessage(error: unknown, fallback: string): string {
 
 /** Create route (S1): the form lives here, never on the list page. */
 export default function NewProductPage() {
+  // useSearchParams needs a boundary when the route is prerendered.
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+        </div>
+      }
+    >
+      <NewProductContent />
+    </Suspense>
+  );
+}
+
+function NewProductContent() {
   const { addToast } = useToastStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  /** Source product of a variant copy (S7): `/nuevo?from=<productId>`. */
+  const fromProductId = searchParams.get("from");
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
+  const [variantForm, setVariantForm] = useState<ProductForm | null>(null);
+  const [variantSource, setVariantSource] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
 
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [categoryTree, supplierPage, unitList, ratesData] =
+      const [categoryTree, supplierPage, unitList, ratesData, source] =
         await Promise.all([
           apiClient
             .get<Category[]>(ProductEndpoints.categories)
@@ -67,6 +88,11 @@ export default function NewProductPage() {
           apiClient
             .get<ExchangeRates>(ExchangeEndpoints.latest)
             .catch(() => ({ data: null as ExchangeRates | null })),
+          fromProductId
+            ? apiClient
+                .get<Product>(ProductEndpoints.detail(fromProductId))
+                .catch(() => ({ data: null as Product | null }))
+            : Promise.resolve({ data: null as Product | null }),
         ]);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
@@ -75,6 +101,16 @@ export default function NewProductPage() {
         setRates({
           rateBcv: Number(ratesData.data.rateBcv),
           rateUsdt: Number(ratesData.data.rateUsdt) || 1,
+        });
+      }
+      if (source.data) {
+        setVariantSource(source.data);
+        setVariantForm(variantPrefillFromProduct(source.data));
+      } else if (fromProductId) {
+        addToast({
+          type: "warning",
+          title: "Productos",
+          message: "No se pudo copiar el producto origen; el formulario queda vacío.",
         });
       }
     } catch {
@@ -86,7 +122,7 @@ export default function NewProductPage() {
     } finally {
       setLoading(false);
     }
-  }, [addToast]);
+  }, [addToast, fromProductId]);
 
   useEffect(() => {
     void bootstrap();
@@ -140,11 +176,21 @@ export default function NewProductPage() {
           <span className={BRASS_DOT} />
           <span>Nuevo</span>
         </div>
-        <h1 className={PAGE_TITLE}>Nuevo producto</h1>
+        <h1 className={PAGE_TITLE}>
+          {variantForm ? "Nueva variante" : "Nuevo producto"}
+        </h1>
+        {variantForm ? (
+          <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
+            Copia de {variantSource?.sku ?? "otro producto"}: revise el SKU
+            (sufijo -V), regenere el código de barras y ajuste lo que cambie
+            antes de guardar.
+          </p>
+        ) : null}
       </header>
 
       <section className={`rounded-2xl p-6 ${CARD}`}>
         <ProductFormPanel
+          initialForm={variantForm ?? undefined}
           units={units}
           categories={categories}
           suppliers={suppliers}

@@ -4,11 +4,20 @@ export type ProductStatus =
   | "OUT_OF_STOCK"
   | "ON_SALE";
 
+/** One stored catalog image (S8): the MinIO key renders through the public route. */
+export interface ProductImage {
+  id: string;
+  key: string;
+  position: number;
+}
+
 export interface Product {
   id: string;
   sku: string;
   barcode?: string | null;
   name: string;
+  /** Hex `#rrggbb` or a short color name (S6); null = sin color. */
+  color?: string | null;
   description?: string | null;
   /** Decimal columns arrive as strings. */
   costPriceUSD: string | number;
@@ -25,6 +34,8 @@ export interface Product {
   categoryId?: string | null;
   supplierId?: string | null;
   organizationId?: string | null;
+  /** Detail route only (S8); ordered by `position`. */
+  images?: ProductImage[];
   category?: { id: string; name: string } | null;
   supplier?: { id: string; name: string } | null;
 }

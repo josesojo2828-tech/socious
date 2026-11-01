@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
+  Copy,
   Layers,
   Loader2,
   Pencil,
@@ -18,6 +19,7 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import {
   BRASS_DOT,
+  BTN_GHOST,
   CARD,
   CARD_HEADER,
   EYEBROW,
@@ -31,11 +33,30 @@ import type {
 import { PRODUCT_STATUS_OPTIONS } from "@/features/products/lib/product-form";
 import { BarcodePreview } from "@/features/products/components/BarcodePreview";
 import { PresentationsCard } from "@/features/products/components/PresentationsCard";
+import { ProductImagesCard } from "@/features/products/components/ProductImagesCard";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as { response?: { data?: { message?: string } } };
   return maybe?.response?.data?.message || fallback;
+}
+
+/** Tienda visibility (S10): shown only when the plan has CATALOG_ONLINE. */
+function visibilityBadge(isPublic: boolean): {
+  label: string;
+  className: string;
+} {
+  return isPublic
+    ? {
+        label: "Público",
+        className:
+          "rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-700 dark:text-sky-300",
+      }
+    : {
+        label: "Privado",
+        className:
+          "rounded-full border border-slate-300 dark:border-slate-600 bg-white/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400",
+      };
 }
 
 function statusBadge(status: ProductStatus): { label: string; className: string } {
@@ -84,6 +105,9 @@ export default function ProductDetailPage() {
 
   const [product, setProduct] = useState<Product | null>(null);
   const [planModules, setPlanModules] = useState<string[]>([]);
+  const [imageLimits, setImageLimits] = useState<
+    { product: number; variant: number } | null
+  >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
 
@@ -97,6 +121,7 @@ export default function ProductDetailPage() {
       ]);
       setProduct(detail.data);
       setPlanModules(settings?.planModules ?? []);
+      setImageLimits(settings?.imageLimits ?? null);
     } catch (error) {
       addToast({
         type: "error",
@@ -108,6 +133,23 @@ export default function ProductDetailPage() {
       setLoading(false);
     }
   }, [addToast, productId, router]);
+
+  /** Quiet refetch after an image change: no full-page spinner. */
+  const refreshDetail = useCallback(async () => {
+    if (!productId) return;
+    try {
+      const { data } = await apiClient.get<Product>(
+        ProductEndpoints.detail(productId),
+      );
+      setProduct(data);
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Productos",
+        message: apiMessage(error, "No se pudo actualizar el producto."),
+      });
+    }
+  }, [addToast, productId]);
 
   useEffect(() => {
     void bootstrap();
@@ -164,6 +206,8 @@ export default function ProductDetailPage() {
   }
 
   const badge = statusBadge(product.status);
+  const catalogOnline = planModules.includes("CATALOG_ONLINE");
+  const storeBadge = visibilityBadge(product.isPublic);
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -182,14 +226,40 @@ export default function ProductDetailPage() {
             </Link>
             <span className={BRASS_DOT} />
             <span className={badge.className}>{badge.label}</span>
+            {catalogOnline ? (
+              <>
+                <span className={BRASS_DOT} />
+                <span className={storeBadge.className}>{storeBadge.label}</span>
+              </>
+            ) : null}
           </div>
           <h1 className={PAGE_TITLE}>{product.name}</h1>
           <p className="mt-2 font-mono text-sm text-slate-500 dark:text-slate-400">
             {product.sku}
             {product.isService ? " · servicio" : ` · ${product.unit}`}
+            {product.color ? (
+              <span className="ml-2 inline-flex items-center gap-1.5 align-middle">
+                <span
+                  aria-hidden
+                  className="inline-block h-3 w-3 rounded-full border border-white/70 shadow-sm dark:border-slate-700"
+                  style={{ backgroundColor: product.color }}
+                />
+                <span className="text-xs">{product.color}</span>
+              </span>
+            ) : null}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              router.push(`/dashboard/productos/nuevo?from=${product.id}`)
+            }
+            className={BTN_GHOST}
+            title="Crea una copia de este producto como variante nueva"
+          >
+            <Copy className="h-4 w-4" /> Crear variante
+          </button>
           <Link
             href={`/dashboard/productos/${product.id}/editar`}
             className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1a2a46] hover:bg-[#243a5e] text-[#f0ede4] font-semibold transition-colors h-11 px-5 text-sm"
@@ -360,8 +430,21 @@ export default function ProductDetailPage() {
         </section>
       </div>
 
+      {imageLimits ? (
+        <ProductImagesCard
+          productId={product.id}
+          images={product.images ?? []}
+          limit={imageLimits.product}
+          onChanged={() => void refreshDetail()}
+        />
+      ) : null}
+
       {planModules.includes("PRESENTATIONS") ? (
-        <PresentationsCard productId={product.id} product={product} />
+        <PresentationsCard
+          productId={product.id}
+          product={product}
+          imageLimit={imageLimits?.variant}
+        />
       ) : null}
     </div>
   );

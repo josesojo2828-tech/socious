@@ -27,9 +27,17 @@ import type { Category, Product, ProductStatus } from "../types/product.type";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 
+/** The picker needs a real hex; the text field also accepts a color name. */
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
 interface ProductFormPanelProps {
   /** Present → edit mode: seeded with toForm(initial), no initial-stock field. */
   initial?: Product;
+  /**
+   * Explicit seed that wins over `initial` (S7): the create route opens it
+   * prefilled as a variant copy while still creating a NEW product.
+   */
+  initialForm?: ProductForm;
   units: UnitOfMeasure[];
   categories: Category[];
   suppliers: Supplier[];
@@ -47,6 +55,7 @@ interface ProductFormPanelProps {
  */
 export function ProductFormPanel({
   initial,
+  initialForm,
   units,
   categories,
   suppliers,
@@ -57,8 +66,8 @@ export function ProductFormPanel({
 }: ProductFormPanelProps) {
   const { addToast } = useToastStore();
   const editing = Boolean(initial);
-  const [form, setForm] = useState<ProductForm>(() =>
-    initial ? toForm(initial) : EMPTY_PRODUCT_FORM,
+  const [form, setForm] = useState<ProductForm>(
+    () => initialForm ?? (initial ? toForm(initial) : EMPTY_PRODUCT_FORM),
   );
   const [priceCurrency, setPriceCurrency] = useState<PriceCurrency>("USD");
 
@@ -123,6 +132,30 @@ export function ProductFormPanel({
             </button>
           </div>
           <BarcodePreview value={form.barcode ?? ""} />
+        </label>
+        <label className={LABEL_SM}>
+          Color
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              type="color"
+              aria-label="Selector de color"
+              value={
+                HEX_COLOR.test(form.color ?? "") ? (form.color as string) : "#1a2a46"
+              }
+              onChange={(event) => patchForm({ color: event.target.value })}
+              className="h-10 w-11 shrink-0 cursor-pointer rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 p-1.5"
+            />
+            <input
+              maxLength={32}
+              placeholder="#1a2a46 o Azul"
+              value={form.color ?? ""}
+              onChange={(event) => patchForm({ color: event.target.value })}
+              className={`font-mono text-xs ${INPUT}`}
+            />
+          </div>
+          <span className="mt-1 block text-xs text-slate-400">
+            El POS muestra un circulito con este color.
+          </span>
         </label>
         <label className={LABEL_SM}>
           Unidad
