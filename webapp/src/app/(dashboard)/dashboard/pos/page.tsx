@@ -21,6 +21,7 @@ import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
 import { creditSchedule } from "@/features/sales/lib/credit-schedule";
+import { publicFileUrl } from "@/features/products/lib/product-images";
 import { CREDIT_CADENCE_LABELS, type TenantSettings } from "@/features/settings/types/tenant-settings.type";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import { CashEndpoints } from "@/features/cash/services/cash.endpoints";
@@ -529,7 +530,7 @@ export default function PosPage() {
                   : "Sin turno"}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-none text-[#111018] dark:text-slate-50">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none text-[#111018] dark:text-slate-50">
             Punto de Venta
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -607,14 +608,19 @@ export default function PosPage() {
                   className={`group text-left rounded-2xl p-3 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 hover:-translate-y-1 hover:shadow-[0_18px_40px_-16px_rgba(26,42,70,0.25)] ${GLASS}`}
                 >
                   <div className="aspect-[4/3] rounded-xl overflow-hidden bg-[#1a2a46]/5 dark:bg-slate-800 mb-3 relative flex items-center justify-center">
-                    {product.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={product.imageUrl}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
+                    {(() => {
+                      const cover = product.images?.[0]?.key
+                        ? publicFileUrl(product.images[0].key)
+                        : product.imageUrl;
+                      return cover ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={cover}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      ) : null;
+                    })() || (
                       <span className="text-3xl font-semibold text-[#1a2a46]/30 dark:text-[#f0ede4]/30">
                         {product.name.trim().charAt(0).toUpperCase() || "?"}
                       </span>

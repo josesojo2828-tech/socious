@@ -11,6 +11,13 @@ export interface ProductImage {
   position: number;
 }
 
+/** Imagen guardada en MinIO (clave servida por /api/file/public/<key>). */
+export interface ProductImageRef {
+  id: string;
+  key: string;
+  position: number;
+}
+
 export interface Product {
   id: string;
   sku: string;
