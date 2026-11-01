@@ -1,4 +1,5 @@
-import { IsEnum, IsString, MaxLength } from "class-validator";
+import { IsBoolean,
+  IsEnum, IsString, MaxLength } from "class-validator";
 import { UnitKind } from "@prisma/client";
 
 export class CreateUnitDto {
@@ -26,5 +27,6 @@ export class UpdateUnitDto {
   @IsEnum(UnitKind, { message: "Tipo de unidad no válido." })
   kind?: UnitKind;
 
+  @IsBoolean()
   active?: boolean;
 }
