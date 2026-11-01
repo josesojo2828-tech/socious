@@ -49,12 +49,16 @@ const makeTx = () => ({
 const makeService = () => {
   const tx = makeTx();
   const prisma = { ...tx, $transaction: jest.fn(async (fn: any) => fn(tx)) };
+  const tenantSettings = {
+    get: jest.fn().mockResolvedValue({ payments: { disabledCodes: [] } }),
+  };
   const service = new PurchaseService(
     prisma as any,
     { resolveRates: jest.fn().mockResolvedValue(RATES) } as any,
     { nextFormatted: jest.fn().mockResolvedValue("COM-00001") } as any,
+    tenantSettings as any,
   );
-  return { service, prisma, tx };
+  return { service, prisma, tx, tenantSettings };
 };
 
 const PURCHASE = {
@@ -70,6 +74,26 @@ const PURCHASE = {
     { productId: "prod-1", productName: "Arroz", quantity: "10.00", unitCostUSD: "1.00" },
   ],
 };
+
+describe("assertPaymentMethod — disabled codes (B round)", () => {
+  it("rejects a builtin method the tenant disabled", async () => {
+    const { service, tenantSettings } = makeService();
+    tenantSettings.get.mockResolvedValueOnce({
+      payments: { disabledCodes: ["ZELLE"] },
+    });
+
+    await expect(
+      (service as any).assertPaymentMethod("org-1", "ZELLE"),
+    ).rejects.toThrow(/deshabilitado/);
+  });
+
+  it("accepts a builtin method that is still enabled", async () => {
+    const { service } = makeService();
+    await expect(
+      (service as any).assertPaymentMethod("org-1", "CASH_USD"),
+    ).resolves.toBeUndefined();
+  });
+});
 
 describe("PurchaseService", () => {
   it("freezes the rates and numbers the purchase per tenant", async () => {

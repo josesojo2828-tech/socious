@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, PurchaseStatus } from "@prisma/client";
@@ -58,6 +59,7 @@ export class PurchaseService {
     private readonly prisma: PrismaService,
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
+    private readonly tenantSettings: TenantSettingsService,
     private readonly eventEmitter?: EventEmitter2,
   ) {}
 
@@ -70,7 +72,17 @@ export class PurchaseService {
     organizationId: string | null,
     code: string,
   ): Promise<void> {
-    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) return;
+    if (BUSINESS_PAYMENT_METHOD_CODES.includes(code)) {
+      if (organizationId) {
+        const settings = await this.tenantSettings.get(organizationId);
+        if (settings.payments?.disabledCodes?.includes(code)) {
+          throw new BadRequestException(
+            `El método "${code}" está deshabilitado en la configuración.`,
+          );
+        }
+      }
+      return;
+    }
     if (!organizationId) {
       throw new BadRequestException(`Método de pago no reconocido: "${code}".`);
     }
