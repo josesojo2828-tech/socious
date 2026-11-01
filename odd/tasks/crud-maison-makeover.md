@@ -105,6 +105,19 @@ features (images, offers) validate their plan server-side.
 
 ### S11 — Consumo de ofertas en la tienda (follow-up)
 
+### S12 — Ficha de compra como ruta
+Acceptance: `/dashboard/compras/[id]` own page with receive/pay/cancel;
+list rows navigate there; the drawer is removed.
+
+### S13 — Borradores de compra en el backend
+User (verbatim): "Borradores de compra en el backend — hoy son por
+estación (localStorage); sincronizarlos con la cuenta para cambiar de
+equipo."
+Acceptance: PurchaseDraft (one per org+user, Json payload) + CRUD-free
+save/load/clear endpoints on /api/purchases/drafts; the nuevo screen
+syncs server-first with localStorage as offline fallback; specs cover the
+pure payload/merge logic.
+
 ### S5 — Resto de vistas (follow-up)
 Recorded for later: ventas, pedidos, inventario, configuración, cuentas por
 cobrar/pagar, rutas — same Maison treatment.

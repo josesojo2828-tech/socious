@@ -5,12 +5,15 @@ import {
   IsEnum,
   IsIn,
   IsNumber,
+  IsObject,
   IsOptional,
   Matches,
   IsString,
   MaxLength,
   Min,
+  registerDecorator,
   ValidateNested,
+  ValidationOptions,
 } from "class-validator";
 import { Type } from "class-transformer";
 import { PaymentStatus, PurchaseStatus } from "@prisma/client";
@@ -166,4 +169,44 @@ export class PurchasesReportQueryDto {
   @IsOptional()
   @IsDateString()
   to?: string;
+}
+
+/**
+ * Draft payload (S13): free-form Json, but it MUST be an object carrying an
+ * `items` array — the shape the /dashboard/compras/nuevo screen writes and
+ * reads back. Anything else is refused by the global ValidationPipe with a
+ * 400 before it reaches the controller.
+ */
+export function IsPurchaseDraftPayload(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string): void {
+    registerDecorator({
+      name: "isPurchaseDraftPayload",
+      target: object.constructor,
+      propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: unknown): boolean {
+          if (!value || typeof value !== "object" || Array.isArray(value)) {
+            return false;
+          }
+          return Array.isArray((value as { items?: unknown }).items);
+        },
+        defaultMessage(): string {
+          return "El borrador debe ser un objeto con un arreglo items.";
+        },
+      },
+    });
+  };
+}
+
+/** Body PUT /api/purchases/drafts — one draft per organization + creator. */
+export class SavePurchaseDraftDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  name?: string;
+
+  @IsObject({ message: "El borrador debe ser un objeto." })
+  @IsPurchaseDraftPayload()
+  payload: Record<string, unknown>;
 }

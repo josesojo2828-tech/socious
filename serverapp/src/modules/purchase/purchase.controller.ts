@@ -1,21 +1,26 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
+import type { Prisma } from "@prisma/client";
 import { PurchaseService, PurchaseScope } from "./purchase.service";
 import {
   AddPurchasePaymentDto,
   CreatePurchaseDto,
   ListPurchasesQueryDto,
   PurchasesReportQueryDto,
+  SavePurchaseDraftDto,
 } from "./dto/purchase.dto";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
@@ -72,6 +77,74 @@ export class PurchaseController {
   ) {
     const scope = await this.resolveScope(request);
     return this.purchaseService.list(scope, query);
+  }
+
+  // ------------------------------------------------------------------
+  // Drafts (S13): ONE slot per organization + creator, never a global
+  // collection. Declared before `GET :id` so "drafts" is never parsed as
+  // a purchase id.
+  // ------------------------------------------------------------------
+
+  /** MY account draft, or null (the personal context has no draft slot). */
+  @Get("drafts")
+  async getDraft(@Req() request: RequestWithUser) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId || !scope.createdById) return null;
+
+    return this.prisma.purchaseDraft.findFirst({
+      where: {
+        organizationId: scope.organizationId,
+        createdById: scope.createdById,
+      },
+    });
+  }
+
+  /** Upserts MY draft on the [organizationId, createdById] unique key. */
+  @Put("drafts")
+  async saveDraft(
+    @Req() request: RequestWithUser,
+    @Body() body: SavePurchaseDraftDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    if (!scope.organizationId || !scope.createdById) {
+      throw new BadRequestException(
+        "Se necesita una organización activa para guardar borradores en tu cuenta.",
+      );
+    }
+
+    const where = {
+      organizationId: scope.organizationId,
+      createdById: scope.createdById,
+    };
+    const payload = body.payload as Prisma.InputJsonValue;
+    const name = body.name ?? null;
+
+    const existing = await this.prisma.purchaseDraft.findFirst({ where });
+    if (existing) {
+      return this.prisma.purchaseDraft.update({
+        where: { id: existing.id },
+        data: { name, payload },
+      });
+    }
+
+    return this.prisma.purchaseDraft.create({
+      data: { ...where, name, payload },
+    });
+  }
+
+  /** Discards MY draft; idempotent (no draft left is already success). */
+  @Delete("drafts")
+  async deleteDraft(@Req() request: RequestWithUser) {
+    const scope = await this.resolveScope(request);
+    if (scope.organizationId && scope.createdById) {
+      await this.prisma.purchaseDraft.deleteMany({
+        where: {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById,
+        },
+      });
+    }
+    return { deleted: true };
   }
 
   @Get(":id")

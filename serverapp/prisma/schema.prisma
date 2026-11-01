@@ -1332,6 +1332,23 @@ model ProductPresentation {
 }
 
 // ======================================
+// BORRADORES DE COMPRA (S13)
+// ======================================
+
+model PurchaseDraft {
+  id             String   @id @default(uuid())
+  organizationId String
+  createdById    String
+  name           String?
+  payload        Json     // { supplierId, issueDate, dueDate, notes, items[] }
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([organizationId, createdById])
+  @@index([organizationId])
+}
+
+// ======================================
 // IMÁGENES Y OFERTAS (S6–S9)
 // ======================================
 

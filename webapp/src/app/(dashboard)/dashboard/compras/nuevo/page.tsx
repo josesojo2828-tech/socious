@@ -33,8 +33,15 @@ import {
 import {
   clearDraft,
   loadDraft,
+  pickResumeDraft,
   saveDraft,
+  type PurchaseDraft,
 } from "@/features/purchases/lib/purchase-draft";
+import {
+  deletePurchaseDraft,
+  fetchPurchaseDraft,
+  savePurchaseDraft,
+} from "@/features/purchases/services/purchase-drafts.service";
 
 interface Paged<T> {
   list: T[];
@@ -65,9 +72,11 @@ function emptyForm(): PurchaseForm {
 }
 
 /**
- * Dedicated purchase-create screen (S4). The inline create form was removed
- * from the list; this route hosts it with live totals, catalog pick and a
- * station-local draft (save / resume / discard via purchase-draft lib).
+ * Dedicated purchase-create screen (S4 + S13). The inline create form was
+ * removed from the list; this route hosts it with live totals, catalog pick
+ * and an ACCOUNT-SYNCED draft: the server copy (one per org + user) is the
+ * source of truth, and the localStorage copy is the offline fallback the
+ * screen keeps working on (401 / personal workspace / no network).
  */
 export default function NewPurchasePage() {
   const router = useRouter();
@@ -80,7 +89,10 @@ export default function NewPurchasePage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
 
-  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+  const [pendingDraft, setPendingDraft] = useState<PurchaseDraft | null>(null);
+  const [draftOrigin, setDraftOrigin] = useState<"server" | "local">("server");
+  const [draftSyncFailed, setDraftSyncFailed] = useState<boolean>(false);
+  const [draftBusy, setDraftBusy] = useState<boolean>(false);
 
   useEffect(() => {
     void (async () => {
@@ -103,40 +115,90 @@ export default function NewPurchasePage() {
     })();
   }, []);
 
-  // Resume banner: a draft saved on this station offers Continuar / Descartar.
+  // Resume banner: server draft first (account-synced), station copy as the
+  // fallback when the request fails (401, offline) or the account is empty.
   useEffect(() => {
-    const draft = loadDraft();
-    if (draft) setDraftSavedAt(draft.savedAt);
+    let cancelled = false;
+    void (async () => {
+      let serverDraft: PurchaseDraft | null = null;
+      let syncFailed = false;
+      try {
+        serverDraft = await fetchPurchaseDraft();
+      } catch {
+        syncFailed = true;
+      }
+      if (cancelled) return;
+      const draft = pickResumeDraft(serverDraft, loadDraft());
+      setPendingDraft(draft);
+      setDraftOrigin(serverDraft ? "server" : "local");
+      setDraftSyncFailed(syncFailed);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const resumeDraft = useCallback(() => {
-    const draft = loadDraft();
+    const draft = pendingDraft;
     if (!draft) return;
     setForm({
       supplierId: draft.supplierId,
-      issueDate: draft.issueDate,
+      issueDate: draft.issueDate || todayISO(),
       dueDate: draft.dueDate,
       notes: draft.notes,
       items:
         draft.items.length > 0 ? draft.items : [emptyPurchaseLine()],
     });
-    setDraftSavedAt(null);
+    setPendingDraft(null);
     setFormError(null);
-  }, []);
+  }, [pendingDraft]);
 
   const discardDraft = useCallback(() => {
     clearDraft();
-    setDraftSavedAt(null);
-  }, []);
-
-  const handleSaveDraft = () => {
-    saveDraft(form);
-    setDraftSavedAt(new Date().toISOString());
-    addToast({
-      type: "success",
-      title: "Borrador",
-      message: "Borrador guardado en este equipo.",
+    setPendingDraft(null);
+    setDraftSyncFailed(false);
+    // Best-effort server delete: the local copy is already gone, and a
+    // failed delete only means the draft reappears on the next mount.
+    void deletePurchaseDraft().catch(() => {
+      addToast({
+        type: "warning",
+        title: "Borrador",
+        message: "No se pudo borrar el borrador de tu cuenta.",
+      });
     });
+  }, [addToast]);
+
+  const handleSaveDraft = async () => {
+    if (draftBusy) return;
+    setDraftBusy(true);
+    // The station copy is always kept: it is the fallback the screen
+    // restores from when the account request fails.
+    saveDraft(form);
+    try {
+      const stored = await savePurchaseDraft(form);
+      setPendingDraft(
+        stored ?? { ...form, savedAt: new Date().toISOString() },
+      );
+      setDraftOrigin("server");
+      setDraftSyncFailed(false);
+      addToast({
+        type: "success",
+        title: "Borrador",
+        message: "Borrador guardado en tu cuenta.",
+      });
+    } catch {
+      setPendingDraft(loadDraft() ?? { ...form, savedAt: new Date().toISOString() });
+      setDraftOrigin("local");
+      setDraftSyncFailed(true);
+      addToast({
+        type: "warning",
+        title: "Borrador",
+        message:
+          "No se pudo sincronizar con tu cuenta. El borrador quedó guardado en este equipo.",
+      });
+    } finally {
+      setDraftBusy(false);
+    }
   };
 
   const updateLine = (
@@ -166,6 +228,7 @@ export default function NewPurchasePage() {
         buildCreatePayload(form),
       );
       clearDraft();
+      void deletePurchaseDraft().catch(() => undefined);
       addToast({
         type: "success",
         title: "Compras",
@@ -203,20 +266,28 @@ export default function NewPurchasePage() {
         </Link>
       </header>
 
-      {draftSavedAt ? (
+      {pendingDraft ? (
         <div
           className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm ${GLASS}`}
         >
-          <p className="text-[#111018] dark:text-slate-100">
-            Borrador guardado el{" "}
-            <span className="font-medium">
-              {new Date(draftSavedAt).toLocaleString("es-VE", {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-            </span>
-            .
-          </p>
+          <div className="min-w-0">
+            <p className="text-[#111018] dark:text-slate-100">
+              Borrador guardado el{" "}
+              <span className="font-medium">
+                {new Date(pendingDraft.savedAt).toLocaleString("es-VE", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </span>{" "}
+              {draftOrigin === "server" ? "en tu cuenta" : "en este equipo"}.
+            </p>
+            {draftSyncFailed ? (
+              <p className="mt-0.5 text-xs text-amber-700 dark:text-amber-400">
+                No se pudo sincronizar con tu cuenta; el borrador vive solo en
+                este equipo.
+              </p>
+            ) : null}
+          </div>
           <div className="flex gap-2">
             <button type="button" onClick={resumeDraft} className={CTA_NAVY}>
               Continuar
@@ -400,8 +471,8 @@ export default function NewPurchasePage() {
         <div className="flex flex-wrap items-center justify-end gap-3">
           <button
             type="button"
-            onClick={handleSaveDraft}
-            disabled={saving}
+            onClick={() => void handleSaveDraft()}
+            disabled={saving || draftBusy}
             className={BTN_GHOST}
           >
             <Save className="h-4 w-4" /> Guardar borrador

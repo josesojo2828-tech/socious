@@ -13,6 +13,18 @@ export interface PurchaseDraft {
   savedAt: string;
 }
 
+/** Draft form fields without the local stamp (what the server stores). */
+export type PurchaseDraftPayload = Omit<PurchaseDraft, "savedAt">;
+
+/** Row returned by GET/PUT /api/purchases/drafts (S13). */
+export interface ServerPurchaseDraft {
+  id: string;
+  name: string | null;
+  payload: PurchaseDraftPayload;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /** Minimal Storage contract so tests can inject a double. */
 export interface DraftStorage {
   getItem(key: string): string | null;
@@ -55,4 +67,63 @@ export function clearDraft(
 ): void {
   if (!storage) return;
   storage.removeItem(PURCHASE_DRAFT_KEY);
+}
+
+// ------------------------------------------------------------------
+// Account sync (S13): pure mapping helpers between the screen draft and
+// the PurchaseDraft Json payload the backend stores per org + user.
+// ------------------------------------------------------------------
+
+/**
+ * The Json body the server stores: the draft form fields exactly as the
+ * screen holds them, minus `savedAt` (the server stamps its own updatedAt).
+ */
+export function draftToPayload(
+  draft: PurchaseDraft | Omit<PurchaseDraft, "savedAt">,
+): PurchaseDraftPayload {
+  return {
+    supplierId: draft.supplierId,
+    issueDate: draft.issueDate,
+    dueDate: draft.dueDate,
+    notes: draft.notes,
+    items: draft.items,
+  };
+}
+
+/**
+ * Maps a server row onto the screen draft (server `updatedAt` becomes the
+ * banner's `savedAt`). Unusable rows answer null instead of throwing: a
+ * corrupted account draft must never break the screen.
+ */
+export function serverDraftFromResponse(
+  row: ServerPurchaseDraft | null | undefined,
+): PurchaseDraft | null {
+  if (!row || typeof row !== "object") return null;
+
+  const payload = row.payload as Partial<PurchaseDraftPayload> | null | undefined;
+  if (!payload || typeof payload !== "object" || !Array.isArray(payload.items)) {
+    return null;
+  }
+  if (typeof row.updatedAt !== "string" || !row.updatedAt) return null;
+
+  return {
+    supplierId: typeof payload.supplierId === "string" ? payload.supplierId : "",
+    issueDate: typeof payload.issueDate === "string" ? payload.issueDate : "",
+    dueDate: typeof payload.dueDate === "string" ? payload.dueDate : "",
+    notes: typeof payload.notes === "string" ? payload.notes : "",
+    items: payload.items as PurchaseLineForm[],
+    savedAt: row.updatedAt,
+  };
+}
+
+/**
+ * Resume precedence: the account draft wins (it is the newest source of
+ * truth); the station-local copy fills in when the account has none or the
+ * request never made it (offline, 401, personal workspace).
+ */
+export function pickResumeDraft(
+  serverDraft: PurchaseDraft | null,
+  localDraft: PurchaseDraft | null,
+): PurchaseDraft | null {
+  return serverDraft ?? localDraft;
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Banknote, Loader2, Plus, Search, X } from "lucide-react";
+import { Loader2, Plus, Search } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
-import { SectionCard } from "@/shared/components/molecules/SectionCard";
 import {
   BRASS_DOT,
   CARD,
@@ -26,9 +26,7 @@ import type {
 } from "@/features/purchases/types/purchase.type";
 import {
   PAYMENT_STATUS_LABELS,
-  PURCHASE_PAYMENT_METHODS,
   PURCHASE_STATUS_LABELS,
-  paymentCurrencyForMethod,
 } from "@/features/purchases/lib/purchase-form";
 
 interface Paged<T> {
@@ -68,25 +66,19 @@ function unpaidUSD(purchase: Purchase): number {
 }
 
 /**
- * Purchase register (S1/S4): Maison table list with a real-aggregate
- * summary strip. Create moved to its own route (/dashboard/compras/nuevo);
- * the receive/pay/cancel detail drawer stays here until S5.
+ * Purchase register (S1/S4/S12): Maison table list with a real-aggregate
+ * summary strip. Create moved to its own route (/dashboard/compras/nuevo)
+ * and the receive/pay/cancel detail moved to the ficha route
+ * (/dashboard/compras/[id]) — rows navigate there.
  */
 export default function PurchasesPage() {
+  const router = useRouter();
   const { addToast } = useToastStore();
 
   const [rows, setRows] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<PurchaseStatus | "">("");
-
-  const [selected, setSelected] = useState<Purchase | null>(null);
-  const [detailLoading, setDetailLoading] = useState<boolean>(false);
-  const [actionBusy, setActionBusy] = useState<boolean>(false);
-
-  const [payAmount, setPayAmount] = useState<string>("");
-  const [payMethod, setPayMethod] = useState<string>("CASH_USD");
-  const [payReference, setPayReference] = useState<string>("");
 
   const fetchList = useCallback(async () => {
     setLoading(true);
@@ -116,75 +108,6 @@ export default function PurchasesPage() {
   useEffect(() => {
     void fetchList();
   }, [fetchList]);
-
-  const openDetail = useCallback(
-    async (purchaseId: string) => {
-      setDetailLoading(true);
-      setSelected(null);
-      try {
-        const { data } = await apiClient.get<Purchase>(
-          PurchaseEndpoints.detail(purchaseId),
-        );
-        setSelected(data);
-      } catch (error) {
-        addToast({
-          type: "error",
-          title: "Compra",
-          message: apiMessage(error, "No se pudo abrir la compra."),
-        });
-      } finally {
-        setDetailLoading(false);
-      }
-    },
-    [addToast],
-  );
-
-  const runAction = async (
-    action: () => Promise<unknown>,
-    successMessage: string,
-  ) => {
-    setActionBusy(true);
-    try {
-      await action();
-      addToast({ type: "success", title: "Compra", message: successMessage });
-      if (selected) void openDetail(selected.id);
-      void fetchList();
-    } catch (error) {
-      addToast({
-        type: "error",
-        title: "Compra",
-        message: apiMessage(error, "La acción no se pudo completar."),
-      });
-    } finally {
-      setActionBusy(false);
-    }
-  };
-
-  const submitPayment = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!selected) return;
-    const amount = Number(payAmount);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      addToast({
-        type: "warning",
-        title: "Pago",
-        message: "Ingresá un monto mayor que cero.",
-      });
-      return;
-    }
-    await runAction(
-      () =>
-        apiClient.post(PurchaseEndpoints.payments(selected.id), {
-          amountOriginal: amount,
-          currency: paymentCurrencyForMethod(payMethod),
-          paymentMethod: payMethod,
-          ...(payReference.trim() ? { reference: payReference.trim() } : {}),
-        }),
-      "Pago registrado.",
-    );
-    setPayAmount("");
-    setPayReference("");
-  };
 
   // Summary strip aggregates, computed only from the currently fetched rows.
   const monthPrefix = new Date().toISOString().slice(0, 7);
@@ -319,7 +242,9 @@ export default function PurchasesPage() {
                 {rows.map((purchase) => (
                   <tr
                     key={purchase.id}
-                    onClick={() => void openDetail(purchase.id)}
+                    onClick={() =>
+                      router.push(`/dashboard/compras/${purchase.id}`)
+                    }
                     className={`cursor-pointer ${TABLE_ROW}`}
                   >
                     <td className="px-4 py-2.5 font-mono text-xs tabular-nums font-medium text-[#111018] dark:text-slate-100">
@@ -355,210 +280,6 @@ export default function PurchasesPage() {
           </div>
         )}
       </div>
-
-      {detailLoading || selected ? (
-        <div className="fixed inset-0 z-40 flex justify-end">
-          <button
-            type="button"
-            aria-label="Cerrar detalle"
-            className="absolute inset-0 bg-slate-900/40"
-            onClick={() => setSelected(null)}
-          />
-          <aside className="relative w-full max-w-md h-full overflow-y-auto bg-white dark:bg-slate-900 shadow-xl p-5 space-y-4">
-            {detailLoading || !selected ? (
-              <div className="flex justify-center py-16">
-                <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-              </div>
-            ) : (
-              <>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                      {selected.purchaseNumber}
-                    </h2>
-                    <p className="text-sm text-slate-500">
-                      {selected.supplier?.name ?? "Sin proveedor"} ·{" "}
-                      {new Date(selected.issueDate).toLocaleDateString("es-VE")}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelected(null)}
-                    className="rounded-lg p-1 text-slate-400 hover:text-slate-600"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold ${STATUS_TONE[selected.status]}`}
-                  >
-                    {PURCHASE_STATUS_LABELS[selected.status]}
-                  </span>
-                  <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold ${PAYMENT_TONE[selected.paymentStatus]}`}
-                  >
-                    {PAYMENT_STATUS_LABELS[selected.paymentStatus]}
-                  </span>
-                </div>
-
-                <SectionCard
-                  icon={<Banknote className="h-5 w-5" />}
-                  title="Artículos"
-                  description="Lo que se compró en esta factura."
-                >
-                  <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {selected.items.map((item) => (
-                      <li
-                        key={item.id}
-                        className="flex items-center justify-between py-2 text-sm"
-                      >
-                        <span>
-                          {item.productName}{" "}
-                          <span className="text-slate-400">
-                            × {Number(item.quantity)}
-                          </span>
-                        </span>
-                        <span className="font-medium">
-                          {money(item.totalUSD)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-2 border-t border-slate-100 pt-2 text-right text-sm font-semibold dark:border-slate-800">
-                    Total {money(selected.totalUSD)}
-                  </p>
-                </SectionCard>
-
-                {selected.status === "PENDING" ? (
-                  <button
-                    type="button"
-                    disabled={actionBusy}
-                    onClick={() =>
-                      void runAction(
-                        () =>
-                          apiClient.post(
-                            PurchaseEndpoints.receive(selected.id),
-                          ),
-                        "Mercancía recibida; el stock fue actualizado.",
-                      )
-                    }
-                    className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5"
-                  >
-                    Recibir mercancía
-                  </button>
-                ) : null}
-
-                {selected.status !== "CANCELLED" ? (
-                  <SectionCard
-                    icon={<Banknote className="h-5 w-5" />}
-                    title="Registrar pago"
-                    description={`Saldo pendiente: ${money(unpaidUSD(selected))}`}
-                  >
-                    <form onSubmit={submitPayment} className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <label className="block text-xs">
-                          <span className="text-slate-500">Monto</span>
-                          <input
-                            type="number"
-                            min="0.01"
-                            step="any"
-                            value={payAmount}
-                            onChange={(event) =>
-                              setPayAmount(event.target.value)
-                            }
-                            className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
-                          />
-                        </label>
-                        <label className="block text-xs">
-                          <span className="text-slate-500">Método</span>
-                          <select
-                            value={payMethod}
-                            onChange={(event) =>
-                              setPayMethod(event.target.value)
-                            }
-                            className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
-                          >
-                            {PURCHASE_PAYMENT_METHODS.map((method) => (
-                              <option key={method.code} value={method.code}>
-                                {method.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      </div>
-                      <label className="block text-xs">
-                        <span className="text-slate-500">Referencia</span>
-                        <input
-                          value={payReference}
-                          onChange={(event) =>
-                            setPayReference(event.target.value)
-                          }
-                          placeholder="Nro. de referencia o transferencia"
-                          className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
-                        />
-                      </label>
-                      <button
-                        type="submit"
-                        disabled={actionBusy}
-                        className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2"
-                      >
-                        Registrar pago
-                      </button>
-                    </form>
-                  </SectionCard>
-                ) : null}
-
-                {selected.payments.length > 0 ? (
-                  <SectionCard
-                    icon={<Banknote className="h-5 w-5" />}
-                    title="Pagos registrados"
-                    description="Historial de pagos al proveedor."
-                  >
-                    <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-                      {selected.payments.map((payment) => (
-                        <li
-                          key={payment.id}
-                          className="flex items-center justify-between py-2 text-sm"
-                        >
-                          <span>
-                            {new Date(payment.paidAt).toLocaleDateString(
-                              "es-VE",
-                            )}{" "}
-                            <span className="text-slate-400">
-                              {payment.paymentMethod}
-                            </span>
-                          </span>
-                          <span className="font-medium">
-                            {money(payment.amountUSD)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </SectionCard>
-                ) : null}
-
-                {selected.status === "PENDING" ? (
-                  <button
-                    type="button"
-                    disabled={actionBusy}
-                    onClick={() =>
-                      void runAction(
-                        () => apiClient.post(PurchaseEndpoints.cancel(selected.id)),
-                        "Compra cancelada.",
-                      )
-                    }
-                    className="w-full rounded-xl border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-60 text-sm font-semibold py-2.5"
-                  >
-                    Cancelar compra
-                  </button>
-                ) : null}
-              </>
-            )}
-          </aside>
-        </div>
-      ) : null}
     </div>
   );
 }
