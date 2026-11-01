@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { variantPrefillFromProduct } from "./variant-prefill";
+import {
+  suggestFreeSku,
+  variantPrefillFromProduct,
+} from "./variant-prefill";
 import { validateProductForm } from "./product-form";
 import type { Product } from "../types/product.type";
 
@@ -86,5 +89,25 @@ describe("variantPrefillFromProduct (S7)", () => {
     expect(form.supplierId).toBe("");
     expect(form.wholesalePriceUSD).toBeUndefined();
     expect(form.sku).toBe("ARROZ-1K-V");
+  });
+});
+
+describe("suggestFreeSku", () => {
+  it("returns <base>-V when it is free", () => {
+    expect(suggestFreeSku("CAM-001", ["CAM-001", "CAM-002"])).toBe("CAM-001-V");
+  });
+
+  it("walks -V2, -V3… until it finds a free candidate (case-insensitive)", () => {
+    expect(
+      suggestFreeSku("CAM-001", ["CAM-001", "cam-001-v", "CAM-001-V2"]),
+    ).toBe("CAM-001-V3");
+  });
+
+  it("never returns a taken sku", () => {
+    const taken = Array.from({ length: 999 }, (_, i) =>
+      i === 0 ? "X-1" : `X-1-V${i - 1}`,
+    );
+    const sku = suggestFreeSku("X-1", taken);
+    expect(taken.map((t) => t.toUpperCase())).not.toContain(sku.toUpperCase());
   });
 });

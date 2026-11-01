@@ -19,7 +19,10 @@ import {
   buildProductPayload,
   type ProductForm,
 } from "@/features/products/lib/product-form";
-import { variantPrefillFromProduct } from "@/features/products/lib/variant-prefill";
+import {
+  suggestFreeSku,
+  variantPrefillFromProduct,
+} from "@/features/products/lib/variant-prefill";
 import { ProductFormPanel } from "@/features/products/components/ProductFormPanel";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
@@ -104,8 +107,20 @@ function NewProductContent() {
         });
       }
       if (source.data) {
+        const prefilled = variantPrefillFromProduct(source.data);
+        // SKU libre: buscamos los SKUs parecidos y sugerimos el primero que
+        // no choque (el -V simple se rechazaría con 409 si ya existe).
+        const taken = await apiClient
+          .get<{ list: { sku: string }[] }>(ProductEndpoints.list, {
+            params: { q: source.data.sku, limit: 100 },
+          })
+          .then((r) => (r.data.list ?? []).map((row) => row.sku))
+          .catch(() => [] as string[]);
         setVariantSource(source.data);
-        setVariantForm(variantPrefillFromProduct(source.data));
+        setVariantForm({
+          ...prefilled,
+          sku: suggestFreeSku(source.data.sku, taken),
+        });
       } else if (fromProductId) {
         addToast({
           type: "warning",
