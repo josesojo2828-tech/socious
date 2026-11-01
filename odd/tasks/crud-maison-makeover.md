@@ -165,3 +165,24 @@ L2: S6–S10 closed (backend b727918 + two frontend units). Upload gotcha:
 apiClient defaults to JSON Content-Type — multipart needs the explicit
 header. Variant prefill resets isPublic (create would bypass the plan gate).
 S11 storefront offer display and S5 screen restyles remain open.
+
+L3 (user correction round 5, recorded by parent): items #1-#9 —
+"#1" unit update endpoint rejected `active` (whitelist); "#2" drop the
+service checkbox from the product form; "#3" variant-of chaining plus the
+disabled-stock root cause; "#4" payables card header aligned with sibling
+panels; "#5. Migra las pantallas que faltan (usuarios, perfil y actividad)";
+"#6. Monta la paginacion en lo que falta"; "#7 Dale a ~300 errores de lint
+preexistentes"; "#8 Quita todo lo legacy de nutricion"; "#9" refund methods
+must respect disabled payment methods. Closed as commits 80e86fd (#1),
+79579bc (#9), cbc3ae0 (#3, includes migration 20261101155238_product_variant_of),
+f99eeeb (#2), 8ceb7f3 (#4), c3106d3 (#6, OfferService list envelope),
+a222226 (#5, with human-approved surfaces GenericCrudPage + ProfilePage/
+ProfileSidebar), 1da7d76 (#7+#8: lint 149->0 errors, nutrition copy
+neutralized; zero-importer audit found NO deletable candidate — 9 dead files,
+/mmarketing/octubre and ambiguous copy listed for the human instead).
+Verification gate: serverapp typecheck 0 + 738 tests, webapp typecheck 0 +
+425 tests, lint 0 errors, invariance diffs on shared files. Native RDD review
+attempted for the committed slice and for the reduced lint unit; both refused
+terminally with `lens_context_budget_exceeded` (no review authority created).
+Human decision: close the round without the native review; RDD stays enabled
+for future smaller changes.
