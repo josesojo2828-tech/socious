@@ -434,17 +434,13 @@ export default function HomeDashboard() {
               )}
             </div>
           </div>
-          {/* Cuentas por pagar (feedback dashboard #1) */}
+          {/* Cuentas por pagar — misma estructura que las demás tablas */}
           <section>
-            <div className="flex items-baseline justify-between mb-4">
-              <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-50">
-                Cuentas por pagar
-              </h2>
-              <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-slate-500 dark:text-slate-400">
-                proveedores · recientes
-              </span>
-            </div>
             <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
+              <CardHeader
+                title="Cuentas por pagar"
+                note="proveedores · recientes"
+              />
               {apTop.length === 0 ? (
                 <p className="px-5 py-6 text-sm text-[#1b1d21]/55 dark:text-slate-400 text-center">
                   Sin deudas con proveedores.
