@@ -4,9 +4,17 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
-import { CreateOfferDto, UpdateOfferDto } from "./dto/offer.dto";
+import type { Prisma } from "@prisma/client";
+import {
+  CreateOfferDto,
+  ListOffersQueryDto,
+  UpdateOfferDto,
+} from "./dto/offer.dto";
 
 const PRODUCT_SELECT = { select: { id: true, name: true, sku: true } } as const;
+
+const DEFAULT_LIMIT = 10;
+const MAX_LIMIT = 100;
 
 /**
  * Promotional offers (S9, Avanzado+): name, slogan, banner and an expiry
@@ -17,12 +25,46 @@ const PRODUCT_SELECT = { select: { id: true, name: true, sku: true } } as const;
 export class OfferService {
   constructor(private readonly prisma: PrismaService) {}
 
-  list(organizationId: string) {
-    return this.prisma.offer.findMany({
-      where: { organizationId },
-      orderBy: { createdAt: "desc" },
-      include: { items: { include: { product: PRODUCT_SELECT } } },
-    });
+  /** Admin list: same paged envelope as products/purchases (`page`+`limit`). */
+  async list(organizationId: string, query: ListOffersQueryDto = {}) {
+    const page = Math.max(query.page ?? 1, 1);
+    const limit = Math.min(Math.max(query.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
+
+    const filters: Prisma.OfferWhereInput[] = [{ organizationId }];
+    if (query.q?.trim()) {
+      const q = query.q.trim();
+      filters.push({
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { slogan: { contains: q, mode: "insensitive" } },
+        ],
+      });
+    }
+
+    const where: Prisma.OfferWhereInput = { AND: filters };
+    const [list, total] = await Promise.all([
+      this.prisma.offer.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: { items: { include: { product: PRODUCT_SELECT } } },
+      }),
+      this.prisma.offer.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      list,
+      total,
+      totalRecords: total,
+      totalPages,
+      currentPage: page,
+      limit,
+      hasPrev: page > 1,
+      hasNext: page < totalPages,
+    };
   }
 
   /**

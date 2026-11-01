@@ -10,6 +10,27 @@ import {
   MaxLength,
   Min,
 } from "class-validator";
+import { Type } from "class-transformer";
+
+/** GET /api/offers — page/limit like every other list, plus a text filter. */
+export class ListOffersQueryDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  q?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  limit?: number;
+}
 
 export class CreateOfferDto {
   @IsString({ message: "El nombre es obligatorio." })

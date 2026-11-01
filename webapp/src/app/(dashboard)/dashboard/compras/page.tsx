@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2, Plus, Search } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import {
   BRASS_DOT,
   CARD,
@@ -28,10 +29,12 @@ import {
   PAYMENT_STATUS_LABELS,
   PURCHASE_STATUS_LABELS,
 } from "@/features/purchases/lib/purchase-form";
+import { buildListParams } from "@/features/purchases/lib/purchase-list";
 
 interface Paged<T> {
   list: T[];
   total: number;
+  totalPages: number;
 }
 
 const STATUS_TONE: Record<PurchaseStatus, string> = {
@@ -69,7 +72,8 @@ function unpaidUSD(purchase: Purchase): number {
  * Purchase register (S1/S4/S12): Maison table list with a real-aggregate
  * summary strip. Create moved to its own route (/dashboard/compras/nuevo)
  * and the receive/pay/cancel detail moved to the ficha route
- * (/dashboard/compras/[id]) — rows navigate there.
+ * (/dashboard/compras/[id]) — rows navigate there. The list pages on the
+ * server (`page`+`limit:25`) like productos/clientes.
  */
 export default function PurchasesPage() {
   const router = useRouter();
@@ -77,39 +81,62 @@ export default function PurchasesPage() {
 
   const [rows, setRows] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  /** Real pagination: the backend pages with `page`+`limit:25` (25 per page). */
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  /** `searchInput` paints the box instantly; `query` commits after 300ms. */
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<PurchaseStatus | "">("");
 
-  const fetchList = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await apiClient.get<Paged<Purchase>>(
-        PurchaseEndpoints.list,
-        {
-          params: {
-            ...(query.trim() ? { q: query.trim() } : {}),
-            ...(statusFilter ? { status: statusFilter } : {}),
-            limit: 50,
-          },
-        },
-      );
-      setRows(data.list ?? []);
-    } catch (error) {
-      addToast({
-        type: "error",
-        title: "Compras",
-        message: apiMessage(error, "No se pudieron cargar las compras."),
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [addToast, query, statusFilter]);
-
+  // Debounce the search term; every commit restarts the list at page 1.
   useEffect(() => {
-    void fetchList();
-  }, [fetchList]);
+    const timer = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  // Summary strip aggregates, computed only from the currently fetched rows.
+  // Server-side list: page + filters live in the request, not in a useMemo.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<Paged<Purchase>>(
+          PurchaseEndpoints.list,
+          {
+            params: buildListParams({
+              page,
+              q: query,
+              status: statusFilter,
+            }),
+          },
+        );
+        if (cancelled) return;
+        setRows(data.list ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(Math.max(1, data.totalPages ?? 1));
+      } catch (error) {
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Compras",
+            message: apiMessage(error, "No se pudieron cargar las compras."),
+          });
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [addToast, page, query, statusFilter]);
+
+  // Summary strip aggregates, computed only from the rows on this page.
   const monthPrefix = new Date().toISOString().slice(0, 7);
   const monthRows = rows.filter(
     (purchase) =>
@@ -129,6 +156,14 @@ export default function PurchasesPage() {
     0,
   );
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -137,6 +172,8 @@ export default function PurchasesPage() {
             <span>Compras</span>
             <span className={BRASS_DOT} aria-hidden />
             <span>Registro de facturas</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span className="font-mono">{total} en total</span>
           </div>
           <h1 className={PAGE_TITLE}>Compras</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -152,11 +189,11 @@ export default function PurchasesPage() {
         </Link>
       </header>
 
-      {/* Summary strip: real aggregates from the fetched rows. */}
+      {/* Summary strip: real aggregates from the rows of THIS page. */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className={`rounded-2xl px-5 py-4 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Compras del mes
+            Compras del mes en página
           </p>
           <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
             {money(monthTotalUSD)}
@@ -168,7 +205,7 @@ export default function PurchasesPage() {
         </div>
         <div className={`rounded-2xl px-5 py-4 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Pendientes de pago
+            Pendientes de pago en página
           </p>
           <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
             {money(openUnpaidUSD)}
@@ -184,17 +221,18 @@ export default function PurchasesPage() {
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Buscar por número, proveedor o nota…"
             className={`pl-9 pr-3 py-2 ${INPUT}`}
           />
         </div>
         <select
           value={statusFilter}
-          onChange={(event) =>
-            setStatusFilter(event.target.value as PurchaseStatus | "")
-          }
+          onChange={(event) => {
+            setStatusFilter(event.target.value as PurchaseStatus | "");
+            setPage(1);
+          }}
           className={`rounded-xl px-3 py-2 ${INPUT} w-auto`}
         >
           <option value="">Todos los estados</option>
@@ -210,16 +248,14 @@ export default function PurchasesPage() {
             Facturas
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {rows.length} en pantalla
+            {rows.length} de {total}
           </span>
         </div>
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-          </div>
-        ) : rows.length === 0 ? (
+        {rows.length === 0 ? (
           <p className="px-4 py-10 text-center text-sm text-slate-500">
-            Todavía no hay compras registradas.
+            {total === 0 && !query && !statusFilter
+              ? "Todavía no hay compras registradas."
+              : "Ninguna compra coincide con la búsqueda."}
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -279,6 +315,12 @@ export default function PurchasesPage() {
             </table>
           </div>
         )}
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

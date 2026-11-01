@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import {
   BRASS_DOT,
   CARD,
@@ -25,7 +26,14 @@ import {
   formatOfferDate,
   offerStatus,
 } from "@/features/offers/lib/offer-form";
+import { buildListParams } from "@/features/offers/lib/offer-list";
 import type { Offer, OfferStatus } from "@/features/offers/types/offer.type";
+
+interface Paged<T> {
+  list: T[];
+  total: number;
+  totalPages: number;
+}
 
 const STATUS_TONE: Record<OfferStatus, string> = {
   Activa: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
@@ -43,6 +51,7 @@ function apiMessage(error: unknown, fallback: string): string {
  * create (/ofertas/nueva) and edit (/ofertas/[id]/editar), row-level delete
  * with confirmation. The whole screen is plan-gated — without the OFFERS
  * module it shows the honest Avanzado empty state instead of rows or CTA.
+ * The list pages on the server (`page`+`limit:25`) like productos/compras.
  */
 export default function OffersPage() {
   const router = useRouter();
@@ -51,29 +60,57 @@ export default function OffersPage() {
 
   const [rows, setRows] = useState<Offer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  /** Real pagination: the backend pages with `page`+`limit:25` (25 per page). */
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  /** `searchInput` paints the box instantly; `query` commits after 300ms. */
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState<string>("");
+  /** Bumped after a mutation so the current page reloads without a full boot. */
+  const [reloadToken, setReloadToken] = useState<number>(0);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchList = useCallback(async () => {
-    setLoading(true);
-    try {
-      // Unlike purchases, GET /api/offers answers a bare array.
-      const { data } = await apiClient.get<Offer[]>(OfferEndpoints.list);
-      setRows(Array.isArray(data) ? data : []);
-    } catch (error) {
-      addToast({
-        type: "error",
-        title: "Ofertas",
-        message: apiMessage(error, "No se pudieron cargar las ofertas."),
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [addToast]);
-
+  // Debounce the search term; every commit restarts the list at page 1.
   useEffect(() => {
-    if (allowed) void fetchList();
-  }, [allowed, fetchList]);
+    const timer = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Server-side list: page + q travel in the request, not in a useMemo.
+  useEffect(() => {
+    if (!allowed) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<Paged<Offer>>(
+          OfferEndpoints.list,
+          { params: buildListParams({ page, q: query }) },
+        );
+        if (cancelled) return;
+        setRows(data.list ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(Math.max(1, data.totalPages ?? 1));
+      } catch (error) {
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Ofertas",
+            message: apiMessage(error, "No se pudieron cargar las ofertas."),
+          });
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [addToast, allowed, page, query, reloadToken]);
 
   const removeOffer = async (offer: Offer) => {
     const confirmed = window.confirm(
@@ -88,7 +125,7 @@ export default function OffersPage() {
         title: "Ofertas",
         message: "Oferta eliminada.",
       });
-      await fetchList();
+      setReloadToken((token) => token + 1);
     } catch (error) {
       addToast({
         type: "error",
@@ -103,20 +140,15 @@ export default function OffersPage() {
   // One `now` per render for the badges and the strip, so a row never flips
   // mid-render.
   const now = new Date();
-  const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle) return rows;
-    return rows.filter(
-      (offer) =>
-        offer.name.toLowerCase().includes(needle) ||
-        (offer.slogan ?? "").toLowerCase().includes(needle),
-    );
-  }, [rows, query]);
+  // Summary strip aggregates, computed only from the rows on this page.
+  const activeCount = rows.filter(
+    (offer) => offerStatus(offer, now) === "Activa",
+  ).length;
+  const expiredCount = rows.filter(
+    (offer) => offerStatus(offer, now) === "Vencida",
+  ).length;
 
-  const activeCount = rows.filter((offer) => offerStatus(offer, now) === "Activa").length;
-  const expiredCount = rows.filter((offer) => offerStatus(offer, now) === "Vencida").length;
-
-  if (checking) {
+  if (checking || (allowed && loading)) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
@@ -150,6 +182,8 @@ export default function OffersPage() {
             <span>Ofertas</span>
             <span className={BRASS_DOT} aria-hidden />
             <span>Promociones con fecha</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span className="font-mono">{total} en total</span>
           </div>
           <h1 className={PAGE_TITLE}>Ofertas</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -164,22 +198,22 @@ export default function OffersPage() {
         </Link>
       </header>
 
-      {/* Summary strip: real aggregates from the fetched rows. */}
+      {/* Summary strip: real aggregates from the rows of THIS page. */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className={`rounded-2xl px-5 py-4 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Ofertas
+            Ofertas en página
           </p>
           <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
             {rows.length}
           </p>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-            en tu catálogo
+            de {total} en tu catálogo
           </p>
         </div>
         <div className={`rounded-2xl px-5 py-4 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Activas
+            Activas en página
           </p>
           <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
             {activeCount}
@@ -190,7 +224,7 @@ export default function OffersPage() {
         </div>
         <div className={`rounded-2xl px-5 py-4 ${GLASS}`}>
           <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Vencidas
+            Vencidas en página
           </p>
           <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
             {expiredCount}
@@ -204,8 +238,8 @@ export default function OffersPage() {
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
         <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
           placeholder="Buscar por nombre o lema…"
           className={`pl-9 pr-3 py-2 ${INPUT}`}
         />
@@ -217,16 +251,12 @@ export default function OffersPage() {
             Promociones
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {filtered.length} en pantalla
+            {rows.length} de {total}
           </span>
         </div>
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-          </div>
-        ) : filtered.length === 0 ? (
+        {rows.length === 0 ? (
           <p className="px-4 py-10 text-center text-sm text-slate-500">
-            {rows.length === 0
+            {total === 0 && !query
               ? "Todavía no hay ofertas. Crea la primera con el botón “Nueva oferta”."
               : "Ninguna oferta coincide con la búsqueda."}
           </p>
@@ -247,7 +277,7 @@ export default function OffersPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((offer) => {
+                {rows.map((offer) => {
                   const status = offerStatus(offer, now);
                   return (
                     <tr key={offer.id} className={TABLE_ROW}>
@@ -313,6 +343,12 @@ export default function OffersPage() {
             </table>
           </div>
         )}
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

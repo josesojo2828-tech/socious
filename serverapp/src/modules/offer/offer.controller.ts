@@ -7,13 +7,18 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { OfferService } from "./offer.service";
-import { CreateOfferDto, UpdateOfferDto } from "./dto/offer.dto";
+import {
+  CreateOfferDto,
+  ListOffersQueryDto,
+  UpdateOfferDto,
+} from "./dto/offer.dto";
 import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
@@ -62,10 +67,14 @@ export class OfferController {
     }
   }
 
+  /** Admin list: same paged envelope as products/purchases (`page`+`limit`). */
   @Get()
-  async list(@Req() request: RequestWithUser) {
+  async list(
+    @Req() request: RequestWithUser,
+    @Query() query: ListOffersQueryDto,
+  ) {
     const organizationId = await this.requireOrg(request);
-    return this.offers.list(organizationId);
+    return this.offers.list(organizationId, query);
   }
 
   /**
