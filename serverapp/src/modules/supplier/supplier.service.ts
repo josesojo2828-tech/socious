@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -277,6 +278,83 @@ export class SupplierService {
   async removeLocation(scope: SupplierScope, id: string) {
     await this.ownLocation(scope, id);
     await this.prisma.supplierLocation.delete({ where: { id } });
+    return { deleted: true };
+  }
+
+  // ---- Productos que provee (round 3, #1/#3) ----
+
+  async listSuppliedProducts(scope: SupplierScope, supplierId: string) {
+    await this.assertSupplier(scope, supplierId);
+    return this.prisma.product.findMany({
+      where: {
+        supplierId,
+        organizationId: scope.organizationId,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        sku: true,
+        stock: true,
+        unit: true,
+        salePriceUSD: true,
+      },
+      orderBy: { name: "asc" },
+      take: 200,
+    });
+  }
+
+  async linkProducts(
+    scope: SupplierScope,
+    supplierId: string,
+    productIds: string[],
+  ) {
+    await this.assertSupplier(scope, supplierId);
+    const unique = [...new Set(productIds)];
+    if (unique.length === 0) {
+      throw new BadRequestException("Elegí al menos un producto.");
+    }
+    // Solo productos del tenant (pueden venir de otro proveedor: cambiar de
+    // proveedor es un movimiento legítimo del negocio).
+    const owned = await this.prisma.product.count({
+      where: {
+        id: { in: unique },
+        organizationId: scope.organizationId,
+        deletedAt: null,
+      },
+    });
+    if (owned !== unique.length) {
+      throw new BadRequestException(
+        "Algunos productos no existen en tu catálogo.",
+      );
+    }
+    await this.prisma.product.updateMany({
+      where: { id: { in: unique } },
+      data: { supplierId },
+    });
+    return this.listSuppliedProducts(scope, supplierId);
+  }
+
+  async unlinkProduct(
+    scope: SupplierScope,
+    supplierId: string,
+    productId: string,
+  ) {
+    await this.assertSupplier(scope, supplierId);
+    const product = await this.prisma.product.findFirst({
+      where: {
+        id: productId,
+        supplierId,
+        organizationId: scope.organizationId,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+    if (!product) throw new NotFoundException("Producto no encontrado.");
+    await this.prisma.product.update({
+      where: { id: productId },
+      data: { supplierId: null },
+    });
     return { deleted: true };
   }
 }

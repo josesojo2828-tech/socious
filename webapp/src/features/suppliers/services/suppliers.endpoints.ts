@@ -5,4 +5,8 @@ export const SupplierEndpoints = {
   balance: (supplierId: string) => `/api/suppliers/${supplierId}/balance`,
   locations: (supplierId: string) => `/api/suppliers/${supplierId}/locations`,
   locationDetail: (locationId: string) => `/api/suppliers/locations/${locationId}`,
+  suppliedProducts: (supplierId: string) =>
+    `/api/suppliers/${supplierId}/products`,
+  suppliedProduct: (supplierId: string, productId: string) =>
+    `/api/suppliers/${supplierId}/products/${productId}`,
 };

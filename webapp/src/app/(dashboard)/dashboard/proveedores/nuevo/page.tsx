@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -19,6 +19,8 @@ import {
   PAGE_TITLE,
 } from "@/shared/lib/maison-style";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
+import { ProductEndpoints } from "@/features/products/services/products.endpoints";
+import type { Product } from "@/features/products/types/product.type";
 import {
   buildSupplierPayload,
   validateSupplierForm,
@@ -63,12 +65,30 @@ export default function NewSupplierPage() {
     null,
   );
   const [locLabel, setLocLabel] = useState<string>("");
+  const [linkProductIds, setLinkProductIds] = useState<string[]>([]);
+  const [linkQuery, setLinkQuery] = useState<string>("");
+  const [candidates, setCandidates] = useState<Product[]>([]);
   const [locPoints, setLocPoints] = useState<
     { label: string; lat: number; lng: number }[]
   >([]);
 
   const patchForm = (patch: Partial<SupplierForm>) =>
     setForm((current) => ({ ...current, ...patch }));
+
+  useEffect(() => {
+    void apiClient
+      .get<{ list: Product[] }>(ProductEndpoints.list, {
+        params: { limit: 200 },
+      })
+      .then((r) =>
+        setCandidates(
+          (r.data.list ?? []).filter(
+            (row) => !row.supplierId && !row.isService,
+          ),
+        ),
+      )
+      .catch(() => setCandidates([]));
+  }, []);
 
   const submitForm = async (): Promise<void> => {
     const validation = validateSupplierForm(form);
@@ -90,9 +110,19 @@ export default function NewSupplierPage() {
           .post(SupplierEndpoints.locations(created.id), point)
           .catch(() => undefined);
       }
+      // Productos que provee — en el mismo alta (round 3, #3).
+      if (linkProductIds.length > 0) {
+        await apiClient
+          .post(SupplierEndpoints.suppliedProducts(created.id), {
+            productIds: linkProductIds,
+          })
+          .catch(() => undefined);
+      }
       setLocPick(null);
       setLocLabel("");
       setLocPoints([]);
+      setLinkProductIds([]);
+      setLinkQuery("");
       addToast({
         type: "success",
         title: "Proveedores",
@@ -255,6 +285,7 @@ export default function NewSupplierPage() {
               height="220px"
               lat={locPick?.lat}
               lng={locPick?.lng}
+              markers={locPoints}
               onLocationSelect={(lat, lng) => setLocPick({ lat, lng })}
             />
           </div>
@@ -291,6 +322,65 @@ export default function NewSupplierPage() {
               ))}
             </ul>
           ) : null}
+        </div>
+
+        <div className="space-y-3 border-t border-[#1a2a46]/10 dark:border-white/10 pt-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-sm font-medium text-[#111018] dark:text-slate-100">
+              Productos que provee
+            </p>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+              {linkProductIds.length} elegidos
+            </span>
+          </div>
+          {candidates.length === 0 ? (
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Todos tus productos ya tienen proveedor.
+            </p>
+          ) : (
+            <>
+              <input
+                type="search"
+                value={linkQuery}
+                onChange={(event) => setLinkQuery(event.target.value)}
+                placeholder="Buscar producto…"
+                className="w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 text-sm"
+              />
+              <ul className="max-h-52 overflow-y-auto rounded-xl border border-[#1a2a46]/10 dark:border-white/10 divide-y divide-[#1b1d21]/8 dark:divide-white/5">
+                {candidates
+                  .filter((row) => {
+                    const term = linkQuery.trim().toLowerCase();
+                    if (!term) return true;
+                    return `${row.name} ${row.sku}`.toLowerCase().includes(term);
+                  })
+                  .map((product) => (
+                    <li
+                      key={product.id}
+                      className="flex items-center gap-3 px-3 py-2"
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-[#b2944a]"
+                        checked={linkProductIds.includes(product.id)}
+                        onChange={(event) =>
+                          setLinkProductIds((current) =>
+                            event.target.checked
+                              ? [...current, product.id]
+                              : current.filter((id) => id !== product.id),
+                          )
+                        }
+                      />
+                      <span className="flex-1 min-w-0 text-sm text-[#111018] dark:text-slate-100 truncate">
+                        {product.name}
+                      </span>
+                      <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
+                        {product.sku}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 border-t border-[#1a2a46]/10 dark:border-white/10 pt-4">

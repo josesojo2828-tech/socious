@@ -11,7 +11,10 @@ interface MapClickHandlerProps {
 function MapClickHandler({ onSelect, setMarker }: MapClickHandlerProps) {
     const { map } = useMap();
     const callbackRef = useRef({ onSelect, setMarker });
-    callbackRef.current = { onSelect, setMarker };
+    // Actualizado en effect (no en render): el linter exige refs puras.
+    useEffect(() => {
+        callbackRef.current = { onSelect, setMarker };
+    });
 
     useEffect(() => {
         if (!map) return;
@@ -28,11 +31,19 @@ function MapClickHandler({ onSelect, setMarker }: MapClickHandlerProps) {
     return null;
 }
 
+interface MapMarkerPoint {
+    lat: number;
+    lng: number;
+    id?: string;
+}
+
 interface NutriMapPickerProps {
     lat?: number;
     lng?: number;
     onLocationSelect: (lat: number, lng: number) => void;
     height?: string;
+    /** Puntos ya agregados: quedan dibujados en el mapa (round 3, #2). */
+    markers?: MapMarkerPoint[];
 }
 
 const VENEZUELA_CENTER: [number, number] = [-66.0, 7.0];
@@ -42,22 +53,17 @@ const NutriMapPicker: React.FC<NutriMapPickerProps> = ({
     lng,
     onLocationSelect,
     height = "400px",
+    markers = [],
 }) => {
     const hasPosition = typeof lat === 'number' && typeof lng === 'number';
-    const [markerPos, setMarkerPos] = useState<{ lat: number; lng: number } | null>(
-        hasPosition ? { lat: lat!, lng: lng! } : null
-    );
-
-    useEffect(() => {
-        if (typeof lat === 'number' && typeof lng === 'number') {
-            setMarkerPos({ lat, lng });
-        } else {
-            setMarkerPos(null);
-        }
-    }, [lat, lng]);
+    // El estado solo guarda los clicks/drag (event handlers); las props
+    // controladas tienen prioridad y, al soltarse, el último click persiste —
+    // así "el punto queda en el mapa" sin efectos que seteen estado en render.
+    const [clickPos, setClickPos] = useState<{ lat: number; lng: number } | null>(null);
+    const markerPos = hasPosition ? { lat: lat!, lng: lng! } : clickPos;
 
     const handleSelect = (nextLat: number, nextLng: number) => {
-        setMarkerPos({ lat: nextLat, lng: nextLng });
+        setClickPos({ lat: nextLat, lng: nextLng });
         onLocationSelect(nextLat, nextLng);
     };
 
@@ -68,7 +74,7 @@ const NutriMapPicker: React.FC<NutriMapPickerProps> = ({
                     center={hasPosition ? [lng!, lat!] : VENEZUELA_CENTER}
                     zoom={hasPosition ? 16 : 6}
                 >
-                    <MapClickHandler onSelect={handleSelect} setMarker={setMarkerPos} />
+                    <MapClickHandler onSelect={handleSelect} setMarker={setClickPos} />
 
                     {markerPos && (
                         <MapMarker
@@ -84,6 +90,30 @@ const NutriMapPicker: React.FC<NutriMapPickerProps> = ({
                             </MarkerContent>
                         </MapMarker>
                     )}
+
+                    {markers
+                        .filter(
+                            (point) =>
+                                !(
+                                    markerPos &&
+                                    Math.abs(point.lat - markerPos.lat) < 1e-9 &&
+                                    Math.abs(point.lng - markerPos.lng) < 1e-9
+                                ),
+                        )
+                        .map((point, index) => (
+                            <MapMarker
+                                key={point.id ?? `marker-${index}`}
+                                longitude={point.lng}
+                                latitude={point.lat}
+                            >
+                                <MarkerContent>
+                                    <MapPin
+                                        className="fill-[#b2944a] stroke-white dark:fill-[#b2944a]"
+                                        size={22}
+                                    />
+                                </MarkerContent>
+                            </MapMarker>
+                        ))}
 
                     <MapControls
                         position="top-right"

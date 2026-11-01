@@ -168,6 +168,11 @@ export function SupplierLocationsCard({ supplierId }: { supplierId: string }) {
                 height="260px"
                 lat={picked?.lat}
                 lng={picked?.lng}
+                markers={rows.map((row) => ({
+                  id: row.id,
+                  lat: row.lat,
+                  lng: row.lng,
+                }))}
                 onLocationSelect={(lat, lng) => setPicked({ lat, lng })}
               />
             </div>

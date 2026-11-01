@@ -28,6 +28,8 @@ import {
 } from "@/shared/lib/maison-style";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { SupplierLocationsCard } from "@/features/suppliers/components/SupplierLocationsCard";
+import { ProductEndpoints } from "@/features/products/services/products.endpoints";
+import type { Product } from "@/features/products/types/product.type";
 import type {
   Supplier,
   SupplierBalance,
@@ -73,6 +75,8 @@ function IdentityRow({
  * locations and the delete action with confirmation — the backend rejects
  * suppliers with purchases, and that message is surfaced via toast.
  */
+type Paged<T> = { list: T[]; total: number };
+
 export default function SupplierDetailPage() {
   const params = useParams();
   const supplierId = params?.id as string | undefined;
@@ -84,6 +88,8 @@ export default function SupplierDetailPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<boolean>(false);
+  const [supplied, setSupplied] = useState<Product[]>([]);
+  const [candidates, setCandidates] = useState<Product[]>([]);
 
   const bootstrap = useCallback(async () => {
     if (!supplierId) return;
@@ -109,9 +115,92 @@ export default function SupplierDetailPage() {
     }
   }, [supplierId]);
 
+  const loadProducts = useCallback(async () => {
+    if (!supplierId) return;
+    try {
+      const [linked, all] = await Promise.all([
+        apiClient
+          .get<Paged<Product>>(ProductEndpoints.list, {
+            params: { supplierId, limit: 200 },
+          })
+          .then((r) => r.data.list ?? []),
+        apiClient
+          .get<Paged<Product>>(ProductEndpoints.list, {
+            params: { limit: 200 },
+          })
+          .then((r) => r.data.list ?? []),
+      ]);
+      setSupplied(linked);
+      // Candidatos: todo lo que NO esté ya con este proveedor (cambiar de
+      // proveedor es un movimiento legítimo del negocio).
+      setCandidates(all.filter((row) => row.supplierId !== supplierId));
+    } catch {
+      setSupplied([]);
+      setCandidates([]);
+    }
+  }, [supplierId]);
+
   useEffect(() => {
     void bootstrap();
   }, [bootstrap]);
+
+  useEffect(() => {
+    void loadProducts();
+  }, [loadProducts]);
+
+  const linkProduct = (productId: string) => {
+    if (!supplierId) return;
+    setBusy(true);
+    void (async () => {
+      try {
+        const { data } = await apiClient.post<Product[]>(
+          SupplierEndpoints.suppliedProducts(supplierId),
+          { productIds: [productId] },
+        );
+        setSupplied(data);
+        setCandidates((rows) => rows.filter((row) => row.id !== productId));
+        addToast({
+          type: "success",
+          title: "Proveedores",
+          message: "Producto vinculado.",
+        });
+      } catch (linkError) {
+        addToast({
+          type: "error",
+          title: "Proveedores",
+          message: apiMessage(linkError, "No se pudo vincular el producto."),
+        });
+      } finally {
+        setBusy(false);
+      }
+    })();
+  };
+
+  const unlinkProduct = (productId: string) => {
+    if (!supplierId) return;
+    setBusy(true);
+    void (async () => {
+      try {
+        await apiClient.delete(
+          SupplierEndpoints.suppliedProduct(supplierId, productId),
+        );
+        await loadProducts();
+        addToast({
+          type: "success",
+          title: "Proveedores",
+          message: "Producto desvinculado.",
+        });
+      } catch (unlinkError) {
+        addToast({
+          type: "error",
+          title: "Proveedores",
+          message: apiMessage(unlinkError, "No se pudo desvincular."),
+        });
+      } finally {
+        setBusy(false);
+      }
+    })();
+  };
 
   const handleDelete = () => {
     if (!supplier) return;
@@ -321,6 +410,87 @@ export default function SupplierDetailPage() {
 
       {/* ===== Ubicaciones en el mapa (componente existente) ===== */}
       <SupplierLocationsCard supplierId={supplier.id} />
+
+      {/* ===== Productos que provee (round 3, #1) ===== */}
+      <div className={`rounded-3xl p-6 ${GLASS}`}>
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-50">
+            Productos que provee
+          </h2>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            {supplied.length} vinculados
+          </span>
+        </div>
+
+        {supplied.length === 0 ? (
+          <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
+            Todavía no hay productos vinculados con este proveedor.
+          </p>
+        ) : (
+          <ul className="mb-4 divide-y divide-[#1b1d21]/10 dark:divide-white/10">
+            {supplied.map((product) => (
+              <li
+                key={product.id}
+                className="flex items-center justify-between gap-3 py-2"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-[#111018] dark:text-slate-100 truncate">
+                    {product.name}
+                  </p>
+                  <p className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
+                    {product.sku} · stock {Number(product.stock)}{" "}
+                    {product.unit}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => unlinkProduct(product.id)}
+                  className="text-xs font-semibold text-red-500 hover:underline shrink-0"
+                >
+                  Desvincular
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex flex-wrap items-end gap-3 border-t border-[#1a2a46]/10 dark:border-white/10 pt-4">
+          <label className="block text-xs text-slate-500 dark:text-slate-400 flex-1 min-w-[220px]">
+            Agregar producto
+            <select
+              id="link-product"
+              defaultValue=""
+              className="mt-1 w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 text-sm"
+            >
+              <option value="" disabled>
+                {candidates.length === 0
+                  ? "Todos los productos ya tienen proveedor"
+                  : "Elegí un producto…"}
+              </option>
+              {candidates.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name} ({product.sku})
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            disabled={busy || candidates.length === 0}
+            onClick={() => {
+              const select = document.getElementById(
+                "link-product",
+              ) as HTMLSelectElement | null;
+              const productId = select?.value;
+              if (productId) linkProduct(productId);
+            }}
+            className="rounded-xl bg-[#b2944a] hover:bg-[#bf9f54] text-[#111018] font-semibold px-4 py-2 text-sm disabled:opacity-50 transition-colors shadow-[0_10px_26px_-12px_rgba(178,148,74,0.75)]"
+          >
+            Vincular
+          </button>
+        </div>
+      </div>
 
       {/* ===== Panel de cristal decorativo del patrón Maison ===== */}
       <div className={`rounded-3xl px-5 py-4 ${GLASS}`}>

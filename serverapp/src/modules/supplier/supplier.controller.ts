@@ -105,6 +105,40 @@ export class SupplierController {
     return this.supplierService.createLocation(scope, id, body);
   }
 
+  // Productos que provee (round 3, #1/#3)
+  @Get(":id/products")
+  async listSuppliedProducts(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.listSuppliedProducts(scope, id);
+  }
+
+  @Post(":id/products")
+  async linkProducts(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Body() body: { productIds?: string[] },
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.linkProducts(
+      scope,
+      id,
+      Array.isArray(body.productIds) ? body.productIds : [],
+    );
+  }
+
+  @Delete(":id/products/:productId")
+  async unlinkProduct(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Param("productId") productId: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.supplierService.unlinkProduct(scope, id, productId);
+  }
+
   @Patch("locations/:locationId")
   async updateLocation(
     @Req() request: RequestWithUser,
