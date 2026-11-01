@@ -321,16 +321,4 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(withCheck).toContain("/dashboard/rutas");
   });
 
-  it("returns ONLY the general panel when isPatient is true", async () => {
-    const sections = await makeService().getSidebarSections({
-      id: "patient-1",
-      permits: BASE_PERMITS,
-      modules: ["INVENTORY"],
-      isPatient: true,
-    });
-
-    expect(linksOf(sections)).toEqual(["/dashboard"]);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBe("common.sidebar.general_panel");
-  });
 });

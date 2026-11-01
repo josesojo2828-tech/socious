@@ -20,8 +20,8 @@ export class DashboardService {
     private readonly tenantSettings: TenantSettingsService,
   ) { }
 
-  async getSidebarSections({ id, permits, modules = [], isPremium = false, isPatient = false, isGlobalRole = false, organizationId }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isPatient?: boolean; isGlobalRole?: boolean; organizationId?: string | null }): Promise<SidebarSection[]> {
-    if (!isPatient && (!permits || permits.length === 0)) return [];
+  async getSidebarSections({ id, permits, modules = [], isPremium = false, isGlobalRole = false, organizationId }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isGlobalRole?: boolean; organizationId?: string | null }): Promise<SidebarSection[]> {
+    if (!permits || permits.length === 0) return [];
 
     const moduleKeys = new Set(modules);
     const hasModule = (key: string) => moduleKeys.has(key);
@@ -143,24 +143,9 @@ export class DashboardService {
           },
         ],
       });
-    } else if (isPatient) {
-      // =========================================================================
-      // SECCIONES EXCLUSIVAS PARA PACIENTE (isPatient)
-      // =========================================================================
-      sections.push({
-        title: "common.sidebar.general_panel",
-        icon: "dashboard",
-        items: [
-          {
-            title: "common.sidebar.dashboard",
-            icon: "clipboard2-data-fill",
-            link: "/dashboard",
-          },
-        ],
-      });
     } else {
       // =========================================================================
-      // SECCIONES PARA NUTRICIONISTAS / PERFIL CLÍNICO (!isGlobalRole && !isPatient)
+      // SECCIONES DEL TENANT (no global)
       // =========================================================================
 
       // 1. Panel General

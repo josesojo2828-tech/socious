@@ -40,7 +40,6 @@ export function buildSidebarSections(
   const modules = resolved?.modules?.map((module) => module.key) ?? [];
   const isGlobalRole =
     user.permits?.name === "SUPERADMIN" || user.permits?.name === "ADMIN";
-  const isPatient = user.permits?.name === "PATIENT";
 
   console.log('[SIDEBAR DEBUG] Permits count:', permits?.length, 'Modules:', JSON.stringify(modules));
   console.log('[SIDEBAR DEBUG] Has INSTITUTIONAL_FOOD_ACCESS?', permits?.includes('INSTITUTIONAL_FOOD_ACCESS'), 'Has INSTITUTIONAL_FOOD module?', modules?.includes('INSTITUTIONAL_FOOD'));
@@ -49,7 +48,6 @@ export function buildSidebarSections(
     id: user.id,
     permits,
     modules,
-    isPatient,
     isGlobalRole,
     organizationId,
   });

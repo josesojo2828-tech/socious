@@ -262,14 +262,13 @@ function SidebarSection({
 
 export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
   const pathname = usePathname();
-  const { logout, user } = useAuthStore();
+  const { logout } = useAuthStore();
   const { isOpen, close, isCollapsed, toggleCollapse } = useSidebarStore();
   const { sidebar: storeSidebar } = useAuthStore();
   const sidebar = customSidebar !== undefined ? customSidebar : storeSidebar;
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
   const { currentRole, isGlobalAdmin } = useWorkspaceRole();
   const { t } = useTranslation();
-  const isPatient = user?.permits?.name === "PATIENT";
 
   // Resetear collapsed al cambiar de desktop → mobile (orientación o resize)
   useEffect(() => {
@@ -287,7 +286,7 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
   // "Nueva venta" solo en contextos de negocio reales: org activa, sin admin
   // global ni paciente.
   const showCreate =
-    activeWorkspace?.type === "ORGANIZATION" && !isGlobalAdmin && !isPatient;
+    activeWorkspace?.type === "ORGANIZATION" && !isGlobalAdmin;
 
   // Secciones visibles calculadas fuera del JSX (puras): el divisor entre
   // grupos sale del índice, sin contadores mutantes en render.
@@ -297,32 +296,6 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
         const link = subItem?.link || "";
         const title = subItem?.title || "";
 
-        if (isPatient) {
-          const forbiddenPatientLinks = [
-            '/dashboard/patients',
-            '/dashboard/menu',
-            '/dashboard/diets',
-            '/dashboard/foods',
-            '/dashboard/exchange-list',
-            '/dashboard/exchange-food',
-            '/dashboard/condiments',
-            '/dashboard/institutional',
-            '/dashboard/subscription',
-            '/dashboard/organization',
-            '/dashboard/community',
-            '/dashboard/campus',
-            '/dashboard/marketplace',
-            '/dashboard/adoption',
-            '/dashboard/activity',
-            '/dashboard/users',
-            '/dashboard/permits',
-            '/dashboard/transactions',
-            '/dashboard/wallets',
-          ];
-          if (forbiddenPatientLinks.some((forbidden) => link.startsWith(forbidden))) {
-            return false;
-          }
-        }
 
         if (activeWorkspace?.type === "PERSONAL") {
           if (
