@@ -1224,6 +1224,7 @@ model Purchase {
   status         PurchaseStatus    @default(PENDING)
   paymentStatus  PaymentStatus     @default(UNPAID)
   notes          String?
+  invoiceKey     String?           // clave MinIO de la factura (foto/PDF, S14)
   createdById    String?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt

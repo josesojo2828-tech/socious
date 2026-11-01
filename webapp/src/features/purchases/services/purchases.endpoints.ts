@@ -8,4 +8,8 @@ export const PurchaseEndpoints = {
   payments: (purchaseId: string) => `/api/purchases/${purchaseId}/payments`,
   cancel: (purchaseId: string) => `/api/purchases/${purchaseId}/cancel`,
   report: "/api/purchases/report",
+  /** Signed URL of the attached invoice — private key (S14 #5). */
+  invoice: (purchaseId: string) => `/api/purchases/${purchaseId}/invoice`,
+  /** Shared multipart upload; invoices go under the `purchase` prefix. */
+  fileUpload: "/api/file/upload",
 };

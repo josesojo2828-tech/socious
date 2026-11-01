@@ -370,6 +370,21 @@ export class TenantSettingsService {
       result.notifications = patchSection;
     }
 
+    if (input.purchases !== undefined) {
+      const purchases = input.purchases as Record<string, unknown>;
+      assertKnownKeys("purchases", purchases, ["onlySupplierProducts"]);
+      if (purchases.onlySupplierProducts !== undefined) {
+        if (typeof purchases.onlySupplierProducts !== "boolean") {
+          throw new BadRequestException(
+            "purchases.onlySupplierProducts debe ser verdadero o falso.",
+          );
+        }
+        result.purchases = {
+          onlySupplierProducts: purchases.onlySupplierProducts,
+        };
+      }
+    }
+
     return result;
   }
 }
@@ -443,5 +458,6 @@ export function mergeTenantSettings(
       disabledCodes:
         patch.payments?.disabledCodes ?? base.payments.disabledCodes,
     },
+    purchases: { ...base.purchases, ...(patch.purchases ?? {}) },
   });
 }

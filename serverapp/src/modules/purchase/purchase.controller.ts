@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  Res,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
@@ -25,7 +26,9 @@ import {
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import type { FastifyReply } from "fastify";
 import type { RequestWithUser } from "src/shared/types/server.type";
+import { StorageService } from "src/modules/file/storage.service";
 
 /** Purchases from suppliers (S8), tenant-scoped. */
 @Controller("api/purchases")
@@ -36,6 +39,7 @@ export class PurchaseController {
   constructor(
     private readonly purchaseService: PurchaseService,
     private readonly workspaceContext: WorkspaceContextService,
+    private readonly storageService: StorageService,
     private readonly prisma: PrismaService,
   ) {
     this.organizationScope = new OrganizationScopeService(this.prisma);
@@ -151,6 +155,35 @@ export class PurchaseController {
   async getOne(@Req() request: RequestWithUser, @Param("id") id: string) {
     const scope = await this.resolveScope(request);
     return this.purchaseService.getOne(scope, id);
+  }
+
+  /**
+   * Signed URL of the attached invoice (S14 #5). Same SessionAuthGuard +
+   * organization scope as the rest of the controller: a member of another
+   * workspace gets 404 (the lookup is org-scoped), never a URL.
+   */
+  @Get(":id/invoice")
+  async getInvoice(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+    @Res() res: FastifyReply,
+  ) {
+    const scope = await this.resolveScope(request);
+    const { key } = await this.purchaseService.getInvoice(scope, id);
+
+    // Stream autenticado: la clave nunca sale y el navegador no necesita
+    // alcanzar el host de MinIO (patrón del FileController público).
+    const { stream, contentType } = await this.storageService.getFileStream(key);
+    res.header("Cache-Control", "private, no-store");
+    if (stream && typeof stream.transformToByteArray === "function") {
+      const bytes = await stream.transformToByteArray();
+      return res.status(200).type(contentType).send(Buffer.from(bytes));
+    }
+    if (stream && typeof stream.pipe === "function") {
+      res.type(contentType);
+      return res.send(stream);
+    }
+    return res.status(404).send({ message: "File stream unavailable" });
   }
 
   @Post()

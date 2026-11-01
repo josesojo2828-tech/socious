@@ -387,7 +387,7 @@ function RegisterFormContent() {
               <Link href="/privacy" className="text-primary underline font-bold hover:text-accent">
                 Política de Privacidad
               </Link>{' '}
-              de Socius.
+              de Stockira.
             </span>
           </label>
           {termsError && (

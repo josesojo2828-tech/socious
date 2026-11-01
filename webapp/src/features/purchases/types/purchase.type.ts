@@ -35,6 +35,8 @@ export interface Purchase {
   status: PurchaseStatus;
   paymentStatus: PurchasePaymentStatus;
   notes: string | null;
+  /** Attached invoice (photo/PDF) MinIO key — private, S14 #5. */
+  invoiceKey?: string | null;
   supplier: { id: string; name: string } | null;
   items: PurchaseItem[];
   payments: PurchasePayment[];
@@ -46,6 +48,8 @@ export interface CreatePurchasePayload {
   issueDate?: string;
   dueDate?: string;
   notes?: string;
+  /** Attached invoice MinIO key (upload prefix `purchase`, optional). */
+  invoiceKey?: string;
   items: {
     productId?: string;
     productName: string;

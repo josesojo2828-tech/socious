@@ -52,13 +52,18 @@ const makeService = () => {
   const tenantSettings = {
     get: jest.fn().mockResolvedValue({ payments: { disabledCodes: [] } }),
   };
+  const storage = {
+    getSignedUrl: jest
+      .fn()
+      .mockResolvedValue("https://minio.local/signed/invoice.pdf"),
+  };
   const service = new PurchaseService(
     prisma as any,
     { resolveRates: jest.fn().mockResolvedValue(RATES) } as any,
     { nextFormatted: jest.fn().mockResolvedValue("COM-00001") } as any,
     tenantSettings as any,
   );
-  return { service, prisma, tx, tenantSettings };
+  return { service, prisma, tx, tenantSettings, storage };
 };
 
 const PURCHASE = {
@@ -220,5 +225,69 @@ describe("PurchaseService", () => {
     expect(report.paymentsByMonth).toEqual([
       { month: "2026-04", totalUSD: 200, count: 1 },
     ]);
+  });
+
+  it("persists the optional invoiceKey on create (S14 #5)", async () => {
+    const { service, tx } = makeService();
+
+    await service.create({ organizationId: ORG_A, createdById: "u-1" }, {
+      items: [{ productName: "Arroz", quantity: 1, unitCostUSD: 2 }],
+      invoiceKey: "purchase_1730000000_ab12cd.pdf",
+    });
+
+    expect(tx.purchase.create.mock.calls[0][0].data.invoiceKey).toBe(
+      "purchase_1730000000_ab12cd.pdf",
+    );
+  });
+
+  it("stores null when the purchase carries no invoice", async () => {
+    const { service, tx } = makeService();
+
+    await service.create({ organizationId: ORG_A, createdById: "u-1" }, {
+      items: [{ productName: "Arroz", quantity: 1, unitCostUSD: 2 }],
+    });
+
+    expect(tx.purchase.create.mock.calls[0][0].data.invoiceKey).toBeNull();
+  });
+});
+
+/**
+ * GET /api/purchases/:id/invoice (S14 #5): invoices are PRIVATE — the signed
+ * URL is minted only inside the caller's organization scope, never through
+ * the public asset allowlist (purchase_ keys answer 404 there).
+ */
+describe("PurchaseService.getInvoice — org-scoped private key", () => {
+  it("answers the invoice key for a purchase of my organization", async () => {
+    const { service, tx } = makeService();
+    tx.purchase.findFirst.mockResolvedValue({
+      invoiceKey: "purchase_1730000000_ab12cd.pdf",
+    });
+
+    const result = await service.getInvoice({ organizationId: ORG_A }, "pu-1");
+
+    expect(result).toEqual({ key: "purchase_1730000000_ab12cd.pdf" });
+    expect(tx.purchase.findFirst.mock.calls[0][0].where).toMatchObject({
+      id: "pu-1",
+      organizationId: ORG_A,
+      deletedAt: null,
+    });
+  });
+
+  it("never answers a key for another tenant's purchase", async () => {
+    const { service, tx } = makeService();
+    tx.purchase.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.getInvoice({ organizationId: ORG_A }, "foreign"),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it("answers NotFound when the purchase has no invoice attached", async () => {
+    const { service, tx } = makeService();
+    tx.purchase.findFirst.mockResolvedValue({ invoiceKey: null });
+
+    await expect(service.getInvoice({ organizationId: ORG_A }, "pu-1")).rejects.toThrow(
+      /factura/,
+    );
   });
 });

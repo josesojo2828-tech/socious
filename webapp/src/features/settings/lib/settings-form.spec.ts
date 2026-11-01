@@ -44,6 +44,7 @@ const base: TenantSettings = {
     saleCreated: false,
   },
   payments: { disabledCodes: [] },
+  purchases: { onlySupplierProducts: false },
 };
 
 describe("settings-form (S4)", () => {

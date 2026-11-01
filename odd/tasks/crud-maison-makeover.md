@@ -105,6 +105,25 @@ features (images, offers) validate their plan server-side.
 
 ### S11 — Consumo de ofertas en la tienda (follow-up)
 
+### S14 — Compras: flujo guiado con datos reales (round 4)
+User (verbatim): "#1. Seleccionar proveedor. #2. Agregar una configuracion
+para validar si se mostrar unicamente lo productos de un proveedor, o
+mostrar todos. #3. Mostrar los productos de ese proveedor o todos segun la
+configuracion. #4. Debemos utilizar todos los datos de los productos,
+precios y todo eso, no colocar el precio manual. #5. Poder cargar una foto
+o un PDF de la factura que de el proveedor (opcional). #6. Hacer los
+calculos y todo detallado. #7. Ahi mismo mostrar cuanto seria en cada
+moneda configurada."
+Acceptance: the nuevo screen leads with the supplier; tenant setting
+`purchases.onlySupplierProducts` (default false = show all, stated) toggled
+in-context filters the catalog to that supplier's products; picking a
+product fills name + cost from the product record (cost readonly for
+catalog lines; free-text lines keep manual cost as the escape hatch);
+optional invoice attachment (image or PDF, private — served through an
+authenticated endpoint, never the public asset allowlist); detailed totals
+summary; per-currency equivalents using today's rates and the currency
+visibility settings.
+
 ### S12 — Ficha de compra como ruta
 Acceptance: `/dashboard/compras/[id]` own page with receive/pay/cancel;
 list rows navigate there; the drawer is removed.

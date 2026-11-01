@@ -54,6 +54,18 @@ export interface TenantSettings {
   returns: { reasons: string[] };
   /** Payment-method switches (S3): built-ins the merchant turned off. */
   payments: { disabledCodes: string[] };
+  /**
+   * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
+   * catalog the /dashboard/compras/nuevo screen offers for a supplier.
+   */
+  purchases: {
+    /**
+     * `false` (default) = mostrar todos los productos; `true` = solo los del
+     * proveedor seleccionado. Display-only: the invoice keeps whatever the
+     * merchant registered.
+     */
+    onlySupplierProducts: boolean;
+  };
   /** Logic-only notification switches (CRM S2); nothing is sent yet. */
   notifications: {
     lowStock: boolean;
@@ -113,6 +125,7 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
     monthlyDay: 1,
   },
   payments: { disabledCodes: [] },
+  purchases: { onlySupplierProducts: false },
   notifications: {
     lowStock: true,
     creditDue: true,
@@ -256,6 +269,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
     ? source.notifications
     : {};
   const payments = isPlainObject(source.payments) ? source.payments : {};
+  const purchases = isPlainObject(source.purchases) ? source.purchases : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -300,6 +314,12 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       disabledCodes: Array.isArray(payments.disabledCodes)
         ? [...new Set(payments.disabledCodes.filter((c: unknown) => typeof c === "string"))]
         : defaults.payments.disabledCodes,
+    },
+    purchases: {
+      onlySupplierProducts: asBool(
+        purchases.onlySupplierProducts,
+        defaults.purchases.onlySupplierProducts,
+      ),
     },
     notifications: {
       lowStock: asBool(notifications.lowStock, defaults.notifications.lowStock),

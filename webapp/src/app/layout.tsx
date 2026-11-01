@@ -31,11 +31,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Socius ERP — Gestión de negocio",
-    template: "%s | Socius ERP",
+    default: "Stockira — Gestión Comercial, Inventario y Sucursales",
+    template: "%s | Stockira",
   },
   description:
-    "Socius ERP administra inventario, clientes, ventas, caja, pedidos, envíos y rutas desde un solo lugar, con multi-moneda y control por sucursales.",
+    "Stockira administra inventario en tiempo real, Kardex, punto de venta (POS), caja multimoneda, clientes, ventas y control de sucursales en una plataforma ágil y centralizada.",
 };
 
 export default function RootLayout({

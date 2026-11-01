@@ -6,6 +6,7 @@ import {
   AlertCircle,
   ArrowLeft,
   Ban,
+  FileText,
   Loader2,
   Package,
   Save,
@@ -15,6 +16,7 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import {
   BRASS_DOT,
+  BTN_GHOST,
   CTA_BRASS,
   CARD,
   CARD_HEADER,
@@ -27,6 +29,7 @@ import {
   TABLE_ROW,
 } from "@/shared/lib/maison-style";
 import { PurchaseEndpoints } from "@/features/purchases/services/purchases.endpoints";
+import { isImageInvoiceKey } from "@/features/purchases/lib/purchase-invoice";
 import type {
   Purchase,
   PurchasePaymentStatus,
@@ -130,6 +133,52 @@ export default function PurchaseDetailPage() {
   const [payMethod, setPayMethod] = useState<string>("CASH_USD");
   const [payDate, setPayDate] = useState<string>(todayISO);
   const [payReference, setPayReference] = useState<string>("");
+
+  /**
+   * Invoice attachment (S14 #5): the key is PRIVATE — the view downloads the
+   * authenticated stream (Bearer via apiClient) into an object URL and shows
+   * an <img> for image keys, a new-tab link for everything else (PDF). No
+   * MinIO hostname ever reaches the browser.
+   */
+  const [invoice, setInvoice] = useState<{
+    busy: boolean;
+    data: { url: string; key: string } | null;
+    error: string | null;
+  }>({ busy: false, data: null, error: null });
+
+  const openInvoice = async () => {
+    if (!purchaseId || invoice.busy || invoice.data) return;
+    setInvoice({ busy: true, data: null, error: null });
+    try {
+      const { data: blob } = await apiClient.get<Blob>(
+        PurchaseEndpoints.invoice(purchaseId),
+        { responseType: "blob" },
+      );
+      setInvoice({
+        busy: false,
+        data: {
+          url: URL.createObjectURL(blob),
+          key: purchase?.invoiceKey ?? "",
+        },
+        error: null,
+      });
+    } catch (loadError) {
+      setInvoice({
+        busy: false,
+        data: null,
+        error: apiMessage(loadError, "No se pudo abrir la factura."),
+      });
+    }
+  };
+
+  // Revocar el object URL anterior cuando cambia o el componente se va.
+  const invoiceUrl = invoice.data?.url;
+  useEffect(
+    () => () => {
+      if (invoiceUrl) URL.revokeObjectURL(invoiceUrl);
+    },
+    [invoiceUrl],
+  );
 
   const loadDetail = useCallback(
     async (options?: { silent?: boolean }) => {
@@ -367,6 +416,56 @@ export default function PurchaseDetailPage() {
               <FactRow label="Notas" value={purchase.notes} />
             ) : null}
           </div>
+
+          {/* Factura adjunta (S14 #5): URL firmada, nunca la ruta pública. */}
+          {purchase.invoiceKey ? (
+            <div className="px-5 py-3 border-t border-[#1a2a46]/8 dark:border-white/5 space-y-2">
+              {!invoice.data ? (
+                <button
+                  type="button"
+                  onClick={() => void openInvoice()}
+                  disabled={invoice.busy}
+                  className={BTN_GHOST}
+                >
+                  {invoice.busy ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Cargando
+                      factura…
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="h-4 w-4" /> Ver factura
+                    </>
+                  )}
+                </button>
+              ) : null}
+              {invoice.error ? (
+                <p className="text-xs text-red-600 dark:text-red-400">
+                  {invoice.error}
+                </p>
+              ) : null}
+              {invoice.data ? (
+                isImageInvoiceKey(invoice.data.key) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={invoice.data.url}
+                    alt="Factura de la compra"
+                    className="max-h-96 w-auto rounded-lg border border-[#1a2a46]/10 dark:border-white/10"
+                  />
+                ) : (
+                  <a
+                    href={invoice.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#b2944a] hover:underline"
+                  >
+                    <FileText className="h-4 w-4" /> Abrir factura en una
+                    pestaña nueva
+                  </a>
+                )
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         <div className={`rounded-xl ${CARD}`}>

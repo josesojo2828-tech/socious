@@ -9,6 +9,8 @@ export interface PurchaseDraft {
   issueDate: string;
   dueDate: string;
   notes: string;
+  /** Attached invoice key (S14 #5); absent when no invoice was uploaded. */
+  invoiceKey?: string;
   items: PurchaseLineForm[];
   savedAt: string;
 }
@@ -86,6 +88,9 @@ export function draftToPayload(
     issueDate: draft.issueDate,
     dueDate: draft.dueDate,
     notes: draft.notes,
+    // Only an ATTACHED invoice travels (S14 #5): drafts saved before the
+    // field existed send exactly the same body as before.
+    ...(draft.invoiceKey ? { invoiceKey: draft.invoiceKey } : {}),
     items: draft.items,
   };
 }
@@ -111,6 +116,10 @@ export function serverDraftFromResponse(
     issueDate: typeof payload.issueDate === "string" ? payload.issueDate : "",
     dueDate: typeof payload.dueDate === "string" ? payload.dueDate : "",
     notes: typeof payload.notes === "string" ? payload.notes : "",
+    // Rows saved before S14 simply have no invoice attached.
+    ...(typeof payload.invoiceKey === "string" && payload.invoiceKey
+      ? { invoiceKey: payload.invoiceKey }
+      : {}),
     items: payload.items as PurchaseLineForm[],
     savedAt: row.updatedAt,
   };

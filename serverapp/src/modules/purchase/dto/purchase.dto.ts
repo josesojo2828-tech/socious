@@ -96,6 +96,12 @@ export class CreatePurchaseDto {
   @MaxLength(NOTES_MAX)
   notes?: string;
 
+  /** MinIO key of the supplier invoice (photo or PDF, optional, S14 #5). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  invoiceKey?: string;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

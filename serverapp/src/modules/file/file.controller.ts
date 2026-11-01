@@ -21,18 +21,27 @@ import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { safeExtensionFromMime } from "src/shared/helpers/file.util";
 import type { RequestWithUser } from "src/shared/types/server.type";
 
-const ALLOWED_MIME = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+const ALLOWED_MIME = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  // Facturas de proveedor (S14 #5): foto o PDF. `purchase_` NO entra en la
+  // allowlist pública — se sirve por getSignedUrl en /api/purchases/:id/invoice.
+  "application/pdf",
+];
 const MAX_SIZE = 5 * 1024 * 1024;
-const UPLOAD_PREFIXES = ["product", "offer"] as const;
+const UPLOAD_PREFIXES = ["product", "offer", "purchase"] as const;
 
 @Controller("api/file")
 export class FileController {
   constructor(private readonly storageService: StorageService) {}
 
   /**
-   * Upload de imágenes de catálogo/ofertas (S8/S9). El prefijo se limita a
-   * la allowlist para no escribir claves arbitrarias en el bucket; la
-   * respuesta devuelve la clave (persistida en la entidad) y la URL pública.
+   * Upload de imágenes de catálogo/ofertas (S8/S9) y facturas de compra
+   * (S14 #5). El prefijo se limita a la allowlist para no escribir claves
+   * arbitrarias en el bucket; la respuesta devuelve la clave (persistida en
+   * la entidad) y la URL pública.
    */
   @Post("upload")
   @UseGuards(SessionAuthGuard)
@@ -43,14 +52,14 @@ export class FileController {
     @Body() body: { prefix?: string },
   ) {
     if (!file || !file.buffer) {
-      throw new BadRequestException("Debe subir una imagen.");
+      throw new BadRequestException("Debe subir un archivo.");
     }
     if (file.size && file.size > MAX_SIZE) {
-      throw new BadRequestException("La imagen excede el máximo de 5MB.");
+      throw new BadRequestException("El archivo excede el máximo de 5MB.");
     }
     if (!ALLOWED_MIME.includes(file.mimetype)) {
       throw new BadRequestException(
-        "Formato no permitido. Solo PNG, JPG, JPEG o WEBP.",
+        "Formato no permitido. Solo PNG, JPG, JPEG, WEBP o PDF.",
       );
     }
     const prefix = UPLOAD_PREFIXES.includes(

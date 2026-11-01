@@ -50,6 +50,12 @@ export interface TenantSettings {
   /** Built-ins the merchant turned off (S3). */
   payments: { disabledCodes: string[] };
   /**
+   * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
+   * catalog on /dashboard/compras/nuevo to the selected supplier's products.
+   * `false` (default) = mostrar todos los productos.
+   */
+  purchases: { onlySupplierProducts: boolean };
+  /**
    * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
    * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the
    * sections those modules own instead of offering switches that only exist

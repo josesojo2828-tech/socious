@@ -2,7 +2,7 @@ import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { PurchaseController } from "./purchase.controller";
-import { SavePurchaseDraftDto } from "./dto/purchase.dto";
+import { CreatePurchaseDto, SavePurchaseDraftDto } from "./dto/purchase.dto";
 
 const ORG_A = "11111111-1111-4111-8111-111111111111";
 const ORG_B = "22222222-2222-4222-8222-222222222222";
@@ -40,6 +40,7 @@ const makeController = ({
     getReport: jest.fn(),
     list: jest.fn(),
     getOne: jest.fn(),
+    getInvoice: jest.fn(),
     create: jest.fn(),
     receive: jest.fn(),
     addPayment: jest.fn(),
@@ -76,13 +77,17 @@ const makeController = ({
     },
   };
 
+  const storage = {
+    getFileStream: jest.fn(),
+  };
   const controller = new PurchaseController(
     purchaseService as any,
     workspaceContext as any,
+    storage as any,
     prisma as any,
   );
 
-  return { controller, prisma, purchaseService };
+  return { controller, prisma, purchaseService, storage };
 };
 
 const request = (user: unknown) => ({ user, headers: {} }) as any;
@@ -242,5 +247,84 @@ describe("PurchaseController — DELETE /api/purchases/drafts (S13)", () => {
       UnauthorizedException,
     );
     expect(prisma.purchaseDraft.deleteMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("PurchaseController — GET /api/purchases/:id/invoice (S14 #5)", () => {
+  const makeReply = () => {
+    const res: any = {};
+    res.header = jest.fn(() => res);
+    res.type = jest.fn(() => res);
+    res.status = jest.fn(() => res);
+    res.send = jest.fn(() => res);
+    return res;
+  };
+
+  it("resolves my organization scope and streams the private file", async () => {
+    const { controller, purchaseService, storage } = makeController();
+    purchaseService.getInvoice.mockResolvedValueOnce({
+      key: "purchase_1.pdf",
+    });
+    storage.getFileStream.mockResolvedValueOnce({
+      stream: { transformToByteArray: async () => Buffer.from("PDF") },
+      contentType: "application/pdf",
+    });
+    const res = makeReply();
+
+    await controller.getInvoice(request(memberUser), "pu-1", res);
+
+    expect(purchaseService.getInvoice).toHaveBeenCalledWith(
+      { organizationId: ORG_A, createdById: "u-1" },
+      "pu-1",
+    );
+    expect(storage.getFileStream).toHaveBeenCalledWith("purchase_1.pdf");
+    expect(res.type).toHaveBeenCalledWith("application/pdf");
+    expect(res.send).toHaveBeenCalled();
+    expect(res.header).toHaveBeenCalledWith(
+      "Cache-Control",
+      "private, no-store",
+    );
+  });
+
+  it("rejects an unauthenticated call", async () => {
+    const { controller, purchaseService, storage } = makeController({
+      user: null,
+    });
+
+    await expect(
+      controller.getInvoice(request(null), "pu-1", makeReply()),
+    ).rejects.toThrow(UnauthorizedException);
+    expect(purchaseService.getInvoice).not.toHaveBeenCalled();
+    expect(storage.getFileStream).not.toHaveBeenCalled();
+  });
+});
+
+describe("CreatePurchaseDto — optional invoiceKey (S14 #5)", () => {
+  const base = {
+    items: [{ productName: "Harina", quantity: 2, unitCostUSD: 10.5 }],
+  };
+
+  it("accepts a body without an invoice (it is optional)", async () => {
+    await expect(
+      validate(plainToInstance(CreatePurchaseDto, base)),
+    ).resolves.toHaveLength(0);
+  });
+
+  it("accepts the key the upload endpoint answered", async () => {
+    await expect(
+      validate(
+        plainToInstance(CreatePurchaseDto, {
+          ...base,
+          invoiceKey: "purchase_1730000000_ab12cd.pdf",
+        }),
+      ),
+    ).resolves.toHaveLength(0);
+  });
+
+  it("rejects a non-string invoiceKey", async () => {
+    const errors = await validate(
+      plainToInstance(CreatePurchaseDto, { ...base, invoiceKey: 42 }),
+    );
+    expect(errors).not.toHaveLength(0);
   });
 });

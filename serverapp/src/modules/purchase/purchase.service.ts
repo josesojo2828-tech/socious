@@ -20,6 +20,7 @@ import {
   type RateSnapshot,
 } from "src/shared/utils/money";
 import { EventEmitter2 } from "@nestjs/event-emitter";
+import { StorageService } from "../file/storage.service";
 import { emitEvent } from "src/shared/event/event-envelope";
 import type { EventName } from "src/shared/event/event-taxonomy";
 import {
@@ -60,6 +61,8 @@ export class PurchaseService {
     private readonly exchangeService: ExchangeService,
     private readonly sequenceService: SequenceService,
     private readonly tenantSettings: TenantSettingsService,
+    // Invoice attachments (S14 #5): private keys minted through signed URLs.
+    private readonly storageService: StorageService,
     private readonly eventEmitter?: EventEmitter2,
   ) {}
 
@@ -145,6 +148,8 @@ export class PurchaseService {
           status: PurchaseStatus.PENDING,
           paymentStatus: PaymentStatus.UNPAID,
           notes: data.notes?.trim() || null,
+          // Private invoice (S14 #5): never on the public asset allowlist.
+          invoiceKey: data.invoiceKey?.trim() || null,
           createdById: scope.createdById ?? null,
         },
       });
@@ -467,6 +472,27 @@ export class PurchaseService {
 
     if (!purchase) throw new NotFoundException("Compra no encontrada.");
     return purchase;
+  }
+
+  /**
+   * Key of the attached invoice (S14 #5). The key is PRIVATE: it only
+   * leaves the server through this org-scoped endpoint, never through the
+   * public asset route (`purchase_` is not a public prefix).
+   */
+  async getInvoice(scope: PurchaseScope, id: string) {
+    const purchase = await this.prisma.purchase.findFirst({
+      where: { id, ...this.scopeWhere(scope.organizationId) },
+      select: { invoiceKey: true },
+    });
+
+    if (!purchase) throw new NotFoundException("Compra no encontrada.");
+    if (!purchase.invoiceKey) {
+      throw new NotFoundException("La compra no tiene una factura adjunta.");
+    }
+
+    // La clave es PRIVADA: el controller la streamea autenticado (el host de
+    // MinIO no es alcanzable desde el navegador ni en dev).
+    return { key: purchase.invoiceKey };
   }
 
   /** Payables: what was purchased per month vs what was paid per month. */

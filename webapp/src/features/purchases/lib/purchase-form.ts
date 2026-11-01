@@ -1,3 +1,4 @@
+import { convertFromUSD } from "@/features/products/lib/price-currency";
 import type {
   CreatePurchasePayload,
   PurchaseCurrency,
@@ -50,6 +51,8 @@ export interface PurchaseForm {
   issueDate: string;
   dueDate: string;
   notes: string;
+  /** MinIO key of the attached invoice photo/PDF (optional, S14 #5). */
+  invoiceKey?: string;
   items: PurchaseLineForm[];
 }
 
@@ -67,6 +70,70 @@ export function lineTotalUSD(line: PurchaseLineForm): number {
 export function grandTotalUSD(items: PurchaseLineForm[]): number {
   const total = items.reduce((sum, line) => sum + lineTotalUSD(line), 0);
   return Math.round(total * 100) / 100;
+}
+
+/** Detailed resumen of the create screen (S14 #6), over the SENT lines. */
+export interface PurchaseSummary {
+  /** Lines with a name — the ones that reach the payload. */
+  articleCount: number;
+  /** Sum of the quantities of those lines (blank/unparsable = 0). */
+  units: number;
+  /** Sum of the line totals, rounded to cents. */
+  subtotalUSD: number;
+  /** Document total — the same value the API books (no taxes on entry). */
+  totalUSD: number;
+}
+
+/** Pure math for the resumen card: artículos · unidades · subtotal · total. */
+export function purchaseSummary(items: PurchaseLineForm[]): PurchaseSummary {
+  const filled = items.filter((line) => line.productName.trim());
+  const units = filled.reduce((sum, line) => {
+    const quantity = Number(line.quantity);
+    return sum + (Number.isFinite(quantity) && quantity > 0 ? quantity : 0);
+  }, 0);
+
+  const subtotalUSD = grandTotalUSD(filled);
+  return {
+    articleCount: filled.length,
+    units: Math.round(units * 100) / 100,
+    subtotalUSD,
+    // The total is what the API books: the same sent lines (no taxes here).
+    totalUSD: subtotalUSD,
+  };
+}
+
+/** One per-currency equivalent shown under the total (S14 #7). */
+export interface PurchaseEquivalent {
+  currency: "VES" | "USDT";
+  amount: number;
+}
+
+/**
+ * ≈ equivalents of a USD amount at today's rates, gated by the currency
+ * visibility checks. Conversion is the shared POS rule via `price-currency`
+ * (VES = USD × BCV · USDT = USD × BCV / rateUsdt); without rates there is
+ * nothing honest to show.
+ */
+export function purchaseCurrencyEquivalents(
+  totalUSD: number,
+  rates: { rateBcv: number; rateUsdt: number } | null,
+  visibility: { showVES: boolean; showUSDT: boolean },
+): PurchaseEquivalent[] {
+  if (!rates) return [];
+  const equivalents: PurchaseEquivalent[] = [];
+  if (visibility.showVES) {
+    equivalents.push({
+      currency: "VES",
+      amount: convertFromUSD(totalUSD, "VES", rates),
+    });
+  }
+  if (visibility.showUSDT) {
+    equivalents.push({
+      currency: "USDT",
+      amount: convertFromUSD(totalUSD, "USDT", rates),
+    });
+  }
+  return equivalents;
 }
 
 /**
@@ -110,6 +177,7 @@ export function buildCreatePayload(form: PurchaseForm): CreatePurchasePayload {
     ...(form.issueDate ? { issueDate: form.issueDate } : {}),
     ...(form.dueDate ? { dueDate: form.dueDate } : {}),
     ...(form.notes.trim() ? { notes: form.notes.trim() } : {}),
+    ...(form.invoiceKey ? { invoiceKey: form.invoiceKey } : {}),
     items,
   };
 }

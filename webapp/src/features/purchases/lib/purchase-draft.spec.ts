@@ -156,3 +156,41 @@ describe("purchase-draft — account sync payload (S13)", () => {
     expect(pickResumeDraft(null, null)).toBeNull();
   });
 });
+
+describe("purchase-draft — attached invoice (S14 #5)", () => {
+  it("draftToPayload forwards the invoiceKey only when one is attached", () => {
+    expect(draftToPayload(sampleDraft())).not.toHaveProperty("invoiceKey");
+    expect(
+      draftToPayload({ ...sampleDraft(), invoiceKey: "purchase_1_a.pdf" }),
+    ).toEqual({ ...sampleDraft(), invoiceKey: "purchase_1_a.pdf" });
+  });
+
+  it("serverDraftFromResponse restores the invoiceKey from the account row", () => {
+    const draft = serverDraftFromResponse({
+      id: "draft-1",
+      name: null,
+      payload: {
+        ...draftToPayload(sampleDraft()),
+        invoiceKey: "purchase_1_a.pdf",
+      },
+      createdAt: "2026-11-01T09:00:00.000Z",
+      updatedAt: "2026-11-01T10:30:00.000Z",
+    });
+
+    expect(draft?.invoiceKey).toBe("purchase_1_a.pdf");
+    expect(draft?.items).toEqual(sampleDraft().items);
+  });
+
+  it("keeps loading drafts saved before the invoice field existed", () => {
+    const draft = serverDraftFromResponse({
+      id: "draft-1",
+      name: null,
+      payload: draftToPayload(sampleDraft()),
+      createdAt: "2026-11-01T09:00:00.000Z",
+      updatedAt: "2026-11-01T10:30:00.000Z",
+    });
+
+    expect(draft).not.toBeNull();
+    expect(draft?.invoiceKey).toBeUndefined();
+  });
+});

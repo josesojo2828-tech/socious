@@ -164,6 +164,14 @@ export class PaymentsSettingsDto {
   disabledCodes?: string[];
 }
 
+export class PurchasesSettingsDto {
+  @IsOptional()
+  @IsBoolean({
+    message: "purchases.onlySupplierProducts debe ser verdadero o falso.",
+  })
+  onlySupplierProducts?: boolean;
+}
+
 export class UpdateTenantSettingsDto {
   @IsOptional()
   @ValidateNested()
@@ -214,6 +222,11 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => PaymentsSettingsDto)
   payments?: PaymentsSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PurchasesSettingsDto)
+  purchases?: PurchasesSettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

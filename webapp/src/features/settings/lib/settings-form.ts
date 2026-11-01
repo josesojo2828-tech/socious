@@ -52,6 +52,7 @@ export function applySettingsPatch(
       disabledCodes:
         patch.payments?.disabledCodes ?? current.payments.disabledCodes,
     },
+    purchases: { ...current.purchases, ...(patch.purchases ?? {}) },
   };
 }
 
