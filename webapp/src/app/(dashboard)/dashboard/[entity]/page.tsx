@@ -8,13 +8,10 @@ import {
   Plus,
   Search,
   Filter,
-  Download,
-  MoreHorizontal,
   ChevronLeft,
   ChevronRight,
   Shield,
   Wallet,
-  ArrowLeftRight,
   Pencil,
   Trash,
   FileText,
@@ -23,7 +20,8 @@ import {
   X,
   Eye
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@/context/i18n.context";
@@ -37,6 +35,82 @@ import { ensureString } from "@/shared/lib/utils";
 import { UniversityFormModal } from "@/features/dashboard/components/UniversityFormModal";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { TransactionConfirmModal } from "@/features/dashboard/components/TransactionConfirmModal";
+import {
+  BRASS_DOT,
+  CARD,
+  CTA_BRASS,
+  EYEBROW,
+  GLASS,
+  INPUT,
+  LABEL_SM,
+  PAGE_TITLE,
+  TABLE_HEAD,
+  TABLE_ROW,
+} from "@/shared/lib/maison-style";
+
+/**
+ * Loose row shape the generic table consumes. The API answers heterogeneous
+ * records per entity; the typed fields are exactly the ones the rows touch.
+ */
+interface CrudItem {
+  [key: string]: unknown;
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  username?: string | null;
+  email?: string | null;
+  status?: string | null;
+  createdAt?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  plan?: { name?: string | null } | null;
+  user?: { email?: string | null } | null;
+  referenceCode?: string | null;
+  amount?: number | string | null;
+  type?: string | null;
+  paymentMethod?: {
+    name?: string | null;
+    paymentMethod?: { name?: string | null } | null;
+  } | null;
+  message?: string | null;
+  active?: boolean | null;
+  name?: string | null;
+  title?: string | null;
+  code?: string | null;
+  description?: string | null;
+  list?: unknown[] | null;
+  userId?: string | null;
+  balance?: number | string | null;
+  currency?: string | null;
+  key?: string | null;
+  shortName?: string | null;
+  isActive?: boolean | null;
+}
+
+/** Narrow shapes the two domain modals expect (type-level casts only). */
+type UniversityModalRow = { id: string; name: string; shortName?: string; isActive?: boolean };
+type TransactionModalRow = {
+  id: string;
+  referenceCode?: string;
+  amount: number;
+  status: string;
+  type: string;
+  createdAt?: string;
+  paymentMethod?: { paymentMethod?: { name: string } };
+  user?: { email: string; firstName?: string; lastName?: string };
+};
+
+interface EntityConfig {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  columns: string[];
+  renderRow: (item: CrudItem) => ReactNode;
+}
+
+/** Cuerpo de INPUT para controles en línea (sin el ancho completo). */
+const INLINE_INPUT =
+  "rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 text-sm text-[#111018] dark:text-slate-100";
 
 interface GenericCrudPageProps {
   entity?: string;
@@ -49,7 +123,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
 
   const entity = overrideEntity || (typeof params?.entity === 'string' ? params.entity : '');
 
-  const ENTITY_CONFIG: Record<string, any> = {
+  const ENTITY_CONFIG: Record<string, EntityConfig> = {
     users: {
       title: t('dashboard.entities.users.title'),
       description: t('dashboard.entities.users.description'),
@@ -61,22 +135,22 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         t('dashboard.entities.users.columns.status'),
         t('dashboard.entities.users.columns.created')
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             {item.firstName || item.lastName ? `${item.firstName ?? ''} ${item.lastName ?? ''}` : 'Sin nombre'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">@{item.username || 'n/a'}</td>
-          <td className="px-6 py-4 text-base-content/70">{item.email}</td>
+          <td className="px-6 py-4 font-mono text-slate-500 dark:text-slate-400">@{item.username || 'n/a'}</td>
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{item.email}</td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' :
-                item.status === 'SUSPENDED' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400' :
-                  'bg-base-200 text-base-content/70'
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' :
+                item.status === 'SUSPENDED' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400' :
+                  'bg-slate-500/10 text-slate-500 border-slate-500/20 dark:text-slate-400'
               }`}>
               {item.status || 'UNKNOWN'}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -94,27 +168,27 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         t('dashboard.entities.subscriptions.columns.email'),
         t('dashboard.entities.subscriptions.columns.created')
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             {item.plan?.name || 'Plan básico'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.startDate ? new Date(item.startDate).toLocaleDateString() : '-'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.endDate ? new Date(item.endDate).toLocaleDateString() : '-'}
           </td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' :
-                item.status === 'CANCELED' ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400' :
-                  'bg-base-200 text-base-content/70'
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' :
+                item.status === 'CANCELED' ? 'bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400' :
+                  'bg-slate-500/10 text-slate-500 border-slate-500/20 dark:text-slate-400'
               }`}>
               {item.status || 'UNKNOWN'}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">{item.user?.email || '-'}</td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{item.user?.email || '-'}</td>
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -133,31 +207,31 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         t('dashboard.entities.transactions.columns.user'),
         t('dashboard.entities.transactions.columns.created')
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-mono font-medium text-base-content">
+          <td className="px-6 py-4 font-mono tabular-nums font-medium text-[#111018] dark:text-slate-100">
             {item.referenceCode || 'n/a'}
           </td>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-mono tabular-nums font-medium text-[#111018] dark:text-slate-100">
             ${Number(item.amount || 0).toFixed(2)}
           </td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.status === 'SUCCESS' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' :
-                item.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400' :
-                  item.status === 'FAILED' ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400' :
-                    'bg-base-200 text-base-content/70'
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' :
+                item.status === 'PENDING' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400' :
+                  item.status === 'FAILED' ? 'bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400' :
+                    'bg-slate-500/10 text-slate-500 border-slate-500/20 dark:text-slate-400'
               }`}>
               {item.status || 'UNKNOWN'}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70 capitalize text-xs">
+          <td className="px-6 py-4 text-slate-500 capitalize text-xs dark:text-slate-400">
             {item.type || '-'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
             {item.paymentMethod?.paymentMethod?.name || 'Manual'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">{item.user?.email || '-'}</td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{item.user?.email || '-'}</td>
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -172,15 +246,15 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Email Usuario',
         'Fecha'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content max-w-md truncate">
+          <td className="px-6 py-4 font-medium text-[#111018] max-w-md truncate dark:text-slate-100">
             {item.message}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
             {item.user?.email || 'Anónimo'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -195,16 +269,16 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Proveedor',
         'Estado'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             {item.user?.email || '-'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
             {item.paymentMethod?.name || 'Tarjeta/Otro'}
           </td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.active ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400'
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.active ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400'
               }`}>
               {item.active ? 'Activo' : 'Inactivo'}
             </span>
@@ -222,23 +296,23 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Permisos',
         'Fecha de Creación'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-semibold text-base-content">
+          <td className="px-6 py-4 font-semibold text-[#111018] dark:text-slate-100">
             <div className="flex items-center gap-2">
-              <Shield size={14} className="text-indigo-500" />
+              <Shield size={14} className="text-[#b2944a]" />
               {item.name || 'Sin nombre'}
             </div>
           </td>
-          <td className="px-6 py-4 text-base-content/70 max-w-xs truncate">
+          <td className="px-6 py-4 text-slate-500 max-w-xs truncate dark:text-slate-400">
             {item.description || '-'}
           </td>
           <td className="px-6 py-4">
-            <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400">
+            <span className="inline-flex items-center rounded-full border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs font-bold text-violet-600 dark:text-violet-400">
               {item.list?.length || 0} permisos
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -254,22 +328,22 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Moneda',
         'Fecha de Creación'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             {item.user?.email || item.userId || '-'}
           </td>
           <td className="px-6 py-4">
-            <span className={`font-bold ${
-              Number(item.balance) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-base-content/50'
+            <span className={`font-mono tabular-nums font-bold ${
+              Number(item.balance) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500'
             }`}>
               ${Number(item.balance || 0).toFixed(2)}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
             {item.currency || 'USD'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -285,26 +359,26 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Estado',
         'Fecha de Creación'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             <div className="flex items-center gap-2">
-              <CreditCard size={14} className="text-indigo-500" />
+              <CreditCard size={14} className="text-[#b2944a]" />
               {item.name || '-'}
             </div>
           </td>
           <td className="px-6 py-4">
-            <span className="px-2 py-1 text-xs font-mono font-semibold rounded bg-base-200 text-base-content/70">
+            <span className="inline-flex items-center rounded border border-[#1b1d21]/10 bg-slate-100 px-2 py-1 font-mono text-xs font-semibold text-slate-600 dark:border-white/10 dark:bg-slate-800 dark:text-slate-300">
               {item.code || '-'}
             </span>
           </td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.active ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400'
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.active ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400'
               }`}>
               {item.active ? 'Activo' : 'Inactivo'}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -320,21 +394,21 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Descripción',
         'Fecha de Creación'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             <div className="flex items-center gap-2">
-              <FileText size={14} className="text-blue-500" />
+              <FileText size={14} className="text-[#b2944a]" />
               {item.key || '-'}
             </div>
           </td>
-          <td className="px-6 py-4 font-medium text-base-content/70">
+          <td className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
             {item.title || '-'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
             {item.description || '-'}
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -350,25 +424,25 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
         'Estado',
         'Fecha de Creación'
       ],
-      renderRow: (item: any) => (
+      renderRow: (item) => (
         <>
-          <td className="px-6 py-4 font-medium text-base-content">
+          <td className="px-6 py-4 font-medium text-[#111018] dark:text-slate-100">
             <div className="flex items-center gap-2">
-              <GraduationCap size={14} className="text-indigo-500" />
+              <GraduationCap size={14} className="text-[#b2944a]" />
               {item.name || '-'}
             </div>
           </td>
           <td className="px-6 py-4">
-            <span className="px-2 py-1 text-xs font-mono font-semibold rounded bg-base-200 text-base-content/70">
+            <span className="inline-flex items-center rounded border border-[#1b1d21]/10 bg-slate-100 px-2 py-1 font-mono text-xs font-semibold text-slate-600 dark:border-white/10 dark:bg-slate-800 dark:text-slate-300">
               {item.shortName || '-'}
             </span>
           </td>
           <td className="px-6 py-4">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400'}`}>
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${item.isActive ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400'}`}>
               {item.isActive ? 'Activa' : 'Inactiva'}
             </span>
           </td>
-          <td className="px-6 py-4 text-base-content/70">
+          <td className="px-6 py-4 font-mono tabular-nums text-slate-500 dark:text-slate-400">
             {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-'}
           </td>
         </>
@@ -467,7 +541,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
     }
   };
 
-  const handleUpdate = (item: any) => {
+  const handleUpdate = (item: CrudItem) => {
     let formPath = "";
     let sendPath = "";
 
@@ -492,7 +566,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
     } else if (entity === 'universities') {
       openModal(
         <UniversityFormModal
-          university={item}
+          university={item as unknown as UniversityModalRow}
           onClose={closeModal}
           onSuccess={() => {
             closeModal();
@@ -522,7 +596,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
     }
   };
 
-  const handleDelete = (item: any) => {
+  const handleDelete = (item: CrudItem) => {
     let deletePath = "";
 
     if (entity === 'users') {
@@ -636,20 +710,25 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
   };
 
   return (
-    <div className="space-y-6 pb-10 font-sans text-base-content/70">
+    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6 font-sans">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-base-content flex items-center gap-2 capitalize">
-            <Icon className="text-primary" />
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className={EYEBROW}>
+            <span>Administración</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span className="truncate">{ensureString(config.title)}</span>
+          </div>
+          <h1 className={`${PAGE_TITLE} flex items-center gap-2 capitalize`}>
+            <Icon className="text-[#b2944a]" />
             {ensureString(config.title)}
           </h1>
-          <p className="text-base-content/70 mt-1 text-sm">{ensureString(config.description)}</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{ensureString(config.description)}</p>
         </div>
         {supportsCreate && (
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition-colors"
+            className={`px-4 py-2.5 text-sm ${CTA_BRASS}`}
           >
             <Plus size={16} />
             Crear Nuevo
@@ -658,65 +737,67 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
       </div>
 
       {/* TOOLBAR GENÉRICO */}
-      <div className="bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-2.5 text-base-content/50" size={18} />
-          <input
-            type="text"
-            placeholder={`${t('dashboard.entities.common.search_in')} ${ensureString(config.title)}...`}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-base-300 bg-base-200 focus:bg-base-100 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all text-sm text-base-content"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-          <div className="flex items-center gap-2">
-            <Filter size={16} className="text-base-content/50" />
-            <select
-              className="bg-base-200 border border-base-300 rounded-lg text-sm text-base-content/70 py-2 px-3 outline-none focus:ring-2 focus:ring-blue-600/20"
-              value={statusFilter}
+      <div className={`rounded-2xl p-4 ${GLASS}`}>
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" size={18} />
+            <input
+              type="text"
+              placeholder={`${t('dashboard.entities.common.search_in')} ${ensureString(config.title)}...`}
+              className={`pl-10 pr-4 py-2 ${INPUT}`}
+              value={searchTerm}
               onChange={(e) => {
-                setStatusFilter(e.target.value);
+                setSearchTerm(e.target.value);
                 setPage(1);
               }}
-            >
-              <option value="">Todos los Estados</option>
-              {entity === 'users' && (
-                <>
-                  <option value="ACTIVE">Activo</option>
-                  <option value="SUSPENDED">Suspendido</option>
-                </>
-              )}
-              {entity === 'subscriptions' && (
-                <>
-                  <option value="ACTIVE">Activa</option>
-                  <option value="CANCELED">Cancelada</option>
-                </>
-              )}
-              {entity === 'transactions' && (
-                <>
-                  <option value="SUCCESS">Exitosa</option>
-                  <option value="PENDING">Pendiente</option>
-                  <option value="FAILED">Fallida</option>
-                </>
-              )}
-            </select>
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+            <div className="flex items-center gap-2">
+              <Filter size={16} className="text-slate-400 dark:text-slate-500" />
+              <select
+                className={INLINE_INPUT}
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">Todos los Estados</option>
+                {entity === 'users' && (
+                  <>
+                    <option value="ACTIVE">Activo</option>
+                    <option value="SUSPENDED">Suspendido</option>
+                  </>
+                )}
+                {entity === 'subscriptions' && (
+                  <>
+                    <option value="ACTIVE">Activa</option>
+                    <option value="CANCELED">Cancelada</option>
+                  </>
+                )}
+                {entity === 'transactions' && (
+                  <>
+                    <option value="SUCCESS">Exitosa</option>
+                    <option value="PENDING">Pendiente</option>
+                    <option value="FAILED">Fallida</option>
+                  </>
+                )}
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
       {/* FILTROS AVANZADOS DE USUARIOS */}
       {entity === "users" && (
-        <div className="bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm flex flex-col gap-4">
+        <div className={`rounded-2xl p-4 flex flex-col gap-4 ${GLASS}`}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-base-content/70 mr-1">
+            <span className={`${LABEL_SM} mr-1 font-semibold uppercase tracking-wider`}>
               Tipo de usuario
             </span>
             {permitOptions.length === 0 ? (
-              <span className="text-xs text-base-content/50">Cargando roles...</span>
+              <span className="text-xs text-slate-400 dark:text-slate-500">Cargando roles...</span>
             ) : (
               permitOptions.map((permit) => {
                 const active = permitNames.includes(permit.name);
@@ -734,8 +815,8 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
                     }}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors cursor-pointer ${
                       active
-                        ? "bg-primary text-primary-content border-primary shadow-sm"
-                        : "bg-base-200 text-base-content/70 border-base-300 hover:border-primary/40 hover:text-primary"
+                        ? "border-[#1a2a46] bg-[#1a2a46] text-[#f0ede4]"
+                        : "border-[#1a2a46]/15 bg-transparent text-[#1a2a46]/70 hover:border-[#b2944a]/60 hover:text-[#1a2a46] dark:border-white/15 dark:text-slate-300"
                     }`}
                   >
                     {permit.label}
@@ -747,11 +828,11 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
 
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-base-content/70">
+              <span className={`${LABEL_SM} font-semibold uppercase tracking-wider`}>
                 Correo verificado
               </span>
               <select
-                className="bg-base-200 border border-base-300 rounded-lg text-sm text-base-content/70 py-2 px-3 outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                className={INLINE_INPUT}
                 value={emailVerified}
                 onChange={(e) => {
                   setEmailVerified(e.target.value as "" | "true" | "false");
@@ -772,7 +853,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
                   setEmailVerified("");
                   setPage(1);
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-error border border-error/20 bg-error/10 hover:bg-error/20 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 transition-colors cursor-pointer dark:text-red-400"
               >
                 <X size={14} /> Limpiar filtros
               </button>
@@ -783,44 +864,44 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
 
       {/* ERROR MESSAGE */}
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-400 rounded-xl text-sm">
+        <div className="p-4 rounded-xl text-sm border border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
           {error}
         </div>
       )}
 
       {/* TABLA GENÉRICA */}
-      <div className="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
+      <div className={`rounded-2xl overflow-hidden ${CARD}`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-base-200 border-b border-base-300 text-xs font-bold text-base-content/70 uppercase tracking-wider">
-                {config.columns.map((col: any, idx: number) => (
-                  <th key={idx} className="px-6 py-4">{ensureString(col)}</th>
+              <tr className={TABLE_HEAD}>
+                {config.columns.map((col, idx) => (
+                  <th key={idx} className="px-6 py-3 text-[10px] font-medium">{ensureString(col)}</th>
                 ))}
-                <th className="px-6 py-4 text-right">{t('dashboard.entities.common.actions')}</th>
+                <th className="px-6 py-3 text-right text-[10px] font-medium">{t('dashboard.entities.common.actions')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-base-300 text-sm">
+            <tbody className="text-sm">
               {loading ? (
                 // Skeletons
                 Array.from({ length: 5 }).map((_, idx) => (
                   <tr key={idx} className="animate-pulse">
                     {Array.from({ length: config.columns.length + 1 }).map((_, cIdx) => (
                       <td key={cIdx} className="px-6 py-4">
-                        <div className="h-4 bg-base-200 rounded w-2/3"></div>
+                        <div className="h-4 bg-slate-100 rounded w-2/3 dark:bg-slate-800"></div>
                       </td>
                     ))}
                   </tr>
                 ))
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={config.columns.length + 1} className="px-6 py-10 text-center text-base-content/50">
+                  <td colSpan={config.columns.length + 1} className="px-6 py-10 text-center text-slate-500 dark:text-slate-400">
                     {t('dashboard.entities.common.no_data')}
                   </td>
                 </tr>
               ) : (
-                data.map((item: any) => (
-                  <tr key={item.id} className="hover:bg-base-200/50 transition-colors">
+                (data as CrudItem[]).map((item) => (
+                  <tr key={item.id} className={TABLE_ROW}>
                     {config.renderRow(item)}
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
@@ -830,7 +911,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
                               onClick={() => {
                                 openModal(
                                   <TransactionConfirmModal
-                                    transaction={item}
+                                    transaction={item as unknown as TransactionModalRow}
                                     action="approve"
                                     onClose={closeModal}
                                     onSuccess={() => {
@@ -854,7 +935,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
                               onClick={() => {
                                 openModal(
                                   <TransactionConfirmModal
-                                    transaction={item}
+                                    transaction={item as unknown as TransactionModalRow}
                                     action="reject"
                                     onClose={closeModal}
                                     onSuccess={() => {
@@ -904,7 +985,7 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
                           </button>
                         )}
                         {!supportsEdit && !supportsDelete && !(entity === 'transactions' && item.status === 'PENDING' && user?.permits?.list?.includes('TRANSACTION_UPDATE')) && (
-                          <span className="text-base-content/50 text-xs font-medium">—</span>
+                          <span className="text-slate-400 dark:text-slate-500 text-xs font-medium">—</span>
                         )}
                       </div>
                     </td>
@@ -917,25 +998,25 @@ export default function GenericCrudPage({ entity: overrideEntity }: GenericCrudP
 
         {/* PAGINACIÓN */}
         {!loading && totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-base-300 flex items-center justify-between">
-            <span className="text-xs text-base-content/70">
+          <div className="flex items-center justify-between border-t border-[#1b1d21]/12 px-6 py-3 text-xs text-slate-500 dark:border-white/10 dark:text-slate-400">
+            <span className="font-mono tabular-nums">
               Mostrando {data.length} de {total} registros
             </span>
             <div className="flex items-center gap-2">
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
-                className="p-1.5 rounded-lg border border-base-300 text-base-content/70 hover:bg-base-200 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                className="p-1.5 rounded-lg border border-[#1a2a46]/15 text-[#1a2a46]/70 hover:bg-[#1a2a46]/[0.05] disabled:opacity-40 transition-colors dark:border-white/15 dark:text-slate-300 dark:hover:bg-white/5"
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="text-xs text-base-content font-medium">
+              <span className="font-mono tabular-nums text-xs font-medium text-[#111018] dark:text-slate-100">
                 Página {page} de {totalPages}
               </span>
               <button
                 onClick={handleNextPage}
                 disabled={page === totalPages}
-                className="p-1.5 rounded-lg border border-base-300 text-base-content/70 hover:bg-base-200 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                className="p-1.5 rounded-lg border border-[#1a2a46]/15 text-[#1a2a46]/70 hover:bg-[#1a2a46]/[0.05] disabled:opacity-40 transition-colors dark:border-white/15 dark:text-slate-300 dark:hover:bg-white/5"
               >
                 <ChevronRight size={16} />
               </button>

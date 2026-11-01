@@ -9,6 +9,7 @@ import { UserNotificationsSection } from "@/features/user/components/sections/Us
 import { UserDataSection } from "@/features/user/components/sections/UserDataSection";
 import { IndexProfile } from "@/features/user/components/sections/IndexProfile";
 import { useTranslation } from "@/context/i18n.context";
+import { BRASS_DOT, EYEBROW, PAGE_TITLE } from "@/shared/lib/maison-style";
 
 export function ProfilePage() {
     const { t } = useTranslation();
@@ -18,7 +19,7 @@ export function ProfilePage() {
     const ChangeSection = (sec: SECTION_TYPE) => setSection(sec);
 
     return (
-        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 font-sans">
+        <main className="w-full max-w-6xl mx-auto px-4 py-6 font-sans">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                 {/* Sidebar Izquierdo */}
                 <div className="md:col-span-4 lg:col-span-3">
@@ -27,9 +28,14 @@ export function ProfilePage() {
 
                 {/* Contenido Principal */}
                 <div className="md:col-span-8 lg:col-span-9 space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-base-300/70 pb-4 gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl font-black tracking-tight text-base-content">
+                            <div className={EYEBROW}>
+                                <span>Perfil</span>
+                                <span className={BRASS_DOT} aria-hidden />
+                                <span>Cuenta</span>
+                            </div>
+                            <h1 className={PAGE_TITLE}>
                                 {section === "dashboard"
                                     ? t("dashboard.user_dashboard.panel_title")
                                     : section === "data"
@@ -42,7 +48,7 @@ export function ProfilePage() {
                                     ? t("dashboard.user_dashboard.preferences_title")
                                     : ""}
                             </h1>
-                            <p className="text-xs text-base-content/50 mt-0.5">
+                            <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">
                                 Configuración de cuenta, facturación y presencia digital en Nutringest
                             </p>
                         </div>

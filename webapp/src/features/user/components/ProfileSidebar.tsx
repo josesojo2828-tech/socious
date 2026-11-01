@@ -1,24 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useModalStore } from "@/shared/store/ui/useModalStore";
-import { Bell, Key, User, Camera, Loader2, Mail, AtSign, Wallet, CreditCard, Sparkles } from "lucide-react";
+import { Bell, Key, User, Camera, Loader2, Mail, AtSign } from "lucide-react";
 import { Avatar } from "@/shared/components/atoms/Avatar";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { Badge } from "@/shared/components/atoms/Badge";
-import { useTranslation } from "@/context/i18n.context";
 import { Button } from "@/shared/components/atoms/Button";
 import { FC } from "react";
 import { SECTION_TYPE } from "../types/user.types";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { CARD, GLASS } from "@/shared/lib/maison-style";
 
 export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYPE) => void }> = ({
     section,
     set,
 }) => {
     const { user, updateStorageUser } = useAuthStore();
-    const { t } = useTranslation();
     const { addToast } = useToastStore();
 
     const [uploading, setUploading] = useState(false);
@@ -72,10 +70,11 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                     message: "Foto de perfil actualizada correctamente.",
                 });
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Error al subir imagen de perfil:", error);
+            const responseMessage = (error as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
             const errorMsg =
-                error?.response?.data?.message || "Ocurrió un error al subir la foto de perfil.";
+                (Array.isArray(responseMessage) ? responseMessage[0] : responseMessage) as string || "Ocurrió un error al subir la foto de perfil.";
             addToast({
                 type: "error",
                 title: "Error al subir",
@@ -90,15 +89,15 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
     return (
         <div className="space-y-6 font-sans">
             {/* Tarjeta de Resumen e Información de Sesión del Usuario */}
-            <div className="glass-panel p-6 shadow-xs border border-base-300/70 flex flex-col items-center text-center relative overflow-hidden rounded-xl bg-base-100">
+            <div className={`rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden ${GLASS}`}>
                 {/* Fondo decorativo superior */}
-                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary/40 via-primary/30 to-success/40 rounded-t-xl z-0" />
+                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-[#1a2a46]/25 via-[#1a2a46]/15 to-[#b2944a]/25 rounded-t-xl z-0" />
 
                 <div className="relative z-10 mt-8 w-full flex flex-col items-center">
                     <div className="relative inline-block group">
                         <label
                             htmlFor="avatar-upload"
-                            className="relative cursor-pointer group rounded-full block focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
+                            className="relative cursor-pointer group rounded-full block focus-within:ring-2 focus-within:ring-[#b2944a] focus-within:ring-offset-2"
                         >
                             <input
                                 type="file"
@@ -126,18 +125,18 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                     </div>
 
                     <div className="flex items-center justify-center gap-1.5 mt-4">
-                        <h2 className="text-xl font-black text-base-content">
+                        <h2 className="font-display text-xl font-semibold text-[#111018] dark:text-slate-50">
                             {user?.firstName} {user?.lastName}
                         </h2>
                     </div>
 
                     {/* Datos de Sesión */}
                     <div className="mt-2 space-y-1 text-sm opacity-80 w-full">
-                        <p className="flex items-center justify-center gap-1.5 text-xs text-primary font-bold">
+                        <p className="flex items-center justify-center gap-1.5 text-xs font-bold text-[#b2944a]">
                             <AtSign className="w-3.5 h-3.5" />
                             {user?.username || "sin-usuario"}
                         </p>
-                        <p className="flex items-center justify-center gap-1.5 text-xs text-base-content/70 font-medium">
+                        <p className="flex items-center justify-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
                             <Mail className="w-3.5 h-3.5" />
                             {user?.email}
                         </p>
@@ -147,15 +146,15 @@ export const ProfileSidebar: FC<{ section: SECTION_TYPE; set: (type: SECTION_TYP
                         {sub ? (
                             <Badge color="red-500">{sub.plan.name}</Badge>
                         ) : (
-                            <Badge color="emerald">{user?.permits?.name || "Nutricionista"}</Badge>
+                            <Badge color="emerald">{user?.permits?.name || "Colaborador"}</Badge>
                         )}
                     </div>
                 </div>
             </div>
 
             {/* Menú de Secciones del Perfil */}
-            <div className="bg-base-100 p-3 shadow-xs border border-base-300/70 rounded-xl space-y-1">
-                <p className="text-[11px] font-black uppercase tracking-wider text-base-content/50 px-3 py-2">
+            <div className={`rounded-xl p-3 space-y-1 ${CARD}`}>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 px-3 py-2 dark:text-slate-400">
                   Configuración & Cuenta
                 </p>
                 <nav className="space-y-1">

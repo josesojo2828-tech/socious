@@ -24,6 +24,12 @@ import { NutritionalTab } from "@/features/dashboard/components/user-detail/Nutr
 import { ModulesTab } from "@/features/dashboard/components/user-detail/ModulesTab";
 import { BillingTab } from "@/features/dashboard/components/user-detail/BillingTab";
 import { StatsTab } from "@/features/dashboard/components/user-detail/StatsTab";
+import {
+  BRASS_DOT,
+  EYEBROW,
+  GLASS,
+  PAGE_TITLE,
+} from "@/shared/lib/maison-style";
 
 function getInitials(firstName?: string | null, lastName?: string | null, email?: string): string {
   if (firstName && lastName) return `${firstName[0]}${lastName[0]}`.toUpperCase();
@@ -33,9 +39,9 @@ function getInitials(firstName?: string | null, lastName?: string | null, email?
 }
 
 function getStatusBadgeClass(status: string): string {
-  if (status === "ACTIVE") return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300";
-  if (status === "SUSPENDED") return "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-300";
-  return "bg-base-200 text-base-content/70";
+  if (status === "ACTIVE") return "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+  if (status === "SUSPENDED") return "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400";
+  return "border-slate-500/30 bg-slate-500/10 text-slate-500 dark:text-slate-400";
 }
 
 export default function UserDetailPage() {
@@ -136,8 +142,8 @@ export default function UserDetailPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] w-full flex flex-col items-center justify-center bg-transparent">
-        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <p className="text-base-content/70 font-medium animate-pulse">
+        <Loader2 className="h-12 w-12 animate-spin text-slate-400 mb-4" />
+        <p className="text-slate-500 dark:text-slate-400 font-medium animate-pulse">
           Cargando ficha del usuario...
         </p>
       </div>
@@ -146,7 +152,7 @@ export default function UserDetailPage() {
 
   if (error || !userDetail) {
     return (
-      <div className="card bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/40 p-6 rounded-2xl max-w-2xl mx-auto my-12 shadow-sm text-center">
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-6 max-w-2xl mx-auto my-12 shadow-sm text-center dark:border-red-900/40 dark:bg-red-950/40">
         <div className="flex justify-center mb-4 text-red-500">
           <AlertCircle size={48} />
         </div>
@@ -156,7 +162,7 @@ export default function UserDetailPage() {
         </p>
         <button
           onClick={refetch}
-          className="btn btn-error text-white font-bold px-6 py-2 rounded-xl flex items-center gap-2 mx-auto"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-700 px-6 py-2 text-sm font-semibold text-white transition-colors mx-auto"
         >
           <Loader2 size={16} />
           Intentar de nuevo
@@ -168,14 +174,14 @@ export default function UserDetailPage() {
   if (!userDetail.user) {
     return (
       <div className="min-h-[60vh] w-full flex flex-col items-center justify-center bg-transparent">
-        <User className="h-16 w-16 text-base-content/30 mb-4" />
-        <h3 className="text-lg font-bold text-base-content">Usuario no encontrado</h3>
-        <p className="text-base-content/70 mt-1">
+        <User className="h-16 w-16 text-slate-300 dark:text-slate-600 mb-4" />
+        <h3 className="text-lg font-bold text-[#111018] dark:text-slate-100">Usuario no encontrado</h3>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">
           El usuario solicitado no existe o ha sido eliminado.
         </p>
         <InternalLink
           href="/dashboard/users"
-          className="mt-4 text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          className="mt-4 inline-flex items-center gap-1 text-sm text-[#1a2a46]/80 hover:underline dark:text-slate-300"
         >
           <ArrowLeft size={16} />
           Volver a usuarios
@@ -188,34 +194,39 @@ export default function UserDetailPage() {
   const name = user.fullName || `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email;
 
   return (
-    <div className="w-full space-y-6 font-sans text-base-content pb-16 animate-fade-in">
+    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
       {/* Back button */}
       <InternalLink
         href="/dashboard/users"
         variant="hover"
-        className="text-sm text-base-content/70 hover:text-base-content flex items-center gap-1.5 no-underline hover:underline"
+        className="text-sm text-slate-500 dark:text-slate-400 hover:text-[#111018] dark:hover:text-slate-100 flex items-center gap-1.5 no-underline hover:underline w-fit"
       >
         <ArrowLeft size={16} />
         Volver a usuarios
       </InternalLink>
 
       {/* Header Section */}
-      <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-md shrink-0">
+      <div className={`rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 ${GLASS}`}>
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#1a2a46] to-[#2f4a78] flex items-center justify-center text-white text-2xl font-bold shadow-md shrink-0">
           {getInitials(user.firstName, user.lastName, user.email)}
         </div>
         <div className="flex-1 min-w-0">
+          <div className={EYEBROW}>
+            <span>Usuarios</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span>Ficha</span>
+          </div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <h1 className="text-2xl font-black text-base-content truncate">{name}</h1>
-            <span className={`badge badge-sm border-none px-2.5 py-1 font-bold ${getStatusBadgeClass(user.status)}`}>
+            <h1 className={`${PAGE_TITLE} truncate`}>{name}</h1>
+            <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${getStatusBadgeClass(user.status)}`}>
               {user.status}
             </span>
-            <span className="badge badge-sm border-none px-2.5 py-1 font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300">
+            <span className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-600 dark:text-indigo-400">
               {user.permitName}
             </span>
           </div>
-          <p className="text-base-content/70 text-sm">{user.email}</p>
-          <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-base-content/50">
+          <p className="text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
+          <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-400 dark:text-slate-500">
             {user.username && (
               <span className="font-mono">@{user.username}</span>
             )}
