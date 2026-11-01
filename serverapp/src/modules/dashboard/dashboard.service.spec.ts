@@ -114,6 +114,22 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).not.toContain("/dashboard/universities");
   });
 
+  it("offers the admin organizations screen from platform_config (BRANCHES grants)", async () => {
+    const sections = await makeService().getSidebarSections({
+      id: "admin-1",
+      permits: ["PERMIT_DASHBOARD"],
+      modules: [],
+      isGlobalRole: true,
+    });
+
+    const platformConfig = sections.find(
+      (section) => section.title === "common.sidebar.platform_config",
+    );
+    expect(
+      platformConfig?.items.map((item) => item.link),
+    ).toContain("/dashboard/admin/organizations");
+  });
+
   it("renders ONE grouped modules section for admins with the active catalog", async () => {
     const sections = await makeService([
       { key: "ATTENDANCE_CONTROL", name: "Asistencia", icon: "calendar" },

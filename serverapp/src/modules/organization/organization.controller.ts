@@ -9,6 +9,8 @@ import {
   Query,
   Req,
   UseGuards,
+  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { SessionAuthGuard } from 'src/modules/auth/guards/authenticated.guard';
 import type { RequestWithUser } from 'src/shared/types/server.type';
@@ -21,6 +23,35 @@ import { CreateOrganizationDto, InviteMemberDto, UpdateMemberColorDto, UpdateMem
 @UseGuards(SessionAuthGuard)
 export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
+
+  /** Global-role check: `SUPERADMIN`/`ADMIN` (same rule as dashboard.controller). */
+  private isGlobalRole(user: RequestWithUser["user"]): boolean {
+    return (
+      user?.permits?.name === "SUPERADMIN" || user?.permits?.name === "ADMIN"
+    );
+  }
+
+  /**
+   * Platform-wide organization list for the admin panel (global roles only).
+   *
+   * Declared before every `:id` route: `GET /api/organizations` is the
+   * controller base path and must not be captured by the dynamic segment.
+   * Answers each non-deleted organization with its ACTIVE plan and its
+   * ACTIVE module grants (the BRANCHES admin screen reads both).
+   */
+  @Get('')
+  async listAll(@Req() req: RequestWithUser) {
+    const user = req.user;
+    if (!user) {
+      throw new UnauthorizedException('No autorizado');
+    }
+    if (!this.isGlobalRole(user)) {
+      throw new ForbiddenException(
+        'El listado de organizaciones es solo para roles globales.',
+      );
+    }
+    return this.organizationService.listAllForAdmin();
+  }
 
   @Get('my-workspaces')
   async getMyWorkspaces(@Req() req: RequestWithUser) {

@@ -141,6 +141,54 @@ export class OrganizationService {
     return org;
   }
 
+  /**
+   * Platform-wide organization list for the admin panel (global roles only).
+   *
+   * Answers every non-deleted organization with its ACTIVE org subscription
+   * plan and its ACTIVE module grants. Grants are shaped as
+   * `{ id, moduleKey, status }` so the BRANCHES admin screen can toggle them
+   * without knowing about the `moduleId` foreign key.
+   */
+  async listAllForAdmin() {
+    const organizations = await this.prisma.organization.findMany({
+      where: { deletedAt: null },
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        status: true,
+        subscriptions: {
+          where: { status: "ACTIVE", deletedAt: null },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { plan: { select: { id: true, name: true } } },
+        },
+        moduleGrants: {
+          where: { status: "ACTIVE" },
+          select: {
+            id: true,
+            status: true,
+            module: { select: { key: true } },
+          },
+        },
+      },
+    });
+
+    return organizations.map((org) => ({
+      id: org.id,
+      name: org.name,
+      slug: org.slug,
+      status: org.status,
+      plan: org.subscriptions[0]?.plan ?? null,
+      grants: org.moduleGrants.map((grant) => ({
+        id: grant.id,
+        moduleKey: grant.module.key,
+        status: grant.status,
+      })),
+    }));
+  }
+
   async getUserOrganizations(userId: string) {
     const memberships = await this.prisma.organizationMember.findMany({
       where: { userId, status: 'ACTIVE' },

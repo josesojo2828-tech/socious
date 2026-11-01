@@ -109,6 +109,11 @@ export class DashboardService {
             link: "/dashboard/permits",
           },
           {
+            title: "Organizaciones",
+            icon: "building",
+            link: "/dashboard/admin/organizations",
+          },
+          {
             title: "common.sidebar.subscription_plans",
             icon: "fingerprint",
             link: "/dashboard/subscription",
