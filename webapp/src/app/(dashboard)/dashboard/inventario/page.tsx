@@ -1,10 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { AlertTriangle, History, Loader2, PackageSearch } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
-import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
+import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
+import { SectionRow } from "@/shared/components/molecules/SectionCard";
+import {
+  BRASS_DOT,
+  CARD,
+  CARD_HEADER,
+  EYEBROW,
+  INPUT,
+  PAGE_TITLE,
+  TABLE_HEAD,
+  TABLE_ROW,
+} from "@/shared/lib/maison-style";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product, StockMovement } from "@/features/products/types/product.type";
 import { isLowStock } from "@/features/products/lib/product-form";
@@ -23,12 +34,47 @@ const TYPE_LABEL: Record<string, string> = {
   RETURN: "Devolución",
 };
 
+/** Card blanca con icono en latón: el chrome de sección del lenguaje Maison. */
+function SectionPanel({
+  icon,
+  title,
+  description,
+  children,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className={`rounded-2xl overflow-hidden ${CARD}`}>
+      <div className={CARD_HEADER}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="shrink-0 text-[#b2944a]">{icon}</span>
+          <div className="min-w-0">
+            <h2 className="truncate font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              {title}
+            </h2>
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+              {description}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="px-5 py-4">{children}</div>
+    </section>
+  );
+}
+
 /**
  * Stock control (S7): what must be reordered (low stock) plus the kardex of a
  * selected product — every historical movement with its previous/new balance.
+ * S5 restyle: Maison chrome (eyebrow header, hairline cards, mono tabular
+ * numbers); the data flow and every label stay untouched.
  */
 export default function InventoryPage() {
   const { addToast } = useToastStore();
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
   const [lowStock, setLowStock] = useState<Product[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -103,23 +149,32 @@ export default function InventoryPage() {
   const selected = products.find((product) => product.id === selectedId);
 
   return (
-    <div className="px-4 py-6 space-y-4">
-      <header>
-        <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-          Movimientos y stock
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Qué reponer hoy y el historial inmutable de cada producto.
-        </p>
+    <div className="px-4 py-6 space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className={EYEBROW}>
+            <span className="truncate max-w-[180px]">
+              {activeWorkspace?.name ?? "Socius ERP"}
+            </span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span>Inventario</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span className="font-mono">{products.length} en total</span>
+          </div>
+          <h1 className={PAGE_TITLE}>Movimientos y stock</h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            Qué reponer hoy y el historial inmutable de cada producto.
+          </p>
+        </div>
       </header>
 
-      <SectionCard
+      <SectionPanel
         icon={<AlertTriangle className="h-5 w-5" />}
         title="Por reponer"
         description="Productos con stock igual o menor al mínimo. Los servicios no cuentan."
       >
         {lowStock.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Ningún producto bajo el mínimo. ¡Todo al día!
           </p>
         ) : (
@@ -130,26 +185,26 @@ export default function InventoryPage() {
                 label={product.name}
                 hint={`${product.sku} · mínimo ${Number(product.minStock)}`}
               >
-                <span className="text-sm font-medium text-amber-600">
+                <span className="font-mono text-sm font-medium tabular-nums text-amber-600 dark:text-amber-400">
                   {Number(product.stock)} {product.unit}
                 </span>
               </SectionRow>
             ))}
           </div>
         )}
-      </SectionCard>
+      </SectionPanel>
 
-      <SectionCard
+      <SectionPanel
         icon={<History className="h-5 w-5" />}
         title="Kardex"
         description="Entradas, salidas, ajustes, ventas y devoluciones con su saldo anterior y nuevo."
       >
-        <label className="mb-3 block text-xs text-slate-500">
+        <label className="mb-3 block text-xs text-slate-500 dark:text-slate-400">
           Producto
           <select
             value={selectedId}
             onChange={(event) => setSelectedId(event.target.value)}
-            className="mt-1 w-full max-w-md rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+            className={`mt-1 max-w-md ${INPUT}`}
           >
             <option value="">Elegí un producto</option>
             {products.map((product) => (
@@ -165,7 +220,7 @@ export default function InventoryPage() {
             <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
           </div>
         ) : movements.length === 0 ? (
-          <p className="flex items-center gap-2 text-sm text-slate-500">
+          <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
             <PackageSearch className="h-4 w-4" />
             {selected
               ? `"${selected.name}" todavía no tiene movimientos.`
@@ -175,34 +230,37 @@ export default function InventoryPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-400 dark:border-slate-700">
-                  <th className="px-2 py-2">Fecha</th>
-                  <th className="px-2 py-2">Tipo</th>
-                  <th className="px-2 py-2 text-right">Cantidad</th>
-                  <th className="px-2 py-2 text-right">Antes → Después</th>
-                  <th className="px-2 py-2">Referencia</th>
+                <tr className={TABLE_HEAD}>
+                  <th className="px-4 py-2.5 text-left font-medium">Fecha</th>
+                  <th className="px-4 py-2.5 text-left font-medium">Tipo</th>
+                  <th className="px-4 py-2.5 text-right font-medium">
+                    Cantidad
+                  </th>
+                  <th className="px-4 py-2.5 text-right font-medium">
+                    Antes → Después
+                  </th>
+                  <th className="px-4 py-2.5 text-left font-medium">
+                    Referencia
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {movements.map((movement) => (
-                  <tr
-                    key={movement.id}
-                    className="border-b border-slate-100 last:border-0 dark:border-slate-800"
-                  >
-                    <td className="px-2 py-2 text-xs">
+                  <tr key={movement.id} className={TABLE_ROW}>
+                    <td className="px-4 py-2.5 font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
                       {new Date(movement.createdAt).toLocaleString("es-VE")}
                     </td>
-                    <td className="px-2 py-2">
+                    <td className="px-4 py-2.5 text-[#111018] dark:text-slate-100">
                       {TYPE_LABEL[movement.type] ?? movement.type}
                     </td>
-                    <td className="px-2 py-2 text-right">
+                    <td className="px-4 py-2.5 text-right font-mono tabular-nums text-[#111018] dark:text-slate-100">
                       {Number(movement.quantity)}
                     </td>
-                    <td className="px-2 py-2 text-right font-mono text-xs">
+                    <td className="px-4 py-2.5 text-right font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
                       {Number(movement.previousStock)} →{" "}
                       {Number(movement.newStock)}
                     </td>
-                    <td className="px-2 py-2 text-xs text-slate-500">
+                    <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-400">
                       {movement.reference ?? "—"}
                     </td>
                   </tr>
@@ -213,12 +271,12 @@ export default function InventoryPage() {
         )}
 
         {selected && !selected.isService && isLowStock(selected) ? (
-          <p className="mt-3 flex items-center gap-2 text-xs text-amber-600">
+          <p className="mt-3 flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400">
             <AlertTriangle className="h-3.5 w-3.5" />
             Este producto está en su mínimo: reponé desde Productos.
           </p>
         ) : null}
-      </SectionCard>
+      </SectionPanel>
     </div>
   );
 }

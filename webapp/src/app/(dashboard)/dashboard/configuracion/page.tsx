@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import {
   Loader2,
   Save,
@@ -16,12 +16,21 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
+import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { Checkbox } from "@/shared/components/atoms/Checkbox";
+import { SectionRow } from "@/shared/components/molecules/SectionCard";
 import {
-  SectionCard,
-  SectionRow,
-} from "@/shared/components/molecules/SectionCard";
+  BRASS_DOT,
+  BTN_GHOST,
+  CARD,
+  CARD_HEADER,
+  CTA_BRASS,
+  EYEBROW,
+  INPUT,
+  LABEL_SM,
+  PAGE_TITLE,
+} from "@/shared/lib/maison-style";
 import {
   getTenantSettings,
   updateTenantSettings,
@@ -73,13 +82,48 @@ interface ShippingAgency {
   name: string;
 }
 
+/** Card blanca con icono en latón: el chrome de sección del lenguaje Maison. */
+function SectionPanel({
+  icon,
+  title,
+  description,
+  children,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className={`rounded-2xl overflow-hidden ${CARD}`}>
+      <div className={CARD_HEADER}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="shrink-0 text-[#b2944a]">{icon}</span>
+          <div className="min-w-0">
+            <h2 className="truncate font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              {title}
+            </h2>
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+              {description}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="px-5 py-4">{children}</div>
+    </section>
+  );
+}
+
 /**
  * Tenant configuration (S4): the six checks the backend exposes at
  * GET/PATCH /api/settings. Every change is saved immediately and optimistically;
  * a rejected patch (the backend validates strictly) restores the previous value.
+ * S5 restyle: Maison chrome (eyebrow header, brass tabs, hairline cards); the
+ * tabs, panels, gates and every save/patch call stay untouched.
  */
 export default function SettingsPage() {
   const { addToast } = useToastStore();
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
   const [agencies, setAgencies] = useState<ShippingAgency[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -208,13 +252,13 @@ export default function SettingsPage() {
   if (!settings) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-2 text-center">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           No se pudo cargar la configuración.
         </p>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+          className={BTN_GHOST}
         >
           <Settings2 className="h-4 w-4" /> Reintentar
         </button>
@@ -236,30 +280,37 @@ export default function SettingsPage() {
   const canManageRoutes = planModules.includes("ROUTES");
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
-      <header className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-            Configuración del negocio
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0">
+          <div className={EYEBROW}>
+            <span className="truncate max-w-[180px]">
+              {activeWorkspace?.name ?? "Socius ERP"}
+            </span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span>Ajustes</span>
+            <span className={BRASS_DOT} aria-hidden />
+            <span className="font-mono">{planModules.length} módulos</span>
+          </div>
+          <h1 className={PAGE_TITLE}>Configuración del negocio</h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             Los cambios se guardan solos a medida que los marcas.
           </p>
         </div>
-        <span className="inline-flex items-center gap-2 text-xs text-slate-400">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[#1a2a46]/12 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:border-white/10 dark:text-slate-400">
           {saving ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin" /> Guardando…
             </>
           ) : (
             <>
-              <Save className="h-3.5 w-3.5" /> Guardado
+              <Save className="h-3.5 w-3.5 text-[#b2944a]" /> Guardado
             </>
           )}
         </span>
       </header>
 
-      <nav className="flex gap-1 border-b border-slate-200 dark:border-slate-800">
+      <nav className="flex flex-wrap gap-1 border-b border-[#1a2a46]/12 dark:border-white/10">
         {(
           [
             ["general", "General"],
@@ -278,8 +329,8 @@ export default function SettingsPage() {
             onClick={() => setTab(key)}
             className={
               tab === key
-                ? "border-b-2 border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600"
-                : "border-b-2 border-transparent px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700"
+                ? "border-b-2 border-[#b2944a] px-4 py-2 text-sm font-semibold text-[#111018] dark:text-slate-50"
+                : "border-b-2 border-transparent px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }
           >
             {label}
@@ -289,7 +340,7 @@ export default function SettingsPage() {
 
       {tab === "general" ? (
         <>
-      <SectionCard
+      <SectionPanel
         icon={<Wallet className="h-5 w-5" />}
         title="Caja"
         description="Con el control activo cada turno se abre y se cierra; apagado, la caja queda siempre activa y el cuadre es diario."
@@ -303,9 +354,9 @@ export default function SettingsPage() {
             onChange={() => void save(patchCashShiftControl)}
           />
         </SectionRow>
-      </SectionCard>
+      </SectionPanel>
 
-      <SectionCard
+      <SectionPanel
         icon={<Coins className="h-5 w-5" />}
         title="Monedas visibles"
         description="Solo cambia lo que se muestra: los montos siempre se guardan en USD, Bs y USDT."
@@ -324,11 +375,11 @@ export default function SettingsPage() {
             </SectionRow>
           ))}
         </div>
-      </SectionCard>
+      </SectionPanel>
 
       {canManageShipping ? (
         <>
-      <SectionCard
+      <SectionPanel
         icon={<Truck className="h-5 w-5" />}
         title="Tipos de entrega"
         description="Lo que el cliente puede elegir al hacer el pedido, y cómo se coordina la entrega."
@@ -350,12 +401,12 @@ export default function SettingsPage() {
             );
           })}
         </div>
-        <div className="mt-3 flex items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-800 pt-3">
+        <div className="mt-3 flex items-center justify-between gap-4 border-t border-[#1a2a46]/10 pt-3 dark:border-white/10">
           <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
             Coordinación por defecto
           </p>
           <select
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+            className={`w-auto ${INPUT}`}
             value={settings.fulfillment.coordination}
             onChange={(event) =>
               void save((current) =>
@@ -373,15 +424,15 @@ export default function SettingsPage() {
             ))}
           </select>
         </div>
-      </SectionCard>
+      </SectionPanel>
 
-      <SectionCard
+      <SectionPanel
         icon={<TruckElectric className="h-5 w-5" />}
         title="Agencias de envío"
         description="Las agencias habilitadas son las que el cliente elige al pedir envío."
       >
         {agencies.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Todavía no hay agencias cargadas.
           </p>
         ) : (
@@ -402,9 +453,9 @@ export default function SettingsPage() {
             ))}
           </div>
         )}
-      </SectionCard>
+      </SectionPanel>
 
-      <SectionCard
+      <SectionPanel
         icon={<Truck className="h-5 w-5" />}
         title="Delivery"
         description="Cobro de envío a domicilio; el monto se congela en cada pedido."
@@ -429,15 +480,15 @@ export default function SettingsPage() {
             onChange={(event) =>
               void save(() => patchDeliveryFee(Number(event.target.value)))
             }
-            className="w-28 rounded-lg border border-slate-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800"
+            className={`w-28 font-mono tabular-nums disabled:opacity-50 ${INPUT}`}
           />
         </SectionRow>
-      </SectionCard>
+      </SectionPanel>
         </>
       ) : null}
 
       {canManageRoutes ? (
-        <SectionCard
+        <SectionPanel
           icon={<Map className="h-5 w-5" />}
           title="Rutas de entrega"
           description="Agrupa los pedidos de un día en una ruta. Al habilitarlo aparece la opción en el menú lateral."
@@ -452,11 +503,11 @@ export default function SettingsPage() {
               }
             />
           </SectionRow>
-        </SectionCard>
+        </SectionPanel>
       ) : null}
 
       {settings?.manualGrants?.includes("BRANCHES") ? (
-      <SectionCard
+      <SectionPanel
         icon={<Building2 className="h-5 w-5" />}
         title="Sucursales"
         description={`${branchSummary(branches).included} incluida(s) en tu plan · ${branchSummary(branches).extra} creada(s)`}
@@ -469,7 +520,7 @@ export default function SettingsPage() {
                 label={branch.name}
                 hint={branch.address ?? "Sin dirección"}
               >
-                <span className="text-xs text-slate-400">
+                <span className="font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
                   {(branch._count?.sales ?? 0)} venta(s) ·{" "}
                   {(branch._count?.orders ?? 0)} pedido(s)
                 </span>
@@ -477,52 +528,52 @@ export default function SettingsPage() {
             ))}
           </div>
         ) : (
-          <p className="mb-3 text-sm text-slate-500">
+          <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
             Tu plan trae una sucursal activa desde la creación del negocio. Las
             sucursales adicionales se suman acá.
           </p>
         )}
 
-        <div className="flex flex-wrap items-end gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
-          <label className="flex flex-col gap-1 text-xs text-slate-500">
+        <div className="flex flex-wrap items-end gap-3 border-t border-[#1a2a46]/10 pt-3 dark:border-white/10">
+          <label className={LABEL_SM}>
             Nueva sucursal
             <input
               type="text"
               value={branchName}
               onChange={(event) => setBranchName(event.target.value)}
               placeholder="Sucursal Norte"
-              className="w-56 rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+              className={`mt-1 w-56 ${INPUT}`}
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-slate-500">
+          <label className={LABEL_SM}>
             Dirección (opcional)
             <input
               type="text"
               value={branchAddress}
               onChange={(event) => setBranchAddress(event.target.value)}
               placeholder="Av. Principal 123"
-              className="w-64 rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+              className={`mt-1 w-64 ${INPUT}`}
             />
           </label>
           <button
             type="button"
             disabled={saving || !branchName.trim()}
             onClick={() => void handleCreateBranch()}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className={`px-4 py-2 text-sm ${CTA_BRASS}`}
           >
             Agregar sucursal
           </button>
         </div>
-      </SectionCard>
+      </SectionPanel>
       ) : null}
 
-      <SectionCard
+      <SectionPanel
         icon={<Sparkles className="h-5 w-5" />}
         title="Planes"
         description="Precios por usuario y mes; se cambian desde la plataforma, no desde acá."
       >
         {plans.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             No se pudieron cargar los planes.
           </p>
         ) : (
@@ -540,30 +591,32 @@ export default function SettingsPage() {
               .map((plan) => (
                 <div
                   key={plan.id}
-                  className="rounded-lg border border-slate-200 p-3 dark:border-slate-700"
+                  className="rounded-xl border border-[#1a2a46]/12 p-3 dark:border-white/10"
                 >
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold">{plan.name}</p>
+                    <p className="text-sm font-semibold text-[#111018] dark:text-slate-100">
+                      {plan.name}
+                    </p>
                     {plan.badge ? (
-                      <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] uppercase text-indigo-600 dark:bg-indigo-950">
+                      <span className="rounded-full border border-[#b2944a]/40 bg-[#b2944a]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8e7538] dark:text-[#d8c084]">
                         {plan.badge}
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-lg font-semibold">
+                  <p className="mt-1 font-mono text-lg font-semibold tabular-nums text-[#111018] dark:text-slate-100">
                     ${Number(plan.price).toFixed(2)}
-                    <span className="text-xs font-normal text-slate-400">
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
                       {" "}
                       /mes
                     </span>
                   </p>
-                  <ul className="mt-2 space-y-0.5 text-xs text-slate-500">
+                  <ul className="mt-2 space-y-0.5 text-xs text-slate-500 dark:text-slate-400">
                     {(plan.content?.features ?? []).map((feature) => (
                       <li key={feature}>• {feature}</li>
                     ))}
                   </ul>
                   {plan.content?.capacity ? (
-                    <p className="mt-2 text-[11px] text-slate-400">
+                    <p className="mt-2 font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400">
                       {plan.content.capacity.maxBranches} sucursal(es) ·{" "}
                       {plan.content.capacity.includedSeats} empleado(s)
                     </p>
@@ -572,7 +625,7 @@ export default function SettingsPage() {
               ))}
           </div>
         )}
-      </SectionCard>
+      </SectionPanel>
         </>
       ) : null}
 
