@@ -12,6 +12,10 @@ import { DashboardController } from "./dashboard.controller";
  *    caller has an ACTIVE `OrganizationMember` row there. A foreign
  *    organization id degrades to the caller's OWN ACTIVE membership
  *    organization (or the personal context) and never reaches a query.
+ *
+ * Probed through the sidebar endpoint (the old stats probe was replaced by
+ * /platform-stats, a global-role-only read with no org scope — covered at the
+ * end of this file by its own describe).
  */
 type Member = { organizationId: string; userId: string; status: string };
 
@@ -20,10 +24,6 @@ const makeController = (members: Member[]) => {
     getSidebarSections: jest.fn(),
     getTabs: jest.fn(),
     getUserTabs: jest.fn(),
-  };
-  const adminAnalyticsService = {
-    getDashboardStats: jest.fn().mockResolvedValue({}),
-    getOfficeLocations: jest.fn().mockResolvedValue([]),
   };
   const userDetailService = { getUserDetail: jest.fn() };
   const entitlementService = {
@@ -44,17 +44,25 @@ const makeController = (members: Member[]) => {
         return rows[0] ?? null;
       }),
     },
+    organization: { count: jest.fn(async () => 7) },
+    user: { count: jest.fn(async () => 42) },
+    subscription: {
+      findMany: jest.fn(async () => [
+        {
+          plan: { id: "BASICO", name: "Básico", price: 9.99 },
+        },
+      ]),
+    },
   };
 
   const controller = new DashboardController(
     dashboardService as any,
-    adminAnalyticsService as any,
     userDetailService as any,
     prisma as any,
     entitlementService as any,
   );
 
-  return { controller, adminAnalyticsService, prisma, queries };
+  return { controller, prisma, queries, dashboardService };
 };
 
 const request = (permitName: string, headers: Record<string, string> = {}) =>
@@ -67,149 +75,127 @@ const request = (permitName: string, headers: Record<string, string> = {}) =>
     headers,
   }) as any;
 
+/** The sidebar endpoint funnels every request through getOrganizationId. */
+const probeSidebar = async (controller: DashboardController, req: any) =>
+  await (controller as unknown as { sidebar: (r: any) => Promise<unknown> })
+    .sidebar(req);
+
+const sidebarCall = (dashboardService: { getSidebarSections: jest.Mock }) =>
+  dashboardService.getSidebarSections.mock.calls[0]?.[0] as
+    | { organizationId?: string | null }
+    | undefined;
+
 describe("DashboardController — x-workspace-id tenant isolation (S6)", () => {
   it("resolves the OWN membership org when the header points to a foreign org", async () => {
-    const { controller, adminAnalyticsService, queries } = makeController([
+    const { controller, dashboardService, queries } = makeController([
       { organizationId: "org-MINE", userId: "u1", status: "ACTIVE" },
     ]);
 
-    await controller.getStatsJson(
-      request("NUTRITIONIST", { "x-workspace-id": "org-OTHER" }),
+    await probeSidebar(
+      controller,
+      request("USER", { "x-workspace-id": "org-OTHER" }),
     );
 
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(
-      "org-MINE",
-    );
-    expect(adminAnalyticsService.getDashboardStats).not.toHaveBeenCalledWith(
+    expect(sidebarCall(dashboardService)?.organizationId).toBe("org-MINE");
+    expect(sidebarCall(dashboardService)?.organizationId).not.toBe(
       "org-OTHER",
     );
-    // The foreign organization id never reaches the data query, and every
-    // membership lookup stays scoped to the caller.
     expect(queries.every((q) => q.userId === "u1")).toBe(true);
   });
 
-  it("never lets a foreign header reach the query when the caller has no membership", async () => {
-    const { controller, adminAnalyticsService, queries } = makeController([]);
+  it("degrades a foreign header to the personal context when the caller has no membership", async () => {
+    const { controller, dashboardService, queries } = makeController([]);
 
-    // T26: a null organization on this endpoint means platform-wide, so a
-    // tenant without membership is rejected instead of reading it.
-    await expect(
-      controller.getStatsJson(
-        request("NUTRITIONIST", { "x-workspace-id": "org-OTHER" }),
-      ),
-    ).rejects.toThrow(ForbiddenException);
+    await probeSidebar(
+      controller,
+      request("USER", { "x-workspace-id": "org-OTHER" }),
+    );
 
-    expect(adminAnalyticsService.getDashboardStats).not.toHaveBeenCalled();
+    // Never the foreign org: unresolved → personal (null) context.
+    expect(sidebarCall(dashboardService)?.organizationId).toBeNull();
     expect(queries.every((q) => q.userId === "u1")).toBe(true);
   });
 
   it("keeps the requested org when the caller IS an ACTIVE member of it", async () => {
-    const { controller, adminAnalyticsService } = makeController([
+    const { controller, dashboardService } = makeController([
       { organizationId: "org-MINE", userId: "u1", status: "ACTIVE" },
     ]);
 
-    await controller.getStatsJson(
-      request("NUTRITIONIST", { "x-workspace-id": "org-MINE" }),
+    await probeSidebar(
+      controller,
+      request("USER", { "x-workspace-id": "org-MINE" }),
     );
 
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(
-      "org-MINE",
-    );
+    expect(sidebarCall(dashboardService)?.organizationId).toBe("org-MINE");
   });
 
   it("does not honor an org whose only membership is INACTIVE", async () => {
-    const { controller, adminAnalyticsService, queries } = makeController([
+    const { controller, dashboardService, queries } = makeController([
       { organizationId: "org-MINE", userId: "u1", status: "INACTIVE" },
     ]);
 
-    await expect(
-      controller.getStatsJson(
-        request("NUTRITIONIST", { "x-workspace-id": "org-MINE" }),
-      ),
-    ).rejects.toThrow(ForbiddenException);
+    await probeSidebar(
+      controller,
+      request("USER", { "x-workspace-id": "org-MINE" }),
+    );
 
-    expect(adminAnalyticsService.getDashboardStats).not.toHaveBeenCalled();
+    expect(sidebarCall(dashboardService)?.organizationId).toBeNull();
     expect(queries.every((q) => q.userId === "u1")).toBe(true);
   });
 
   it("keeps the platform-global behavior for ADMIN / SUPERADMIN", async () => {
-    const { controller, adminAnalyticsService, queries } = makeController([]);
+    const { controller, dashboardService, queries } = makeController([]);
 
-    await controller.getStatsJson(
+    await probeSidebar(
+      controller,
       request("ADMIN", { "x-workspace-id": "org-OTHER" }),
     );
 
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(
-      "org-OTHER",
-    );
-    // A global role needs no membership row.
+    // A global role needs no membership row and the header is honored as-is.
+    expect(sidebarCall(dashboardService)?.organizationId).toBe("org-OTHER");
     expect(queries).toHaveLength(0);
   });
 
   it("falls back to the own membership org when no header is present", async () => {
-    const { controller, adminAnalyticsService } = makeController([
+    const { controller, dashboardService } = makeController([
       { organizationId: "org-MINE", userId: "u1", status: "ACTIVE" },
     ]);
 
-    await controller.getStatsJson(request("CLINIC_ADMIN"));
+    await probeSidebar(controller, request("CLINIC_ADMIN"));
 
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(
-      "org-MINE",
-    );
+    expect(sidebarCall(dashboardService)?.organizationId).toBe("org-MINE");
   });
 });
 
 /**
- * T26 (security-hardening-followups): on the stats endpoint a null
- * organization means PLATFORM-WIDE, not "the caller's personal scope". A
- * tenant without a resolvable organization must therefore be rejected instead
- * of receiving platform-wide statistics.
+ * The analytics rewrite: /platform-stats replaces the nutrition-era stats
+ * read with real platform counts, available to GLOBAL ROLES ONLY (there is
+ * no organization scope to leak — a tenant never reaches the aggregates).
  */
-describe("DashboardController — stats scope (T26)", () => {
-  it("rejects a tenant with no resolvable organization instead of returning platform-wide stats", async () => {
-    const { controller, adminAnalyticsService } = makeController([]);
-
-    await expect(
-      controller.getStatsJson(
-        request("NUTRITIONIST", { "x-workspace-id": "org-OTHER" }),
-      ),
-    ).rejects.toThrow(ForbiddenException);
-
-    // The platform-wide read must never be reached by a tenant.
-    expect(adminAnalyticsService.getDashboardStats).not.toHaveBeenCalled();
-  });
-
-  it("rejects a tenant whose only membership is INACTIVE", async () => {
-    const { controller, adminAnalyticsService } = makeController([
-      { organizationId: "org-MINE", userId: "u1", status: "INACTIVE" },
-    ]);
-
-    await expect(
-      controller.getStatsJson(
-        request("NUTRITIONIST", { "x-workspace-id": "org-MINE" }),
-      ),
-    ).rejects.toThrow(ForbiddenException);
-
-    expect(adminAnalyticsService.getDashboardStats).not.toHaveBeenCalled();
-  });
-
-  it("keeps platform-wide stats available for ADMIN / SUPERADMIN", async () => {
-    const { controller, adminAnalyticsService } = makeController([]);
-
-    await controller.getStatsJson(request("ADMIN"));
-
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(null);
-  });
-
-  it("scopes a tenant with an ACTIVE membership to its own organization", async () => {
-    const { controller, adminAnalyticsService } = makeController([
+describe("DashboardController — /platform-stats (ERP analytics)", () => {
+  it("rejects non-global callers", async () => {
+    const { controller } = makeController([
       { organizationId: "org-MINE", userId: "u1", status: "ACTIVE" },
     ]);
 
-    await controller.getStatsJson(request("CLINIC_ADMIN"));
+    await expect(
+      controller.getPlatformStats(request("USER")),
+    ).rejects.toThrow(ForbiddenException);
+  });
 
-    expect(adminAnalyticsService.getDashboardStats).toHaveBeenCalledWith(
-      "org-MINE",
-    );
+  it("returns real platform counts for a global role", async () => {
+    const { controller } = makeController([]);
+
+    const stats = await controller.getPlatformStats(request("ADMIN"));
+
+    expect(stats).toEqual({
+      organizations: 7,
+      users: 42,
+      activeSubscriptions: 1,
+      mrrUSD: 9.99,
+      plans: [
+        { planId: "BASICO", name: "Básico", priceUSD: 9.99, count: 1 },
+      ],
+    });
   });
 });

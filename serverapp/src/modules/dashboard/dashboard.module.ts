@@ -7,7 +7,6 @@ import { UserModule } from "../user/user.module";
 import { WalletModule } from "../wallet/wallet.module";
 import { LoggerService } from "src/shared/logger/logger.service";
 import { JwtService } from "@nestjs/jwt";
-import { AdminAnalyticsService } from "./service/admin-analytics.service";
 import { UserDetailService } from "./service/user-detail.service";
 import { ActivityModule } from "../activity/activity.module";
 import { ModuleFrameworkModule } from "../module-framework/module-framework.module";
@@ -26,7 +25,6 @@ import { ModuleFrameworkModule } from "../module-framework/module-framework.modu
   providers: [
     DashboardService,
     PermitReporitory,
-    AdminAnalyticsService,
     UserDetailService,
     LoggerService,
     JwtService,

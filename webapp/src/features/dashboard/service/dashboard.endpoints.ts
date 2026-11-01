@@ -5,7 +5,6 @@ export const DashboardEndpoints = {
     tabs: '/api/dashboard/tabs',
   },
   api: {
-    stats: '/api/dashboard/stats',
     users: '/api/dashboard/users/api/list',
     userDetail: '/api/dashboard/users',
     subscriptions: '/api/dashboard/users/subscriptions/api/list',
@@ -27,7 +26,6 @@ export const DashboardEndpoints = {
       funnel: '/api/dashboard/adoption/funnel',
       depth: '/api/dashboard/adoption/depth',
     },
-    locations: '/api/dashboard/locations',
   },
   permit: {
     permissions: '/api/permit/permissions',

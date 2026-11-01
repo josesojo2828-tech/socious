@@ -12,7 +12,6 @@ import { DashboardService } from "./dashboard.service";
 import { buildSidebarSections } from "./sidebar.helper";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import type { RequestWithUser } from "src/shared/types/server.type";
-import { AdminAnalyticsService } from "./service/admin-analytics.service";
 import { UserDetailService } from "./service/user-detail.service";
 import { PrismaService } from "nestjs-prisma";
 import { Logger } from "@nestjs/common";
@@ -32,7 +31,6 @@ export class DashboardController {
 
   constructor(
     private readonly dashboardService: DashboardService,
-    private readonly adminAnalyticsService: AdminAnalyticsService,
     private readonly userDetailService: UserDetailService,
     private readonly prisma: PrismaService,
     private readonly entitlementService: EntitlementService,
@@ -99,27 +97,62 @@ export class DashboardController {
     );
   }
 
-  @Get("/stats")
+  /**
+   * Platform-wide ERP numbers for the admin panel (analytics rewrite):
+   * real counts only — organizations, users, active subscriptions per plan
+   * and the MRR those subscriptions add up to. Global roles only.
+   */
+  @Get("/platform-stats")
   @UseGuards(SessionAuthGuard)
-  async getStatsJson(@Req() request: RequestWithUser) {
+  async getPlatformStats(@Req() request: RequestWithUser) {
     const user = request.user;
     if (!user) {
       throw new UnauthorizedException("No autorizado");
     }
-
-    const organizationId = await this.getOrganizationId(request);
-
-    // T26: on this endpoint a null organization means PLATFORM-WIDE, not the
-    // caller's personal scope. Only a global role may read platform-wide
-    // statistics; a tenant without a resolvable organization is rejected
-    // instead of receiving them. Same rule as `resolveAdoptionScope`.
-    if (!organizationId && !this.isGlobalRole(user)) {
+    if (!this.isGlobalRole(user)) {
       throw new ForbiddenException(
-        "Workspace context required: no organization could be resolved",
+        "Las métricas de plataforma son solo para roles globales.",
       );
     }
 
-    return this.adminAnalyticsService.getDashboardStats(organizationId);
+    const [organizations, users, subscriptions] = await Promise.all([
+      this.prisma.organization.count(),
+      this.prisma.user.count({ where: { deletedAt: null } }),
+      this.prisma.subscription.findMany({
+        where: { status: "ACTIVE" },
+        include: { plan: { select: { id: true, name: true, price: true } } },
+      }),
+    ]);
+
+    const byPlan = new Map<
+      string,
+      { planId: string; name: string; priceUSD: number; count: number }
+    >();
+    let mrrUSD = 0;
+    for (const subscription of subscriptions) {
+      const price = Number(subscription.plan.price ?? 0);
+      mrrUSD += price;
+      const row =
+        byPlan.get(subscription.plan.id) ??
+        {
+          planId: subscription.plan.id,
+          name: subscription.plan.name,
+          priceUSD: price,
+          count: 0,
+        };
+      row.count += 1;
+      byPlan.set(subscription.plan.id, row);
+    }
+
+    return {
+      organizations,
+      users,
+      activeSubscriptions: subscriptions.length,
+      mrrUSD: Math.round(mrrUSD * 100) / 100,
+      plans: [...byPlan.values()].sort((a, b) =>
+        a.planId.localeCompare(b.planId),
+      ),
+    };
   }
 
   @Get("/sidebar")
@@ -184,21 +217,5 @@ export class DashboardController {
     return detail;
   }
 
-  @Get("/locations")
-  @UseGuards(SessionAuthGuard)
-  async getOfficeLocations(@Req() request: RequestWithUser) {
-    const user = request.user;
-    if (!user) return { list: [] };
-
-    const resolved = await this.getOrResolveEntitlements(request);
-    const permits = resolved?.permissions ?? user.permits?.list ?? [];
-    const hasAdminAccess =
-      permits.includes("USER_LIST") ||
-      permits.includes("PERMIT_DASHBOARD");
-    if (!hasAdminAccess) {
-      return { list: [] };
-    }
-    return this.adminAnalyticsService.getOfficeLocations();
-  }
 
 }
