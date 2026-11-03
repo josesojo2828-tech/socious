@@ -12,7 +12,6 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  LogIn,
 } from "lucide-react";
 
 // Hooks y Stores
@@ -22,6 +21,10 @@ import { useTranslation } from "@/context/i18n.context";
 // Componentes
 import { AuthHeroSlider } from "@/shared/components/molecules/AuthHeroSlider/AuthHeroSlider";
 import { AuthHeader } from "@/shared/components/molecules/AuthHeader/AuthHeader";
+
+/** Auth field language — Maison navy border, brass focus (not Daisy indigo). */
+const AUTH_INPUT =
+  "w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/80 dark:bg-[#0c101c]/60 px-4 py-3.5 text-[#111018] dark:text-[#f0ede4] placeholder:text-[#1a2a46]/35 dark:placeholder:text-[#f0ede4]/30 focus:border-[#b2944a] focus:ring-4 focus:ring-[#b2944a]/15 outline-none transition-all font-medium disabled:opacity-50";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -73,34 +76,33 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-primary/20">
+    <div className="min-h-screen flex flex-col bg-[#f0ede4]/50 dark:bg-[#0c101c] text-[#111018] dark:text-[#f0ede4] font-sans antialiased selection:bg-[#b2944a] selection:text-[#111018]">
       {/* Auth Navigation Header */}
       <AuthHeader />
 
       {/* Main Content Area */}
       <div className="flex-1 flex w-full overflow-hidden">
         {/* Left Panel: Desktop Hero Branding */}
-        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] bg-slate-950 relative overflow-hidden border-r border-base-200">
+        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden border-r border-[#1a2a46]/10 dark:border-white/10">
           <AuthHeroSlider />
         </section>
 
         {/* Right Panel: Login Form */}
-        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20 bg-base-100">
+        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20">
           <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header / Intro */}
-            <div className="space-y-2 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-2">
-                <LogIn size={14} />
-                <span>Iniciar Sesión</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
+            <div className="space-y-3 text-center lg:text-left">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a]">
                 {t("auth.welcome_back") || "Bienvenido de nuevo"}
+              </p>
+              <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
+                Entrá a tu negocio
               </h1>
-              <p className="text-sm text-base-content/60 font-medium">
+              <p className="text-sm text-[#1a2a46]/65 dark:text-[#f0ede4]/55 font-medium">
                 {t("common.auth.no_account") || "¿No tenés una cuenta?"}{" "}
                 <Link
                   href="/register"
-                  className="text-primary hover:text-accent font-bold hover:underline transition-all inline-flex items-center gap-1"
+                  className="text-[#b2944a] font-bold hover:underline transition-all inline-flex items-center gap-1"
                 >
                   {t("auth.register_link") || "Registrate gratis"}
                   <ArrowRight size={14} />
@@ -110,7 +112,7 @@ export default function LoginPage() {
 
             {/* Error Feedback Alert */}
             {authError && (
-              <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-sm font-semibold animate-in shake duration-300 flex items-center gap-3">
+              <div className="p-4 rounded-xl bg-[#c63749]/10 border border-[#c63749]/25 text-[#c63749] text-sm font-semibold animate-in shake duration-300 flex items-center gap-3">
                 <AlertCircle size={20} className="shrink-0" />
                 <span>{authError}</span>
               </div>
@@ -118,9 +120,12 @@ export default function LoginPage() {
 
             {/* Success Feedback Alert */}
             {isSuccess && (
-              <div className="p-4 rounded-2xl bg-success/10 border border-success/20 text-success text-sm font-semibold animate-in fade-in duration-300 flex items-center gap-3">
+              <div className="p-4 rounded-xl bg-[#128454]/10 border border-[#128454]/25 text-[#128454] text-sm font-semibold animate-in fade-in duration-300 flex items-center gap-3">
                 <CheckCircle2 size={20} className="shrink-0" />
-                <span>{t("auth.login_success") || "¡Éxito! Redirigiendo a la plataforma..."}</span>
+                <span>
+                  {t("auth.login_success") ||
+                    "¡Éxito! Redirigiendo a la plataforma..."}
+                </span>
               </div>
             )}
 
@@ -128,20 +133,22 @@ export default function LoginPage() {
             <form className="space-y-5" onSubmit={handleSubmit}>
               {/* Email Field */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+                <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
                   {t("form.labels.email") || "Correo electrónico"}
                 </label>
                 <div className="relative group">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
-                    <Mail size={20} />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors">
+                    <Mail size={18} />
                   </div>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isPending}
-                    placeholder={t("form.placeholders.email") || "correo@ejemplo.com"}
-                    className="w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium disabled:opacity-50"
+                    placeholder={
+                      t("form.placeholders.email") || "correo@ejemplo.com"
+                    }
+                    className={`${AUTH_INPUT} pl-11`}
                     required
                   />
                 </div>
@@ -150,19 +157,20 @@ export default function LoginPage() {
               {/* Password Field */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-base-content/70">
+                  <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50">
                     {t("form.labels.password") || "Contraseña"}
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-xs font-bold text-primary hover:text-accent hover:underline uppercase tracking-wide transition-colors"
+                    className="text-[11px] font-semibold text-[#b2944a] hover:underline transition-colors"
                   >
-                    {t("common.auth.forgot_password") || "¿Olvidaste tu contraseña?"}
+                    {t("common.auth.forgot_password") ||
+                      "¿Olvidaste tu contraseña?"}
                   </Link>
                 </div>
                 <div className="relative group">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
-                    <Lock size={20} />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors">
+                    <Lock size={18} />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -170,26 +178,26 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isPending}
                     placeholder="••••••••"
-                    className="w-full pl-11 pr-12 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium disabled:opacity-50"
+                    className={`${AUTH_INPUT} pl-11 pr-12`}
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content transition-colors p-1 rounded-lg"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 hover:text-[#1a2a46] dark:text-[#f0ede4]/40 dark:hover:text-[#f0ede4] transition-colors p-1 rounded-lg"
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button — brass CTA, same as landing */}
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full py-4 bg-primary hover:bg-primary/90 active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+                  className="w-full py-4 rounded-2xl bg-[#b2944a] hover:bg-[#bf9f54] active:scale-[0.99] text-[#111018] font-semibold text-base shadow-[0_10px_26px_-12px_rgba(178,148,74,0.75)] transition-all flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed group"
                 >
                   {isPending ? (
                     <>
@@ -197,13 +205,17 @@ export default function LoginPage() {
                       <span>
                         {isSuccess
                           ? t("auth.login_success") || "¡Éxito! Redirigiendo..."
-                          : t("auth.login_loading") || "Iniciando sesión..."}
+                          : t("auth.login_loading") ||
+                            "Iniciando sesión..."}
                       </span>
                     </>
                   ) : (
                     <>
                       <span>{t("form.buttons.login") || "Iniciar Sesión"}</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight
+                        size={18}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
                     </>
                   )}
                 </button>
@@ -211,15 +223,22 @@ export default function LoginPage() {
             </form>
 
             {/* Legal Notice */}
-            <p className="text-center text-xs text-base-content/50 leading-relaxed font-medium">
+            <p className="text-center text-xs text-[#1a2a46]/45 dark:text-[#f0ede4]/40 leading-relaxed font-medium">
               Al iniciar sesión, aceptás nuestros{" "}
-              <Link href="/terms" className="text-base-content/70 underline hover:text-primary font-semibold transition-colors">
+              <Link
+                href="/terms"
+                className="text-[#1a2a46]/70 dark:text-[#f0ede4]/60 underline hover:text-[#b2944a] font-semibold transition-colors"
+              >
                 Términos de Servicio
               </Link>{" "}
               y{" "}
-              <Link href="/privacy" className="text-base-content/70 underline hover:text-primary font-semibold transition-colors">
+              <Link
+                href="/privacy"
+                className="text-[#1a2a46]/70 dark:text-[#f0ede4]/60 underline hover:text-[#b2944a] font-semibold transition-colors"
+              >
                 Política de Privacidad
-              </Link>.
+              </Link>
+              .
             </p>
           </div>
         </section>

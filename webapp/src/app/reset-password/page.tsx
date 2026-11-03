@@ -105,19 +105,19 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-primary/20">
+    <div className="min-h-screen flex flex-col bg-[#f0ede4]/50 dark:bg-[#0c101c] text-[#111018] dark:text-[#f0ede4] font-sans antialiased selection:bg-[#b2944a] selection:text-[#111018]">
       {/* Auth Navigation Header */}
       <AuthHeader />
 
       {/* Main Content Area */}
       <div className="flex-1 flex w-full overflow-hidden">
         {/* Left Panel: Desktop Hero Branding */}
-        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] bg-slate-950 relative overflow-hidden border-r border-base-200">
+        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden border-r border-[#1a2a46]/10 dark:border-white/10">
           <AuthHeroSlider />
         </section>
 
         {/* Right Panel: Reset Password Form */}
-        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20 bg-base-100">
+        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20">
           <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {success ? (
               /* Success State */
@@ -138,11 +138,11 @@ export default function ResetPasswordPage() {
               <>
                 {/* Form Header */}
                 <div className="space-y-2 text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#b2944a]/10 border border-[#b2944a]/30 text-[#b2944a] text-[10px] font-mono uppercase tracking-[0.16em] mb-2">
                     <KeyRound size={14} />
                     <span>Nueva Contraseña</span>
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
+                  <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
                     Restablecer contraseña
                   </h1>
                   <p className="text-sm text-base-content/60 font-medium leading-relaxed">
@@ -248,7 +248,7 @@ export default function ResetPasswordPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-4 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-900/20 hover:shadow-xl hover:shadow-indigo-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+                      className="w-full py-4 bg-[#b2944a] hover:bg-[#bf9f54] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-[0_10px_26px_-12px_rgba(178,148,74,0.75)] transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
                     >
                       {isLoading ? (
                         <>

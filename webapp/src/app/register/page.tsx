@@ -56,6 +56,11 @@ function requireTranslation(
   return value;
 }
 
+
+/** Auth field language — Maison navy border, brass focus (not Daisy indigo). */
+const AUTH_INPUT =
+  "w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/80 dark:bg-[#0c101c]/60 px-4 py-3.5 text-[#111018] dark:text-[#f0ede4] placeholder:text-[#1a2a46]/35 dark:placeholder:text-[#f0ede4]/30 focus:border-[#b2944a] focus:ring-4 focus:ring-[#b2944a]/15 outline-none transition-all font-medium";
+
 function RegisterFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -164,17 +169,16 @@ function RegisterFormContent() {
   return (
     <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header text */}
-      <div className="space-y-2 text-center lg:text-left">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-2">
-          <UserCircle size={14} />
-          <span>Crear cuenta</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
-          {t('form.title.create_user') || 'Crear Cuenta'}
+      <div className="space-y-3 text-center lg:text-left">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a]">
+          {t('form.title.create_user') || 'Crear cuenta'}
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
+          Empezá tu negocio
         </h1>
-        <p className="text-sm text-base-content/60 font-medium">
+        <p className="text-sm text-[#1a2a46]/65 dark:text-[#f0ede4]/55 font-medium">
           {t('auth.already_have_account') || '¿Ya tenés una cuenta?'}{' '}
-          <Link href="/login" className="text-primary hover:text-accent font-bold hover:underline transition-all inline-flex items-center gap-1">
+          <Link href="/login" className="text-[#b2944a] font-bold hover:underline transition-all inline-flex items-center gap-1">
             {t('auth.login_link') || 'Iniciar sesión'}
             <ArrowRight size={14} />
           </Link>
@@ -186,186 +190,174 @@ function RegisterFormContent() {
         {/* Nombre & Apellido */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+            <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
               {t('form.labels.firstName') || 'Nombre'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
                 <User size={18} />
               </div>
               <input
                 type="text"
                 {...register('firstName')}
                 placeholder={t('form.placeholders.first_name') || 'Tu nombre'}
-                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
-                  errors.firstName ? 'border-error ring-4 ring-error/10' : ''
-                }`}
+                className={`${AUTH_INPUT} ${errors.firstName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
             </div>
-            {errors.firstName && <span className="text-error text-xs font-bold ml-1">{errors.firstName.message}</span>}
+            {errors.firstName && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.firstName.message}</span>}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+            <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
               {t('form.labels.lastName') || 'Apellido'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
                 <User size={18} />
               </div>
               <input
                 type="text"
                 {...register('lastName')}
                 placeholder={t('form.placeholders.last_name') || 'Tu apellido'}
-                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
-                  errors.lastName ? 'border-error ring-4 ring-error/10' : ''
-                }`}
+                className={`${AUTH_INPUT} ${errors.lastName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
             </div>
-            {errors.lastName && <span className="text-error text-xs font-bold ml-1">{errors.lastName.message}</span>}
+            {errors.lastName && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.lastName.message}</span>}
           </div>
         </div>
 
         {/* Email */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+          <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
             {t('form.labels.email') || 'Correo electrónico'}
           </label>
           <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
               <Mail size={18} />
             </div>
               <input
                 type="email"
                 {...register('email')}
                 placeholder={t('form.placeholders.email') || 'correo@ejemplo.com'}
-                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${errors.email ? 'border-error ring-4 ring-error/10' : ''}`}
+                className={`${AUTH_INPUT} ${errors.email ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
           </div>
-          {errors.email && <span className="text-error text-xs font-bold ml-1">{errors.email.message}</span>}
+          {errors.email && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.email.message}</span>}
         </div>
 
         {/* Género */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+          <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
             {t('form.labels.gender') || 'Género'}
           </label>
           <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors pointer-events-none">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
               <UserCircle size={18} />
             </div>
             <select
               {...register('gender')}
-              className={`w-full pl-11 pr-10 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium appearance-none ${
-                errors.gender ? 'border-error ring-4 ring-error/10' : ''
-              }`}
+              className={`${AUTH_INPUT} appearance-none ${errors.gender ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
             >
               <option value="">{t('form.placeholders.select_gender') || 'Seleccionar género'}</option>
               <option value="MALE">{t('form.gender_options.male') || 'Masculino'}</option>
               <option value="FEMALE">{t('form.gender_options.female') || 'Femenino'}</option>
               <option value="OTHER">{t('form.gender_options.other') || 'Otro'}</option>
             </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/40">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#1a2a46]/40 dark:text-[#f0ede4]/40">
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
               </svg>
             </div>
           </div>
-          {errors.gender && <span className="text-error text-xs font-bold ml-1">{errors.gender.message}</span>}
+          {errors.gender && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.gender.message}</span>}
         </div>
 
         {/* Fecha de Nacimiento — S7 (legal-compliance): gate de edad */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+          <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
             {birthDateLabel}
           </label>
           <input
             type="date"
             {...register('birthDate')}
-            className={`w-full px-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
-              errors.birthDate ? 'border-error ring-4 ring-error/10' : ''
-            }`}
+            className={`${AUTH_INPUT} ${errors.birthDate ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
           />
-          {errors.birthDate && <span className="text-error text-xs font-bold ml-1">{errors.birthDate.message}</span>}
+          {errors.birthDate && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.birthDate.message}</span>}
         </div>
 
         {/* Contraseña & Confirmación */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+            <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
               {t('form.labels.password') || 'Contraseña'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
                 <Lock size={18} />
               </div>
               <input
                 type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className={`w-full pl-11 pr-12 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
-                  errors.password ? 'border-error ring-4 ring-error/10' : ''
-                }`}
+                className={`${AUTH_INPUT} pl-11 pr-12 ${errors.password ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content transition-colors p-1"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 hover:text-[#1a2a46] transition-colors p-1 dark:text-[#f0ede4]/40 dark:hover:text-[#f0ede4]"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {errors.password && <span className="text-error text-xs font-bold ml-1">{errors.password.message}</span>}
+            {errors.password && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.password.message}</span>}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1">
+            <label className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50 ml-1">
               {t('form.labels.password_confirm') || 'Confirmar Contraseña'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
                 <Lock size={18} />
               </div>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 {...register('confirmPassword')}
                 placeholder="••••••••"
-                className={`w-full pl-11 pr-12 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
-                  errors.confirmPassword ? 'border-error ring-4 ring-error/10' : ''
-                }`}
+                className={`${AUTH_INPUT} pl-11 pr-12 ${errors.confirmPassword ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content transition-colors p-1"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 hover:text-[#1a2a46] transition-colors p-1 dark:text-[#f0ede4]/40 dark:hover:text-[#f0ede4]"
                 tabIndex={-1}
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {errors.confirmPassword && <span className="text-error text-xs font-bold ml-1">{errors.confirmPassword.message}</span>}
+            {errors.confirmPassword && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.confirmPassword.message}</span>}
           </div>
         </div>
 
         {/* Código de Referido */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-base-content/70 ml-1 flex items-center justify-between">
+          <label className="flex items-center justify-between ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50">
             <span>{t('auth.referral_code_optional') || 'Código de Referido (Opcional)'}</span>
             {refParam && (
-              <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
+              <span className="text-[10px] bg-[#128454]/10 text-[#128454] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
                 <CheckCircle2 size={10} /> {t('auth.referral_applied') || 'Aplicado'}
               </span>
             )}
           </label>
           <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
               <Tag size={18} />
             </div>
             <input
               type="text"
               {...register('referralCode')}
-              className="w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium"
+              className={`${AUTH_INPUT} pl-11`}
               placeholder={t('form.placeholders.referral_code') || 'OPCIONAL'}
             />
           </div>
@@ -381,22 +373,22 @@ function RegisterFormContent() {
                 setAcceptedTerms(e.target.checked);
                 if (e.target.checked) setTermsError(false);
               }}
-              className="w-4 h-4 mt-0.5 rounded border-2 border-base-300 text-primary focus:ring-primary/20 accent-[var(--color-primary)] cursor-pointer"
+              className="w-4 h-4 mt-0.5 rounded border-2 border-[#1a2a46]/25 dark:border-white/20 focus:ring-[#b2944a]/25 accent-[#b2944a] cursor-pointer"
             />
-            <span className="text-xs text-base-content/70 leading-relaxed font-medium group-hover:text-base-content transition-colors">
+            <span className="text-xs text-[#1a2a46]/70 dark:text-[#f0ede4]/65 leading-relaxed font-medium group-hover:text-[#111018] dark:group-hover:text-[#f0ede4] transition-colors">
               Acepto los{' '}
-              <Link href="/terms" className="text-primary underline font-bold hover:text-accent">
+              <Link href="/terms" className="text-[#b2944a] underline font-semibold hover:underline">
                 Términos de Servicio
               </Link>{' '}
               y la{' '}
-              <Link href="/privacy" className="text-primary underline font-bold hover:text-accent">
+              <Link href="/privacy" className="text-[#b2944a] underline font-semibold hover:underline">
                 Política de Privacidad
               </Link>{' '}
               de Stockira.
             </span>
           </label>
           {termsError && (
-            <div className="flex items-center gap-1.5 text-error text-xs font-bold mt-1 ml-1">
+            <div className="flex items-center gap-1.5 text-[#c63749] text-xs font-semibold mt-1 ml-1">
               <AlertCircle size={14} />
               <span>Debés aceptar los términos y condiciones para continuar.</span>
             </div>
@@ -408,7 +400,7 @@ function RegisterFormContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-primary hover:bg-primary/90 active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+            className="w-full py-4 rounded-2xl bg-[#b2944a] hover:bg-[#bf9f54] active:scale-[0.99] text-[#111018] font-semibold text-base shadow-[0_10px_26px_-12px_rgba(178,148,74,0.75)] transition-all flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (
               <>
@@ -430,23 +422,23 @@ function RegisterFormContent() {
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-primary/20">
+    <div className="min-h-screen flex flex-col bg-[#f0ede4]/50 dark:bg-[#0c101c] text-[#111018] dark:text-[#f0ede4] font-sans antialiased selection:bg-[#b2944a] selection:text-[#111018]">
       {/* Auth Navigation Header */}
       <AuthHeader />
 
       {/* Main Content Area */}
       <div className="flex-1 flex w-full overflow-hidden">
         {/* Left Panel: Desktop Hero Branding */}
-        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] bg-slate-950 relative overflow-hidden border-r border-base-200">
+        <section className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden border-r border-[#1a2a46]/10 dark:border-white/10">
           <AuthHeroSlider />
         </section>
 
         {/* Right Panel: Form Container */}
-        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20 bg-base-100">
+        <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20">
           <Suspense
             fallback={
               <div className="flex items-center justify-center py-12">
-                <Loader2 size={32} className="animate-spin text-primary" />
+                <Loader2 size={32} className="animate-spin text-[#b2944a]" />
               </div>
             }
           >

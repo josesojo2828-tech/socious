@@ -4,33 +4,53 @@ import { useTranslation } from "@/context/i18n.context";
 
 /**
  * Brand panel shared by the five auth screens (login, registro, recuperación,
- * verificación). Replaces the old Nutringest slider (photo + purple gradients)
- * with the Socius language: dark slate, indigo accent, no imagery — the
- * product speaks through what it does.
+ * verificación). Maison Lévrier language: deep navy field, brass edge and
+ * mark, pearl type, Fraunces display — same palette as the landing and the
+ * sidebar. No imagery; the product speaks through what it does.
  */
 export const AuthHeroSlider = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="relative flex h-full w-full flex-col justify-between overflow-hidden bg-slate-950 p-10 text-white select-none lg:p-14">
-      {/* Accent: a single quiet indigo edge instead of gradients */}
-      <div className="absolute inset-y-0 left-0 w-1 bg-indigo-500" />
+    <div className="relative flex h-full w-full flex-col justify-between overflow-hidden bg-[#111527] p-10 text-[#f0ede4] select-none lg:p-14">
+      {/* Accent: a single quiet brass edge instead of gradients */}
+      <div className="absolute inset-y-0 left-0 w-1 bg-[#b2944a]" />
 
-      {/* Wordmark */}
+      {/* Subtle radial lift so the navy is not flat */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 70% 20%, rgba(178,148,74,0.12), transparent 55%)",
+        }}
+      />
+
+      {/* Wordmark — same S mark as the landing header */}
       <div className="relative z-10 flex items-center gap-3">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold">
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b2944a] text-[#111018] text-sm font-bold shadow-[0_8px_20px_-10px_rgba(178,148,74,0.8)]">
           S
         </span>
-        <span className="text-base font-semibold tracking-tight">
-          Socius ERP
+        <span className="flex flex-col">
+          <span className="font-display text-base font-semibold tracking-tight leading-none">
+            Socius
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#b2944a]/85 mt-1">
+            ERP
+          </span>
         </span>
       </div>
 
       {/* Value proposition */}
       <div className="relative z-10 space-y-6">
-        <p className="max-w-md text-2xl font-semibold leading-snug tracking-tight text-slate-100 lg:text-3xl">
-          Tu negocio, bajo control: inventario, caja, pedidos y envíos desde un
-          solo lugar.
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a]">
+          Gestión comercial
+        </p>
+        <p className="max-w-md font-display text-2xl font-semibold leading-snug tracking-tight text-[#f0ede4] lg:text-[32px]">
+          Tu negocio, bajo control: inventario, caja, pedidos y envíos{" "}
+          <span className="italic font-normal text-[#b2944a]">
+            sin planillas sueltas.
+          </span>
         </p>
 
         <ul className="space-y-3">
@@ -39,9 +59,12 @@ export const AuthHeroSlider = () => {
             "Cobros en USD, Bs y USDT con la tasa del día",
             "Pedidos online con envíos, delivery y rutas",
           ].map((item) => (
-            <li key={item} className="flex items-start gap-3 text-sm text-slate-300">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-slate-800 ring-1 ring-slate-700">
-                <Check className="h-3.5 w-3.5 text-indigo-400" />
+            <li
+              key={item}
+              className="flex items-start gap-3 text-sm text-[#f0ede4]/75"
+            >
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#b2944a]/15 ring-1 ring-[#b2944a]/40">
+                <Check className="h-3 w-3 text-[#b2944a]" />
               </span>
               {item}
             </li>
@@ -50,13 +73,22 @@ export const AuthHeroSlider = () => {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 flex items-center justify-between text-xs text-slate-500">
-        <span>© 2026 Socius ERP. Todos los derechos reservados.</span>
+      <div className="relative z-10 flex items-center justify-between text-xs text-[#f0ede4]/45">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em]">
+          © 2026 Socius ERP
+        </span>
         <span className="flex items-center gap-3">
-          <Link href="/terms" className="hover:text-slate-300">
+          <Link
+            href="/terms"
+            className="hover:text-[#b2944a] transition-colors"
+          >
             {t("common.nav.terms") || "Términos"}
           </Link>
-          <Link href="/privacy" className="hover:text-slate-300">
+          <span className="w-[3px] h-[3px] rounded-full bg-[#b2944a]/60" />
+          <Link
+            href="/privacy"
+            className="hover:text-[#b2944a] transition-colors"
+          >
             {t("common.nav.privacy") || "Privacidad"}
           </Link>
         </span>

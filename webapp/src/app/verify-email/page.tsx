@@ -47,7 +47,7 @@ function VerifyEmailContent() {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-550/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold">
           <span>Nutringest</span>
         </div>
-        <h1 className="text-3xl font-black tracking-tight text-slate-900">
+        <h1 className="font-display text-3xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
           Tu salud, en tus manos.
         </h1>
       </div>
@@ -65,7 +65,7 @@ function VerifyEmailContent() {
             <CheckCircle2 size={40} className="text-emerald-600" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-3xl font-black tracking-tight text-slate-900">
+            <h2 className="font-display text-3xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
               ¡Email verificado!
             </h2>
             <p className="text-slate-500 font-medium leading-relaxed">{effectiveMessage}</p>
@@ -87,7 +87,7 @@ function VerifyEmailContent() {
             <XCircle size={40} className="text-red-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-3xl font-black tracking-tight text-slate-900">
+            <h2 className="font-display text-3xl font-semibold leading-none tracking-tight text-[#111018] dark:text-[#f0ede4]">
               Error de verificación
             </h2>
             <p className="text-slate-500 font-medium leading-relaxed">{effectiveMessage}</p>
@@ -109,7 +109,7 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
   return (
     <main className="flex min-h-screen w-full bg-slate-50 font-sans selection:bg-emerald-500/20">
-      <section className="hidden lg:flex w-[42%] bg-slate-950 relative overflow-hidden">
+      <section className="hidden lg:flex w-[42%] relative overflow-hidden border-r border-[#1a2a46]/10 dark:border-white/10">
         <AuthHeroSlider />
       </section>
 
