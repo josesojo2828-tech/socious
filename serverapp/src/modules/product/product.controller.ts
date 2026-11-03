@@ -168,6 +168,14 @@ export class ProductController {
     return this.productService.list(scope, query);
   }
 
+  /** Distinct BOM components for the Materiales screen (must precede `:id`). */
+  @Get("raw-materials")
+  @UseGuards(SessionAuthGuard)
+  async listRawMaterials(@Req() request: RequestWithUser) {
+    const scope = await this.resolveScope(request);
+    return this.productService.listRawMaterials(scope);
+  }
+
   @Get(":id/stock-movements")
   @UseGuards(SessionAuthGuard)
   async listStockMovements(

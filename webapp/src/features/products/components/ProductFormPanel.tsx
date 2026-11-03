@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Package, Plus, Trash2 } from "lucide-react";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { CTA_BRASS, CTA_NAVY, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
@@ -442,20 +443,44 @@ export function ProductFormPanel({
                 vendida.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={addComponent}
-              disabled={componentOptions.length === 0}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline disabled:opacity-40"
-            >
-              <Plus className="h-3.5 w-3.5" /> Agregar
-            </button>
+            {componentOptions.length > 0 ? (
+              <button
+                type="button"
+                onClick={addComponent}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
+              >
+                <Plus className="h-3.5 w-3.5" /> Agregar
+              </button>
+            ) : (
+              <Link
+                href="/dashboard/productos/nuevo"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
+              >
+                <Plus className="h-3.5 w-3.5" /> Crear insumo
+              </Link>
+            )}
           </div>
 
-          {form.components.length === 0 ? (
-            <p className="text-xs text-slate-400 py-2">
-              Sin componentes: este producto se vende sin consumir inventario.
+          {componentOptions.length === 0 ? (
+            <p className="text-xs text-slate-400 py-1">
+              No hay otros productos en el catálogo para usar como materia
+              prima.{" "}
+              <Link
+                href="/dashboard/productos/nuevo"
+                className="text-[#b2944a] font-semibold hover:underline"
+              >
+                Creá el insumo primero
+              </Link>{" "}
+              (ej. Hoja A4) y volvé a editar este producto.
             </p>
+          ) : null}
+
+          {form.components.length === 0 ? (
+            componentOptions.length > 0 ? (
+              <p className="text-xs text-slate-400 py-2">
+                Sin componentes: este producto se vende sin consumir inventario.
+              </p>
+            ) : null
           ) : (
             <ul className="space-y-2">
               {form.components.map((row, index) => (

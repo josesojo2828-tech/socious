@@ -127,6 +127,56 @@ export class ProductService {
     };
   }
 
+  /**
+   * Raw materials (S6 "Materiales"): every product referenced as a BOM
+   * component in this tenant, with how many composites consume it and their
+   * names. The Materiales sidebar screen renders this.
+   */
+  async listRawMaterials(scope: ProductScope) {
+    const rows = await this.prisma.productComponent.findMany({
+      where: { component: { ...this.scopeWhere(scope.organizationId) } },
+      include: {
+        component: {
+          include: {
+            images: { orderBy: { position: "asc" }, take: 1 },
+          },
+        },
+        product: { select: { id: true, name: true } },
+      },
+      orderBy: { component: { name: "asc" } },
+    });
+
+    const grouped = new Map<
+      string,
+      {
+        component: (typeof rows)[number]["component"];
+        parents: string[];
+        usedIn: number;
+      }
+    >();
+    for (const row of rows) {
+      const existing = grouped.get(row.componentId);
+      if (existing) {
+        existing.parents.push(row.product.name);
+        existing.usedIn += 1;
+      } else {
+        grouped.set(row.componentId, {
+          component: row.component,
+          parents: [row.product.name],
+          usedIn: 1,
+        });
+      }
+    }
+
+    const list = [...grouped.values()].map((entry) => ({
+      ...entry.component,
+      usedIn: entry.usedIn,
+      usedInNames: entry.parents,
+    }));
+
+    return { list, total: list.length };
+  }
+
   async getOne(scope: ProductScope, id: string) {
     const product = await this.prisma.product.findFirst({
       where: { id, ...this.scopeWhere(scope.organizationId) },

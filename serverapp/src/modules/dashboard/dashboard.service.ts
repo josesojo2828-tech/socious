@@ -289,6 +289,11 @@ export class DashboardService {
             icon: "arrows-down-up",
             link: "/dashboard/inventario",
           },
+          {
+            title: "Materiales",
+            icon: "database",
+            link: "/dashboard/materiales",
+          },
         ];
         sections.push({
           title: "Inventario",

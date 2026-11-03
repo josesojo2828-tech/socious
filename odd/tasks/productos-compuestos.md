@@ -84,3 +84,6 @@ Criterios de aceptación:
 - **L2** (decisión): "dale, implementa eso" — recomendación aceptada: modelo BOM `ProductComponent`, toggle `inventory.useRawMaterials`, **bloqueo** de venta si falta insumo.
 
 - **L3** (evidencia): T1–T4 implementados en `feat/composite-products`; migración `20261103203042_composite_product_components` aplicada; serverapp typecheck 0 (product 31, sale 42, bom 6, tenant-settings 19 tests); webapp typecheck 0, suite 53 archivos / 487 tests. Configuración → Inventario muestra el toggle "Trabajar con materia prima"; el form de producto gatea la sección de componentes por ese flag.
+
+- **L4** (feedback del usuario): "Le doy click a agregar y no me sale nada, la materia prima debe estar en un enlace aparte, en el sidebar con Inventario, que diga Materiales".
+- **L5** (ajuste): `GET /api/products/raw-materials` (componentes distintos con usedIn + padres) precede a `:id`; sidebar Inventario gana **Materiales** (`/dashboard/materiales`); pantalla Maison con búsqueda y stock; el form muestra "Creá el insumo primero" cuando el catálogo no tiene candidatos en vez de un botón muerto.

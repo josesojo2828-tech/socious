@@ -12,6 +12,8 @@ export const ProductEndpoints = {
   presentationDetail: (presentationId: string) =>
     `/api/presentations/${presentationId}`,
   decompose: (productId: string) => `/api/products/${productId}/decompose`,
+  /** Distinct BOM components for the Materiales screen (S6). */
+  rawMaterials: "/api/products/raw-materials",
   // Imágenes del catálogo (S8): la clave se sube a /file/upload y luego se
   // persiste en la entidad; la imagen se sirve por /file/public/<key>.
   fileUpload: "/api/file/upload",
