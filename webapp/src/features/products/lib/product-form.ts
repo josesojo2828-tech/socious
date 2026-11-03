@@ -30,6 +30,16 @@ export interface ProductForm {
   supplierId?: string;
   /** Set by the variant copy route; sent only on create. */
   variantOfId?: string;
+  /** BOM (S1): raw materials consumed per sold unit. */
+  components: ProductComponentForm[];
+}
+
+/** One editable BOM row; quantity is a string in the form, number in the payload. */
+export interface ProductComponentForm {
+  componentId: string;
+  quantity: string;
+  /** Display data from the detail response (edit mode); not sent back. */
+  component?: { name: string; sku?: string; stock?: string | number };
 }
 
 /** Blank form for the create route. */
@@ -50,6 +60,7 @@ export const EMPTY_PRODUCT_FORM: ProductForm = {
   status: "ACTIVE",
   categoryId: "",
   supplierId: "",
+  components: [],
 };
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
@@ -85,6 +96,11 @@ export function toForm(product: Product): ProductForm {
     categoryId: product.categoryId ?? "",
     supplierId: product.supplierId ?? "",
     variantOfId: product.variantOfId ?? undefined,
+    components: (product.components ?? []).map((row) => ({
+      componentId: row.componentId,
+      quantity: String(row.quantity),
+      ...(row.component ? { component: row.component } : {}),
+    })),
   };
 }
 
@@ -92,6 +108,22 @@ export function toForm(product: Product): ProductForm {
 export function validateProductForm(form: ProductForm): string | null {
   if (!form.sku.trim() || !form.name.trim()) {
     return "SKU y nombre son obligatorios.";
+  }
+  for (const row of form.components) {
+    const qty = Number(row.quantity);
+    if (!Number.isFinite(qty) || qty <= 0) {
+      return "Cada componente necesita una cantidad mayor que cero.";
+    }
+    if (row.componentId === form.variantOfId) {
+      // no-op guard: self-reference is blocked in UI; backend re-checks too
+    }
+  }
+  if (
+    form.components.length > 0 &&
+    new Set(form.components.map((row) => row.componentId)).size !==
+      form.components.length
+  ) {
+    return "Hay componentes repetidos en la lista.";
   }
   return null;
 }
@@ -144,6 +176,12 @@ export function buildProductPayload(
     if (form.variantOfId) payload.variantOfId = form.variantOfId;
     payload.stock = form.isService ? 0 : Number(form.stock) || 0;
   }
+
+  // BOM (S1): always sent so an emptied list clears the server-side rows.
+  payload.components = form.components.map((row) => ({
+    componentId: row.componentId,
+    quantity: Number(row.quantity),
+  }));
 
   return payload;
 }

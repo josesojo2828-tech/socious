@@ -20,6 +20,7 @@ import { ProductFormPanel } from "@/features/products/components/ProductFormPane
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 import type { ExchangeRates } from "@/features/products/lib/price-currency";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
@@ -46,6 +47,8 @@ export default function EditProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [showComponents, setShowComponents] = useState<boolean>(false);
+  const [componentProducts, setComponentProducts] = useState<Product[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
@@ -54,7 +57,15 @@ export default function EditProductPage() {
     if (!productId) return;
     setLoading(true);
     try {
-      const [detail, categoryTree, supplierPage, unitList, ratesData] =
+      const [
+        detail,
+        categoryTree,
+        supplierPage,
+        unitList,
+        ratesData,
+        tenantSettings,
+        catalogPage,
+      ] =
         await Promise.all([
           apiClient.get<Product>(ProductEndpoints.detail(productId)),
           apiClient
@@ -69,11 +80,17 @@ export default function EditProductPage() {
           apiClient
             .get<ExchangeRates>(ExchangeEndpoints.latest)
             .catch(() => ({ data: null as ExchangeRates | null })),
+          getTenantSettings().catch(() => null),
+          apiClient
+            .get<Paged<Product>>(ProductEndpoints.list, { params: { limit: 200 } })
+            .catch(() => ({ data: { list: [] as Product[], total: 0 } })),
         ]);
       setProduct(detail.data);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
+      setShowComponents(Boolean(tenantSettings?.inventory?.useRawMaterials));
+      setComponentProducts(catalogPage.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
           rateBcv: Number(ratesData.data.rateBcv),
@@ -157,6 +174,8 @@ export default function EditProductPage() {
           categories={categories}
           suppliers={suppliers}
           rates={rates}
+          showComponents={showComponents}
+          componentProducts={componentProducts}
           busy={busy}
           onCancel={() => router.push(`/dashboard/productos/${product.id}`)}
           onSubmit={(form) => void submitForm(form)}

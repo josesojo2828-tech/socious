@@ -12,6 +12,7 @@ import {
   TruckElectric,
   Building2,
   Sparkles,
+  Boxes,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -63,6 +64,7 @@ import {
   patchDeliveryEnabled,
   patchDeliveryFee,
   patchFulfillmentType,
+  patchInventoryUseRawMaterials,
   patchRoutesEnabled,
 } from "@/features/settings/lib/settings-form";
 import {
@@ -631,6 +633,23 @@ export default function SettingsPage() {
 
       {tab === "inventory" ? (
         <>
+          {settings ? (
+            <SectionPanel
+              icon={<Boxes className="h-5 w-5" />}
+              title="Materia prima"
+              description="Productos compuestos (BOM): al vender, el sistema descuenta los insumos del inventario."
+            >
+              <SectionRow
+                label="Trabajar con materia prima"
+                hint="Activo: el form de producto muestra la sección de componentes y las ventas bloquean si falta insumo."
+              >
+                <Toggle
+                  checked={settings.inventory.useRawMaterials}
+                  onChange={() => void save(patchInventoryUseRawMaterials)}
+                />
+              </SectionRow>
+            </SectionPanel>
+          ) : null}
           <UnitsPanel />
           <CategoriesPanel />
         </>

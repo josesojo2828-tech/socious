@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  EMPTY_PRODUCT_FORM,
   buildProductPayload,
   buildStockPayload,
   flattenCategories,
@@ -25,6 +26,7 @@ const form = (overrides: Partial<ProductForm> = {}): ProductForm => ({
   isPublic: true,
   status: "ACTIVE",
   stock: 40,
+  components: [],
   ...overrides,
 });
 
@@ -178,6 +180,7 @@ describe("product-form (S7)", () => {
         status: "ACTIVE",
         categoryId: "c-1",
         supplierId: "s-1",
+        components: [],
       });
     });
 
@@ -231,5 +234,50 @@ describe("product-form (S7)", () => {
       ]);
       expect(flat[1].name).toBe("↳ Aguas");
     });
+  });
+});
+
+
+describe("components (BOM, S1)", () => {
+  it("starts with an empty component list", () => {
+    expect(EMPTY_PRODUCT_FORM.components).toEqual([]);
+  });
+
+  it("rejects a component with a non-positive quantity", () => {
+    const form = { ...EMPTY_PRODUCT_FORM, sku: "S", name: "N" };
+    form.components = [{ componentId: "c-1", quantity: "0" }];
+    expect(validateProductForm(form)).toMatch(/cantidad/i);
+  });
+
+  it("rejects repeated components", () => {
+    const form = { ...EMPTY_PRODUCT_FORM, sku: "S", name: "N" };
+    form.components = [
+      { componentId: "c-1", quantity: "1" },
+      { componentId: "c-1", quantity: "2" },
+    ];
+    expect(validateProductForm(form)).toMatch(/repetidos/i);
+  });
+
+  it("accepts a valid component list", () => {
+    const form = { ...EMPTY_PRODUCT_FORM, sku: "S", name: "N" };
+    form.components = [
+      { componentId: "c-1", quantity: "1" },
+      { componentId: "c-2", quantity: "0.5" },
+    ];
+    expect(validateProductForm(form)).toBeNull();
+  });
+
+  it("serializes components to numbers in the payload (always sent)", () => {
+    const form = { ...EMPTY_PRODUCT_FORM, sku: "S", name: "N" };
+    form.components = [{ componentId: "c-1", quantity: "2.5" }];
+    const payload = buildProductPayload(form, "create");
+    expect(payload.components).toEqual([
+      { componentId: "c-1", quantity: 2.5 },
+    ]);
+  });
+
+  it("sends an empty components array to clear the server list", () => {
+    const payload = buildProductPayload(EMPTY_PRODUCT_FORM, "update");
+    expect(payload.components).toEqual([]);
   });
 });

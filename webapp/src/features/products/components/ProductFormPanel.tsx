@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Package } from "lucide-react";
+import { Package, Plus, Trash2 } from "lucide-react";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { CTA_BRASS, CTA_NAVY, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
 import { BarcodePreview } from "./BarcodePreview";
@@ -46,6 +46,10 @@ interface ProductFormPanelProps {
   onCancel: () => void;
   /** Receives the validated form; the route owns the API call and navigation. */
   onSubmit: (form: ProductForm) => void;
+  /** S2: tenant `inventory.useRawMaterials` — gates the BOM section. */
+  showComponents?: boolean;
+  /** Candidate raw materials for the BOM picker (whole catalog, loaded by the route). */
+  componentProducts?: Product[];
 }
 
 /**
@@ -63,6 +67,8 @@ export function ProductFormPanel({
   busy,
   onCancel,
   onSubmit,
+  showComponents = false,
+  componentProducts = [],
 }: ProductFormPanelProps) {
   const { addToast } = useToastStore();
   const editing = Boolean(initial);
@@ -75,6 +81,48 @@ export function ProductFormPanel({
     setForm((current) => ({ ...current, ...patch }));
 
   const flatCategoryOptions = flattenCategories(categories);
+
+  // BOM (S1): candidates exclude the product being edited (no self-reference).
+  const componentOptions = componentProducts.filter(
+    (candidate) => candidate.id !== initial?.id,
+  );
+
+  const addComponent = () => {
+    const first = componentOptions[0];
+    if (!first) return;
+    patchForm({
+      components: [
+        ...form.components,
+        { componentId: first.id, quantity: "1" },
+      ],
+    });
+  };
+
+  const updateComponent = (
+    index: number,
+    patch: Partial<ProductForm["components"][number]>,
+  ) => {
+    patchForm({
+      components: form.components.map((row, i) =>
+        i === index ? { ...row, ...patch } : row,
+      ),
+    });
+  };
+
+  const removeComponent = (index: number) => {
+    patchForm({
+      components: form.components.filter((_, i) => i !== index),
+    });
+  };
+
+  const componentLabel = (row: ProductForm["components"][number]): string => {
+    const listed = componentOptions.find((c) => c.id === row.componentId);
+    if (listed) return `${listed.name} (${listed.sku})`;
+    if (row.component) {
+      return `${row.component.name}${row.component.sku ? ` (${row.component.sku})` : ""}`;
+    }
+    return row.componentId;
+  };
 
   const submit = () => {
     const problem = validateProductForm(form);
@@ -381,6 +429,95 @@ export function ProductFormPanel({
           Visible en la tienda online
         </label>
       </div>
+
+      {showComponents ? (
+        <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-4 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-[#111018] dark:text-slate-100">
+                Componentes (materia prima)
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Al vender este producto se descuentan del stock, uno por unidad
+                vendida.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={addComponent}
+              disabled={componentOptions.length === 0}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline disabled:opacity-40"
+            >
+              <Plus className="h-3.5 w-3.5" /> Agregar
+            </button>
+          </div>
+
+          {form.components.length === 0 ? (
+            <p className="text-xs text-slate-400 py-2">
+              Sin componentes: este producto se vende sin consumir inventario.
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {form.components.map((row, index) => (
+                <li
+                  key={`${row.componentId}-${index}`}
+                  className="grid gap-2 sm:grid-cols-[1fr_110px_36px] items-end"
+                >
+                  <label className={LABEL_SM}>
+                    Materia prima
+                    <select
+                      className={`mt-1 ${INPUT}`}
+                      value={row.componentId}
+                      onChange={(event) =>
+                        updateComponent(index, {
+                          componentId: event.target.value,
+                        })
+                      }
+                    >
+                      {/* Current value stays selectable even if absent from the page slice. */}
+                      {!componentOptions.some(
+                        (c) => c.id === row.componentId,
+                      ) && (
+                        <option value={row.componentId}>
+                          {componentLabel(row)}
+                        </option>
+                      )}
+                      {componentOptions.map((candidate) => (
+                        <option key={candidate.id} value={candidate.id}>
+                          {candidate.name} ({candidate.sku})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className={LABEL_SM}>
+                    Cantidad
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="any"
+                      className={`mt-1 ${INPUT}`}
+                      value={row.quantity}
+                      onChange={(event) =>
+                        updateComponent(index, {
+                          quantity: event.target.value,
+                        })
+                      }
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    aria-label="Quitar componente"
+                    onClick={() => removeComponent(index)}
+                    className="rounded-lg border border-[#1a2a46]/15 dark:border-white/15 p-2 text-slate-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
 
       <div className="flex gap-2 pt-1">
         <button

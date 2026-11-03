@@ -27,6 +27,7 @@ import { ProductFormPanel } from "@/features/products/components/ProductFormPane
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 import type { ExchangeRates } from "@/features/products/lib/price-currency";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
@@ -68,6 +69,8 @@ function NewProductContent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [showComponents, setShowComponents] = useState<boolean>(false);
+  const [componentProducts, setComponentProducts] = useState<Product[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
   const [variantForm, setVariantForm] = useState<ProductForm | null>(null);
   const [variantSource, setVariantSource] = useState<Product | null>(null);
@@ -77,7 +80,15 @@ function NewProductContent() {
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [categoryTree, supplierPage, unitList, ratesData, source] =
+      const [
+        categoryTree,
+        supplierPage,
+        unitList,
+        ratesData,
+        source,
+        tenantSettings,
+        catalogPage,
+      ] =
         await Promise.all([
           apiClient
             .get<Category[]>(ProductEndpoints.categories)
@@ -96,10 +107,16 @@ function NewProductContent() {
                 .get<Product>(ProductEndpoints.detail(fromProductId))
                 .catch(() => ({ data: null as Product | null }))
             : Promise.resolve({ data: null as Product | null }),
+          getTenantSettings().catch(() => null),
+          apiClient
+            .get<Paged<Product>>(ProductEndpoints.list, { params: { limit: 200 } })
+            .catch(() => ({ data: { list: [] as Product[], total: 0 } })),
         ]);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
+      setShowComponents(Boolean(tenantSettings?.inventory?.useRawMaterials));
+      setComponentProducts(catalogPage.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
           rateBcv: Number(ratesData.data.rateBcv),
@@ -210,6 +227,8 @@ function NewProductContent() {
           categories={categories}
           suppliers={suppliers}
           rates={rates}
+          showComponents={showComponents}
+          componentProducts={componentProducts}
           busy={busy}
           onCancel={() => router.push("/dashboard/productos")}
           onSubmit={(form) => void submitForm(form)}

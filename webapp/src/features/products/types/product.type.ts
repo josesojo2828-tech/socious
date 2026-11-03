@@ -57,6 +57,20 @@ export interface Product {
   images?: ProductImage[];
   category?: { id: string; name: string } | null;
   supplier?: { id: string; name: string } | null;
+  /** BOM rows (detail only, S1); absent on list responses. */
+  components?: {
+    id?: string;
+    componentId: string;
+    quantity: string | number;
+    component?: {
+      id: string;
+      name: string;
+      sku: string;
+      stock: string | number;
+      unit: string;
+      isService: boolean;
+    };
+  }[];
 }
 
 export interface StockMovement {
