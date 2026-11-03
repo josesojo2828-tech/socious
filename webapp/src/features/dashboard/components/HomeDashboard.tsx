@@ -1,11 +1,26 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { AlertCircle, ArrowDownRight, ArrowUpRight, Loader2, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import {
+  AlertCircle,
+  ArrowDownRight,
+  ArrowUpRight,
+  Calculator,
+  Loader2,
+  RefreshCw,
+  Settings2,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
 import { OrderEndpoints } from "@/features/orders/services/orders.endpoints";
 import { PurchaseEndpoints } from "@/features/purchases/services/purchases.endpoints";
+import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
+import type { TenantSettings } from "@/features/settings/types/tenant-settings.type";
+import { buildDailyRateLines, type DailyRateSnapshot } from "../lib/daily-rates";
 import {
   buildWeekHeat,
   isoDaysAgo,
@@ -99,6 +114,14 @@ function CardHeader({ title, note }: { title: string; note: string }) {
   );
 }
 
+/** Atajos del panel: las cuatro pantallas de trabajo diario. */
+const SHORTCUTS = [
+  { href: "/dashboard/compras", label: "Compras", icon: ShoppingCart },
+  { href: "/dashboard/pos", label: "Punto de venta", icon: Calculator },
+  { href: "/dashboard/clientes", label: "Clientes", icon: Users },
+  { href: "/dashboard/configuracion", label: "Configuración", icon: Settings2 },
+] as const;
+
 export default function HomeDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,6 +136,8 @@ export default function HomeDashboard() {
     [],
   );
   const [heat, setHeat] = useState<WeekHeat | null>(null);
+  const [settings, setSettings] = useState<TenantSettings | null>(null);
+  const [rates, setRates] = useState<DailyRateSnapshot | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -128,34 +153,41 @@ export default function HomeDashboard() {
         apReport,
         pendingRes,
         ordersRes,
+        tenantSettings,
+        rateView,
       ] = await Promise.all([
-          apiClient
-            .get<SalesReportSlice>(
-              `${SaleEndpoints.report}?from=${today}&to=${today}`,
-            )
-            .then((r) => r.data),
-          apiClient
-            .get<SalesReportSlice>(
-              `${SaleEndpoints.report}?from=${yesterday}&to=${yesterday}`,
-            )
-            .then((r) => r.data),
-          apiClient
-            .get<SalesReportSlice>(SaleEndpoints.report)
-            .then((r) => r.data),
-          apiClient
-            .get<PurchasesReportSlice>(PurchaseEndpoints.report)
-            .then((r) => r.data),
-          apiClient
-            .get<{ total: number }>(OrderEndpoints.list, {
-              params: { status: "PENDING", limit: 1 },
-            })
-            .then((r) => r.data),
-          apiClient
-            .get<{ list: OrderRow[] }>(OrderEndpoints.list, {
-              params: { limit: 5 },
-            })
-            .then((r) => r.data),
-        ]);
+        apiClient
+          .get<SalesReportSlice>(
+            `${SaleEndpoints.report}?from=${today}&to=${today}`,
+          )
+          .then((r) => r.data),
+        apiClient
+          .get<SalesReportSlice>(
+            `${SaleEndpoints.report}?from=${yesterday}&to=${yesterday}`,
+          )
+          .then((r) => r.data),
+        apiClient
+          .get<SalesReportSlice>(SaleEndpoints.report)
+          .then((r) => r.data),
+        apiClient
+          .get<PurchasesReportSlice>(PurchaseEndpoints.report)
+          .then((r) => r.data),
+        apiClient
+          .get<{ total: number }>(OrderEndpoints.list, {
+            params: { status: "PENDING", limit: 1 },
+          })
+          .then((r) => r.data),
+        apiClient
+          .get<{ list: OrderRow[] }>(OrderEndpoints.list, {
+            params: { limit: 5 },
+          })
+          .then((r) => r.data),
+        // Tasa del día: monedas visibles + snapshot; nunca rompen el panel.
+        getTenantSettings().catch(() => null),
+        apiClient
+          .get<DailyRateSnapshot>(ExchangeEndpoints.latest)
+          .catch(() => ({ data: null as DailyRateSnapshot | null })),
+      ]);
 
       // Heat: hasta500 ventas de las últimas4 semanas (5 páginas de100).
       const from = isoDaysAgo(27);
@@ -206,6 +238,8 @@ export default function HomeDashboard() {
       setPendingOrders(pendingRes.total);
       setRecentOrders(ordersRes.list ?? []);
       setHeat(buildWeekHeat(saleRows, 4));
+      setSettings(tenantSettings);
+      setRates(rateView.data);
     } catch {
       setError("No se pudieron cargar los datos del panel.");
     } finally {
@@ -272,6 +306,7 @@ export default function HomeDashboard() {
 
   const arTop = openItems.slice(0, 5);
   const apTop = apItems.slice(0, 5);
+  const rateLines = buildDailyRateLines(settings?.currencies ?? {}, rates);
 
   return (
     <div className="space-y-6">
@@ -335,6 +370,59 @@ export default function HomeDashboard() {
             </div>
           );
         })}
+      </div>
+
+      {/* Tasa del día (monedas visibles) + accesos directos */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <section className="xl:col-span-5">
+          <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden h-full">
+            <CardHeader title="Tasa del día" note="en bolívares" />
+            {rateLines.length === 0 ? (
+              <p className="px-5 py-6 text-sm text-[#1b1d21]/55 dark:text-slate-400 text-center">
+                No hay monedas habilitadas en Configuración.
+              </p>
+            ) : (
+              <ul className="divide-y divide-[#1b1d21]/12 dark:divide-white/10">
+                {rateLines.map((line) => (
+                  <li
+                    key={line.key}
+                    className="px-5 py-3 flex items-center justify-between gap-3"
+                  >
+                    <span className="text-[13px] text-[#1b1d21] dark:text-slate-100">
+                      {line.label}
+                    </span>
+                    <span className="font-mono text-[13px] tnum font-medium text-[#1b1d21] dark:text-slate-100">
+                      {line.value}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+
+        <section className="xl:col-span-7">
+          <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden h-full">
+            <CardHeader title="Accesos directos" note="atajos" />
+            <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {SHORTCUTS.map(({ href, label, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="flex flex-col items-center justify-center gap-2 rounded-xl border border-[#1b1d21]/12 dark:border-white/10 bg-[#1b1d21]/[0.03] dark:bg-white/5 px-3 py-5 text-center transition-colors hover:bg-[#b2944a]/10 hover:border-[#b2944a]/40 dark:hover:bg-[#b2944a]/15 focus-visible:outline-2 focus-visible:outline-[#b2944a] focus-visible:-outline-offset-2"
+                >
+                  <Icon
+                    className="h-5 w-5 text-[#b2944a] dark:text-[#d8c084]"
+                    strokeWidth={1.8}
+                  />
+                  <span className="text-[13px] font-medium text-[#1b1d21] dark:text-slate-100 leading-tight">
+                    {label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* Cuerpo: heat + tablas, cada uno en su card */}
