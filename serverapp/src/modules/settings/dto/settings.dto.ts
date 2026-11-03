@@ -172,6 +172,14 @@ export class PurchasesSettingsDto {
   onlySupplierProducts?: boolean;
 }
 
+export class InventorySettingsDto {
+  @IsOptional()
+  @IsBoolean({
+    message: "inventory.useRawMaterials debe ser verdadero o falso.",
+  })
+  useRawMaterials?: boolean;
+}
+
 export class UpdateTenantSettingsDto {
   @IsOptional()
   @ValidateNested()
@@ -227,6 +235,11 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => PurchasesSettingsDto)
   purchases?: PurchasesSettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InventorySettingsDto)
+  inventory?: InventorySettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

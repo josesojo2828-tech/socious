@@ -66,6 +66,14 @@ export interface TenantSettings {
      */
     onlySupplierProducts: boolean;
   };
+  inventory: {
+    /**
+     * `false` (default) = catálogo simple, sin componentes visibles;
+     * `true` = productos compuestos (BOM): la sección de materia prima
+     * aparece en el form y las ventas descuentan los insumos (S1/S2).
+     */
+    useRawMaterials: boolean;
+  };
   /** Logic-only notification switches (CRM S2); nothing is sent yet. */
   notifications: {
     lowStock: boolean;
@@ -126,6 +134,7 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
   },
   payments: { disabledCodes: [] },
   purchases: { onlySupplierProducts: false },
+  inventory: { useRawMaterials: false },
   notifications: {
     lowStock: true,
     creditDue: true,
@@ -270,6 +279,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
     : {};
   const payments = isPlainObject(source.payments) ? source.payments : {};
   const purchases = isPlainObject(source.purchases) ? source.purchases : {};
+  const inventory = isPlainObject(source.inventory) ? source.inventory : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -319,6 +329,12 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       onlySupplierProducts: asBool(
         purchases.onlySupplierProducts,
         defaults.purchases.onlySupplierProducts,
+      ),
+    },
+    inventory: {
+      useRawMaterials: asBool(
+        inventory.useRawMaterials,
+        defaults.inventory.useRawMaterials,
       ),
     },
     notifications: {

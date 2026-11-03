@@ -8,6 +8,7 @@ import {
   patchDeliveryEnabled,
   patchDeliveryFee,
   patchFulfillmentType,
+  patchInventoryUseRawMaterials,
   patchRoutesEnabled,
   toggleListValue,
 } from "./settings-form";
@@ -45,6 +46,7 @@ const base: TenantSettings = {
   },
   payments: { disabledCodes: [] },
   purchases: { onlySupplierProducts: false },
+  inventory: { useRawMaterials: false },
 };
 
 describe("settings-form (S4)", () => {
@@ -92,6 +94,31 @@ describe("settings-form (S4)", () => {
     it("never sends a negative delivery fee", () => {
       expect(patchDeliveryFee(-5)).toEqual({ delivery: { feeUSD: 0 } });
       expect(patchDeliveryFee(2.75)).toEqual({ delivery: { feeUSD: 2.75 } });
+    });
+  });
+
+  describe("inventory raw materials (S2)", () => {
+    it("flips the useRawMaterials flag", () => {
+      expect(patchInventoryUseRawMaterials(base)).toEqual({
+        inventory: { useRawMaterials: true },
+      });
+      const on = applySettingsPatch(
+        base,
+        patchInventoryUseRawMaterials(base),
+      );
+      expect(on.inventory.useRawMaterials).toBe(true);
+      expect(on.purchases).toEqual(base.purchases);
+      expect(
+        patchInventoryUseRawMaterials(on),
+      ).toEqual({ inventory: { useRawMaterials: false } });
+    });
+
+    it("merges the inventory section without dropping siblings", () => {
+      const next = applySettingsPatch(base, {
+        inventory: { useRawMaterials: true },
+      });
+      expect(next.inventory.useRawMaterials).toBe(true);
+      expect(next.cash).toEqual(base.cash);
     });
   });
 

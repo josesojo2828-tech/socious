@@ -53,6 +53,7 @@ export function applySettingsPatch(
         patch.payments?.disabledCodes ?? current.payments.disabledCodes,
     },
     purchases: { ...current.purchases, ...(patch.purchases ?? {}) },
+    inventory: { ...current.inventory, ...(patch.inventory ?? {}) },
   };
 }
 
@@ -67,6 +68,15 @@ export function patchCashShiftControl(
   current: TenantSettings,
 ): TenantSettingsPatch {
   return { cash: { shiftControl: !current.cash.shiftControl } };
+}
+
+/** S2: toggle "trabajar con materia prima" (BOM) from the Inventario tab. */
+export function patchInventoryUseRawMaterials(
+  current: TenantSettings,
+): TenantSettingsPatch {
+  return {
+    inventory: { useRawMaterials: !current.inventory.useRawMaterials },
+  };
 }
 
 export function patchCurrency(

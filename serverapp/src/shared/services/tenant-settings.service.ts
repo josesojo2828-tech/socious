@@ -385,6 +385,21 @@ export class TenantSettingsService {
       }
     }
 
+    if (input.inventory !== undefined) {
+      const inventory = input.inventory as Record<string, unknown>;
+      assertKnownKeys("inventory", inventory, ["useRawMaterials"]);
+      if (inventory.useRawMaterials !== undefined) {
+        if (typeof inventory.useRawMaterials !== "boolean") {
+          throw new BadRequestException(
+            "inventory.useRawMaterials debe ser verdadero o falso.",
+          );
+        }
+        result.inventory = {
+          useRawMaterials: inventory.useRawMaterials,
+        };
+      }
+    }
+
     return result;
   }
 }
@@ -459,5 +474,6 @@ export function mergeTenantSettings(
         patch.payments?.disabledCodes ?? base.payments.disabledCodes,
     },
     purchases: { ...base.purchases, ...(patch.purchases ?? {}) },
+    inventory: { ...base.inventory, ...(patch.inventory ?? {}) },
   });
 }

@@ -139,6 +139,31 @@ describe("TenantSettingsService", () => {
       { fulfillment: { enabledTypes: ["DRONE"] } },
       /Tipo de entrega desconocido/,
     );
+
+    it("persists the inventory raw-materials toggle (S2)", async () => {
+      const { service } = makeService();
+
+      const settings = await service.update(ORG, {
+        inventory: { useRawMaterials: true },
+      });
+
+      expect(settings.inventory.useRawMaterials).toBe(true);
+      // untouched sibling keeps its default
+      expect(settings.purchases).toEqual(
+        DEFAULT_TENANT_SETTINGS.purchases,
+      );
+    });
+
+    rejects(
+      "rejects a non-boolean inventory flag",
+      { inventory: { useRawMaterials: "yes" } },
+      /verdadero o falso/i,
+    );
+    rejects(
+      "rejects an unknown inventory key",
+      { inventory: { rawMaterialMode: true } },
+      /desconocida/i,
+    );
     it("accepts an empty fulfillment list so every type can be turned off", async () => {
       const { service } = makeService();
       const settings = await service.update(ORG, {
