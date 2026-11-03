@@ -423,7 +423,7 @@ export class SubscriptionService {
       organizationId,
     );
     const isBootstrapOnly =
-      existingCount > 0 &&
+      existingCount === 1 &&
       !!found &&
       found.endDate === null &&
       !found.lastPlanChangeAt;
