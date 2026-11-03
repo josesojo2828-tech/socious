@@ -162,22 +162,27 @@ function RegisterFormContent() {
   };
 
   return (
-    <div className="w-full max-w-lg space-y-7 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header text */}
       <div className="space-y-2 text-center lg:text-left">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-2">
+          <UserCircle size={14} />
+          <span>Crear cuenta</span>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-base-content">
           {t('form.title.create_user') || 'Crear Cuenta'}
         </h1>
         <p className="text-sm text-base-content/60 font-medium">
           {t('auth.already_have_account') || '¿Ya tenés una cuenta?'}{' '}
-          <Link href="/login" className="text-primary hover:text-accent font-bold hover:underline transition-all">
+          <Link href="/login" className="text-primary hover:text-accent font-bold hover:underline transition-all inline-flex items-center gap-1">
             {t('auth.login_link') || 'Iniciar sesión'}
+            <ArrowRight size={14} />
           </Link>
         </p>
       </div>
 
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Nombre & Apellido */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
@@ -192,7 +197,7 @@ function RegisterFormContent() {
                 type="text"
                 {...register('firstName')}
                 placeholder={t('form.placeholders.first_name') || 'Tu nombre'}
-                className={`w-full pl-11 pr-4 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
                   errors.firstName ? 'border-error ring-4 ring-error/10' : ''
                 }`}
               />
@@ -212,7 +217,7 @@ function RegisterFormContent() {
                 type="text"
                 {...register('lastName')}
                 placeholder={t('form.placeholders.last_name') || 'Tu apellido'}
-                className={`w-full pl-11 pr-4 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
+                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
                   errors.lastName ? 'border-error ring-4 ring-error/10' : ''
                 }`}
               />
@@ -230,12 +235,12 @@ function RegisterFormContent() {
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary transition-colors">
               <Mail size={18} />
             </div>
-            <input
-              type="email"
-              {...register('email')}
-              placeholder={t('form.placeholders.email') || 'correo@ejemplo.com'}
-              className={`w-full pl-11 pr-4 py-3 border rounded-lg transition-all outline-none font-medium bg-base-100 dark:bg-base-200 border-base-300 focus:border-primary focus:ring-4 focus:ring-primary/10 text-base-content ${errors.email ? 'border-error ring-4 ring-error/10' : ''}`}
-            />
+              <input
+                type="email"
+                {...register('email')}
+                placeholder={t('form.placeholders.email') || 'correo@ejemplo.com'}
+                className={`w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${errors.email ? 'border-error ring-4 ring-error/10' : ''}`}
+              />
           </div>
           {errors.email && <span className="text-error text-xs font-bold ml-1">{errors.email.message}</span>}
         </div>
@@ -251,7 +256,7 @@ function RegisterFormContent() {
             </div>
             <select
               {...register('gender')}
-              className={`w-full pl-11 pr-10 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium appearance-none ${
+              className={`w-full pl-11 pr-10 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium appearance-none ${
                 errors.gender ? 'border-error ring-4 ring-error/10' : ''
               }`}
             >
@@ -277,7 +282,7 @@ function RegisterFormContent() {
           <input
             type="date"
             {...register('birthDate')}
-            className={`w-full px-4 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
+            className={`w-full px-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
               errors.birthDate ? 'border-error ring-4 ring-error/10' : ''
             }`}
           />
@@ -298,7 +303,7 @@ function RegisterFormContent() {
                 type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className={`w-full pl-11 pr-12 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
+                className={`w-full pl-11 pr-12 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
                   errors.password ? 'border-error ring-4 ring-error/10' : ''
                 }`}
               />
@@ -326,7 +331,7 @@ function RegisterFormContent() {
                 type={showConfirmPassword ? 'text' : 'password'}
                 {...register('confirmPassword')}
                 placeholder="••••••••"
-                className={`w-full pl-11 pr-12 py-3 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
+                className={`w-full pl-11 pr-12 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium ${
                   errors.confirmPassword ? 'border-error ring-4 ring-error/10' : ''
                 }`}
               />
@@ -360,7 +365,7 @@ function RegisterFormContent() {
             <input
               type="text"
               {...register('referralCode')}
-              className="w-full pl-11 pr-4 py-3 border rounded-lg transition-all outline-none font-medium bg-base-100 dark:bg-base-200 border-base-300 text-primary focus:border-primary focus:ring-4 focus:ring-primary/10"
+              className="w-full pl-11 pr-4 py-3.5 bg-base-100 dark:bg-base-200 border-2 border-base-300 rounded-2xl focus:bg-base-100 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-base-content font-medium"
               placeholder={t('form.placeholders.referral_code') || 'OPCIONAL'}
             />
           </div>
@@ -403,7 +408,7 @@ function RegisterFormContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary)] active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-900/20 hover:shadow-xl hover:shadow-indigo-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
+            className="w-full py-4 bg-primary hover:bg-primary/90 active:scale-[0.99] text-white rounded-2xl font-black text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-3 disabled:opacity-75 disabled:cursor-not-allowed group"
           >
             {isSubmitting ? (
               <>
