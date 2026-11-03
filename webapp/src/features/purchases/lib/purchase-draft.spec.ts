@@ -32,6 +32,9 @@ const sampleDraft = (): Omit<PurchaseDraft, "savedAt"> => ({
   issueDate: "2026-10-31",
   dueDate: "2026-11-15",
   notes: "Factura A-123",
+  paymentMode: "CREDIT",
+  paymentMethod: "CASH_USD",
+  initialAmount: "",
   items: [
     {
       productId: "prod-1",
@@ -192,5 +195,47 @@ describe("purchase-draft — attached invoice (S14 #5)", () => {
 
     expect(draft).not.toBeNull();
     expect(draft?.invoiceKey).toBeUndefined();
+  });
+});
+
+describe("purchase-draft — settlement mode (S3)", () => {
+  it("forwards paymentMode, paymentMethod and initialAmount", () => {
+    const payload = draftToPayload({
+      ...sampleDraft(),
+      paymentMode: "PARTIAL",
+      paymentMethod: "ZELLE",
+      initialAmount: "10",
+    });
+    expect(payload.paymentMode).toBe("PARTIAL");
+    expect(payload.paymentMethod).toBe("ZELLE");
+    expect(payload.initialAmount).toBe("10");
+  });
+
+  it("defaults missing payment fields when restoring a pre-S3 draft", () => {
+    const { paymentMode: _m, paymentMethod: _p, initialAmount: _i, ...legacy } =
+      sampleDraft();
+    const draft = serverDraftFromResponse({
+      id: "draft-1",
+      name: null,
+      payload: legacy,
+      createdAt: "2026-11-01T09:00:00.000Z",
+      updatedAt: "2026-11-01T10:30:00.000Z",
+    });
+
+    expect(draft).not.toBeNull();
+    expect(draft?.paymentMode).toBe("PENDING");
+    expect(draft?.paymentMethod).toBe("CASH_USD");
+    expect(draft?.initialAmount).toBe("");
+  });
+
+  it("rejects an unknown paymentMode and falls back to PENDING", () => {
+    const draft = serverDraftFromResponse({
+      id: "draft-1",
+      name: null,
+      payload: { ...sampleDraft(), paymentMode: "NOPE" as never },
+      createdAt: "2026-11-01T09:00:00.000Z",
+      updatedAt: "2026-11-01T10:30:00.000Z",
+    });
+    expect(draft?.paymentMode).toBe("PENDING");
   });
 });

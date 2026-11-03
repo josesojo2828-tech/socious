@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { Checkbox } from "@/shared/components/atoms/Checkbox";
 import {
   BTN_GHOST,
@@ -46,10 +47,14 @@ import {
 import {
   buildCreatePayload,
   emptyPurchaseLine,
+  paymentCurrencyForMethod,
+  PURCHASE_PAYMENT_METHODS,
+  PURCHASE_PAYMENT_MODE_LABELS,
   purchaseCurrencyEquivalents,
   purchaseSummary,
   validatePurchaseForm,
   type PurchaseForm,
+  type PurchasePaymentMode,
 } from "@/features/purchases/lib/purchase-form";
 import {
   INVOICE_ACCEPT,
@@ -69,6 +74,7 @@ import {
   fetchPurchaseDraft,
   savePurchaseDraft,
 } from "@/features/purchases/services/purchase-drafts.service";
+import { InlineProductForm } from "@/features/purchases/components/InlineProductForm";
 
 interface Paged<T> {
   list: T[];
@@ -106,9 +112,20 @@ function emptyForm(): PurchaseForm {
     issueDate: todayISO(),
     dueDate: "",
     notes: "",
+    paymentMode: "PENDING",
+    paymentMethod: "CASH_USD",
+    initialAmount: "",
     items: [emptyPurchaseLine()],
   };
 }
+
+/** Payment modes offered in the Pago section (S3). */
+const PAYMENT_MODES: PurchasePaymentMode[] = [
+  "PENDING",
+  "PAID",
+  "PARTIAL",
+  "CREDIT",
+];
 
 /**
  * Dedicated purchase-create screen (S4 + S13 + S14): a GUIDED flow —
@@ -123,6 +140,7 @@ function emptyForm(): PurchaseForm {
 export default function NewPurchasePage() {
   const router = useRouter();
   const { addToast } = useToastStore();
+  const { openModal } = useModalStore();
 
   const [form, setForm] = useState<PurchaseForm>(emptyForm);
   const [saving, setSaving] = useState<boolean>(false);
@@ -132,6 +150,8 @@ export default function NewPurchasePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [catalogLoading, setCatalogLoading] = useState<boolean>(true);
   const [catalogSearch, setCatalogSearch] = useState<string>("");
+  /** Bumped after an inline product create so the catalog re-fetches (S1). */
+  const [catalogNonce, setCatalogNonce] = useState<number>(0);
 
   /** Tenant settings (S14 #2): the toggle reads and writes this copy. */
   const [settings, setSettings] = useState<TenantSettings | null>(null);
@@ -182,7 +202,8 @@ export default function NewPurchasePage() {
   }, []);
 
   // Catalog (S14 #3): toggle ON + supplier → only that supplier's products;
-  // otherwise the whole catalog. Re-fetches on every supplier/toggle change.
+  // otherwise the whole catalog. Re-fetches on every supplier/toggle change
+  // and after an inline product create (catalogNonce).
   useEffect(() => {
     let cancelled = false;
     setCatalogLoading(true);
@@ -204,7 +225,7 @@ export default function NewPurchasePage() {
     return () => {
       cancelled = true;
     };
-  }, [form.supplierId, onlySupplierProducts]);
+  }, [form.supplierId, onlySupplierProducts, catalogNonce]);
 
   // Resume banner: server draft first (account-synced), station copy as the
   // fallback when the request fails (401, offline) or the account is empty.
@@ -237,8 +258,12 @@ export default function NewPurchasePage() {
       issueDate: draft.issueDate || todayISO(),
       dueDate: draft.dueDate,
       notes: draft.notes,
-      // Drafts saved before S14 simply carry no invoice.
+      // Drafts saved before S14 simply carry no invoice; pre-S3 drafts
+      // default to PENDING with the built-in USD method.
       ...(draft.invoiceKey ? { invoiceKey: draft.invoiceKey } : {}),
+      paymentMode: draft.paymentMode ?? "PENDING",
+      paymentMethod: draft.paymentMethod ?? "CASH_USD",
+      initialAmount: draft.initialAmount ?? "",
       items:
         draft.items.length > 0 ? draft.items : [emptyPurchaseLine()],
     });
@@ -380,6 +405,83 @@ export default function NewPurchasePage() {
     }));
   };
 
+  /**
+   * S1: opens the inline product dialog. When `lineIndex` points at a
+   * free-text line, its name/cost prefill the form and the created product
+   * converts THAT line instead of appending a duplicate.
+   */
+  const openCreateProduct = (lineIndex?: number) => {
+    const source =
+      lineIndex !== undefined ? form.items[lineIndex] : undefined;
+    openModal(
+      <InlineProductForm
+        supplierId={form.supplierId || undefined}
+        initialName={source?.productName ?? ""}
+        initialCostUSD={source?.unitCostUSD ?? ""}
+        onCreated={(product) => handleProductCreated(product, lineIndex)}
+      />,
+      { size: "md" },
+    );
+  };
+
+  const handleProductCreated = (product: Product, lineIndex?: number) => {
+    const cost = Number(product.costPriceUSD);
+    const unitCostUSD = Number.isFinite(cost) ? String(cost) : "0";
+    setForm((current) => {
+      if (
+        lineIndex !== undefined &&
+        lineIndex >= 0 &&
+        lineIndex < current.items.length &&
+        !current.items[lineIndex].productId
+      ) {
+        // Convert the free line in place — no duplicate row.
+        return {
+          ...current,
+          items: current.items.map((line, index) =>
+            index === lineIndex
+              ? {
+                  productId: product.id,
+                  productName: product.name,
+                  quantity: line.quantity || "1",
+                  unitCostUSD,
+                }
+              : line,
+          ),
+        };
+      }
+      const existingIndex = current.items.findIndex(
+        (line) => line.productId === product.id,
+      );
+      if (existingIndex >= 0) {
+        return {
+          ...current,
+          items: current.items.map((line, index) =>
+            index === existingIndex
+              ? {
+                  ...line,
+                  quantity: String((Number(line.quantity) || 0) + 1),
+                  unitCostUSD,
+                }
+              : line,
+          ),
+        };
+      }
+      return {
+        ...current,
+        items: [
+          ...current.items,
+          {
+            productId: product.id,
+            productName: product.name,
+            quantity: "1",
+            unitCostUSD,
+          },
+        ],
+      };
+    });
+    setCatalogNonce((n) => n + 1);
+  };
+
   const uploadInvoice = async (file: File) => {
     const reason = invoiceFileError(file);
     if (reason) {
@@ -426,7 +528,7 @@ export default function NewPurchasePage() {
 
   const submitCreate = async (event: React.FormEvent) => {
     event.preventDefault();
-    const validation = validatePurchaseForm(form);
+    const validation = validatePurchaseForm(form, rates);
     if (validation) {
       setFormError(validation);
       return;
@@ -436,7 +538,7 @@ export default function NewPurchasePage() {
     try {
       const { data } = await apiClient.post<Purchase>(
         PurchaseEndpoints.list,
-        buildCreatePayload(form),
+        buildCreatePayload(form, rates),
       );
       clearDraft();
       void deletePurchaseDraft().catch(() => undefined);
@@ -531,12 +633,18 @@ export default function NewPurchasePage() {
       <form onSubmit={submitCreate} className="space-y-5">
         {/* ===== 1 · Proveedor (S14 #1: el flujo empieza acá) ===== */}
         <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#1a2a46] text-[10px] font-bold text-[#f0ede4] align-middle dark:bg-[#b2944a] dark:text-[#111018]">
+                1
+              </span>
               Proveedor
             </h2>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              paso 1 · define el catálogo
+            <span
+              className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400"
+              title="El catálogo, los cálculos y las equivalencias salen de este proveedor."
+            >
+              define el catálogo
             </span>
           </div>
           <label className={LABEL_SM}>
@@ -556,24 +664,19 @@ export default function NewPurchasePage() {
               ))}
             </select>
           </label>
-          <label className="flex items-start gap-2.5 cursor-pointer">
+          <label
+            className="flex items-center gap-2.5 cursor-pointer"
+            title="Por defecto se muestran todos los productos; activá el filtro para ver únicamente los de este proveedor."
+          >
             <Checkbox
               checked={onlySupplierProducts}
               disabled={!settings}
               onChange={(event) =>
                 void toggleOnlySupplierProducts(event.target.checked)
               }
-              className="mt-0.5"
             />
             <span className="text-sm text-[#111018] dark:text-slate-100">
               Solo productos de este proveedor
-              <span className="block text-xs text-slate-500 dark:text-slate-400">
-                Por defecto se muestran todos los productos (mostrar todos);
-                activá el filtro para ver únicamente los de este proveedor.
-                {settings
-                  ? ""
-                  : " No se pudo cargar la configuración: se muestran todos."}
-              </span>
             </span>
           </label>
         </section>
@@ -582,11 +685,23 @@ export default function NewPurchasePage() {
         <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#1a2a46] text-[10px] font-bold text-[#f0ede4] align-middle dark:bg-[#b2944a] dark:text-[#111018]">
+                2
+              </span>
               Productos
             </h2>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              paso 2 · catálogo
-            </span>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => openCreateProduct()}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
+              >
+                <Plus className="h-3.5 w-3.5" /> Crear producto
+              </button>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                catálogo
+              </span>
+            </div>
           </div>
 
           {!form.supplierId ? (
@@ -745,19 +860,140 @@ export default function NewPurchasePage() {
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
+                {!isCatalogLine ? (
+                  <button
+                    type="button"
+                    onClick={() => openCreateProduct(index)}
+                    className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-[#b2944a] hover:underline"
+                  >
+                    <Plus className="h-3 w-3" /> Crear producto con estos datos
+                    y enlazarlo
+                  </button>
+                ) : null}
               </div>
             );
           })}
         </section>
 
-        {/* ===== 3 · Fechas, notas y factura (S14 #5) ===== */}
+        {/* ===== 3 · Pago (S3): pagada / inicial / crédito con fecha ===== */}
         <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#1a2a46] text-[10px] font-bold text-[#f0ede4] align-middle dark:bg-[#b2944a] dark:text-[#111018]">
+                3
+              </span>
+              Pago
+            </h2>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+              cómo se cancela
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-1 rounded-full p-1 bg-white/60 dark:bg-white/5 border border-[#1a2a46]/10 dark:border-white/10 w-fit">
+            {PAYMENT_MODES.map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() =>
+                  setForm((c) => ({ ...c, paymentMode: mode }))
+                }
+                className={
+                  form.paymentMode === mode
+                    ? "h-9 px-4 rounded-full bg-[#1a2a46] text-[#f0ede4] text-xs font-semibold tracking-wide transition-colors dark:bg-[#b2944a] dark:text-[#111018]"
+                    : "h-9 px-4 rounded-full text-xs font-medium text-[#1a2a46]/70 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-white/10 transition-colors"
+                }
+              >
+                {PURCHASE_PAYMENT_MODE_LABELS[mode]}
+              </button>
+            ))}
+          </div>
+
+          {form.paymentMode === "PAID" || form.paymentMode === "PARTIAL" ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className={LABEL_SM}>
+                Método de pago *
+                <select
+                  value={form.paymentMethod}
+                  onChange={(event) =>
+                    setForm((c) => ({ ...c, paymentMethod: event.target.value }))
+                  }
+                  className={`mt-1 ${INPUT}`}
+                >
+                  {PURCHASE_PAYMENT_METHODS.map((method) => (
+                    <option key={method.code} value={method.code}>
+                      {method.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {form.paymentMode === "PARTIAL" ? (
+                <label className={LABEL_SM}>
+                  Inicial ({paymentCurrencyForMethod(form.paymentMethod)})
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.initialAmount}
+                    onChange={(event) =>
+                      setForm((c) => ({
+                        ...c,
+                        initialAmount: event.target.value,
+                      }))
+                    }
+                    placeholder="Monto que pagás ahora"
+                    className={`mt-1 ${INPUT}`}
+                  />
+                </label>
+              ) : (
+                <div className="flex items-end pb-1">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Se registra el pago del total con este método al crear la
+                    compra.
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {form.paymentMode === "CREDIT" ||
+          form.paymentMode === "PARTIAL" ? (
+            <label className={LABEL_SM}>
+              {form.paymentMode === "CREDIT"
+                ? "Fecha de pago (obligatoria) *"
+                : "Pagar antes de (crédito, opcional)"}
+              <input
+                type="date"
+                value={form.dueDate}
+                min={form.issueDate || undefined}
+                onChange={(event) =>
+                  setForm((c) => ({ ...c, dueDate: event.target.value }))
+                }
+                className={`mt-1 ${INPUT}`}
+              />
+            </label>
+          ) : null}
+
+          {form.paymentMode === "PAID" &&
+          paymentCurrencyForMethod(form.paymentMethod) !== "USD" &&
+          !rates ? (
+            <p className="text-xs text-amber-700 dark:text-amber-400">
+              Cargá la tasa de hoy (o elegí un método en USD) para marcar
+              Pagada en esa moneda.
+            </p>
+          ) : null}
+        </section>
+
+        {/* ===== 4 · Fechas, notas y factura (S14 #5) ===== */}
+        <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#1a2a46] text-[10px] font-bold text-[#f0ede4] align-middle dark:bg-[#b2944a] dark:text-[#111018]">
+                4
+              </span>
               Fechas, notas y factura
             </h2>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              paso 3 · opcional
+              opcional
             </span>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -772,17 +1008,8 @@ export default function NewPurchasePage() {
                 className={`mt-1 ${INPUT}`}
               />
             </label>
-            <label className={LABEL_SM}>
-              Pagar antes de (crédito, opcional)
-              <input
-                type="date"
-                value={form.dueDate}
-                onChange={(event) =>
-                  setForm((c) => ({ ...c, dueDate: event.target.value }))
-                }
-                className={`mt-1 ${INPUT}`}
-              />
-            </label>
+            {/* La fecha de pago vive en la sección Pago (S3). */}
+            <div />
           </div>
           <label className={LABEL_SM}>
             Notas
@@ -858,10 +1085,13 @@ export default function NewPurchasePage() {
           </div>
         </section>
 
-        {/* ===== 4 · Resumen detallado (S14 #6 + #7) ===== */}
+        {/* ===== 5 · Resumen detallado (S14 #6 + #7) ===== */}
         <section className={`rounded-2xl ${CARD} p-5 sm:p-6 space-y-3`}>
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#b2944a] text-[10px] font-bold text-[#111018] align-middle">
+                5
+              </span>
               Resumen
             </h2>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">

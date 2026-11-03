@@ -16,6 +16,9 @@ const baseForm = (): PurchaseForm => ({
   issueDate: "2026-10-31",
   dueDate: "",
   notes: "",
+  paymentMode: "PENDING",
+  paymentMethod: "CASH_USD",
+  initialAmount: "",
   items: [
     { productName: "Harina", quantity: "2", unitCostUSD: "10.5" },
     { productName: "", quantity: "1", unitCostUSD: "" },
@@ -68,6 +71,60 @@ describe("validatePurchaseForm", () => {
   it("accepts a valid form ignoring empty trailing lines", () => {
     expect(validatePurchaseForm(baseForm())).toBeNull();
   });
+
+  it("requires a payment method when the purchase is marked PAID", () => {
+    const form = baseForm();
+    form.paymentMode = "PAID";
+    form.paymentMethod = "";
+    expect(validatePurchaseForm(form)).toBe(
+      "Elegí un método de pago para marcar la compra como pagada.",
+    );
+  });
+
+  it("rejects PAID in a non-USD method when rates are missing", () => {
+    const form = baseForm();
+    form.paymentMode = "PAID";
+    form.paymentMethod = "PAGO_MOVIL";
+    expect(validatePurchaseForm(form, null)).toBe(
+      "Necesitás la tasa de hoy para marcar Pagada en esa moneda.",
+    );
+  });
+
+  it("rejects an initial that is empty, zero or not numeric", () => {
+    const form = baseForm();
+    form.paymentMode = "PARTIAL";
+    form.initialAmount = "0";
+    expect(validatePurchaseForm(form)).toBe(
+      "Ingresá un monto de inicial mayor que cero.",
+    );
+  });
+
+  it("rejects an initial that covers or exceeds the total", () => {
+    const form = baseForm();
+    form.paymentMode = "PARTIAL";
+    form.paymentMethod = "CASH_USD";
+    form.initialAmount = "21";
+    expect(validatePurchaseForm(form)).toBe(
+      "El inicial no puede cubrir el total: usá Pagada.",
+    );
+  });
+
+  it("requires a due date when the purchase is on credit", () => {
+    const form = baseForm();
+    form.paymentMode = "CREDIT";
+    expect(validatePurchaseForm(form)).toBe(
+      "Marcá la fecha de pago para la compra a crédito.",
+    );
+  });
+
+  it("rejects a credit due date before the issue date", () => {
+    const form = baseForm();
+    form.paymentMode = "CREDIT";
+    form.dueDate = "2026-10-01";
+    expect(validatePurchaseForm(form)).toBe(
+      "La fecha de pago no puede ser anterior a la fecha de emisión.",
+    );
+  });
 });
 
 describe("buildCreatePayload", () => {
@@ -81,12 +138,20 @@ describe("buildCreatePayload", () => {
   it("keeps supplier, due date and notes when present", () => {
     const form = baseForm();
     form.supplierId = "sup-1";
+    form.paymentMode = "CREDIT";
     form.dueDate = "2026-11-15";
     form.notes = "  Factura 001  ";
     const payload = buildCreatePayload(form);
     expect(payload.supplierId).toBe("sup-1");
     expect(payload.dueDate).toBe("2026-11-15");
     expect(payload.notes).toBe("Factura 001");
+  });
+
+  it("drops dueDate when the mode is not credit-flavoured", () => {
+    const form = baseForm();
+    form.paymentMode = "PENDING";
+    form.dueDate = "2026-11-15";
+    expect(buildCreatePayload(form)).not.toHaveProperty("dueDate");
   });
 
   it("passes the productId through when a catalog item was picked", () => {
@@ -103,6 +168,50 @@ describe("buildCreatePayload", () => {
     expect(buildCreatePayload(form).invoiceKey).toBe(
       "purchase_1730000000_ab12cd.pdf",
     );
+  });
+
+  it("omits payments entirely for PENDING mode", () => {
+    expect(buildCreatePayload(baseForm())).not.toHaveProperty("payments");
+  });
+
+  it("books a full USD payment when marked PAID", () => {
+    const form = baseForm();
+    form.paymentMode = "PAID";
+    form.paymentMethod = "CASH_USD";
+    const payload = buildCreatePayload(form);
+    expect(payload.payments).toEqual([
+      { amountOriginal: 21, currency: "USD", paymentMethod: "CASH_USD" },
+    ]);
+  });
+
+  it("converts the total into the method currency for PAID with rates", () => {
+    const form = baseForm();
+    form.paymentMode = "PAID";
+    form.paymentMethod = "PAGO_MOVIL"; // VES
+    const payload = buildCreatePayload(form, { rateBcv: 36.5, rateUsdt: 40 });
+    expect(payload.payments).toEqual([
+      { amountOriginal: 766.5, currency: "VES", paymentMethod: "PAGO_MOVIL" },
+    ]);
+  });
+
+  it("sends the initial amount as-is for PARTIAL", () => {
+    const form = baseForm();
+    form.paymentMode = "PARTIAL";
+    form.paymentMethod = "ZELLE";
+    form.initialAmount = "10";
+    const payload = buildCreatePayload(form);
+    expect(payload.payments).toEqual([
+      { amountOriginal: 10, currency: "USD", paymentMethod: "ZELLE" },
+    ]);
+  });
+
+  it("keeps dueDate for CREDIT and never sends an empty payments array", () => {
+    const form = baseForm();
+    form.paymentMode = "CREDIT";
+    form.dueDate = "2026-11-15";
+    const payload = buildCreatePayload(form);
+    expect(payload.dueDate).toBe("2026-11-15");
+    expect(payload.payments).toBeUndefined();
   });
 });
 

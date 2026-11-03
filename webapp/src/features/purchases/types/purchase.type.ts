@@ -56,6 +56,15 @@ export interface CreatePurchasePayload {
     quantity: number;
     unitCostUSD: number;
   }[];
+  /**
+   * Settlement booked atomically with the document (S3): full payment
+   * (PAID) or initial (PARTIAL). Omitted for PENDING/CREDIT — never `[]`.
+   */
+  payments?: {
+    amountOriginal: number;
+    currency: PurchaseCurrency;
+    paymentMethod: string;
+  }[];
 }
 
 /** Body POST /api/purchases/:id/payments. */

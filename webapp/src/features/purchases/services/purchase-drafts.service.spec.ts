@@ -32,6 +32,9 @@ const DRAFT = {
   issueDate: "2026-11-01",
   dueDate: "2026-11-15",
   notes: "Factura A-123",
+  paymentMode: "PENDING" as const,
+  paymentMethod: "CASH_USD",
+  initialAmount: "",
   items: [
     {
       productId: "prod-1",
@@ -52,6 +55,9 @@ const ROW = {
     issueDate: "2026-11-01",
     dueDate: "2026-11-15",
     notes: "Factura A-123",
+    paymentMode: "PENDING",
+    paymentMethod: "CASH_USD",
+    initialAmount: "",
     items: DRAFT.items,
   },
   createdAt: "2026-11-01T09:00:00.000Z",
@@ -98,6 +104,9 @@ describe("savePurchaseDraft — PUT /api/purchases/drafts", () => {
         issueDate: "2026-11-01",
         dueDate: "2026-11-15",
         notes: "Factura A-123",
+        paymentMode: "PENDING",
+        paymentMethod: "CASH_USD",
+        initialAmount: "",
         items: DRAFT.items,
       },
     });

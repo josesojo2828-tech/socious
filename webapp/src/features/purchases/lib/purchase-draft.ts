@@ -1,4 +1,7 @@
-import type { PurchaseLineForm } from "./purchase-form";
+import type {
+  PurchaseDraftPaymentMode,
+  PurchaseLineForm,
+} from "./purchase-form";
 
 /** localStorage key for the station-local purchase draft (S4). */
 export const PURCHASE_DRAFT_KEY = "socius.purchase-draft";
@@ -12,6 +15,12 @@ export interface PurchaseDraft {
   /** Attached invoice key (S14 #5); absent when no invoice was uploaded. */
   invoiceKey?: string;
   items: PurchaseLineForm[];
+  /** Settlement mode (S3); absent on drafts saved before the field. */
+  paymentMode?: PurchaseDraftPaymentMode;
+  /** Method code for PAID / PARTIAL. */
+  paymentMethod?: string;
+  /** Initial amount in the method's currency (PARTIAL). */
+  initialAmount?: string;
   savedAt: string;
 }
 
@@ -91,9 +100,15 @@ export function draftToPayload(
     // Only an ATTACHED invoice travels (S14 #5): drafts saved before the
     // field existed send exactly the same body as before.
     ...(draft.invoiceKey ? { invoiceKey: draft.invoiceKey } : {}),
+    // Settlement (S3): always written so a resume can restore the mode.
+    paymentMode: draft.paymentMode ?? "PENDING",
+    paymentMethod: draft.paymentMethod ?? "CASH_USD",
+    initialAmount: draft.initialAmount ?? "",
     items: draft.items,
   };
 }
+
+const PAYMENT_MODES = new Set(["PENDING", "PAID", "PARTIAL", "CREDIT"]);
 
 /**
  * Maps a server row onto the screen draft (server `updatedAt` becomes the
@@ -111,6 +126,12 @@ export function serverDraftFromResponse(
   }
   if (typeof row.updatedAt !== "string" || !row.updatedAt) return null;
 
+  const paymentMode =
+    typeof payload.paymentMode === "string" &&
+    PAYMENT_MODES.has(payload.paymentMode)
+      ? payload.paymentMode
+      : "PENDING";
+
   return {
     supplierId: typeof payload.supplierId === "string" ? payload.supplierId : "",
     issueDate: typeof payload.issueDate === "string" ? payload.issueDate : "",
@@ -120,6 +141,13 @@ export function serverDraftFromResponse(
     ...(typeof payload.invoiceKey === "string" && payload.invoiceKey
       ? { invoiceKey: payload.invoiceKey }
       : {}),
+    paymentMode,
+    paymentMethod:
+      typeof payload.paymentMethod === "string" && payload.paymentMethod
+        ? payload.paymentMethod
+        : "CASH_USD",
+    initialAmount:
+      typeof payload.initialAmount === "string" ? payload.initialAmount : "",
     items: payload.items as PurchaseLineForm[],
     savedAt: row.updatedAt,
   };
