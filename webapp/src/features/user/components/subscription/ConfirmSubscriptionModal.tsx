@@ -37,10 +37,26 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const isFirstSubscription = !user?.subscriptions?.length;
   const isOrganizationWorkspace = activeWorkspace?.type === 'ORGANIZATION';
   const workspaceId = activeWorkspace?.id;
   const planCurrency = plan.currency || 'USD';
+
+  // Workspace-scoped, mirrors the backend trial rule (create()):
+  // free when this workspace has no subscription yet, or only the org
+  // bootstrap BASICO (endDate null, never plan-changed). A personal sub
+  // must not force the wallet UI when picking a plan for the org, and
+  // vice versa.
+  const workspaceSubscriptions = (user?.subscriptions ?? []).filter((sub) => {
+    if (isOrganizationWorkspace) {
+      return Boolean(workspaceId) && sub.organizationId === workspaceId;
+    }
+    return !sub.organizationId;
+  });
+  const isFirstSubscription =
+    workspaceSubscriptions.length === 0 ||
+    workspaceSubscriptions.every(
+      (sub) => !sub.endDate && !sub.lastPlanChangeAt,
+    );
 
   useEffect(() => {
     let active = true;
@@ -75,16 +91,27 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
     setSubmitting(true);
     setErrorMsg(null);
     try {
-      const payload: { planId: string; autoRenew: boolean; organizationId?: string } = {
+      const payload: {
+        planId: string;
+        autoRenew: boolean;
+        organizationId?: string;
+        ignorePayment?: boolean;
+      } = {
         planId: plan.id,
         autoRenew: autoRenew,
       };
-      
+
       // Add organizationId if workspace is ORGANIZATION
       if (isOrganizationWorkspace && workspaceId) {
         payload.organizationId = workspaceId;
       }
-      
+
+      // Explicit trial marker: the backend also derives this, but sending it
+      // keeps the UI and the charge path in lockstep (DTO already accepts it).
+      if (isFirstSubscription) {
+        payload.ignorePayment = true;
+      }
+
       await apiClient.post(`/api/user/${user.id}/subscription`, payload);
       await useWorkspaceStore.getState().fetchWorkspaces();
       await useAuthStore.getState().refreshSession();

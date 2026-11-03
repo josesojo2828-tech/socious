@@ -411,15 +411,26 @@ export class SubscriptionService {
       this.logger.log(`Organización "${orgName}" creada automáticamente para usuario ${data.userId}`);
     }
 
-    // 3. Verificar si es la primera suscripción para ESTE workspace (trial gratis)
+    // 3. Trial gratis: sin suscripción previa en este workspace, o solo el
+    //    BASICO de arranque que crea la organización (endDate infinito y
+    //    nunca cambiado). Elegir el primer plan no debe pedir wallet.
+    const found = await this.subscriptionRepository.findByUserAndWorkspace(
+      data.userId,
+      organizationId,
+    );
     const existingCount = await this.subscriptionRepository.countByUserAndWorkspace(
       data.userId,
       organizationId,
     );
-    const isFirstSubscription = existingCount === 0;
+    const isBootstrapOnly =
+      existingCount > 0 &&
+      !!found &&
+      found.endDate === null &&
+      !found.lastPlanChangeAt;
+    const isFirstSubscription = existingCount === 0 || isBootstrapOnly;
 
     if (isFirstSubscription) {
-      // Primera suscripción para este workspace = trial gratis, sin check de wallet
+      // Primera suscripción (o primer plan sobre el BASICO de arranque) = trial
       data.ignorePayment = true;
     }
 
@@ -444,12 +455,8 @@ export class SubscriptionService {
       });
     }
 
-    // 5. Verificar si ya existe una suscripción activa para [userId, organizationId]
-    const found = await this.subscriptionRepository.findByUserAndWorkspace(
-      data.userId,
-      organizationId,
-    );
-
+    // 5. Actualizar la suscripción existente (no re-fetch: `found` ya se cargó
+    //    arriba para el chequeo de trial bootstrap).
     if (found) {
       const prev = new DomainEvent({
         action: this.subscriptionRepository.EVENT_UPDATED,
@@ -480,6 +487,9 @@ export class SubscriptionService {
             gracePeriodEndsAt: null,
             readOnlyEndsAt: null,
             canceledAt: null,
+            // Marca la primera elección explícita de plan: el próximo cambio
+            // sí pasa por la wallet (el bootstrap ya no cuenta como trial).
+            lastPlanChangeAt: new Date(),
           },
           where: { id: found.id },
         });
@@ -532,6 +542,7 @@ export class SubscriptionService {
       startDate,
       endDate,
       autoRenew: data.autoRenew ? true : false,
+      lastPlanChangeAt: new Date(),
       ...(organizationId && {
         organization: { connect: { id: organizationId } },
       }),

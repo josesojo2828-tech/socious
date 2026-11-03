@@ -259,6 +259,8 @@ export interface Subscription {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
+  /** Set on the first explicit plan pick; null on the org bootstrap BASICO. */
+  lastPlanChangeAt?: Date | null;
 
   // Relations
   plan: SubscriptionPlan; // Added relation
