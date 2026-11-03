@@ -221,6 +221,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain('/dashboard/compras');
     expect(links).toContain('/dashboard/cuentas-por-cobrar');
     expect(links).toContain('/dashboard/cuentas-por-pagar');
+    expect(links).toContain('/dashboard/finanzas');
   });
 
   it("keeps POS, sales, orders and cash together under Ventas (S grouping)", async () => {

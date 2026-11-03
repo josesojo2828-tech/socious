@@ -265,6 +265,11 @@ export class DashboardService {
             icon: "credit-card-fill",
             link: "/dashboard/cuentas-por-pagar",
           },
+          {
+            title: "Finanzas",
+            icon: "wallet",
+            link: "/dashboard/finanzas",
+          },
         ];
         sections.push({
           title: "CRM",

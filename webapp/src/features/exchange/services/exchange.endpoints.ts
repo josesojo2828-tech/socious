@@ -5,4 +5,5 @@
 export const ExchangeEndpoints = {
   currencies: "/api/exchange/currencies",
   latest: "/api/exchange/rates/latest",
+  history: "/api/exchange/rates/history",
 };
