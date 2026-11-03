@@ -105,3 +105,26 @@ export function filterRatesByRange(
     return time >= start && time <= end;
   });
 }
+
+export interface OpenCloseRates {
+  /** Oldest row in the set — the range's opening snapshot. */
+  open: RateHistoryRow;
+  /** Newest row in the set — the range's closing snapshot. */
+  close: RateHistoryRow;
+}
+
+/**
+ * Opening = oldest row, closing = newest row of the set the caller already
+ * filtered to the active range. Answers null when there is nothing to
+ * compare (empty history).
+ */
+export function buildOpenCloseRates(
+  rows: RateHistoryRow[],
+): OpenCloseRates | null {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+
+  const sorted = [...rows].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+  );
+  return { open: sorted[0], close: sorted[sorted.length - 1] };
+}

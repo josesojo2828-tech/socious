@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   buildFinancialSummary,
+  filterOpenItemsByRange,
+  openItemNumber,
+  openItemParty,
+  sumOpenItems,
   type FinancialReportSlice,
 } from "./financial-summary";
 
@@ -93,5 +97,101 @@ describe("buildFinancialSummary", () => {
 
     // 10.01 − 3.00 = 7.01 — money is rounded per document, then subtracted.
     expect(buildFinancialSummary(sales, purchases).resultUSD).toBe(7.01);
+  });
+});
+
+describe("filterOpenItemsByRange", () => {
+  const item = (issueDate: string, totalUSD = 100) => ({
+    id: `x-${issueDate}`,
+    saleNumber: "VTA-1",
+    issueDate,
+    totalUSD,
+    daysOverdue: 0,
+    client: { id: "c1", name: "Ana" },
+  });
+
+  it("keeps only open items issued inside the inclusive range", () => {
+    const items = [
+      item("2026-10-15T12:00:00.000Z"),
+      item("2026-11-01T00:00:00.000Z"),
+      item("2026-11-15T12:00:00.000Z"),
+      item("2026-11-30T23:59:59.000Z"),
+      item("2026-12-01T00:00:00.000Z"),
+    ];
+    const filtered = filterOpenItemsByRange(items, "2026-11-01", "2026-11-30");
+    expect(filtered.map((i) => i.issueDate)).toEqual([
+      "2026-11-01T00:00:00.000Z",
+      "2026-11-15T12:00:00.000Z",
+      "2026-11-30T23:59:59.000Z",
+    ]);
+  });
+
+  it("passes everything through when either bound is missing", () => {
+    const items = [item("2026-01-01T00:00:00.000Z")];
+    expect(filterOpenItemsByRange(items, "", "2026-11-30")).toEqual(items);
+    expect(filterOpenItemsByRange(items, "2026-11-01", "")).toEqual(items);
+  });
+
+  it("excludes unparseable issue dates when a range is set", () => {
+    expect(
+      filterOpenItemsByRange([item("not-a-date")], "2026-11-01", "2026-11-30"),
+    ).toEqual([]);
+  });
+});
+
+describe("sumOpenItems / openItem helpers", () => {
+  it("sums totalUSD to cents", () => {
+    expect(
+      sumOpenItems([
+        { id: "1", issueDate: "2026-11-01", totalUSD: 10.005, daysOverdue: 0 },
+        { id: "2", issueDate: "2026-11-02", totalUSD: 5, daysOverdue: 0 },
+      ]),
+    ).toBe(15.01);
+  });
+
+  it("prefers the client name for sales and the supplier for purchases", () => {
+    expect(
+      openItemParty({
+        id: "1",
+        issueDate: "2026-11-01",
+        totalUSD: 1,
+        daysOverdue: 0,
+        client: { id: "c", name: "Ana" },
+      }),
+    ).toBe("Ana");
+    expect(
+      openItemParty({
+        id: "2",
+        issueDate: "2026-11-01",
+        totalUSD: 1,
+        daysOverdue: 0,
+        supplier: { id: "s", name: "Mercados" },
+      }),
+    ).toBe("Mercados");
+    expect(
+      openItemParty({ id: "3", issueDate: "2026-11-01", totalUSD: 1, daysOverdue: 0 }),
+    ).toBe("—");
+  });
+
+  it("prefers saleNumber over purchaseNumber", () => {
+    expect(
+      openItemNumber({
+        id: "1",
+        saleNumber: "VTA-9",
+        purchaseNumber: "COM-1",
+        issueDate: "2026-11-01",
+        totalUSD: 1,
+        daysOverdue: 0,
+      }),
+    ).toBe("VTA-9");
+    expect(
+      openItemNumber({
+        id: "2",
+        purchaseNumber: "COM-2",
+        issueDate: "2026-11-01",
+        totalUSD: 1,
+        daysOverdue: 0,
+      }),
+    ).toBe("COM-2");
   });
 });

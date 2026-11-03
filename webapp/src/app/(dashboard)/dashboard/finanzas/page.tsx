@@ -1,13 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  AlertCircle,
-  ArrowDownRight,
-  ArrowUpRight,
-  Loader2,
-  RefreshCw,
-} from "lucide-react";
+import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
 import { PurchaseEndpoints } from "@/features/purchases/services/purchases.endpoints";
@@ -21,13 +15,21 @@ import {
   GLASS,
   INPUT,
   PAGE_TITLE,
+  TABLE_HEAD,
+  TABLE_ROW,
 } from "@/shared/lib/maison-style";
 import {
   buildFinancialSummary,
+  filterOpenItemsByRange,
+  openItemNumber,
+  openItemParty,
+  sumOpenItems,
+  type FinancialOpenItem,
   type FinancialReportSlice,
   type FinancialSummary,
 } from "@/features/finanzas/lib/financial-summary";
 import {
+  buildOpenCloseRates,
   buildRateDifferentials,
   filterRatesByRange,
   type RateHistoryRow,
@@ -40,10 +42,10 @@ import {
 } from "@/features/finanzas/lib/period-range";
 
 /**
- * Financial dashboard (S1–S2): Ventas − Compras del período with date
- * presets, cash collected/paid, open balances and the BCV/USDT/parallel
- * rate differentials over the same range. Composes the existing sales and
- * purchases report endpoints — no new backend surface.
+ * Financial metrics dashboard: neutral KPIs for the selected range
+ * (ventas, compras, resultado, flujo), opening/closing rates, and the
+ * open receivables/payables issued inside that range. No alarm framing —
+ * numbers only. Composes the existing sales/purchases report endpoints.
  */
 
 const PRESETS: PeriodPreset[] = [
@@ -77,6 +79,10 @@ function formatDay(iso: string): string {
   });
 }
 
+function formatBs(value: number): string {
+  return `${value.toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs`;
+}
+
 function KpiCard({
   label,
   value,
@@ -86,16 +92,12 @@ function KpiCard({
   label: string;
   value: string;
   sub: string;
-  tone?: "neutral" | "positive" | "negative" | "accent";
+  tone?: "neutral" | "accent";
 }) {
   const toneClass =
-    tone === "positive"
-      ? "text-[#128454] dark:text-emerald-400"
-      : tone === "negative"
-        ? "text-[#c63749] dark:text-red-400"
-        : tone === "accent"
-          ? "text-[#b2944a] dark:text-[#d8c084]"
-          : "text-[#111018] dark:text-slate-50";
+    tone === "accent"
+      ? "text-[#b2944a] dark:text-[#d8c084]"
+      : "text-[#111018] dark:text-slate-50";
   return (
     <div className={`rounded-xl p-5 ${GLASS}`}>
       <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-slate-500 dark:text-slate-400">
@@ -108,6 +110,110 @@ function KpiCard({
       </p>
       <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{sub}</p>
     </div>
+  );
+}
+
+/** One row of the open-items tables (clients owed / suppliers pending). */
+function OpenItemRow({
+  number,
+  party,
+  issueDate,
+  amount,
+  overdueDays,
+}: {
+  number: string;
+  party: string;
+  issueDate: string;
+  amount: number;
+  overdueDays: number;
+}) {
+  return (
+    <tr className={TABLE_ROW}>
+      <td className="px-4 py-2.5 font-mono text-xs tabular-nums text-[#111018] dark:text-slate-100">
+        {number}
+      </td>
+      <td className="px-4 py-2.5 text-[#111018] dark:text-slate-100 truncate max-w-[160px]">
+        {party}
+      </td>
+      <td className="px-4 py-2.5 font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
+        {formatDay(issueDate)}
+      </td>
+      <td className="px-4 py-2.5 text-right font-mono tabular-nums font-medium text-[#111018] dark:text-slate-100">
+        {money(amount)}
+      </td>
+      <td
+        className={`px-4 py-2.5 text-right font-mono text-xs tabular-nums ${
+          overdueDays > 0
+            ? "text-[#c63749]"
+            : "text-slate-400 dark:text-slate-500"
+        }`}
+      >
+        {overdueDays > 0 ? `${overdueDays}d` : "al día"}
+      </td>
+    </tr>
+  );
+}
+
+function OpenItemsPanel({
+  title,
+  note,
+  items,
+  emptyLabel,
+}: {
+  title: string;
+  note: string;
+  items: FinancialOpenItem[];
+  emptyLabel: string;
+}) {
+  const total = sumOpenItems(items);
+  const partyHeader = title.includes("pagar") ? "Proveedor" : "Cliente";
+  return (
+    <section className={`rounded-2xl overflow-hidden ${CARD}`}>
+      <div className={CARD_HEADER}>
+        <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
+          {title}
+        </h2>
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+          {items.length} · {money(total)}
+        </span>
+      </div>
+      {items.length === 0 ? (
+        <p className="px-5 py-6 text-sm text-slate-500 dark:text-slate-400 text-center">
+          {emptyLabel}
+        </p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className={TABLE_HEAD}>
+                <th className="px-4 py-2.5 text-left font-medium">Doc.</th>
+                <th className="px-4 py-2.5 text-left font-medium">
+                  {partyHeader}
+                </th>
+                <th className="px-4 py-2.5 text-left font-medium">Emitido</th>
+                <th className="px-4 py-2.5 text-right font-medium">Saldo</th>
+                <th className="px-4 py-2.5 text-right font-medium">Atraso</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <OpenItemRow
+                  key={item.id}
+                  number={openItemNumber(item)}
+                  party={openItemParty(item)}
+                  issueDate={item.issueDate}
+                  amount={Number(item.totalUSD)}
+                  overdueDays={item.daysOverdue}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <p className="px-4 py-2.5 border-t border-[#1b1d21]/12 dark:border-white/10 text-[11px] text-slate-400">
+        {note}
+      </p>
+    </section>
   );
 }
 
@@ -128,7 +234,6 @@ export default function FinanzasPage() {
   const [purchasesError, setPurchasesError] = useState<string | null>(null);
   const [ratesError, setRatesError] = useState<string | null>(null);
 
-  // Resolved [from, to] for the active preset (custom keeps the inputs).
   const range = useMemo(() => {
     if (preset === "personalizado") {
       return { from: customFrom, to: customTo };
@@ -155,7 +260,6 @@ export default function FinanzasPage() {
         .get<RateHistoryRow[]>(ExchangeEndpoints.history, {
           params: { limit: 200 },
         })
-        // The endpoint answers a bare array today; tolerate a wrapped body.
         .then((res) =>
           Array.isArray(res.data)
             ? res.data
@@ -210,13 +314,44 @@ export default function FinanzasPage() {
     [rateRows, range.from, range.to],
   );
 
+  const openClose = useMemo(
+    () => buildOpenCloseRates(inRangeRates),
+    [inRangeRates],
+  );
+
   const snapshot: RateSnapshotDifferentials | null = useMemo(
     () => buildRateDifferentials(inRangeRates),
     [inRangeRates],
   );
 
+  // openItems del backend NO vienen filtrados por fecha: acá acotamos al rango.
+  const clientsOwing = useMemo(
+    () =>
+      filterOpenItemsByRange(
+        salesReport?.openItems ?? [],
+        range.from,
+        range.to,
+      ).sort(
+        (a, b) =>
+          new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
+      ),
+    [salesReport, range.from, range.to],
+  );
+
+  const suppliersOwed = useMemo(
+    () =>
+      filterOpenItemsByRange(
+        purchasesReport?.openItems ?? [],
+        range.from,
+        range.to,
+      ).sort(
+        (a, b) =>
+          new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
+      ),
+    [purchasesReport, range.from, range.to],
+  );
+
   const chart = useMemo(() => {
-    // Oldest → newest for a left-to-right time axis.
     const sorted = [...inRangeRates].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
@@ -264,13 +399,6 @@ export default function FinanzasPage() {
     );
   }
 
-  const resultTone =
-    summary && summary.resultUSD > 0
-      ? "positive"
-      : summary && summary.resultUSD < 0
-        ? "negative"
-        : "neutral";
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -280,10 +408,10 @@ export default function FinanzasPage() {
             <span className={BRASS_DOT} aria-hidden />
             <span className="font-mono">{rangeLabel}</span>
           </div>
-          <h1 className={PAGE_TITLE}>Dashboard financiero</h1>
+          <h1 className={PAGE_TITLE}>Métricas del período</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            Ganancia y pérdida del período (ventas − compras), flujo de caja y
-            diferencial entre tasas.
+            Actividad de ventas y compras, tasas del rango y saldos abiertos
+            emitidos en estas fechas.
           </p>
         </div>
         <button
@@ -342,7 +470,7 @@ export default function FinanzasPage() {
         ) : null}
       </div>
 
-      {/* ===== KPIs ===== */}
+      {/* ===== KPIs del período ===== */}
       {summary ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <KpiCard
@@ -355,65 +483,25 @@ export default function FinanzasPage() {
             value={money(summary.purchasesUSD)}
             sub={`${summary.purchasesCount} factura${summary.purchasesCount === 1 ? "" : "s"} emitida${summary.purchasesCount === 1 ? "" : "s"}`}
           />
-          <div className={`rounded-xl p-5 ${CARD} border-2 ${
-            resultTone === "positive"
-              ? "border-emerald-500/40"
-              : resultTone === "negative"
-                ? "border-red-500/40"
-                : "border-transparent"
-          }`}>
-            <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-slate-500 dark:text-slate-400">
-              {summary.resultUSD >= 0 ? "Ganancia del período" : "Pérdida del período"}
-            </p>
-            <div className="mt-3 flex items-center gap-2">
-              {summary.resultUSD !== 0 ? (
-                summary.resultUSD > 0 ? (
-                  <ArrowUpRight className={`h-5 w-5 ${
-                    summary.resultUSD >= 0
-                      ? "text-[#128454] dark:text-emerald-400"
-                      : "text-[#c63749] dark:text-red-400"
-                  }`} />
-                ) : (
-                  <ArrowDownRight className="h-5 w-5 text-[#c63749] dark:text-red-400" />
-                )
-              ) : null}
-              <p className={`font-mono text-[28px] leading-none tabular-nums font-semibold ${
-                summary.resultUSD > 0
-                  ? "text-[#128454] dark:text-emerald-400"
-                  : summary.resultUSD < 0
-                    ? "text-[#c63749] dark:text-red-400"
-                    : "text-[#111018] dark:text-slate-50"
-              }`}>
-                {money(summary.resultUSD)}
-              </p>
-            </div>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Ventas − Compras · no es margen de inventario
-            </p>
-          </div>
-
           <KpiCard
-            label="Cobrado en el período"
-            value={money(summary.collectedUSD)}
-            sub="Pagos de ventas con fecha en el rango"
-            tone="positive"
+            label="Resultado (ventas − compras)"
+            value={money(summary.resultUSD)}
+            sub="Diferencia del período · no es margen de inventario"
           />
           <KpiCard
-            label="Pagado en el período"
+            label="Cobrado"
+            value={money(summary.collectedUSD)}
+            sub="Pagos de ventas con fecha en el rango"
+          />
+          <KpiCard
+            label="Pagado"
             value={money(summary.paidUSD)}
             sub="Pagos a proveedores con fecha en el rango"
           />
           <KpiCard
-            label="Flujo neto cobrado − pagado"
+            label="Flujo neto (cobrado − pagado)"
             value={money(summary.collectedUSD - summary.paidUSD)}
-            sub="Caja del período (solo pagos)"
-            tone={
-              summary.collectedUSD - summary.paidUSD > 0
-                ? "positive"
-                : summary.collectedUSD - summary.paidUSD < 0
-                  ? "negative"
-                  : "neutral"
-            }
+            sub="Movimiento de caja del período"
           />
         </div>
       ) : (
@@ -427,103 +515,128 @@ export default function FinanzasPage() {
         </div>
       )}
 
-      {/* Errores parciales: un reporte solo no tumba el otro. */}
       {summary && (salesError || purchasesError) ? (
         <p className="text-xs text-amber-700 dark:text-amber-400">
           {salesError ?? ""} {purchasesError ?? ""}
         </p>
       ) : null}
 
-      {/* ===== Saldos actuales ===== */}
-      {summary ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <KpiCard
-            label="Por cobrar (cartera abierta)"
-            value={money(summary.receivableUSD)}
-            sub="Suma del aging de ventas — no depende del filtro"
-            tone="accent"
-          />
-          <KpiCard
-            label="Por pagar (cartera abierta)"
-            value={money(summary.payableUSD)}
-            sub="Suma del aging de compras — no depende del filtro"
-            tone="accent"
-          />
-        </div>
-      ) : null}
-
-      {/* ===== Tasas y diferencial (S2) ===== */}
+      {/* ===== Tasas del rango: apertura y cierre ===== */}
       <section className={`rounded-2xl overflow-hidden ${CARD}`}>
         <div className={CARD_HEADER}>
           <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
-            Tasas y diferencial cambiario
+            Tasas del período
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {range.from && range.to ? "en el rango filtrado" : "historial reciente"}
+            {range.from && range.to
+              ? "apertura y cierre del rango"
+              : "historial reciente"}
           </span>
         </div>
 
         {ratesError ? (
           <p className="px-5 py-6 text-sm text-slate-500">{ratesError}</p>
-        ) : snapshot ? (
+        ) : openClose ? (
           <div className="p-5 space-y-5">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-                  BCV
+                  Apertura BCV
                 </p>
                 <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
-                  {snapshot.rateBcv.toLocaleString("es-VE", {
-                    maximumFractionDigits: 2,
-                  })}
-                  <span className="text-xs font-normal text-slate-400"> Bs</span>
+                  {formatBs(Number(openClose.open.rateBcv))}
                 </p>
                 <p className="mt-0.5 text-[11px] text-slate-400">
-                  {formatDay(snapshot.date)}
+                  {formatDay(openClose.open.date)}
                 </p>
               </div>
               <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-                  USDT
+                  Cierre BCV
                 </p>
                 <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
-                  {snapshot.rateUsdt.toLocaleString("es-VE", {
-                    maximumFractionDigits: 2,
-                  })}
-                  <span className="text-xs font-normal text-slate-400"> Bs</span>
+                  {formatBs(Number(openClose.close.rateBcv))}
+                </p>
+                <p className="mt-0.5 text-[11px] text-slate-400">
+                  {formatDay(openClose.close.date)}
                 </p>
               </div>
               <div className="rounded-xl border border-[#b2944a]/30 bg-[#b2944a]/5 p-3">
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8e7538] dark:text-[#d8c084]">
-                  Dif. USDT − BCV
+                  Apertura USDT
                 </p>
                 <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
-                  {snapshot.usdtBcvAbs != null
-                    ? `${snapshot.usdtBcvAbs > 0 ? "+" : ""}${snapshot.usdtBcvAbs.toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs`
-                    : "—"}
+                  {formatBs(Number(openClose.open.rateUsdt))}
                 </p>
-                <p className="mt-0.5 font-mono text-xs text-[#8e7538] dark:text-[#d8c084]">
-                  {snapshot.usdtBcvPct != null
-                    ? `${snapshot.usdtBcvPct > 0 ? "+" : ""}${snapshot.usdtBcvPct.toFixed(2)} %`
-                    : "sin tasa base"}
+                <p className="mt-0.5 text-[11px] text-slate-400">
+                  {formatDay(openClose.open.date)}
                 </p>
               </div>
-              <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-                  Dif. Paralelo − BCV
+              <div className="rounded-xl border border-[#b2944a]/30 bg-[#b2944a]/5 p-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8e7538] dark:text-[#d8c084]">
+                  Cierre USDT
                 </p>
                 <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
-                  {snapshot.parallelBcvAbs != null
-                    ? `${snapshot.parallelBcvAbs > 0 ? "+" : ""}${snapshot.parallelBcvAbs.toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs`
-                    : "—"}
+                  {formatBs(Number(openClose.close.rateUsdt))}
                 </p>
-                <p className="mt-0.5 font-mono text-xs text-slate-400">
-                  {snapshot.parallelBcvPct != null
-                    ? `${snapshot.parallelBcvPct > 0 ? "+" : ""}${snapshot.parallelBcvPct.toFixed(2)} %`
-                    : "sin tasa paralela"}
+                <p className="mt-0.5 text-[11px] text-slate-400">
+                  {formatDay(openClose.close.date)}
                 </p>
               </div>
             </div>
+
+            {snapshot ? (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rounded-xl border border-[#b2944a]/30 bg-[#b2944a]/5 p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8e7538] dark:text-[#d8c084]">
+                    Dif. USDT − BCV (cierre)
+                  </p>
+                  <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
+                    {snapshot.usdtBcvAbs != null
+                      ? `${snapshot.usdtBcvAbs > 0 ? "+" : ""}${snapshot.usdtBcvAbs.toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs`
+                      : "—"}
+                  </p>
+                  <p className="mt-0.5 font-mono text-xs text-[#8e7538] dark:text-[#d8c084]">
+                    {snapshot.usdtBcvPct != null
+                      ? `${snapshot.usdtBcvPct > 0 ? "+" : ""}${snapshot.usdtBcvPct.toFixed(2)} %`
+                      : "sin tasa base"}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                    Dif. Paralelo − BCV
+                  </p>
+                  <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
+                    {snapshot.parallelBcvAbs != null
+                      ? `${snapshot.parallelBcvAbs > 0 ? "+" : ""}${snapshot.parallelBcvAbs.toLocaleString("es-VE", { maximumFractionDigits: 2 })} Bs`
+                      : "—"}
+                  </p>
+                  <p className="mt-0.5 font-mono text-xs text-slate-400">
+                    {snapshot.parallelBcvPct != null
+                      ? `${snapshot.parallelBcvPct > 0 ? "+" : ""}${snapshot.parallelBcvPct.toFixed(2)} %`
+                      : "sin tasa paralela"}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                    Paralelo (cierre)
+                  </p>
+                  <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
+                    {snapshot.rateParallel != null
+                      ? formatBs(snapshot.rateParallel)
+                      : "—"}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                    Puntos en el rango
+                  </p>
+                  <p className="mt-1.5 font-mono text-lg tabular-nums font-semibold text-[#111018] dark:text-slate-50">
+                    {inRangeRates.length}
+                  </p>
+                </div>
+              </div>
+            ) : null}
 
             {chart.empty ? (
               <p className="text-sm text-slate-500 dark:text-slate-400 py-6 text-center">
@@ -546,6 +659,40 @@ export default function FinanzasPage() {
           </p>
         )}
       </section>
+
+      {/* ===== Saldos abiertos emitidos en el rango ===== */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <OpenItemsPanel
+          title="Clientes que deben"
+          note="Ventas emitidas en el rango que siguen sin saldar."
+          items={clientsOwing}
+          emptyLabel="Ningún cliente con saldo abierto emitido en este rango."
+        />
+        <OpenItemsPanel
+          title="Por pagar en este rango"
+          note="Compras emitidas en el rango que siguen sin cancelar del todo."
+          items={suppliersOwed}
+          emptyLabel="Ninguna compra con saldo pendiente emitida en este rango."
+        />
+      </div>
+
+      {/* ===== Saldos de cartera completa (contexto) ===== */}
+      {summary ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <KpiCard
+            label="Por cobrar · cartera total"
+            value={money(summary.receivableUSD)}
+            sub="Suma del aging de ventas (todas las fechas)"
+            tone="accent"
+          />
+          <KpiCard
+            label="Por pagar · cartera total"
+            value={money(summary.payableUSD)}
+            sub="Suma del aging de compras (todas las fechas)"
+            tone="accent"
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

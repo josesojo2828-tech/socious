@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildOpenCloseRates,
   buildRateDifferentials,
   filterRatesByRange,
   type RateHistoryRow,
@@ -104,5 +105,31 @@ describe("filterRatesByRange", () => {
   it("tolerates unparseable dates by excluding them", () => {
     const rows = [row({ date: "not-a-date" })];
     expect(filterRatesByRange(rows, from, to)).toEqual([]);
+  });
+});
+
+describe("buildOpenCloseRates", () => {
+  it("answers null for an empty list", () => {
+    expect(buildOpenCloseRates([])).toBeNull();
+  });
+
+  it("pairs the oldest row as open with the newest as close", () => {
+    const pair = buildOpenCloseRates([
+      { date: "2026-11-02T12:00:00.000Z", rateBcv: 37, rateUsdt: 41 },
+      { date: "2026-11-01T08:00:00.000Z", rateBcv: 36, rateUsdt: 40 },
+      { date: "2026-11-03T09:00:00.000Z", rateBcv: 38, rateUsdt: 42 },
+    ]);
+    expect(pair).not.toBeNull();
+    expect(pair!.open.date).toBe("2026-11-01T08:00:00.000Z");
+    expect(pair!.open.rateBcv).toBe(36);
+    expect(pair!.close.date).toBe("2026-11-03T09:00:00.000Z");
+    expect(pair!.close.rateBcv).toBe(38);
+  });
+
+  it("answers the same row as both ends for a single snapshot", () => {
+    const only = { date: "2026-11-01T08:00:00.000Z", rateBcv: 36, rateUsdt: 40 };
+    const pair = buildOpenCloseRates([only]);
+    expect(pair!.open).toEqual(only);
+    expect(pair!.close).toEqual(only);
   });
 });

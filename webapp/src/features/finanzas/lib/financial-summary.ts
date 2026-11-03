@@ -19,6 +19,19 @@ export interface FinancialMonthBucket {
   count: number;
 }
 
+/** One open (unpaid) document from either report's `openItems`. */
+export interface FinancialOpenItem {
+  id: string;
+  saleNumber?: string;
+  purchaseNumber?: string;
+  issueDate: string;
+  dueDate?: string | null;
+  totalUSD: number;
+  daysOverdue: number;
+  client?: { id: string; name: string } | null;
+  supplier?: { id: string; name: string } | null;
+}
+
 /** Shared shape of GET /api/sales/report and GET /api/purchases/report. */
 export interface FinancialReportSlice {
   issued: {
@@ -33,7 +46,7 @@ export interface FinancialReportSlice {
   /** Purchases report only. */
   paymentsByMonth?: FinancialMonthBucket[];
   aging: FinancialAging;
-  openItems: { totalUSD: number }[];
+  openItems: FinancialOpenItem[];
 }
 
 export interface FinancialSummary {
@@ -99,4 +112,47 @@ export function buildFinancialSummary(
     receivableUSD: sumAging(sales?.aging),
     payableUSD: sumAging(purchases?.aging),
   };
+}
+
+/**
+ * The backend's `openItems` are EVERY unpaid document (no date filter).
+ * This keeps only those whose `issueDate` falls inside `[from, to]` so the
+ * dashboard lists "lo que deben de este rango". Empty bounds pass through.
+ * Unparseable dates are excluded when a bound is set.
+ */
+export function filterOpenItemsByRange(
+  items: FinancialOpenItem[],
+  from: string,
+  to: string,
+): FinancialOpenItem[] {
+  if (!Array.isArray(items)) return [];
+  if (!from || !to) return items;
+
+  const start = Date.parse(`${from}T00:00:00.000Z`);
+  const end = Date.parse(`${to}T23:59:59.999Z`);
+  if (Number.isNaN(start) || Number.isNaN(end)) return items;
+
+  return items.filter((item) => {
+    const time = Date.parse(item.issueDate);
+    if (Number.isNaN(time)) return false;
+    return time >= start && time <= end;
+  });
+}
+
+/** Total of a filtered open-item list, rounded to cents. */
+export function sumOpenItems(items: FinancialOpenItem[]): number {
+  if (!Array.isArray(items)) return 0;
+  return round2(
+    items.reduce((sum, item) => sum + Number(item.totalUSD || 0), 0),
+  );
+}
+
+/** Display name of an open item: client for sales, supplier for purchases. */
+export function openItemParty(item: FinancialOpenItem): string {
+  return item.client?.name ?? item.supplier?.name ?? "—";
+}
+
+/** Document number of an open item (sale or purchase). */
+export function openItemNumber(item: FinancialOpenItem): string {
+  return item.saleNumber ?? item.purchaseNumber ?? "—";
 }
