@@ -9,9 +9,9 @@
  * Capacity (the reading adopted in the plan, L8 of the feature doc):
  *   BASICO   → 1 sucursal (la oculta por defecto), 1 empleado (el dueño)
  *   AVANZADO → 1 sucursal, 1 empleado
- *   PREMIUM  → 3 sucursales (1 por defecto + 2), 2 empleados por sucursal
+ *   NEGOCIO  → 3 sucursales (1 por defecto + 2), 4 empleados por sucursal
  * Empleados y sucursales adicionales se compran con los add-ons EXTRA_EMPLOYEE
- * (4.99) y EXTRA_BRANCH (9.99).
+ * (9.99) y EXTRA_BRANCH (45 — cada sucursal trae 4 empleados).
  *
  * Usage: runs from DataFixtureService on boot, or manually:
  *   npm run seed:plans
@@ -133,7 +133,7 @@ export const PLAN_SEEDS = [
   {
     id: "BASICO",
     name: "Básico",
-    price: 9.99,
+    price: 7.99,
     badge: null as string | null,
     description:
       "Lo esencial para operar: cartera de clientes, catálogo, caja y ventas.",
@@ -152,7 +152,7 @@ export const PLAN_SEEDS = [
   {
     id: "AVANZADO",
     name: "Avanzado",
-    price: 19.99,
+    price: 22.99,
     badge: "Más elegido" as string | null,
     description:
       "Todo el Básico más la tienda, los pedidos y la logística.",
@@ -170,18 +170,31 @@ export const PLAN_SEEDS = [
   },
   {
     id: "PREMIUM",
-    name: "Premium",
-    price: 34.99,
+    name: "Negocio",
+    price: 99.99,
     badge: null as string | null,
     description:
       "Todo el Avanzado con sucursales y equipo incluidos.",
     features: [
       "Todo lo del plan Avanzado",
-      "Extender subcursales (2)",
-      "Agregar empleados (2 * subcursal)",
+      "2 subcursales",
+      "4 empleados por subcursal",
     ],
     modules: [...PLAN_MODULES.PREMIUM],
-    capacity: { maxBranches: 3, includedSeats: 6 },
+    // 1 default + 2 extensiones; 4 empleados × 3 sucursales.
+    capacity: { maxBranches: 3, includedSeats: 12 },
+    // Explicit grants: the name is no longer "Premium", so the
+    // DEFAULT_PLAN_ENTITLEMENTS fallback would not fill these in.
+    grants: [
+      "PREMIUM_ACCESS",
+      "COMMUNITY_ACCESS",
+      "COMMUNITY_BROWSE",
+      "COMMUNITY_IMPORT",
+      "COMMUNITY_PUBLISH",
+      "PORTFOLIO_MANAGE",
+      "INSTITUTIONAL_FOOD_ACCESS",
+      "CALCULADORA_PREMIUM_ACCESS",
+    ],
   },
 ] as const;
 
@@ -190,15 +203,15 @@ export const ADDON_SEEDS = [
   {
     key: "EXTRA_EMPLOYEE",
     name: "Empleado adicional",
-    description: "+4.99 por empleado y mes, habilitable en cualquier plan.",
-    price: 4.99,
+    description: "+9.99 por empleado y mes, habilitable en cualquier plan.",
+    price: 9.99,
   },
   {
     key: "EXTRA_BRANCH",
     name: "Sucursal adicional",
     description:
-      "+9.99 por sucursal y mes; cada sucursal trae 2 empleados por defecto.",
-    price: 9.99,
+      "+45 por sucursal y mes; cada sucursal trae 4 empleados por defecto.",
+    price: 45,
   },
 ] as const;
 
@@ -236,6 +249,12 @@ export async function seedPlans(
   log(`  → ${NEW_MODULES.length} module key(s) in the catalog`);
 
   for (const plan of PLAN_SEEDS) {
+    const content = {
+      features: [...plan.features],
+      grants: "grants" in plan ? [...plan.grants] : [],
+      modules: [...plan.modules],
+      capacity: plan.capacity,
+    };
     await prisma.subscriptionPlan.upsert({
       where: { id: plan.id },
       create: {
@@ -246,12 +265,7 @@ export async function seedPlans(
         selected: true,
         badge: plan.badge,
         description: plan.description,
-        content: {
-          features: [...plan.features],
-          grants: [],
-          modules: [...plan.modules],
-          capacity: plan.capacity,
-        },
+        content,
       },
       update: {
         name: plan.name,
@@ -260,12 +274,7 @@ export async function seedPlans(
         selected: true,
         badge: plan.badge,
         description: plan.description,
-        content: {
-          features: [...plan.features],
-          grants: [],
-          modules: [...plan.modules],
-          capacity: plan.capacity,
-        },
+        content,
       },
     });
   }
