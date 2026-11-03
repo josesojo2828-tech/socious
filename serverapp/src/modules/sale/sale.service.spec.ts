@@ -43,6 +43,9 @@ const makeTx = () => ({
   stockMovement: {
     create: jest.fn((args: any) => Promise.resolve({ id: "m-1", ...args.data })),
   },
+  productComponent: {
+    findMany: jest.fn().mockResolvedValue([]),
+  },
   client: { update: jest.fn() },
   order: { updateMany: jest.fn() },
 });

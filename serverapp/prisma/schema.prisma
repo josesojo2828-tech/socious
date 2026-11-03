@@ -947,6 +947,8 @@ model Product {
   unit              String          @default("UND")
   taxRate           Decimal         @default(0.00) @db.Decimal(5, 2)
   isService         Boolean         @default(false)
+  /** Producto compuesto (BOM): al vender descuenta sus componentes (S1). */
+  isComposite       Boolean         @default(false)
   isPublic          Boolean         @default(false) // Para mostrar en el carrito público / pedidos online
   status            ProductStatus   @default(ACTIVE)
   imageUrl          String?
@@ -970,12 +972,33 @@ model Product {
   purchaseItems     PurchaseItem[]
   orderItems        OrderItem[]
   saleReturnItems   SaleReturnItem[]
+  components        ProductComponent[] @relation("CompositeComponents")
+  componentsUsedIn  ProductComponent[] @relation("RawMaterialOf")
 
   @@index([organizationId])
   @@index([sku])
   @@index([barcode])
   @@index([categoryId])
   @@index([isPublic, status])
+}
+
+/**
+ * Bill of materials (S1): a composite product's raw materials.
+ * The "materia prima" side is a normal Product (purchase, kardex, supplier
+ * already exist). Quantity is fractional from day one — the base for future
+ * restaurant recipes (yield/waste extend this, they don't replace it).
+ */
+model ProductComponent {
+  id          String  @id @default(uuid())
+  productId   String  // the composite (Impresión A4)
+  componentId String  // the raw material (Hoja A4)
+  quantity    Decimal @db.Decimal(12, 2) // units consumed per sold unit
+
+  product   Product @relation("CompositeComponents", fields: [productId], references: [id], onDelete: Cascade)
+  component Product @relation("RawMaterialOf", fields: [componentId], references: [id], onDelete: Restrict)
+
+  @@unique([productId, componentId])
+  @@index([componentId])
 }
 
 // ======================================

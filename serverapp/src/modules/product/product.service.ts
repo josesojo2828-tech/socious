@@ -134,6 +134,21 @@ export class ProductService {
         images: { orderBy: { position: "asc" } },
         category: true,
         supplier: true,
+        components: {
+          include: {
+            component: {
+              select: {
+                id: true,
+                name: true,
+                sku: true,
+                stock: true,
+                unit: true,
+                isService: true,
+              },
+            },
+          },
+          orderBy: { component: { name: "asc" } },
+        },
         variants: {
           select: {
             id: true,
@@ -208,6 +223,14 @@ export class ProductService {
         });
       }
 
+      if (data.components && data.components.length > 0) {
+        await this.persistComponents(tx, scope, created.id, data.components);
+        await tx.product.update({
+          where: { id: created.id },
+          data: { isComposite: true },
+        });
+      }
+
       return created;
     });
 
@@ -230,7 +253,7 @@ export class ProductService {
         Number(product.stock ?? 0),
       );
 
-    return this.prisma.product.update({
+    await this.prisma.product.update({
       where: { id },
       data: {
         ...(data.sku !== undefined && { sku: data.sku.trim() }),
@@ -253,9 +276,76 @@ export class ProductService {
         ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl?.trim() || null }),
         ...(data.categoryId !== undefined && { categoryId: data.categoryId ?? null }),
         ...(data.supplierId !== undefined && { supplierId: data.supplierId ?? null }),
+        ...(data.components !== undefined && {
+          isComposite: data.components.length > 0,
+        }),
         status: nextStatus,
       },
     });
+
+    if (data.components !== undefined) {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.productComponent.deleteMany({ where: { productId: id } });
+        if (data.components!.length > 0) {
+          await this.persistComponents(tx, scope, id, data.components!);
+        }
+      });
+    }
+
+    return this.getOne(scope, id);
+  }
+
+  /**
+   * Validates and writes BOM lines (S1). Components must belong to the same
+   * tenant, differ from the parent and never repeat. Runs inside the caller's
+   * transaction so a bad line rolls the whole product write back.
+   */
+  private async persistComponents(
+    tx: Prisma.TransactionClient,
+    scope: ProductScope,
+    productId: string,
+    inputs: NonNullable<CreateProductDto["components"]>,
+  ): Promise<void> {
+    const seen = new Set<string>();
+    for (const input of inputs) {
+      const componentId = input.componentId.trim();
+      if (!componentId) {
+        throw new BadRequestException("Cada componente necesita un producto.");
+      }
+      if (componentId === productId) {
+        throw new BadRequestException(
+          "Un producto no puede ser componente de sí mismo.",
+        );
+      }
+      if (seen.has(componentId)) {
+        throw new BadRequestException(
+          "Hay componentes repetidos en la lista.",
+        );
+      }
+      seen.add(componentId);
+
+      const component = await tx.product.findFirst({
+        where: {
+          id: componentId,
+          organizationId: scope.organizationId,
+          deletedAt: null,
+        },
+        select: { id: true },
+      });
+      if (!component) {
+        throw new BadRequestException(
+          "Uno de los componentes no existe en tu catálogo.",
+        );
+      }
+
+      await tx.productComponent.create({
+        data: {
+          productId,
+          componentId,
+          quantity: input.quantity,
+        },
+      });
+    }
   }
 
   /** Soft delete: sale and purchase history keep pointing at the product. */

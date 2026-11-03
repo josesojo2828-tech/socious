@@ -20,6 +20,7 @@ import {
   round2,
   type RateSnapshot,
 } from "src/shared/utils/money";
+import { applyBomStock } from "src/shared/utils/bom-stock";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { emitEvent } from "src/shared/event/event-envelope";
 import type { EventName } from "src/shared/event/event-taxonomy";
@@ -547,6 +548,18 @@ export class SaleService {
 
       for (const item of sale.items) {
         if (!item.productId) continue;
+
+        // BOM (S3): components come back with the cancellation.
+        await applyBomStock(
+          tx,
+          scope,
+          item.productId,
+          Number(item.quantity),
+          sale.saleNumber,
+          "RETURN",
+          `anulación ${sale.saleNumber}`,
+        );
+
         if (item.presentationId) {
           const presentation = await tx.productPresentation.findFirst({
             where: { id: item.presentationId },
@@ -775,7 +788,21 @@ export class SaleService {
     reference: string,
   ): Promise<void> {
     for (const item of items) {
-      if (!item.productId || item.isService) continue;
+      if (!item.productId) continue;
+
+      // BOM (S3): components move regardless of the parent's own stock rules
+      // — a service-like composite (Impresión) still consumes its insumos.
+      await applyBomStock(
+        tx,
+        scope,
+        item.productId,
+        item.quantity,
+        reference,
+        "SALE",
+        item.productName,
+      );
+
+      if (item.isService) continue;
 
       // Presentation sale: its own stock is the one that moves (the product
       // bulk stays untouched), and the Kardex books a row per presentation.

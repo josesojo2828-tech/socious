@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsIn,
@@ -8,6 +9,7 @@ import {
   Matches,
   MaxLength,
   Min,
+  ValidateNested,
 } from "class-validator";
 import { Transform, Type } from "class-transformer";
 import { ProductStatus } from "@prisma/client";
@@ -15,6 +17,18 @@ import { ProductStatus } from "@prisma/client";
 const NAME_MAX = 200;
 const NOTES_MAX = 2000;
 const SKU_PATTERN = /^[A-Za-z0-9._-]+$/;
+
+
+/** One BOM line of a composite product (S1): raw material + qty per unit. */
+export class ProductComponentInputDto {
+  @IsString({ message: "Elegí el componente (materia prima)." })
+  componentId: string;
+
+  @Type(() => Number)
+  @IsNumber({}, { message: "La cantidad debe ser numérica." })
+  @Min(0.0001, { message: "La cantidad debe ser mayor que cero." })
+  quantity: number;
+}
 
 export class CreateProductDto {
   @IsString({ message: "El SKU es obligatorio." })
@@ -117,6 +131,15 @@ export class CreateProductDto {
   @IsString()
   variantOfId?: string;
 
+  /**
+   * BOM (S1): raw materials consumed per sold unit. Present ⇒ isComposite.
+   * Absent ⇒ untouched on update, nothing created on create.
+   */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductComponentInputDto)
+  components?: ProductComponentInputDto[];
 }
 
 export class UpdateProductDto {
@@ -206,6 +229,13 @@ export class UpdateProductDto {
   @IsOptional()
   @IsString()
   supplierId?: string;
+
+  /** BOM (S1): when present the list is fully replaced; absent = untouched. */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductComponentInputDto)
+  components?: ProductComponentInputDto[];
 }
 
 export class ListProductsQueryDto {

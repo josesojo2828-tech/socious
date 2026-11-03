@@ -17,6 +17,7 @@ import {
 } from "src/shared/services/sequence.service";
 import { round2, usdToUsdt, usdToVes } from "src/shared/utils/money";
 import { deriveProductStatus } from "../product/product.service";
+import { applyBomStock } from "src/shared/utils/bom-stock";
 import type { SaleScope } from "./sale.service";
 import {
   CreateSaleReturnDto,
@@ -377,6 +378,18 @@ export class SaleReturnService {
   ): Promise<void> {
     for (const item of resolved) {
       if (!item.saleItem.productId) continue;
+
+      // BOM (S3): components return even when the parent is a service
+      // (service-like composites never booked their own stock).
+      await applyBomStock(
+        tx,
+        scope,
+        item.saleItem.productId,
+        item.quantity,
+        reference,
+        "RETURN",
+        `devolución ${reference}`,
+      );
 
       const product = await tx.product.findFirst({
         where: { id: item.saleItem.productId },

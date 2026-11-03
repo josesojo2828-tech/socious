@@ -31,6 +31,12 @@ const makeTx = () => ({
     findMany: jest.fn().mockResolvedValue([]),
     count: jest.fn().mockResolvedValue(0),
   },
+  productComponent: {
+    create: jest.fn((args: any) =>
+      Promise.resolve({ id: "pc-1", ...args.data }),
+    ),
+    deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
+  },
 });
 
 const makeService = () => {
@@ -208,6 +214,135 @@ describe("ProductService", () => {
       expect(tx.product.update.mock.calls[0][0].data.status).toBe(
         ProductStatus.OUT_OF_STOCK,
       );
+    });
+  });
+
+
+  describe("components (BOM, S1)", () => {
+    it("persists components and flags the product composite on create", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValue(null);
+      // First call: SKU assert (null = free). Component lookup must hit.
+      prisma.product.findFirst
+        .mockResolvedValueOnce(null) // sku check
+        .mockResolvedValue({ id: "component-1" }); // component exists
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          sku: "IMP-A4",
+          name: "Impresión A4",
+          isService: true,
+          components: [{ componentId: "component-1", quantity: 1 }],
+        },
+      );
+
+      expect(tx.productComponent.create.mock.calls[0][0].data).toMatchObject({
+        productId: "p-new",
+        componentId: "component-1",
+        quantity: 1,
+      });
+      expect(tx.product.update.mock.calls[0][0].data).toMatchObject({
+        isComposite: true,
+      });
+    });
+
+    it("does not touch components when the payload omits them on create", async () => {
+      const { service, prisma, tx } = makeService();
+      prisma.product.findFirst.mockResolvedValue(null);
+
+      await service.create({ organizationId: ORG_A }, { sku: "S-1", name: "Arroz" });
+
+      expect(tx.productComponent.create).not.toHaveBeenCalled();
+      expect(tx.product.update).not.toHaveBeenCalled();
+    });
+
+    it("rejects a component that is the product itself", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findFirst
+        .mockResolvedValueOnce(null) // sku check
+        .mockResolvedValue({ id: "p-new" }); // component lookup → same id as created product
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A },
+          {
+            sku: "SELF",
+            name: "Auto",
+            components: [{ componentId: "p-new", quantity: 1 }],
+          },
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("rejects repeated components in the same payload", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findFirst
+        .mockResolvedValueOnce(null)
+        .mockResolvedValue({ id: "c-1" });
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A },
+          {
+            sku: "DUP",
+            name: "Dup",
+            components: [
+              { componentId: "c-1", quantity: 1 },
+              { componentId: "c-1", quantity: 2 },
+            ],
+          },
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("replaces the whole list when update sends components", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst
+        .mockResolvedValueOnce(PRODUCT) // getOne parent
+        .mockResolvedValue({ id: "c-1" }); // component exists
+
+      await service.update({ organizationId: ORG_A }, "p-1", {
+        components: [{ componentId: "c-1", quantity: 0.5 }],
+      });
+
+      expect(tx.productComponent.deleteMany.mock.calls[0][0].where).toEqual({
+        productId: "p-1",
+      });
+      expect(tx.productComponent.create.mock.calls[0][0].data).toMatchObject({
+        productId: "p-1",
+        componentId: "c-1",
+        quantity: 0.5,
+      });
+      expect(tx.product.update.mock.calls[0][0].data).toMatchObject({
+        isComposite: true,
+      });
+    });
+
+    it("clears isComposite when update sends an empty list", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValueOnce(PRODUCT);
+
+      await service.update({ organizationId: ORG_A }, "p-1", {
+        components: [],
+      });
+
+      expect(tx.productComponent.deleteMany).toHaveBeenCalled();
+      expect(tx.productComponent.create).not.toHaveBeenCalled();
+      expect(tx.product.update.mock.calls[0][0].data).toMatchObject({
+        isComposite: false,
+      });
+    });
+
+    it("leaves components untouched when update omits them", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValueOnce(PRODUCT);
+
+      await service.update({ organizationId: ORG_A }, "p-1", {
+        name: "Renombrado",
+      });
+
+      expect(tx.productComponent.deleteMany).not.toHaveBeenCalled();
     });
   });
 
