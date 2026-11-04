@@ -241,70 +241,90 @@ export class ProductService {
     return product;
   }
 
-  async create(scope: ProductScope, data: CreateProductDto) {
-    await this.assertSkuAvailable(scope, data.sku);
+  async create(
+    scope: ProductScope,
+    data: CreateProductDto,
+    tx?: Prisma.TransactionClient,
+  ) {
+    if (tx) {
+      return this.createInTx(tx, scope, data);
+    }
+
+    return this.prisma.$transaction((client) =>
+      this.createInTx(client, scope, data),
+    );
+  }
+
+  /**
+   * Single write path shared by the regular create and the CSV import (S7):
+   * `tx` is either the caller's batch transaction or a fresh one. The SKU
+   * check reads through the same client so an uncommitted row still blocks a
+   * duplicate inside the batch.
+   */
+  private async createInTx(
+    tx: Prisma.TransactionClient,
+    scope: ProductScope,
+    data: CreateProductDto,
+  ) {
+    await this.assertSkuAvailable(scope, data.sku, undefined, tx);
 
     const stock = data.isService ? 0 : (data.stock ?? 0);
     const status =
       data.status ??
       deriveProductStatus(ProductStatus.ACTIVE, data.isService ?? false, stock);
 
-    const product = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.product.create({
-        data: {
-          sku: data.sku.trim(),
-          barcode: data.barcode?.trim() || null,
-          color: data.color?.trim() || null,
-          name: data.name.trim(),
-          description: data.description?.trim() || null,
-          costPriceUSD: data.costPriceUSD ?? 0,
-          salePriceUSD: data.salePriceUSD ?? 0,
-          wholesalePriceUSD: data.wholesalePriceUSD ?? null,
-          stock,
-          minStock: data.minStock ?? 0,
-          unit: data.unit?.trim() || "UND",
-          taxRate: data.taxRate ?? 0,
-          isService: data.isService ?? false,
-          isPublic: data.isPublic ?? false,
-          isRawMaterial: data.isRawMaterial ?? false,
-          status,
-          imageUrl: data.imageUrl?.trim() || null,
-          categoryId: data.categoryId ?? null,
-          supplierId: data.supplierId ?? null,
-          variantOfId: data.variantOfId ?? null,
-          organizationId: scope.organizationId,
-        },
-      });
-
-      if (stock > 0) {
-        await tx.stockMovement.create({
-          data: {
-            productId: created.id,
-            organizationId: scope.organizationId,
-            createdById: scope.createdById ?? null,
-            type: "ADJUSTMENT",
-            quantity: stock,
-            unitCostUSD: data.costPriceUSD ?? null,
-            previousStock: 0,
-            newStock: stock,
-            reference: "STOCK_INICIAL",
-            notes: "Existencia inicial del producto",
-          },
-        });
-      }
-
-      if (data.components && data.components.length > 0) {
-        await this.persistComponents(tx, scope, created.id, data.components);
-        await tx.product.update({
-          where: { id: created.id },
-          data: { isComposite: true },
-        });
-      }
-
-      return created;
+    const created = await tx.product.create({
+      data: {
+        sku: data.sku.trim(),
+        barcode: data.barcode?.trim() || null,
+        color: data.color?.trim() || null,
+        name: data.name.trim(),
+        description: data.description?.trim() || null,
+        costPriceUSD: data.costPriceUSD ?? 0,
+        salePriceUSD: data.salePriceUSD ?? 0,
+        wholesalePriceUSD: data.wholesalePriceUSD ?? null,
+        stock,
+        minStock: data.minStock ?? 0,
+        unit: data.unit?.trim() || "UND",
+        taxRate: data.taxRate ?? 0,
+        isService: data.isService ?? false,
+        isPublic: data.isPublic ?? false,
+        isRawMaterial: data.isRawMaterial ?? false,
+        status,
+        imageUrl: data.imageUrl?.trim() || null,
+        categoryId: data.categoryId ?? null,
+        supplierId: data.supplierId ?? null,
+        variantOfId: data.variantOfId ?? null,
+        organizationId: scope.organizationId,
+      },
     });
 
-    return product;
+    if (stock > 0) {
+      await tx.stockMovement.create({
+        data: {
+          productId: created.id,
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          type: "ADJUSTMENT",
+          quantity: stock,
+          unitCostUSD: data.costPriceUSD ?? null,
+          previousStock: 0,
+          newStock: stock,
+          reference: "STOCK_INICIAL",
+          notes: "Existencia inicial del producto",
+        },
+      });
+    }
+
+    if (data.components && data.components.length > 0) {
+      await this.persistComponents(tx, scope, created.id, data.components);
+      await tx.product.update({
+        where: { id: created.id },
+        data: { isComposite: true },
+      });
+    }
+
+    return created;
   }
 
   async update(scope: ProductScope, id: string, data: UpdateProductDto) {
@@ -575,11 +595,13 @@ export class ProductService {
     scope: ProductScope,
     sku: string | undefined,
     excludeId?: string,
+    tx?: Prisma.TransactionClient,
   ): Promise<void> {
     const normalized = sku?.trim();
     if (!normalized) return;
 
-    const existing = await this.prisma.product.findFirst({
+    const client = tx ?? this.prisma;
+    const existing = await client.product.findFirst({
       where: {
         sku: normalized,
         organizationId: scope.organizationId,

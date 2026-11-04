@@ -14,9 +14,10 @@ import {
 import { Transform, Type } from "class-transformer";
 import { ProductStatus } from "@prisma/client";
 
-const NAME_MAX = 200;
-const NOTES_MAX = 2000;
-const SKU_PATTERN = /^[A-Za-z0-9._-]+$/;
+export const NAME_MAX = 200;
+export const NOTES_MAX = 2000;
+export const SKU_MAX = 60;
+export const SKU_PATTERN = /^[A-Za-z0-9._-]+$/;
 
 
 /** One BOM line of a composite product (S1): raw material + qty per unit. */
@@ -35,7 +36,7 @@ export class CreateProductDto {
   @Matches(SKU_PATTERN, {
     message: "El SKU solo puede contener letras, números, puntos, guiones y guiones bajos.",
   })
-  @MaxLength(60)
+  @MaxLength(SKU_MAX)
   sku: string;
 
   @IsString({ message: "El nombre es obligatorio." })
@@ -151,7 +152,7 @@ export class UpdateProductDto {
   @IsOptional()
   @IsString()
   @Matches(SKU_PATTERN)
-  @MaxLength(60)
+  @MaxLength(SKU_MAX)
   sku?: string;
 
   @IsOptional()

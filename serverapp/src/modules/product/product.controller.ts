@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Req,
+  Res,
   UnauthorizedException,
   UseGuards,
   BadRequestException,
@@ -15,7 +16,9 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
+import type { FastifyReply } from "fastify";
 import { ProductService, ProductScope } from "./product.service";
+import { ProductImportService } from "./import/product-import.service";
 import {
   AdjustStockDto,
   CreateProductDto,
@@ -53,6 +56,7 @@ export class ProductController {
     private readonly workspaceContext: WorkspaceContextService,
     private readonly tenantSettings: TenantSettingsService,
     private readonly prisma: PrismaService,
+    private readonly productImportService: ProductImportService,
   ) {
     this.organizationScope = new OrganizationScopeService(this.prisma);
   }
@@ -174,6 +178,18 @@ export class ProductController {
   async listRawMaterials(@Req() request: RequestWithUser) {
     const scope = await this.resolveScope(request);
     return this.productService.listRawMaterials(scope);
+  }
+
+  /** CSV import template (S1): must precede `:id` like `raw-materials`. */
+  @Get("import/template")
+  @UseGuards(SessionAuthGuard)
+  template(@Res({ passthrough: true }) reply: FastifyReply) {
+    reply.header("Content-Type", "text/csv; charset=utf-8");
+    reply.header(
+      "Content-Disposition",
+      'attachment; filename="plantilla-productos.csv"',
+    );
+    return this.productImportService.template();
   }
 
   @Get(":id/stock-movements")

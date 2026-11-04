@@ -137,6 +137,60 @@ describe("ProductService", () => {
         isRawMaterial: true,
       });
     });
+
+    it("runs on an injected transaction without opening a new one", async () => {
+      const { service, tx, prisma } = makeService();
+      tx.product.findFirst.mockResolvedValue(null);
+
+      const created = await service.create(
+        { organizationId: ORG_A },
+        { sku: "SKU-TX", name: "Arroz" },
+        tx as any,
+      );
+
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+      expect(tx.product.create).toHaveBeenCalledTimes(1);
+      expect(created.id).toBe("p-new");
+    });
+
+    it("opens its own transaction when no client is injected", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValue(null);
+
+      await service.create(
+        { organizationId: ORG_A },
+        { sku: "SKU-OWN", name: "Arroz" },
+      );
+
+      expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    });
+
+    it("rejects a SKU conflict while running inside an injected transaction", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue({ id: "existing" });
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A },
+          { sku: "SKU-1", name: "Arroz" },
+          tx as any,
+        ),
+      ).rejects.toThrow(ConflictException);
+    });
+
+    it("still forces zero stock for services inside a transaction", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(null);
+
+      await service.create(
+        { organizationId: ORG_A },
+        { sku: "SRV-TX", name: "Consulta", isService: true, stock: 99 },
+        tx as any,
+      );
+
+      expect(tx.product.create.mock.calls[0][0].data.stock).toBe(0);
+      expect(tx.stockMovement.create).not.toHaveBeenCalled();
+    });
   });
 
   describe("adjustStock", () => {

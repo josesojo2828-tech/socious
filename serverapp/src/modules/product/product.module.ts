@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import {  Module, forwardRef } from "@nestjs/common";
 import { ProductController } from "./product.controller";
 import { ProductService } from "./product.service";
+import { ProductImportService } from "./import/product-import.service";
 import { PresentationService } from "./presentation.service";
 import { PresentationController } from "./presentation.controller";
 
@@ -15,6 +16,7 @@ import { PresentationController } from "./presentation.controller";
   ],
   controllers: [ProductController, PresentationController],
   providers: [ProductService,
+    ProductImportService,
     PresentationService,
     JwtService,
   ],

@@ -15,7 +15,10 @@ const CATALOG_ROW = {
   categoryId: null,
 };
 
-const makeController = (links: unknown[] = []) => {
+const makeController = (
+  links: unknown[] = [],
+  template: jest.Mock = jest.fn(() => "\uFEFFsku,nombre\r\nA,Arroz\r\n"),
+) => {
   const prisma = {
     organization: {
       findUnique: jest.fn().mockResolvedValue({ id: "org-1", status: "ACTIVE" }),
@@ -26,14 +29,16 @@ const makeController = (links: unknown[] = []) => {
     },
     offerProduct: { findMany: jest.fn().mockResolvedValue(links) },
   };
+  const productImport = { template };
   const controller = new ProductController(
     {} as any,
     {} as any,
     {} as any,
     {} as any,
     prisma as any,
+    productImport as any,
   );
-  return { controller, prisma };
+  return { controller, prisma, template };
 };
 
 describe("ProductController.listPublicCatalog", () => {
@@ -73,5 +78,26 @@ describe("ProductController.listPublicCatalog", () => {
     expect(result.list).toEqual([{ ...CATALOG_ROW, offerPercent: 0 }]);
     expect(result.list[0]).not.toHaveProperty("listPriceUSD");
     expect(result.total).toBe(1);
+  });
+});
+
+describe("ProductController.template", () => {
+  it("serves the CSV with download headers", () => {
+    const csv = "\uFEFFsku,nombre\r\nA,Arroz\r\n";
+    const { controller, template } = makeController([], jest.fn(() => csv));
+    const reply = { header: jest.fn() };
+
+    const result = controller.template(reply as any);
+
+    expect(template).toHaveBeenCalledTimes(1);
+    expect(result).toBe(csv);
+    expect(reply.header).toHaveBeenCalledWith(
+      "Content-Type",
+      "text/csv; charset=utf-8",
+    );
+    expect(reply.header).toHaveBeenCalledWith(
+      "Content-Disposition",
+      'attachment; filename="plantilla-productos.csv"',
+    );
   });
 });
