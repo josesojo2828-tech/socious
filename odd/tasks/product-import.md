@@ -121,9 +121,9 @@ Cada fila se mapea a `CreateProductDto`:
 
 | ID | S# | Route | Estado | Commit |
 | --- | --- | --- | --- | --- |
-| T1 | S1, S2, S7 | inline | pendiente | `feat(productos): plantilla CSV y parser de importación` |
-| T2 | S3, S4 | inline | pendiente | `feat(productos): validación previa de importación CSV` |
-| T3 | S5, S6, S7 | inline | pendiente | `feat(productos): importación parcial de productos por CSV` |
+| T1 | S1, S2, S7 | inline | hecho | `bfd7819` |
+| T2 | S3, S4 | inline | hecho | `1a03935` |
+| T3 | S5, S6, S7 | inline | hecho | `0f03467` |
 | T4 | S2, S5, S8 | delegado | pendiente | `feat(productos): librería pura de importación CSV` |
 | T5 | S5, S8 | delegado | pendiente | `feat(productos): modal de importación en el catálogo` |
 
