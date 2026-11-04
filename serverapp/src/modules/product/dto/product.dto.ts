@@ -131,6 +131,11 @@ export class CreateProductDto {
   @IsString()
   variantOfId?: string;
 
+  /** Alta desde Materiales (S6): el producto queda elegible como componente. */
+  @IsOptional()
+  @IsBoolean()
+  isRawMaterial?: boolean;
+
   /**
    * BOM (S1): raw materials consumed per sold unit. Present ⇒ isComposite.
    * Absent ⇒ untouched on update, nothing created on create.
@@ -236,6 +241,11 @@ export class UpdateProductDto {
   @ValidateNested({ each: true })
   @Type(() => ProductComponentInputDto)
   components?: ProductComponentInputDto[];
+
+  /** Materia prima (S6): alta/edición desde la pantalla Materiales. */
+  @IsOptional()
+  @IsBoolean()
+  isRawMaterial?: boolean;
 }
 
 export class ListProductsQueryDto {

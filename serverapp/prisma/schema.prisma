@@ -949,6 +949,8 @@ model Product {
   isService         Boolean         @default(false)
   /** Producto compuesto (BOM): al vender descuenta sus componentes (S1). */
   isComposite       Boolean         @default(false)
+  /** Alta desde la pantalla Materiales (S6): elegible como componente de BOM. */
+  isRawMaterial     Boolean         @default(false)
   isPublic          Boolean         @default(false) // Para mostrar en el carrito público / pedidos online
   status            ProductStatus   @default(ACTIVE)
   imageUrl          String?

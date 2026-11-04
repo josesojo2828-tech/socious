@@ -36,6 +36,8 @@ export interface Product {
   taxRate: string | number;
   isService: boolean;
   isPublic: boolean;
+  /** Alta desde Materiales (S6): elegible como componente de BOM. */
+  isRawMaterial?: boolean;
   status: ProductStatus;
   imageUrl?: string | null;
   categoryId?: string | null;
@@ -72,6 +74,12 @@ export interface Product {
     };
   }[];
 }
+
+/** GET /raw-materials row (S6): a product plus how many composites use it. */
+export type RawMaterialRow = Product & {
+  usedIn: number;
+  usedInNames: string[];
+};
 
 export interface StockMovement {
   id: string;

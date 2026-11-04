@@ -36,6 +36,7 @@ const makeTx = () => ({
       Promise.resolve({ id: "pc-1", ...args.data }),
     ),
     deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
+    findMany: jest.fn().mockResolvedValue([]),
   },
 });
 
@@ -121,6 +122,20 @@ describe("ProductService", () => {
 
       expect(created.status).toBe(ProductStatus.ACTIVE);
       expect(tx.stockMovement.create).not.toHaveBeenCalled();
+    });
+
+    it("persists isRawMaterial from the Materiales form", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValue(null);
+
+      await service.create(
+        { organizationId: ORG_A },
+        { sku: "HOJA-A4", name: "Hoja A4", isRawMaterial: true, stock: 100 },
+      );
+
+      expect(tx.product.create.mock.calls[0][0].data).toMatchObject({
+        isRawMaterial: true,
+      });
     });
   });
 
@@ -343,6 +358,97 @@ describe("ProductService", () => {
       });
 
       expect(tx.productComponent.deleteMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("listRawMaterials (S6)", () => {
+    const MATERIAL = {
+      id: "m-1",
+      sku: "HOJA-A4",
+      name: "Hoja A4",
+      stock: "50.00",
+      unit: "UND",
+      isService: false,
+      isRawMaterial: true,
+      images: [],
+    };
+
+    it("includes flagged materials even when no composite uses them yet", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findMany.mockResolvedValue([MATERIAL]);
+      prisma.productComponent.findMany.mockResolvedValue([]);
+
+      const result = await service.listRawMaterials({ organizationId: ORG_A });
+
+      expect(result.total).toBe(1);
+      expect(result.list[0]).toMatchObject({
+        id: "m-1",
+        usedIn: 0,
+        usedInNames: [],
+      });
+    });
+
+    it("merges usage from composites into a flagged material", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findMany.mockResolvedValue([MATERIAL]);
+      prisma.productComponent.findMany.mockResolvedValue([
+        {
+          componentId: "m-1",
+          component: MATERIAL,
+          product: { id: "p-1", name: "Impresión A4" },
+        },
+        {
+          componentId: "m-1",
+          component: MATERIAL,
+          product: { id: "p-2", name: "Impresión A3" },
+        },
+      ]);
+
+      const result = await service.listRawMaterials({ organizationId: ORG_A });
+
+      expect(result.total).toBe(1);
+      expect(result.list[0]).toMatchObject({
+        id: "m-1",
+        usedIn: 2,
+        usedInNames: ["Impresión A4", "Impresión A3"],
+      });
+    });
+
+    it("still lists a component that was never flagged as raw material", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findMany.mockResolvedValue([]);
+      prisma.productComponent.findMany.mockResolvedValue([
+        {
+          componentId: "legacy-1",
+          component: { ...MATERIAL, id: "legacy-1", isRawMaterial: false },
+          product: { id: "p-1", name: "Impresión A4" },
+        },
+      ]);
+
+      const result = await service.listRawMaterials({ organizationId: ORG_A });
+
+      expect(result.total).toBe(1);
+      expect(result.list[0]).toMatchObject({
+        id: "legacy-1",
+        usedIn: 1,
+        usedInNames: ["Impresión A4"],
+      });
+    });
+
+    it("scopes both queries to the organization", async () => {
+      const { service, prisma } = makeService();
+      prisma.product.findMany.mockResolvedValue([]);
+      prisma.productComponent.findMany.mockResolvedValue([]);
+
+      await service.listRawMaterials({ organizationId: ORG_A });
+
+      expect(prisma.product.findMany.mock.calls[0][0].where).toMatchObject({
+        organizationId: ORG_A,
+        isRawMaterial: true,
+      });
+      expect(prisma.productComponent.findMany.mock.calls[0][0].where).toEqual({
+        component: { organizationId: ORG_A, deletedAt: null },
+      });
     });
   });
 

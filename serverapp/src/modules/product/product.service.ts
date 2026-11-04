@@ -132,28 +132,42 @@ export class ProductService {
    * component in this tenant, with how many composites consume it and their
    * names. The Materiales sidebar screen renders this.
    */
+  /**
+   * Materials for the Materiales screen and the BOM picker (S6): products
+   * flagged `isRawMaterial` (even before any composite uses them) UNION
+   * products already referenced as a component, with usage counts.
+   */
   async listRawMaterials(scope: ProductScope) {
-    const rows = await this.prisma.productComponent.findMany({
-      where: { component: { ...this.scopeWhere(scope.organizationId) } },
-      include: {
-        component: {
-          include: {
-            images: { orderBy: { position: "asc" }, take: 1 },
-          },
+    const [flagged, rows] = await Promise.all([
+      this.prisma.product.findMany({
+        where: { ...this.scopeWhere(scope.organizationId), isRawMaterial: true },
+        include: {
+          images: { orderBy: { position: "asc" }, take: 1 },
         },
-        product: { select: { id: true, name: true } },
-      },
-      orderBy: { component: { name: "asc" } },
-    });
+      }),
+      this.prisma.productComponent.findMany({
+        where: { component: { ...this.scopeWhere(scope.organizationId) } },
+        include: {
+          component: {
+            include: {
+              images: { orderBy: { position: "asc" }, take: 1 },
+            },
+          },
+          product: { select: { id: true, name: true } },
+        },
+      }),
+    ]);
 
-    const grouped = new Map<
-      string,
-      {
-        component: (typeof rows)[number]["component"];
-        parents: string[];
-        usedIn: number;
-      }
-    >();
+    type MaterialEntry = {
+      component: (typeof flagged)[number];
+      parents: string[];
+      usedIn: number;
+    };
+
+    const grouped = new Map<string, MaterialEntry>();
+    for (const product of flagged) {
+      grouped.set(product.id, { component: product, parents: [], usedIn: 0 });
+    }
     for (const row of rows) {
       const existing = grouped.get(row.componentId);
       if (existing) {
@@ -161,18 +175,20 @@ export class ProductService {
         existing.usedIn += 1;
       } else {
         grouped.set(row.componentId, {
-          component: row.component,
+          component: row.component as (typeof flagged)[number],
           parents: [row.product.name],
           usedIn: 1,
         });
       }
     }
 
-    const list = [...grouped.values()].map((entry) => ({
-      ...entry.component,
-      usedIn: entry.usedIn,
-      usedInNames: entry.parents,
-    }));
+    const list = [...grouped.values()]
+      .map((entry) => ({
+        ...entry.component,
+        usedIn: entry.usedIn,
+        usedInNames: entry.parents,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return { list, total: list.length };
   }
@@ -247,6 +263,7 @@ export class ProductService {
           taxRate: data.taxRate ?? 0,
           isService: data.isService ?? false,
           isPublic: data.isPublic ?? false,
+          isRawMaterial: data.isRawMaterial ?? false,
           status,
           imageUrl: data.imageUrl?.trim() || null,
           categoryId: data.categoryId ?? null,
@@ -323,6 +340,9 @@ export class ProductService {
         ...(data.taxRate !== undefined && { taxRate: data.taxRate }),
         ...(data.isService !== undefined && { isService: data.isService }),
         ...(data.isPublic !== undefined && { isPublic: data.isPublic }),
+        ...(data.isRawMaterial !== undefined && {
+          isRawMaterial: data.isRawMaterial,
+        }),
         ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl?.trim() || null }),
         ...(data.categoryId !== undefined && { categoryId: data.categoryId ?? null }),
         ...(data.supplierId !== undefined && { supplierId: data.supplierId ?? null }),

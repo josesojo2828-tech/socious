@@ -49,7 +49,7 @@ interface ProductFormPanelProps {
   onSubmit: (form: ProductForm) => void;
   /** S2: tenant `inventory.useRawMaterials` — gates the BOM section. */
   showComponents?: boolean;
-  /** Candidate raw materials for the BOM picker (whole catalog, loaded by the route). */
+  /** Materials for the BOM picker (`GET /raw-materials`, loaded by the route). */
   componentProducts?: Product[];
 }
 
@@ -453,25 +453,24 @@ export function ProductFormPanel({
               </button>
             ) : (
               <Link
-                href="/dashboard/productos/nuevo"
+                href="/dashboard/materiales"
                 className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
               >
-                <Plus className="h-3.5 w-3.5" /> Crear insumo
+                <Plus className="h-3.5 w-3.5" /> Cargar material
               </Link>
             )}
           </div>
 
           {componentOptions.length === 0 ? (
             <p className="text-xs text-slate-400 py-1">
-              No hay otros productos en el catálogo para usar como materia
-              prima.{" "}
+              No hay materiales cargados.{" "}
               <Link
-                href="/dashboard/productos/nuevo"
+                href="/dashboard/materiales"
                 className="text-[#b2944a] font-semibold hover:underline"
               >
-                Creá el insumo primero
+                Cargá el material
               </Link>{" "}
-              (ej. Hoja A4) y volvé a editar este producto.
+              (ej. Hoja A4) en Materiales y volvé a editar este producto.
             </p>
           ) : null}
 

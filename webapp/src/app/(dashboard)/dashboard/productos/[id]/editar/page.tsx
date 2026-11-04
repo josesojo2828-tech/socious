@@ -64,7 +64,7 @@ export default function EditProductPage() {
         unitList,
         ratesData,
         tenantSettings,
-        catalogPage,
+        rawMaterials,
       ] =
         await Promise.all([
           apiClient.get<Product>(ProductEndpoints.detail(productId)),
@@ -82,15 +82,15 @@ export default function EditProductPage() {
             .catch(() => ({ data: null as ExchangeRates | null })),
           getTenantSettings().catch(() => null),
           apiClient
-            .get<Paged<Product>>(ProductEndpoints.list, { params: { limit: 200 } })
-            .catch(() => ({ data: { list: [] as Product[], total: 0 } })),
+            .get<{ list: Product[] }>(ProductEndpoints.rawMaterials)
+            .catch(() => ({ data: { list: [] as Product[] } })),
         ]);
       setProduct(detail.data);
       setCategories(categoryTree.data);
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
       setShowComponents(Boolean(tenantSettings?.inventory?.useRawMaterials));
-      setComponentProducts(catalogPage.data.list ?? []);
+      setComponentProducts(rawMaterials.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
           rateBcv: Number(ratesData.data.rateBcv),
