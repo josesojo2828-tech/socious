@@ -25,4 +25,8 @@ export const ProductEndpoints = {
     `/api/presentations/images/${imageId}`,
   // `/mine` = system catalog + this tenant's own categories (S5).
   categories: "/api/categories/mine",
+  // CSV import (S1): template download, dry-run validation and partial commit.
+  importTemplate: "/api/products/import/template",
+  importValidate: "/api/products/import/validate",
+  import: "/api/products/import",
 };

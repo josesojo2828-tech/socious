@@ -13,15 +13,18 @@ import {
   Search,
   ShieldCheck,
   SlidersHorizontal,
+  Upload,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { TablePagination } from "@/shared/components/molecules/TablePagination";
 import {
   BRASS_DOT,
   CARD,
   CTA_BRASS,
+  CTA_NAVY,
   EYEBROW,
   GLASS,
   INPUT,
@@ -31,6 +34,7 @@ import {
   TABLE_ROW,
 } from "@/shared/lib/maison-style";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
+import { ProductImportModal } from "@/features/products/components/ProductImportModal";
 import type {
   Product,
   ProductStatus,
@@ -92,6 +96,7 @@ function statusBadge(status: ProductStatus): { label: string; className: string 
 /** Catalog list (S1/S7): Maison table + summary strip; forms live on routes. */
 export default function ProductsPage() {
   const { addToast } = useToastStore();
+  const { openModal, closeModal } = useModalStore();
   const router = useRouter();
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
@@ -302,12 +307,29 @@ export default function ProductsPage() {
             Los cambios de stock quedan registrados en el kardex.
           </p>
         </div>
-        <Link
-          href="/dashboard/productos/nuevo"
-          className={`h-11 px-5 text-sm ${CTA_BRASS}`}
-        >
-          <Plus className="h-4 w-4" /> Nuevo producto
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              openModal(
+                <ProductImportModal
+                  onClose={closeModal}
+                  onSuccess={() => setReloadToken((token) => token + 1)}
+                />,
+                { size: "xl" },
+              )
+            }
+            className={`h-11 px-5 text-sm ${CTA_NAVY}`}
+          >
+            <Upload className="h-4 w-4" /> Importar
+          </button>
+          <Link
+            href="/dashboard/productos/nuevo"
+            className={`h-11 px-5 text-sm ${CTA_BRASS}`}
+          >
+            <Plus className="h-4 w-4" /> Nuevo producto
+          </Link>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
