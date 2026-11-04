@@ -124,8 +124,8 @@ Cada fila se mapea a `CreateProductDto`:
 | T1 | S1, S2, S7 | inline | hecho | `bfd7819` |
 | T2 | S3, S4 | inline | hecho | `1a03935` |
 | T3 | S5, S6, S7 | inline | hecho | `0f03467` |
-| T4 | S2, S5, S8 | delegado | pendiente | `feat(productos): librería pura de importación CSV` |
-| T5 | S5, S8 | delegado | pendiente | `feat(productos): modal de importación en el catálogo` |
+| T4 | S2, S5, S8 | delegado | hecho | `f9f3426` |
+| T5 | S5, S8 | delegado | hecho | `b19a5ef` |
 
 - **T1** — `ProductImportService` + parser CSV puro (delimitador autodetectado, RFC 4180, BOM, normalización numérica con separador decimal flexible) + DTOs `ImportProductsDto` / `ImportRowDto` / `ImportValidateResult` + `GET /api/products/import/template` en `ProductController` antes de `:id` + `create(scope, dto, tx?)` en `ProductService` + specs.
 - **T2** — Validador por fila (campos, `tipo`, números, SKU intra-archivo, resolución de categoría/proveedor por nombre) + `POST /import/validate` + límites 2 MB / 500 filas + `include` inicial + specs (dry-run no escribe).
