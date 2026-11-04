@@ -545,6 +545,34 @@ export function findDuplicateSkus(
   return duplicates;
 }
 
+/**
+ * S3: only the occurrences after the first are duplicates. Returns, per line,
+ * the SKUs that repeat an earlier row. `findDuplicateSkus` answers a different
+ * question ("which SKUs are duplicated at all") and would flag the first
+ * occurrence too, which the server does not.
+ */
+export function findRepeatLines(
+  rows: { line: number; values: ImportRowValues }[],
+): Map<number, Set<string>> {
+  const seen = new Set<string>();
+  const repeats = new Map<number, Set<string>>();
+
+  for (const row of rows) {
+    const sku = row.values.sku.trim();
+    if (sku === "") continue;
+
+    if (seen.has(sku)) {
+      const forLine = repeats.get(row.line) ?? new Set<string>();
+      forLine.add(sku);
+      repeats.set(row.line, forLine);
+    } else {
+      seen.add(sku);
+    }
+  }
+
+  return repeats;
+}
+
 function parsePublico(value: string | number | boolean): boolean {
   if (typeof value === "boolean") return value;
   const normalized = normalizeHeader(String(value));
@@ -600,7 +628,7 @@ export function applyEdit(
   const replaced = allRows.map((candidate) =>
     candidate.line === row.line ? { ...candidate, values } : candidate,
   );
-  const duplicateSkus = findDuplicateSkus(replaced);
+  const duplicateSkus = findRepeatLines(replaced).get(row.line);
   const local = rowErrors(values, {
     line: row.line,
     duplicateSkus,
@@ -640,7 +668,7 @@ export function applyEdit(
 export function refreshDuplicateErrors(
   rows: ImportPreviewRow[],
 ): ImportPreviewRow[] {
-  const duplicateSkus = findDuplicateSkus(rows);
+  const repeats = findRepeatLines(rows);
 
   return rows.map((row) => {
     const keptNotes = (row.serverNotes ?? []).filter(
@@ -648,7 +676,7 @@ export function refreshDuplicateErrors(
     );
     const local = rowErrors(row.values, {
       line: row.line,
-      duplicateSkus,
+      duplicateSkus: repeats.get(row.line),
       rawNumbers: row.rawNumbers,
     });
     const errors = dedupe([

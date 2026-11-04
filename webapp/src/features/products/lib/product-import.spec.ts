@@ -2,15 +2,25 @@ import { describe, expect, it } from "vitest";
 import {
   applyEdit,
   buildCommitPayload,
+  canConfirm,
+  confirmBlockedReason,
   decodeCsvBytes,
   detectDelimiter,
+  excludeInvalid,
+  fieldOfMessage,
   findDuplicateSkus,
+  includeAllValid,
   normalizeHeader,
   normalizeNumber,
   parseCsv,
+  previewRowsFromValidate,
+  refreshDuplicateErrors,
   rowErrors,
+  setInclude,
+  summarize,
   type ImportPreviewRow,
   type ImportRowValues,
+  type ImportValidateResponse,
 } from "./product-import";
 
 function bytes(...values: number[]): ArrayBuffer {
@@ -415,5 +425,191 @@ describe("product-import buildCommitPayload", () => {
       ],
     });
     expect(Object.keys(payload.rows[0])).toEqual(["line", "include", "values"]);
+  });
+});
+
+describe("product-import preview state (S5)", () => {
+  it("counts included, valid, invalid and excluded rows", () => {
+    const preview = [
+      row({ line: 2, include: true }),
+      row({
+        line: 3,
+        include: true,
+        values: values({ sku: "B-2" }),
+        errors: ["Fila 3: el nombre es obligatorio."],
+      }),
+      row({ line: 4, include: false, values: values({ sku: "C-3" }) }),
+    ];
+
+    expect(summarize(preview)).toEqual({
+      total: 3,
+      included: 2,
+      includedValid: 1,
+      includedInvalid: 1,
+      excluded: 1,
+      warnings: 0,
+    });
+  });
+
+  it("blocks confirmation with no included rows", () => {
+    expect(canConfirm([row({ include: false })])).toBe(false);
+    expect(confirmBlockedReason([row({ include: false })])).toBe(
+      "Incluye al menos una fila para importar.",
+    );
+  });
+
+  it("blocks confirmation when an included row still has errors", () => {
+    const preview = [
+      row({
+        line: 3,
+        errors: ["Fila 3: el tipo debe ser producto, servicio o material."],
+      }),
+    ];
+
+    expect(canConfirm(preview)).toBe(false);
+    expect(confirmBlockedReason(preview)).toBe(
+      "Hay filas incluidas con errores; corrígelas o exclúyelas.",
+    );
+  });
+
+  it("allows confirmation once every included row is valid", () => {
+    const preview = [
+      row({ line: 2 }),
+      row({
+        line: 3,
+        include: false,
+        errors: ["Fila 3: el nombre es obligatorio."],
+      }),
+    ];
+
+    expect(canConfirm(preview)).toBe(true);
+    expect(confirmBlockedReason(preview)).toBeNull();
+  });
+
+  it("toggles include on a single row", () => {
+    const preview = [row({ line: 2 }), row({ line: 3 })];
+    const next = setInclude(preview, 3, false);
+
+    expect(next.map((item) => item.include)).toEqual([true, false]);
+    expect(preview.map((item) => item.include)).toEqual([true, true]);
+  });
+
+  it("includes only the rows without errors", () => {
+    const preview = [
+      row({ line: 2, include: false }),
+      row({
+        line: 3,
+        include: false,
+        errors: ["Fila 3: el nombre es obligatorio."],
+      }),
+    ];
+
+    expect(includeAllValid(preview).map((item) => item.include)).toEqual([
+      true,
+      false,
+    ]);
+  });
+
+  it("excludes only the rows with errors", () => {
+    const preview = [
+      row({ line: 2 }),
+      row({
+        line: 3,
+        errors: ["Fila 3: el nombre es obligatorio."],
+      }),
+    ];
+
+    expect(excludeInvalid(preview).map((item) => item.include)).toEqual([
+      true,
+      false,
+    ]);
+  });
+});
+
+describe("product-import previewRowsFromValidate", () => {
+  it("keeps the server notes on each row and preserves include", () => {
+    const response: ImportValidateResponse = {
+      rows: [
+        row({
+          line: 2,
+          include: false,
+          errors: ["Fila 2: el nombre es obligatorio."],
+          warnings: [
+            'Fila 2: la categoría "Bebidas" no existe; se importará sin categoría.',
+          ],
+        }),
+      ],
+      errors: [
+        {
+          line: 2,
+          field: "nombre",
+          message: "Fila 2: el nombre es obligatorio.",
+        },
+      ],
+      summary: { total: 1, valid: 0, invalid: 1, warnings: 1 },
+    };
+
+    const [preview] = previewRowsFromValidate(response);
+
+    expect(preview.include).toBe(false);
+    expect(preview.serverNotes).toEqual([
+      {
+        line: 2,
+        field: "nombre",
+        message: "Fila 2: el nombre es obligatorio.",
+        kind: "error",
+      },
+      {
+        line: 2,
+        field: "categoria",
+        message:
+          'Fila 2: la categoría "Bebidas" no existe; se importará sin categoría.',
+        kind: "warning",
+      },
+    ]);
+  });
+
+  it("does not attach notes from another line", () => {
+    const response: ImportValidateResponse = {
+      rows: [row({ line: 2 })],
+      errors: [
+        { line: 9, field: "sku", message: "Fila 9: el SKU es obligatorio." },
+      ],
+      summary: { total: 1, valid: 1, invalid: 0, warnings: 0 },
+    };
+
+    expect(previewRowsFromValidate(response)[0].serverNotes).toEqual([]);
+  });
+});
+
+describe("product-import fieldOfMessage", () => {
+  it("maps the server wording back to its column", () => {
+    expect(fieldOfMessage("Fila 2: el SKU es obligatorio.")).toBe("sku");
+    expect(fieldOfMessage("Fila 2: el precio de venta no puede ser negativo.")).toBe(
+      "venta_usd",
+    );
+    expect(fieldOfMessage("Fila 2: el campo público debe ser sí o no.")).toBe(
+      "publico",
+    );
+    expect(fieldOfMessage("algo sin columna")).toBeNull();
+  });
+});
+
+describe("product-import refreshDuplicateErrors", () => {
+  it("flags the second row when an edit creates a duplicate SKU", () => {
+    const preview = [
+      row({ line: 2, values: values({ sku: "ABC-1" }) }),
+      row({ line: 3, values: values({ sku: "B-2" }) }),
+    ];
+
+    const edited = refreshDuplicateErrors([
+      preview[0],
+      { ...preview[1], values: values({ sku: "ABC-1" }) },
+    ]);
+
+    expect(edited[0].errors).toEqual([]);
+    expect(edited[1].errors).toEqual([
+      'Fila 3: el SKU "ABC-1" está repetido en el archivo.',
+    ]);
   });
 });
