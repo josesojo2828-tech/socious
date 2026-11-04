@@ -27,4 +27,13 @@ describe("product-list buildListParams (list pagination)", () => {
       buildListParams({ page: 2, q: "sku-1", status: "ON_SALE" }),
     ).toEqual({ page: 2, limit: 25, q: "sku-1", status: "ON_SALE" });
   });
+
+  it("sends excludeRawMaterials only when the catalog asks for it", () => {
+    expect(buildListParams({ excludeRawMaterials: true })).toEqual({
+      page: 1,
+      limit: 25,
+      excludeRawMaterials: true,
+    });
+    expect(buildListParams({})).not.toHaveProperty("excludeRawMaterials");
+  });
 });

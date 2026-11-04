@@ -464,4 +464,41 @@ describe("ProductService", () => {
       });
     });
   });
+
+  describe("list filters (S7)", () => {
+    it("hides raw materials when the catalog asks to exclude them", async () => {
+      const { service, prisma } = makeService();
+
+      await service.list(
+        { organizationId: ORG_A },
+        { page: 1, limit: 10, excludeRawMaterials: true },
+      );
+
+      expect(prisma.product.findMany.mock.calls[0][0].where.AND).toContainEqual({
+        isRawMaterial: false,
+      });
+    });
+
+    it("keeps materials when the flag is absent (POS / compras)", async () => {
+      const { service, prisma } = makeService();
+
+      await service.list({ organizationId: ORG_A }, { page: 1, limit: 10 });
+
+      const and = prisma.product.findMany.mock.calls[0][0].where.AND;
+      expect(and).not.toContainEqual({ isRawMaterial: false });
+    });
+
+    it("filters services only when isService is set", async () => {
+      const { service, prisma } = makeService();
+
+      await service.list(
+        { organizationId: ORG_A },
+        { page: 1, limit: 10, isService: true },
+      );
+
+      expect(prisma.product.findMany.mock.calls[0][0].where.AND).toContainEqual({
+        isService: true,
+      });
+    });
+  });
 });

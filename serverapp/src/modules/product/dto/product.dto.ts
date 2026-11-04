@@ -294,6 +294,30 @@ export class ListProductsQueryDto {
   @IsBoolean()
   lowStock?: boolean;
 
+  /** Catalog screen only: hide raw materials (POS/compras still see them). */
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === true || value === "true"
+      ? true
+      : value === false || value === "false"
+        ? false
+        : undefined,
+  )
+  @IsBoolean()
+  excludeRawMaterials?: boolean;
+
+  /** Only services (`isService`) — the Servicios screen. */
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === true || value === "true"
+      ? true
+      : value === false || value === "false"
+        ? false
+        : undefined,
+  )
+  @IsBoolean()
+  isService?: boolean;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

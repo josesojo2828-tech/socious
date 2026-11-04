@@ -294,6 +294,11 @@ export class DashboardService {
             icon: "database",
             link: "/dashboard/materiales",
           },
+          {
+            title: "Servicios",
+            icon: "briefcase",
+            link: "/dashboard/servicios",
+          },
         ];
         sections.push({
           title: "Inventario",

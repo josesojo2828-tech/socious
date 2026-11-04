@@ -148,6 +148,9 @@ export default function ProductsPage() {
               page,
               q: query,
               status: statusFilter,
+              // Materials live on /dashboard/materiales; keep them out of
+              // this catalog (POS and compras still receive them).
+              excludeRawMaterials: true,
             }),
           },
         );

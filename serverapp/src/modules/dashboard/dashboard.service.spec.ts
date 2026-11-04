@@ -62,6 +62,8 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain("/dashboard/clientes");
     // Materiales (S6): raw-materials screen under Inventario.
     expect(links).toContain("/dashboard/materiales");
+    // Servicios (S7): create/list isService products, parallel to Materiales.
+    expect(links).toContain("/dashboard/servicios");
   });
 
   it("never renders the retired nutrition routes", async () => {

@@ -67,6 +67,7 @@ const iconMap: Record<string, LucideIcon> = {
   folder: LucideIcons.Folder,
   "arrows-down-up": LucideIcons.ArrowUpDown,
   truck: LucideIcons.Truck,
+  briefcase: LucideIcons.Briefcase,
   adminstration: LucideIcons.ShieldAlert,
 };
 

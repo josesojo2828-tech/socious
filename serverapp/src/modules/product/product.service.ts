@@ -76,6 +76,9 @@ export class ProductService {
     if (query.supplierId) filters.push({ supplierId: query.supplierId });
     if (query.variantOfId) filters.push({ variantOfId: query.variantOfId });
     if (query.isPublic !== undefined) filters.push({ isPublic: query.isPublic });
+    if (query.isService !== undefined) filters.push({ isService: query.isService });
+    // Catalog screen hides materials; POS/compras omit the flag and still see them.
+    if (query.excludeRawMaterials) filters.push({ isRawMaterial: false });
 
     if (query.lowStock) {
       const lowStockIds = await this.findLowStockIds(scope.organizationId);

@@ -4,6 +4,11 @@ export interface ProductListFilters {
   page?: number;
   q?: string;
   status?: string;
+  /**
+   * Catalog screen only: hide raw materials. POS, compras and proveedores
+   * omit it so they keep purchasing/selling materials.
+   */
+  excludeRawMaterials?: boolean;
 }
 
 /**
@@ -13,14 +18,15 @@ export interface ProductListFilters {
  */
 export function buildListParams(
   filters: ProductListFilters,
-): Record<string, string | number> {
-  const params: Record<string, string | number> = {
+): Record<string, string | number | boolean> {
+  const params: Record<string, string | number | boolean> = {
     page: filters.page ?? 1,
     limit: 25,
   };
 
   if (filters.q?.trim()) params.q = filters.q.trim();
   if (filters.status) params.status = filters.status;
+  if (filters.excludeRawMaterials) params.excludeRawMaterials = true;
 
   return params;
 }

@@ -419,8 +419,8 @@ export function ProductFormPanel({
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        {/* Servicios: fuera del formulario (S2 del feedback) — crear es
-            siempre producto; en edición se conserva el valor original. */}
+        {/* Servicios: fuera del formulario (S2 del feedback) — la alta vive
+            en /dashboard/servicios; en edición se conserva el valor original. */}
         <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
