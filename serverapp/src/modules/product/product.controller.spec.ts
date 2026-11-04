@@ -19,6 +19,7 @@ const makeController = (
   links: unknown[] = [],
   template: jest.Mock = jest.fn(() => "\uFEFFsku,nombre\r\nA,Arroz\r\n"),
   validate: jest.Mock = jest.fn(),
+  commit: jest.Mock = jest.fn(),
 ) => {
   const prisma = {
     organization: {
@@ -30,7 +31,7 @@ const makeController = (
     },
     offerProduct: { findMany: jest.fn().mockResolvedValue(links) },
   };
-  const productImport = { template, validate };
+  const productImport = { template, validate, commit };
   const workspaceContext = { getWorkspaceId: () => undefined };
   const controller = new ProductController(
     {} as any,
@@ -40,7 +41,7 @@ const makeController = (
     prisma as any,
     productImport as any,
   );
-  return { controller, prisma, template, validate };
+  return { controller, prisma, template, validate, commit };
 };
 
 describe("ProductController.listPublicCatalog", () => {
@@ -123,5 +124,28 @@ describe("ProductController.validateImport", () => {
       body,
     );
     expect(result).toBe(preview);
+  });
+});
+
+describe("ProductController.importProducts", () => {
+  it("delegates body.rows with the resolved scope", async () => {
+    const result = { created: 1, skipped: 0, excluded: 0, errors: [] };
+    const commit = jest.fn().mockResolvedValue(result);
+    const { controller } = makeController([], undefined, undefined, commit);
+    const request = { user: { id: "u-1", permits: { name: "ADMIN" } } };
+    const body = {
+      rows: [{ line: 2, include: true, values: { sku: "A-1" } }],
+    };
+
+    const response = await controller.importProducts(
+      request as any,
+      body as any,
+    );
+
+    expect(commit).toHaveBeenCalledWith(
+      { organizationId: null, createdById: "u-1" },
+      body.rows,
+    );
+    expect(response).toBe(result);
   });
 });

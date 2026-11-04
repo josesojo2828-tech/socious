@@ -1,9 +1,13 @@
 import {
+  Allow,
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
   IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   Matches,
@@ -111,6 +115,75 @@ export class ImportRowDto {
 }
 
 /**
+ * Commit transport (S6). The global `ValidationPipe` runs with
+ * `whitelist` + `forbidNonWhitelisted`, so a strict nested DTO would answer
+ * 400 for the whole request whenever the user left an invalid row included.
+ * Every field is loose on purpose: the service owns the per-row rules and
+ * reports invalid rows in `skipped`. `@Allow()` keeps the properties through
+ * the whitelist without validating them here.
+ */
+export class ImportCommitRowValuesDto {
+  @Allow()
+  sku?: string;
+
+  @Allow()
+  nombre?: string;
+
+  @Allow()
+  tipo?: string;
+
+  @Allow()
+  barcode?: string;
+
+  @Allow()
+  descripcion?: string;
+
+  @Allow()
+  costo_usd?: number | string;
+
+  @Allow()
+  venta_usd?: number | string;
+
+  @Allow()
+  stock_inicial?: number | string;
+
+  @Allow()
+  unidad?: string;
+
+  @Allow()
+  categoria?: string;
+
+  @Allow()
+  proveedor?: string;
+
+  @Allow()
+  publico?: boolean | string;
+}
+
+/** One reviewed row as sent to `POST /api/products/import` (S6). */
+export class ImportCommitRowDto {
+  @Allow()
+  line?: number;
+
+  @Allow()
+  include?: boolean;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ImportCommitRowValuesDto)
+  values: ImportCommitRowValuesDto;
+}
+
+/** `POST /api/products/import` body (S6): the reviewed, filtered rows. */
+export class ImportCommitDto {
+  @IsArray()
+  @ArrayMaxSize(500, { message: "El archivo supera el límite de 500 filas." })
+  @ValidateNested({ each: true })
+  @Type(() => ImportCommitRowDto)
+  rows: ImportCommitRowDto[];
+}
+
+/**
  * Normalized, editable row returned by the dry-run (S4). Optional text fields
  * use `""` (never `undefined`) so the webapp can render and resubmit them.
  */
@@ -150,4 +223,12 @@ export interface ImportValidateResult {
   rows: ImportPreviewRow[];
   errors: ImportFieldError[];
   summary: { total: number; valid: number; invalid: number; warnings: number };
+}
+
+/** `POST /api/products/import` response (S6). */
+export interface ImportCommitResult {
+  created: number;
+  skipped: number;
+  excluded: number;
+  errors: ImportFieldError[];
 }

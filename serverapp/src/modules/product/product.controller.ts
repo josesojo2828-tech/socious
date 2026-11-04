@@ -19,7 +19,10 @@ import { PrismaService } from "nestjs-prisma";
 import type { FastifyReply } from "fastify";
 import { ProductService, ProductScope } from "./product.service";
 import { ProductImportService } from "./import/product-import.service";
-import { ImportProductsDto } from "./import/product-import.dto";
+import {
+  ImportCommitDto,
+  ImportProductsDto,
+} from "./import/product-import.dto";
 import {
   AdjustStockDto,
   CreateProductDto,
@@ -202,6 +205,17 @@ export class ProductController {
   ) {
     const scope = await this.resolveScope(request);
     return this.productImportService.validate(scope, body);
+  }
+
+  /** Partial import commit (S1/S6): must precede `:id` like the dry-run. */
+  @Post("import")
+  @UseGuards(SessionAuthGuard)
+  async importProducts(
+    @Req() request: RequestWithUser,
+    @Body() body: ImportCommitDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productImportService.commit(scope, body.rows);
   }
 
   @Get(":id/stock-movements")
