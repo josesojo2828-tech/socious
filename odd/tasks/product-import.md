@@ -15,11 +15,11 @@
 
 - `GET /api/products/import/template` → `text/csv; charset=utf-8`, `Content-Disposition: attachment; filename="plantilla-productos.csv"`. Requiere sesión (`SessionAuthGuard`), como el resto del catálogo.
 - `POST /api/products/import/validate` → dry-run: no escribe nada. Devuelve `{ rows, errors, summary }`.
-- `POST /api/products/import` → commit: **revalida en el servidor** y crea solo las filas válidas. Devuelve `{ created, skipped, errors }`.
-- Transporte **JSON, no multipart**. Cuerpo: `{ content: string, filename?: string }`, donde `content` es el texto completo del archivo ya decodificado por el navegador.
-- Límite de **2 MB** medido en bytes UTF-8 (`Buffer.byteLength(content)`). Se rechaza la petición completa con 400: `"El archivo supera el límite de 2 MB."`
-- Límite duro de **500 filas de datos** (sin contar el encabezado). Se rechaza la petición completa con 400: `"El archivo supera el límite de 500 filas."`
-- Contenido vacío o solo encabezado → 400: `"No se recibió contenido para importar."`
+- `POST /api/products/import` → commit: recibe `{ rows: ImportRowDto[] }` — las filas ya parseadas, editadas y filtradas por el cliente; el servidor nunca recibe el CSV en el commit. **Revalida en el servidor** y crea solo las filas incluidas y válidas. Devuelve `{ created, skipped, excluded, errors }`.
+- Transporte **JSON, no multipart**. `POST /import/validate` recibe `{ content: string, filename?: string }`, donde `content` es el texto completo del archivo ya decodificado por el navegador; `POST /import` recibe `{ rows: ImportRowDto[] }`.
+- Límite de **2 MB** medido en bytes UTF-8 (`Buffer.byteLength(content)`) sobre `POST /import/validate`. Se rechaza la petición completa con 400: `"El archivo supera el límite de 2 MB."`
+- Límite duro de **500 filas de datos** (sin contar el encabezado), aplicado tanto a `POST /import/validate` como a `POST /import`. Se rechaza la petición completa con 400: `"El archivo supera el límite de 500 filas."`
+- Contenido vacío o solo encabezado en `POST /import/validate` → 400: `"No se recibió contenido para importar."`
 - Las rutas de importación se declaran en `ProductController` (mismo prefijo `api/products`) **antes** de `@Get(":id")`, junto a `raw-materials`, para no depender del orden de resolución de rutas.
 
 ### S2: Formato del archivo y codificación
