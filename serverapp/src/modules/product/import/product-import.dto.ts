@@ -109,3 +109,45 @@ export class ImportRowDto {
   @Type(() => ImportRowValuesDto)
   values: ImportRowValuesDto;
 }
+
+/**
+ * Normalized, editable row returned by the dry-run (S4). Optional text fields
+ * use `""` (never `undefined`) so the webapp can render and resubmit them.
+ */
+export interface ImportRowValues {
+  sku: string;
+  nombre: string;
+  tipo: ImportTipo;
+  barcode: string;
+  descripcion: string;
+  costo_usd: number;
+  venta_usd: number;
+  stock_inicial: number;
+  unidad: string;
+  categoria: string;
+  proveedor: string;
+  publico: boolean;
+}
+
+/** One preview row: its real file line, whether it will be imported, and why. */
+export interface ImportPreviewRow {
+  line: number;
+  include: boolean;
+  values: ImportRowValues;
+  errors: string[];
+  warnings: string[];
+}
+
+/** Flat error list for the per-line detail in the preview (S4). */
+export interface ImportFieldError {
+  line: number;
+  field: string;
+  message: string;
+}
+
+/** Full `POST /api/products/import/validate` response (S4). */
+export interface ImportValidateResult {
+  rows: ImportPreviewRow[];
+  errors: ImportFieldError[];
+  summary: { total: number; valid: number; invalid: number; warnings: number };
+}

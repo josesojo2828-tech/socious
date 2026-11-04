@@ -19,6 +19,7 @@ import { PrismaService } from "nestjs-prisma";
 import type { FastifyReply } from "fastify";
 import { ProductService, ProductScope } from "./product.service";
 import { ProductImportService } from "./import/product-import.service";
+import { ImportProductsDto } from "./import/product-import.dto";
 import {
   AdjustStockDto,
   CreateProductDto,
@@ -190,6 +191,17 @@ export class ProductController {
       'attachment; filename="plantilla-productos.csv"',
     );
     return this.productImportService.template();
+  }
+
+  /** Dry-run import validation (S1/S4): parses and reports, writes nothing. */
+  @Post("import/validate")
+  @UseGuards(SessionAuthGuard)
+  async validateImport(
+    @Req() request: RequestWithUser,
+    @Body() body: ImportProductsDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.productImportService.validate(scope, body);
   }
 
   @Get(":id/stock-movements")

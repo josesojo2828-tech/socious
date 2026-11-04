@@ -18,6 +18,7 @@ const CATALOG_ROW = {
 const makeController = (
   links: unknown[] = [],
   template: jest.Mock = jest.fn(() => "\uFEFFsku,nombre\r\nA,Arroz\r\n"),
+  validate: jest.Mock = jest.fn(),
 ) => {
   const prisma = {
     organization: {
@@ -29,16 +30,17 @@ const makeController = (
     },
     offerProduct: { findMany: jest.fn().mockResolvedValue(links) },
   };
-  const productImport = { template };
+  const productImport = { template, validate };
+  const workspaceContext = { getWorkspaceId: () => undefined };
   const controller = new ProductController(
     {} as any,
     {} as any,
-    {} as any,
+    workspaceContext as any,
     {} as any,
     prisma as any,
     productImport as any,
   );
-  return { controller, prisma, template };
+  return { controller, prisma, template, validate };
 };
 
 describe("ProductController.listPublicCatalog", () => {
@@ -99,5 +101,27 @@ describe("ProductController.template", () => {
       "Content-Disposition",
       'attachment; filename="plantilla-productos.csv"',
     );
+  });
+});
+
+describe("ProductController.validateImport", () => {
+  it("resolves the scope and delegates to the import service", async () => {
+    const preview = {
+      rows: [],
+      errors: [],
+      summary: { total: 0, valid: 0, invalid: 0, warnings: 0 },
+    };
+    const validate = jest.fn().mockResolvedValue(preview);
+    const { controller } = makeController([], undefined, validate);
+    const request = { user: { id: "u-1", permits: { name: "ADMIN" } } };
+    const body = { content: "sku,nombre,tipo\nA,Arroz,producto" };
+
+    const result = await controller.validateImport(request as any, body as any);
+
+    expect(validate).toHaveBeenCalledWith(
+      { organizationId: null, createdById: "u-1" },
+      body,
+    );
+    expect(result).toBe(preview);
   });
 });
