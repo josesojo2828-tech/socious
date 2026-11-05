@@ -136,9 +136,11 @@ export default function SalesPage() {
   } | null>(null);
   /** Which currency equivalents the tenant chose to show. */
   const [currencies, setCurrencies] = useState<{
+    showUSD: boolean;
     showVES: boolean;
     showUSDT: boolean;
-  }>({ showVES: true, showUSDT: true });
+    showBCV: boolean;
+  }>({ showUSD: true, showVES: true, showUSDT: true, showBCV: true });
   const [report, setReport] = useState<SalesReport | null>(null);
   const [reportOpen, setReportOpen] = useState<boolean>(false);
 
@@ -165,8 +167,10 @@ export default function SalesPage() {
       .then((current) => {
         setReturnReasons(current.returns?.reasons ?? []);
         setCurrencies({
+          showUSD: current.currencies?.showUSD !== false,
           showVES: current.currencies?.showVES !== false,
           showUSDT: current.currencies?.showUSDT !== false,
+          showBCV: current.currencies?.showBCV !== false,
         });
       })
       .catch(() => setReturnReasons([]));
@@ -792,7 +796,16 @@ export default function SalesPage() {
               <div className="border-t border-[#1b1d21]/12 pt-2 dark:border-white/10">
                 <SectionRow
                   label="Total"
-                  hint={`BCV ${Number(selected.rateBcv).toFixed(2)} · USDT ${Number(selected.rateUsdt).toFixed(2)}`}
+                  hint={[
+                    currencies.showBCV
+                      ? `BCV ${Number(selected.rateBcv).toFixed(2)}`
+                      : null,
+                    currencies.showUSDT
+                      ? `USDT ${Number(selected.rateUsdt).toFixed(2)}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 >
                   <span className="text-base font-semibold font-mono tabular-nums">
                     ${Number(selected.totalUSD).toFixed(2)}
@@ -818,7 +831,14 @@ export default function SalesPage() {
                     <SectionRow
                       key={payment.id}
                       label={`${payment.paymentMethod} · ${payment.currency}`}
-                      hint={`${new Date(payment.paidAt).toLocaleDateString("es-VE")} · ≈ $${paidUSDFromPayment.toFixed(2)}`}
+                      hint={[
+                        new Date(payment.paidAt).toLocaleDateString("es-VE"),
+                        currencies.showUSD
+                          ? `≈ $${paidUSDFromPayment.toFixed(2)}`
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     >
                       <span className="block text-right">
                         <span className="block text-sm font-mono tabular-nums">
