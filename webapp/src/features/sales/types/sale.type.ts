@@ -45,7 +45,7 @@ export interface Sale {
   status: SaleStatus;
   paymentStatus: PaymentStatus;
   notes?: string | null;
-  client?: { id: string; name: string } | null;
+  client?: { id: string; name: string; phone?: string | null } | null;
   items?: SaleItem[];
   payments?: SalePayment[];
   returns?: SaleReturnRef[];

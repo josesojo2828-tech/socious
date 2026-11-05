@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
+  MessageCircle,
   PlusCircle,
   Receipt,
   RotateCcw,
@@ -107,6 +108,14 @@ export default function SalesPage() {
   const [to, setTo] = useState<string>("");
 
   const [selected, setSelected] = useState<Sale | null>(null);
+  /** What has been collected and what is still owed, in USD. */
+  const paidUSD = (selected?.payments ?? []).reduce(
+    (sum, payment) => sum + Number(payment.amountUSD),
+    0,
+  );
+  const remainingUSD = selected
+    ? Math.max(0, Math.round((Number(selected.totalUSD) - paidUSD) * 100) / 100)
+    : 0;
   const [methods, setMethods] = useState<PaymentOption[]>([]);
 
   const [payAmount, setPayAmount] = useState<string>("");
@@ -121,12 +130,23 @@ export default function SalesPage() {
   const [reasonChoice, setReasonChoice] = useState<string>("");
   const [returnable, setReturnable] = useState<Record<string, number>>({});
 
+  /** Which currency equivalents the tenant chose to show. */
+  const [currencies, setCurrencies] = useState<{
+    showVES: boolean;
+    showUSDT: boolean;
+  }>({ showVES: true, showUSDT: true });
   const [report, setReport] = useState<SalesReport | null>(null);
   const [reportOpen, setReportOpen] = useState<boolean>(false);
 
   useEffect(() => {
     void getTenantSettings()
-      .then((current) => setReturnReasons(current.returns?.reasons ?? []))
+      .then((current) => {
+        setReturnReasons(current.returns?.reasons ?? []);
+        setCurrencies({
+          showVES: current.currencies?.showVES !== false,
+          showUSDT: current.currencies?.showUSDT !== false,
+        });
+      })
       .catch(() => setReturnReasons([]));
   }, []);
 
@@ -658,13 +678,27 @@ export default function SalesPage() {
                   : "Venta sin cliente"}
               </p>
             </div>
-            <span
-              className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                PAYMENT_TONE[selected.paymentStatus] ?? PAYMENT_TONE.UNPAID
-              }`}
-            >
-              {paymentStatusLabel(selected.paymentStatus).text}
-            </span>
+            <div className="flex shrink-0 items-center gap-2">
+              {selected.client?.phone ? (
+                <a
+                  href={`https://wa.me/${selected.client.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                    `Hola ${selected.client.name}, te comparto el resumen de ${selected.saleNumber}: total $${Number(selected.totalUSD).toFixed(2)}, abonado $${paidUSD.toFixed(2)}, resta $${remainingUSD.toFixed(2)}.`,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#128C4A] transition-colors hover:bg-[#25D366]/20 dark:text-[#4ade80]"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                </a>
+              ) : null}
+              <span
+                className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                  PAYMENT_TONE[selected.paymentStatus] ?? PAYMENT_TONE.UNPAID
+                }`}
+              >
+                {paymentStatusLabel(selected.paymentStatus).text}
+              </span>
+            </div>
           </div>
           <div className="p-5">
             <div className="space-y-1 mb-4">
@@ -728,17 +762,39 @@ export default function SalesPage() {
                 <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 mb-1">
                   Cobros
                 </p>
-                {(selected.payments ?? []).map((payment) => (
-                  <SectionRow
-                    key={payment.id}
-                    label={`${payment.paymentMethod} · ${payment.currency}`}
-                    hint={new Date(payment.paidAt).toLocaleDateString("es-VE")}
-                  >
-                    <span className="text-sm font-mono tabular-nums">
-                      {Number(payment.amountOriginal).toFixed(2)}
-                    </span>
-                  </SectionRow>
-                ))}
+                {(selected.payments ?? []).map((payment) => {
+                  const paidUSDFromPayment = Number(payment.amountUSD);
+                  const paymentBcv = Number(payment.rateBcv) || 1;
+                  const paymentUsdt = Number(payment.rateUsdt) || 1;
+                  return (
+                    <SectionRow
+                      key={payment.id}
+                      label={`${payment.paymentMethod} · ${payment.currency}`}
+                      hint={`${new Date(payment.paidAt).toLocaleDateString("es-VE")} · ≈ $${paidUSDFromPayment.toFixed(2)}`}
+                    >
+                      <span className="block text-right">
+                        <span className="block text-sm font-mono tabular-nums">
+                          {Number(payment.amountOriginal).toFixed(2)}{" "}
+                          {payment.currency}
+                        </span>
+                        <span className="block text-[11px] text-slate-500 dark:text-slate-400">
+                          {currencies.showVES
+                            ? `Bs ${(
+                                paidUSDFromPayment * paymentBcv
+                              ).toLocaleString("es-VE", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}`
+                            : null}
+                          {currencies.showVES && currencies.showUSDT ? " · " : null}
+                          {currencies.showUSDT
+                            ? `USDT ${(paidUSDFromPayment / paymentUsdt).toFixed(2)}`
+                            : null}
+                        </span>
+                      </span>
+                    </SectionRow>
+                  );
+                })}
               </div>
             ) : (
               <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Todavía sin cobros.</p>
@@ -750,9 +806,33 @@ export default function SalesPage() {
               </p>
             ) : (
             <div className="rounded-xl border border-[#1b1d21]/12 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/40">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 mb-2">
-                Registrar abono
-              </p>
+              <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                  Registrar abono
+                </p>
+                <p className="text-sm font-semibold text-[#111018] dark:text-slate-100">
+                  Resta{" "}
+                  <span className="font-mono tabular-nums">
+                    ${remainingUSD.toFixed(2)}
+                  </span>
+                  <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                    {currencies.showVES
+                      ? `≈ Bs ${(
+                          remainingUSD * (Number(selected.rateBcv) || 1)
+                        ).toLocaleString("es-VE", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}`
+                      : null}
+                    {currencies.showVES && currencies.showUSDT ? " · " : null}
+                    {currencies.showUSDT
+                      ? `USDT ${(
+                          remainingUSD / (Number(selected.rateUsdt) || 1)
+                        ).toFixed(2)}`
+                      : null}
+                  </span>
+                </p>
+              </div>
               <div className="flex flex-wrap items-end gap-2">
                 <input
                   type="number"
