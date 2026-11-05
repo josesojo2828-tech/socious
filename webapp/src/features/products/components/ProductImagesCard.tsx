@@ -64,7 +64,11 @@ export function ProductImagesCard({
         buildImageUploadForm(file),
         // The instance default is application/json: without this override
         // axios would serialize the FormData as JSON and drop the file.
-        { headers: { "Content-Type": "multipart/form-data" } },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          // A dead MinIO endpoint would otherwise leave the spinner forever.
+          timeout: 60_000,
+        },
       );
       await apiClient.post(ProductEndpoints.images(productId), {
         key: data.key,

@@ -18,6 +18,8 @@ export interface PublicProduct {
   unit: string;
   taxRate: string | number;
   imageUrl?: string | null;
+  /** Uploaded catalog photos (ProductImage); the first one wins. */
+  images?: { key: string }[];
   stock: string | number;
   categoryId?: string | null;
 }

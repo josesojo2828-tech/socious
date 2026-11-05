@@ -130,6 +130,13 @@ export class ProductController {
           unit: true,
           taxRate: true,
           imageUrl: true,
+          // Uploaded catalog photos live in ProductImage; the storefront
+          // shows the first one and falls back to the legacy imageUrl.
+          images: {
+            orderBy: { position: "asc" },
+            take: 1,
+            select: { key: true },
+          },
           stock: true,
           categoryId: true,
         },

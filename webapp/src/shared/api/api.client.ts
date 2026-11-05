@@ -1,17 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { authStorage } from '@/shared/lib/auth.storage';
-import { HOST } from '@/constants';
+import { apiBaseUrl } from '@/constants';
 import { useToastStore } from '../store/ui/useToastStore';
 
-const getBaseUrl = () => {
-    let host = HOST || '';
-    if (host.endsWith('/api/')) {
-        host = host.slice(0, -5);
-    } else if (host.endsWith('/api')) {
-        host = host.slice(0, -4);
-    }
-    return host;
-};
+const getBaseUrl = () => apiBaseUrl();
 
 export const apiClient = axios.create({
     baseURL: getBaseUrl(),

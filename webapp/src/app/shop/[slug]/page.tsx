@@ -33,6 +33,7 @@ import {
   type CartLine,
 } from "@/features/sales/lib/pos-form";
 import { OfferEndpoints } from "@/features/offers/services/offers.endpoints";
+import { publicFileUrl } from "@/features/products/lib/product-images";
 import {
   offerExpiresLabel,
   offerPercentLabel,
@@ -306,10 +307,14 @@ export default function ShopPage() {
                 key={product.id}
                 className="rounded-xl border border-slate-200 bg-white p-4"
               >
-                {product.imageUrl ? (
+                {product.images?.[0]?.key || product.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={product.imageUrl}
+                    src={
+                      product.images?.[0]?.key
+                        ? publicFileUrl(product.images[0].key)
+                        : (product.imageUrl as string)
+                    }
                     alt={product.name}
                     className="mb-2 h-24 w-full rounded-lg object-cover"
                   />
