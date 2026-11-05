@@ -291,6 +291,10 @@ export default function AdminSettingsPage() {
                     />
                     <span className="text-sm font-semibold text-base-content/60">días</span>
                   </div>
+                  <p className="mt-2 text-xs text-base-content/50">
+                    Aplica a los espacios de trabajo nuevos. Los que ya existen
+                    conservan la fecha con la que se crearon.
+                  </p>
                 </div>
 
                 {generalFeedback && (

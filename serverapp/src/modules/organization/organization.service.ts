@@ -29,6 +29,36 @@ export class OrganizationService {
   ) {}
 
   /**
+   * Trial length for a new workspace. Source of truth is the platform setting
+   * the admin edits in Configuración (`DEFAULT_TRIAL_DAYS`); the env value and
+   * then 14 days are fallbacks for a database that never saw the seed.
+   */
+  private async resolveTrialDays(): Promise<number> {
+    let setting: { value: string } | null = null;
+    try {
+      setting =
+        (await this.prisma.systemSetting?.findUnique({
+          where: { key: "DEFAULT_TRIAL_DAYS" },
+          select: { value: true },
+        })) ?? null;
+    } catch {
+      setting = null;
+    }
+
+    const fromSetting = Number(setting?.value);
+    const fromEnv = Number(process.env.DEFAULT_TRIAL_DAYS);
+
+    const days =
+      Number.isFinite(fromSetting) && fromSetting > 0
+        ? fromSetting
+        : Number.isFinite(fromEnv) && fromEnv > 0
+          ? fromEnv
+          : 14;
+
+    return Math.min(Math.max(Math.floor(days), 1), 365);
+  }
+
+  /**
    * Default plan a new business lands on (S9). Seeded by `seedPlans` on boot,
    * so its capacity — not the historical `maxSeats = 5` — defines how many
    * seats the owner starts with.
@@ -119,15 +149,23 @@ export class OrganizationService {
     });
 
     if (plan) {
+      // The workspace is born on a trial: the length comes from the platform
+      // setting the admin edits (`DEFAULT_TRIAL_DAYS`), not from a hardcoded
+      // month. Once `endDate` passes, the subscription guard blocks writes
+      // until the merchant picks a plan.
+      const startDate = new Date();
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + (await this.resolveTrialDays()));
+
       await this.prisma.subscription.create({
         data: {
           userId: adminUserId,
           organizationId: org.id,
           planId: plan.id,
           status: "ACTIVE",
-          startDate: new Date(),
-          endDate: null,
-          autoRenew: true,
+          startDate,
+          endDate,
+          autoRenew: false,
         },
       });
     } else {
@@ -224,12 +262,14 @@ export class OrganizationService {
             organizationId: orgId,
             deletedAt: null,
           },
+          include: { plan: { select: { id: true, name: true } } },
           orderBy: { createdAt: 'desc' },
         });
 
         // Determinar estado de suscripción
         let subscriptionStatus: 'ACTIVE' | 'TRIAL' | 'GRACE_PERIOD' | 'NONE' = 'NONE';
         let subscriptionEndDate: string | null = null;
+        let plan: { id: string; name: string } | null = orgSubscription?.plan ?? null;
 
         if (orgSubscription) {
           const now = new Date();
@@ -267,11 +307,13 @@ export class OrganizationService {
                   status: { in: ['ACTIVE', 'GRACE_PERIOD'] },
                   deletedAt: null,
                 },
+                include: { plan: { select: { id: true, name: true } } },
               });
 
               if (adminSubscription) {
                 subscriptionStatus = 'ACTIVE';
                 subscriptionEndDate = adminSubscription.endDate?.toISOString() || null;
+                plan = adminSubscription.plan ?? plan;
               }
             }
           }
@@ -285,6 +327,7 @@ export class OrganizationService {
           userColorHex: m.colorHex,
           subscriptionStatus,
           subscriptionEndDate,
+          plan,
           requiresSubscription,
         };
       })

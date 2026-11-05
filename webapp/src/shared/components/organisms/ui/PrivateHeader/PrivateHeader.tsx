@@ -16,6 +16,7 @@ import { UserNotificationsSection } from "@/features/user/components/sections/Us
 import { WorkspaceSwitcher } from "@/shared/components/layout/WorkspaceSwitcher";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { roleLabel } from "@/features/user/lib/role-label";
+import { planBadge } from "@/features/user/lib/plan-badge";
 
 // Importaciones de Notificaciones
 
@@ -71,14 +72,21 @@ export const PrivateHeader = () => {
     }
   };
 
-  // Días restantes de la suscripción activa (cálculo en render, como el
-  // código original; sin Date.now() para no enganchar la regla de pureza).
-  const subscription = user?.subscriptions?.[0];
-  const endDate = subscription?.endDate ? new Date(subscription.endDate) : null;
-  const daysRemaining = endDate
-    ? Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-    : null;
-  const showExpiry = subscription?.status === "ACTIVE" && daysRemaining !== null;
+  // Plan and expiry of the active workspace. Organization workspaces carry the
+  // plan from /my-workspaces; the personal one falls back to the session
+  // subscription.
+  const personalSubscription = user?.subscriptions?.[0];
+  const badge =
+    planBadge({
+      planName:
+        activeWorkspace?.type === "ORGANIZATION"
+          ? activeWorkspace.planName
+          : personalSubscription?.plan?.name,
+      endDate:
+        activeWorkspace?.type === "ORGANIZATION"
+          ? activeWorkspace.subscriptionEndDate
+          : personalSubscription?.endDate,
+    }) ?? null;
 
   return (
     <div className="relative h-full px-4 md:px-8 flex items-center justify-between transition-colors duration-300 bg-transparent text-[#1a2a46] dark:text-[#e6e1d5]">
@@ -101,20 +109,27 @@ export const PrivateHeader = () => {
 
         <ThemeToggle />
 
-        {/* Badge de vencimiento de suscripción */}
-        {showExpiry && daysRemaining !== null && (
+        {/* Plan y vencimiento de la suscripción */}
+        {badge && (
           <span
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold tracking-wide border transition-colors ${
-              daysRemaining <= 1
-                ? "bg-red-500/90 text-white border-red-400/50 animate-pulse"
-                : daysRemaining <= 5
+              badge.tone === "danger"
+                ? "bg-red-500/90 text-white border-red-400/50"
+                : badge.tone === "warning"
                   ? "bg-amber-400/90 text-black border-amber-300/50"
                   : "bg-[#1a2a46]/[0.05] text-[#1a2a46]/70 border-[#1a2a46]/15 dark:bg-white/5 dark:text-[#c9ced6] dark:border-white/10"
             }`}
-            title={`Tu suscripción vence en ${daysRemaining} ${daysRemaining === 1 ? "día" : "días"}`}
+            title={badge.title}
           >
             <Clock size={11} className="shrink-0" />
-            {daysRemaining <= 0 ? "Vencida" : `${daysRemaining}d`}
+            <span className="hidden sm:inline">{badge.label}</span>
+            <span className="sm:hidden">
+              {badge.daysRemaining === null
+                ? "∞"
+                : badge.daysRemaining < 0
+                  ? "Vencida"
+                  : `${badge.daysRemaining}d`}
+            </span>
           </span>
         )}
 

@@ -19,6 +19,8 @@ export interface WorkspaceItem {
   requiresSubscription?: boolean;
   subscriptionStatus?: 'ACTIVE' | 'TRIAL' | 'GRACE_PERIOD' | 'NONE';
   subscriptionEndDate?: string;
+  /** Plan the workspace is on (my-workspaces), for the header badge. */
+  planName?: string | null;
   // PATIENT_NUTRITIONIST specific fields
   nutritionistId?: string;
   nutritionistName?: string;
@@ -74,6 +76,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           requiresSubscription?: boolean;
           subscriptionStatus?: WorkspaceItem['subscriptionStatus'];
           subscriptionEndDate?: string;
+          plan?: { id: string; name: string } | null;
         }
         const orgs: WorkspaceItem[] = (response.data || []).map((org: MyWorkspaceOrg) => ({
           id: org.id,
@@ -87,6 +90,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           requiresSubscription: org.requiresSubscription || false,
           subscriptionStatus: org.subscriptionStatus || 'NONE',
           subscriptionEndDate: org.subscriptionEndDate,
+          planName: org.plan?.name ?? null,
         }));
 
           // Entitlement-driven: the personal workspace is covered when the user
