@@ -298,14 +298,12 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
         const title = subItem?.title || "";
 
 
-        if (activeWorkspace?.type === "PERSONAL") {
-          if (
-            link.includes('/dashboard/organization') ||
-            title.toLowerCase().includes('clínica') ||
-            title.toLowerCase().includes('clinica')
-          ) {
-            return false;
-          }
+        // The personal workspace has no administration screen of its own.
+        if (
+          activeWorkspace?.type === "PERSONAL" &&
+          link.includes("/dashboard/organization")
+        ) {
+          return false;
         }
         return true;
       });

@@ -15,8 +15,13 @@ describe("resolveDashboardHome", () => {
     );
   });
 
-  it("sends platform admins outside an org to /dashboard/users", () => {
-    expect(resolveDashboardHome({ ...base, isAdmin: true })).toBe("platform-admin");
+  it("sends platform admins outside an org to the platform dashboard", () => {
+    expect(resolveDashboardHome({ ...base, isAdmin: true })).toBe(
+      "platform-dashboard",
+    );
+  });
+
+  it("sends a USER_LIST-only user to the admin user list", () => {
     expect(resolveDashboardHome({ ...base, hasUserListPermit: true })).toBe(
       "platform-admin",
     );

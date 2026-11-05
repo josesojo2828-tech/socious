@@ -1,5 +1,6 @@
 export type DashboardHomeRoute =
   | "org-workspace"
+  | "platform-dashboard"
   | "platform-admin"
   | "login"
   | "choose-workspace";
@@ -13,7 +14,9 @@ export type DashboardHomeRoute =
  * organization users to the public landing page.
  *
  * - Organization workspace → the sales floor (`/dashboard/ventas`).
- * - Platform admin (ADMIN/SUPERADMIN or USER_LIST) outside an org → `/dashboard/users`.
+ * - Platform admin (ADMIN/SUPERADMIN) outside an org → the platform dashboard
+ *   (`/dashboard/analytics`), which is where the real metrics live.
+ * - A user with only USER_LIST → the user administration screen.
  * - No user after the session check → `/login` (never the public site).
  * - Authenticated, no organization → stay put and ask for a workspace.
  */
@@ -25,6 +28,7 @@ export function resolveDashboardHome(input: {
 }): DashboardHomeRoute {
   if (!input.hasUser) return "login";
   if (input.workspaceType === "ORGANIZATION") return "org-workspace";
-  if (input.isAdmin || input.hasUserListPermit) return "platform-admin";
+  if (input.isAdmin) return "platform-dashboard";
+  if (input.hasUserListPermit) return "platform-admin";
   return "choose-workspace";
 }

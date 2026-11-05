@@ -42,7 +42,9 @@ export default function AppDashboardPage() {
         if (!route) return;
         // El espacio de organización se queda en /dashboard: el panel con
         // datos reales ES la vista (feedback: nueva home del dashboard).
-        if (route === "platform-admin") {
+        if (route === "platform-dashboard") {
+            router.replace("/dashboard/analytics");
+        } else if (route === "platform-admin") {
             router.replace("/dashboard/users");
         } else if (route === "login") {
             router.replace("/login");

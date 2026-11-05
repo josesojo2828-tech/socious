@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useWorkspaceStore, WorkspaceItem } from '@/shared/store/workspace/useWorkspaceStore';
 import { useAuthStore } from '@/shared/store/auth/useAuthStore';
+import { roleLabel } from '@/features/user/lib/role-label';
 
 export const WorkspaceSwitcher: React.FC = () => {
   const { user } = useAuthStore();
@@ -23,7 +24,7 @@ export const WorkspaceSwitcher: React.FC = () => {
     setIsOpen(false);
     
     if (workspace.requiresSubscription) {
-      window.location.href = 'https://sub.nutringest.com';
+      window.location.href = '/dashboard/subscription';
     } else {
       window.location.href = '/dashboard';
     }
@@ -58,7 +59,10 @@ export const WorkspaceSwitcher: React.FC = () => {
         <div className="hidden md:inline-block">
           {activeWorkspace.role ? (
             <span className="px-1.5 py-0.5 text-[10px] uppercase font-extrabold tracking-wider rounded bg-indigo-500/15 dark:bg-indigo-500/20 text-[#1a2a46] dark:text-[#e6e1d5] border border-indigo-500/30 dark:border-indigo-400/30">
-              {activeWorkspace.role.replace('CLINIC_', '')}
+              {roleLabel({
+                workspaceType: activeWorkspace.type,
+                organizationRole: activeWorkspace.role,
+              })}
             </span>
           ) : (
             <span className="px-1.5 py-0.5 text-[10px] uppercase font-extrabold tracking-wider rounded bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-200 border border-emerald-500/30 dark:border-emerald-400/30">
@@ -107,7 +111,7 @@ export const WorkspaceSwitcher: React.FC = () => {
                       <div className="flex flex-col text-left truncate">
                         <span className="truncate text-xs font-semibold">{ws.name}</span>
                         <span className="text-[10px] text-slate-400 font-normal">
-                          {ws.type === 'ORGANIZATION' ? 'Organización / Clínica' : 'Espacio Personal'}
+                          {ws.type === 'ORGANIZATION' ? 'Organización' : 'Espacio Personal'}
                         </span>
                       </div>
                     </div>

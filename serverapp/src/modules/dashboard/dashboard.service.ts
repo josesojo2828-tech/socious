@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import UserReporitory from "../user/repository/user.repository";
 import PermitReporitory from "../permit/repository/permit.repository";
 import { ModuleService } from "../module-framework/services/module.service";
-import { isModuleFrameworkEnabled } from "../module-framework/util/module-framework.flag";
 import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import {
   SidebarItem,
@@ -31,9 +30,11 @@ export class DashboardService {
     if (isGlobalRole) {
       // =========================================================================
       // SECCIONES PARA ADMIN / SUPERADMIN (isGlobalRole)
+      // Tres pilares: dashboard de plataforma, usuarios y configuración.
+      // Nada del ERP del tenant y nada de módulos/finanzas/feedback.
       // =========================================================================
 
-      // 1. Panel General & Analíticas
+      // 1. Dashboard de plataforma (métricas reales de /platform-stats).
       sections.push({
         title: "common.sidebar.general_analytics",
         icon: "dashboard",
@@ -41,36 +42,12 @@ export class DashboardService {
           {
             title: "common.sidebar.dashboard",
             icon: "clipboard2-data-fill",
-            link: "/dashboard",
-          },
-          {
-            title: "common.sidebar.activity_feed",
-            icon: "activity",
-            link: "/dashboard/activity",
+            link: "/dashboard/analytics",
           },
         ],
       });
 
-      // 2. Módulos (UNA sección agrupada para admins — catálogo activo completo).
-      //    Los items enlazan al dashboard admin de cada módulo. Se omite la
-      //    sección si el catálogo no tiene módulos activos o si el framework
-      //    está apagado (task 5.1: `MODULE_FRAMEWORK_ENABLED`).
-      const activeModules = isModuleFrameworkEnabled()
-        ? await this.moduleService.listActive()
-        : [];
-      if (activeModules.length > 0) {
-        sections.push({
-          title: "common.sidebar.modules",
-          icon: "grid",
-          items: activeModules.map((module) => ({
-            title: module.name,
-            icon: module.icon ?? "grid",
-            link: `/dashboard/admin/modules/${module.key}`,
-          })),
-        });
-      }
-
-      // 3. Gestión de Usuarios
+      // 2. Gestión de Usuarios
       sections.push({
         title: "common.sidebar.user_management",
         icon: "users",
@@ -79,11 +56,6 @@ export class DashboardService {
             title: "common.sidebar.users",
             icon: "people-fill",
             link: "/dashboard/users",
-          },
-          {
-            title: "common.sidebar.feedback",
-            icon: "message",
-            link: "/dashboard/users/feedback",
           },
         ],
       });
@@ -122,29 +94,6 @@ export class DashboardService {
             title: "common.sidebar.active_subscriptions",
             icon: "fingerprint",
             link: "/dashboard/users/subscriptions",
-          },
-        ],
-      });
-
-      // 4. Finanzas
-      sections.push({
-        title: "common.sidebar.finances",
-        icon: "wallet",
-        items: [
-          {
-            title: "common.sidebar.transactions",
-            icon: "credit-card-fill",
-            link: "/dashboard/transactions",
-          },
-          {
-            title: "common.sidebar.wallets",
-            icon: "wallet",
-            link: "/dashboard/wallets",
-          },
-          {
-            title: "common.sidebar.payment_methods",
-            icon: "credit-card",
-            link: "/dashboard/users/payment-methods",
           },
         ],
       });

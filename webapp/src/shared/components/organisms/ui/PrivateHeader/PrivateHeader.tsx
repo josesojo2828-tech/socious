@@ -15,6 +15,7 @@ import { useNotifications } from "@/features/user/hooks/useNotifications";
 import { UserNotificationsSection } from "@/features/user/components/sections/UserNotificationSection";
 import { WorkspaceSwitcher } from "@/shared/components/layout/WorkspaceSwitcher";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
+import { roleLabel } from "@/features/user/lib/role-label";
 
 // Importaciones de Notificaciones
 
@@ -184,11 +185,12 @@ export const PrivateHeader = () => {
             <div className="text-right hidden md:block">
               <Text as={'p'} className="text-sm font-semibold text-[#111018] dark:text-white leading-none">@{user?.username}</Text>
               <Text as={'p'} className="text-[10px] font-bold text-[#8e7538] dark:text-[#d8c084] uppercase tracking-wider mt-1">
-                {user?.permits?.name === 'PATIENT'
-                  ? 'Paciente'
-                  : activeWorkspace?.type === 'ORGANIZATION'
-                    ? activeWorkspace.role === 'CLINIC_ADMIN' ? 'Admin' : 'Colaborador'
-                    : user?.subscriptions?.[0]?.plan?.name || 'Free'}
+                {roleLabel({
+                  permitName: user?.permits?.name,
+                  workspaceType: activeWorkspace?.type,
+                  organizationRole: activeWorkspace?.role,
+                  planName: user?.subscriptions?.[0]?.plan?.name,
+                })}
               </Text>
             </div>
             <Avatar

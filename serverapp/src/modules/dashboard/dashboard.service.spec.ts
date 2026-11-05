@@ -174,32 +174,31 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     ).toContain("/dashboard/admin/organizations");
   });
 
-  it("renders ONE grouped modules section for admins with the active catalog", async () => {
-    const sections = await makeService([
-      { key: "ATTENDANCE_CONTROL", name: "Asistencia", icon: "calendar" },
-      { key: "INVENTORY", name: "Inventario", icon: "package" },
-    ]).getSidebarSections({
+  it("gives the admin only the three pillars: dashboard, users and settings", async () => {
+    const sections = await makeService().getSidebarSections({
       id: "admin-1",
       permits: ["PERMIT_DASHBOARD"],
       modules: [],
       isGlobalRole: true,
     });
 
-    const moduleSections = sections.filter(
-      (section) => section.title === "common.sidebar.modules",
-    );
-    expect(moduleSections).toHaveLength(1);
-    expect(moduleSections[0].items.map((item) => item.link)).toEqual([
-      "/dashboard/admin/modules/ATTENDANCE_CONTROL",
-      "/dashboard/admin/modules/INVENTORY",
-    ]);
+    const links = linksOf(sections);
+    expect(links).toContain("/dashboard/analytics");
+    expect(links).toContain("/dashboard/users");
+    expect(links).toContain("/dashboard/admin/settings");
+    expect(links).not.toContain("/dashboard");
+    expect(links).not.toContain("/dashboard/activity");
+    expect(links).not.toContain("/dashboard/transactions");
+    expect(links).not.toContain("/dashboard/wallets");
+    expect(links).not.toContain("/dashboard/users/payment-methods");
+    expect(links).not.toContain("/dashboard/users/feedback");
+    expect(links).not.toContain("/dashboard/pos");
   });
 
-  it("omits the grouped modules section when MODULE_FRAMEWORK_ENABLED is off", async () => {
-    process.env.MODULE_FRAMEWORK_ENABLED = "false";
-
+  it("drops the module catalog from the admin sidebar", async () => {
     const sections = await makeService([
       { key: "ATTENDANCE_CONTROL", name: "Asistencia", icon: "calendar" },
+      { key: "INVENTORY", name: "Inventario", icon: "package" },
     ]).getSidebarSections({
       id: "admin-1",
       permits: ["PERMIT_DASHBOARD"],
