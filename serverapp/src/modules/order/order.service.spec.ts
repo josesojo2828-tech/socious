@@ -76,6 +76,19 @@ const makeService = (settings: any = DEFAULT_SETTINGS) => {
   return { service, prisma, tx, saleService, tenantSettings, shippingAgency, emitter };
 };
 
+describe("OrderService — inbox", () => {
+  it("keeps orders that already became a sale out of the inbox", async () => {
+    const { service, prisma } = makeService();
+
+    await service.list({ organizationId: ORG_A }, {});
+
+    const where = prisma.order.findMany.mock.calls[0][0].where;
+    expect(where.AND).toEqual(expect.arrayContaining([{ saleId: null }]));
+    // The count must apply the same filter or pagination would lie.
+    expect(prisma.order.count.mock.calls[0][0].where).toEqual(where);
+  });
+});
+
 const baseOrder = (
   status: OrderStatus = OrderStatus.PENDING,
   fulfillmentType: "PICKUP" | "DELIVERY" | "SHIPPING" = "PICKUP",

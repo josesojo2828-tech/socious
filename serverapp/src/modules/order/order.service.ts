@@ -256,7 +256,12 @@ export class OrderService {
     const page = Math.max(query.page ?? 1, 1);
     const limit = Math.min(Math.max(query.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
 
-    const filters: Prisma.OrderWhereInput[] = [this.scopeWhere(scope.organizationId)];
+    // Converted orders leave the inbox: once a sale exists the pending work is
+    // done and the record lives in Ventas.
+    const filters: Prisma.OrderWhereInput[] = [
+      this.scopeWhere(scope.organizationId),
+      { saleId: null },
+    ];
 
     if (query.status) filters.push({ status: query.status });
     if (query.fulfillmentType) {
