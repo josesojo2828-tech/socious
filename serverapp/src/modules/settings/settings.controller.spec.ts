@@ -33,7 +33,13 @@ const makeController = (
 
   const prisma = {
     organization: {
-      findUnique: jest.fn().mockResolvedValue({ id: "org-1", status: "ACTIVE" }),
+      findUnique: jest.fn().mockResolvedValue({
+        id: "org-1",
+        status: "ACTIVE",
+        name: "Socius Demo",
+        slug: "socius-demo",
+        logoUrl: null,
+      }),
     },
     shippingAgency: {
       findMany: jest.fn().mockResolvedValue([
@@ -242,10 +248,17 @@ describe("SettingsController — public checkout config (S12)", () => {
       shipping: { enabledAgencies: ["ZOOM"] },
       delivery: { enabled: true, feeUSD: 3.5 },
       routes: { enabled: false },
+      storefront: { whatsapp: "584241234567" },
     });
 
     const config = await controller.getPublicCheckoutConfig("socius-demo");
 
+    expect(config.store).toEqual({
+      name: "Socius Demo",
+      slug: "socius-demo",
+      logoUrl: null,
+      whatsapp: "584241234567",
+    });
     expect(config.fulfillmentTypes).toEqual(["PICKUP", "DELIVERY"]);
     expect(config.coordination).toBe("WHATSAPP");
     expect(config.delivery).toEqual({ enabled: true, feeUSD: 3.5 });

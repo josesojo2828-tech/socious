@@ -138,7 +138,7 @@ export class SettingsController {
   async getPublicCheckoutConfig(@Param("slug") slug: string) {
     const organization = await this.prisma.organization.findUnique({
       where: { slug },
-      select: { id: true, status: true },
+      select: { id: true, status: true, name: true, slug: true, logoUrl: true },
     });
 
     if (!organization || organization.status !== "ACTIVE") {
@@ -152,6 +152,12 @@ export class SettingsController {
     });
 
     return {
+      store: {
+        name: organization.name,
+        slug: organization.slug,
+        logoUrl: organization.logoUrl,
+        whatsapp: settings.storefront?.whatsapp || null,
+      },
       fulfillmentTypes: settings.fulfillment.enabledTypes,
       coordination: settings.fulfillment.coordination,
       delivery: {

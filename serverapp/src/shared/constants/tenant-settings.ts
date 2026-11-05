@@ -80,6 +80,14 @@ export interface TenantSettings {
      */
     useServices: boolean;
   };
+  /**
+   * Public storefront (S12): contact channel the customer uses to coordinate
+   * payment directly with the merchant.
+   */
+  storefront: {
+    /** Digits only, with country code (e.g. 584241234567). Empty = hidden. */
+    whatsapp: string;
+  };
   /** Logic-only notification switches (CRM S2); nothing is sent yet. */
   notifications: {
     lowStock: boolean;
@@ -141,6 +149,7 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
   payments: { disabledCodes: [] },
   purchases: { onlySupplierProducts: false },
   inventory: { useRawMaterials: false, useServices: false },
+  storefront: { whatsapp: "" },
   notifications: {
     lowStock: true,
     creditDue: true,
@@ -235,6 +244,13 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
 const asBool = (value: unknown, fallback: boolean): boolean =>
   typeof value === "boolean" ? value : fallback;
 
+/** WhatsApp number: digits only, country code included. Empty is legal. */
+const asWhatsapp = (value: unknown, fallback: string): string => {
+  if (typeof value !== "string") return fallback;
+  const digits = value.replace(/[^0-9]/g, "");
+  return digits.length >= 8 && digits.length <= 15 ? digits : "";
+};
+
 /** Fees are money: finite, non-negative, two decimals. */
 const asFee = (value: unknown, fallback: number): number =>
   typeof value === "number" && Number.isFinite(value) && value >= 0
@@ -286,6 +302,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
   const payments = isPlainObject(source.payments) ? source.payments : {};
   const purchases = isPlainObject(source.purchases) ? source.purchases : {};
   const inventory = isPlainObject(source.inventory) ? source.inventory : {};
+  const storefront = isPlainObject(source.storefront) ? source.storefront : {};
 
   const defaults = DEFAULT_TENANT_SETTINGS;
 
@@ -345,6 +362,12 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       useServices: asBool(
         inventory.useServices,
         defaults.inventory.useServices,
+      ),
+    },
+    storefront: {
+      whatsapp: asWhatsapp(
+        storefront?.whatsapp,
+        defaults.storefront.whatsapp,
       ),
     },
     notifications: {

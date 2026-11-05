@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  MaxLength,
   Min,
   Max,
   ValidateNested,
@@ -184,6 +185,13 @@ export class InventorySettingsDto {
   useServices?: boolean;
 }
 
+export class StorefrontSettingsDto {
+  @IsOptional()
+  @IsString({ message: "storefront.whatsapp debe ser texto." })
+  @MaxLength(20)
+  whatsapp?: string;
+}
+
 export class UpdateTenantSettingsDto {
   @IsOptional()
   @ValidateNested()
@@ -244,6 +252,11 @@ export class UpdateTenantSettingsDto {
   @ValidateNested()
   @Type(() => InventorySettingsDto)
   inventory?: InventorySettingsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => StorefrontSettingsDto)
+  storefront?: StorefrontSettingsDto;
 }
 
 /** The visibility keys the DTO accepts, exported for the controller's docs. */

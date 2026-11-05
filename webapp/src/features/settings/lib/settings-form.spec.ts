@@ -48,6 +48,7 @@ const base: TenantSettings = {
   payments: { disabledCodes: [] },
   purchases: { onlySupplierProducts: false },
   inventory: { useRawMaterials: false, useServices: false },
+  storefront: { whatsapp: "" },
 };
 
 describe("settings-form (S4)", () => {

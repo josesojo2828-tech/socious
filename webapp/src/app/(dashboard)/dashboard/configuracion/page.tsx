@@ -14,6 +14,7 @@ import {
   Sparkles,
   Boxes,
   Briefcase,
+  Store,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -67,6 +68,7 @@ import {
   patchFulfillmentType,
   patchInventoryUseRawMaterials,
   patchInventoryUseServices,
+  patchStorefrontWhatsapp,
   patchRoutesEnabled,
 } from "@/features/settings/lib/settings-form";
 import {
@@ -137,8 +139,13 @@ export default function SettingsPage() {
   const [tab, setTab] = useState<
     "general" | "inventory" | "payments" | "credit" | "returns" | "notifications"
   >("general");
+  const [whatsappInput, setWhatsappInput] = useState<string>("");
   const [branchName, setBranchName] = useState<string>("");
   const [branchAddress, setBranchAddress] = useState<string>("");
+
+  useEffect(() => {
+    if (settings) setWhatsappInput(settings.storefront?.whatsapp ?? "");
+  }, [settings]);
 
   useEffect(() => {
     let cancelled = false;
@@ -357,6 +364,37 @@ export default function SettingsPage() {
             checked={settings.cash.shiftControl}
             onChange={() => void save(patchCashShiftControl)}
           />
+        </SectionRow>
+      </SectionPanel>
+
+      <SectionPanel
+        icon={<Store className="h-5 w-5" />}
+        title="Tienda pública"
+        description={`Tu tienda vive en /${activeWorkspace?.slug ?? "tu-usuario"}. Los clientes arman el pedido y coordinan el pago por WhatsApp.`}
+      >
+        <SectionRow
+          label="WhatsApp para coordinar pagos"
+          hint="Con código de país, solo números (ej. 584241234567). Vacío = sin botón de WhatsApp."
+        >
+          <div className="flex items-center gap-2">
+            <input
+              value={whatsappInput}
+              onChange={(event) => setWhatsappInput(event.target.value)}
+              inputMode="numeric"
+              placeholder="584241234567"
+              className={`w-44 font-mono ${INPUT}`}
+            />
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() =>
+                void save(() => patchStorefrontWhatsapp(whatsappInput))
+              }
+              className="inline-flex items-center justify-center rounded-xl bg-[#1a2a46] px-3 py-2 text-sm font-semibold text-[#f0ede4] transition-colors hover:bg-[#243a5e] disabled:opacity-50"
+            >
+              Guardar
+            </button>
+          </div>
         </SectionRow>
       </SectionPanel>
 

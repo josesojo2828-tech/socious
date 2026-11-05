@@ -54,6 +54,7 @@ export function applySettingsPatch(
     },
     purchases: { ...current.purchases, ...(patch.purchases ?? {}) },
     inventory: { ...current.inventory, ...(patch.inventory ?? {}) },
+    storefront: { ...current.storefront, ...(patch.storefront ?? {}) },
   };
 }
 
@@ -86,6 +87,11 @@ export function patchInventoryUseServices(
   return {
     inventory: { useServices: !current.inventory.useServices },
   };
+}
+
+/** Public storefront: the WhatsApp number customers write to. */
+export function patchStorefrontWhatsapp(whatsapp: string): TenantSettingsPatch {
+  return { storefront: { whatsapp: whatsapp.replace(/[^0-9]/g, "") } };
 }
 
 export function patchCurrency(

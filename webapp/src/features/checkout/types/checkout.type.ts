@@ -1,6 +1,15 @@
 import type { FulfillmentType } from "../../orders/types/order.type";
 
+export interface CheckoutStore {
+  name: string;
+  slug: string | null;
+  logoUrl: string | null;
+  /** Digits with country code; null hides the WhatsApp actions. */
+  whatsapp: string | null;
+}
+
 export interface CheckoutConfig {
+  store: CheckoutStore;
   fulfillmentTypes: FulfillmentType[];
   coordination: string;
   delivery: { enabled: boolean; feeUSD: number };

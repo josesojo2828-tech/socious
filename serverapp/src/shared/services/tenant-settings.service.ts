@@ -385,6 +385,25 @@ export class TenantSettingsService {
       }
     }
 
+    if (input.storefront !== undefined) {
+      const storefront = input.storefront as Record<string, unknown>;
+      assertKnownKeys("storefront", storefront, ["whatsapp"]);
+      if (storefront.whatsapp !== undefined) {
+        if (typeof storefront.whatsapp !== "string") {
+          throw new BadRequestException(
+            "storefront.whatsapp debe ser texto.",
+          );
+        }
+        const digits = storefront.whatsapp.replace(/[^0-9]/g, "");
+        if (digits !== "" && (digits.length < 8 || digits.length > 15)) {
+          throw new BadRequestException(
+            "storefront.whatsapp debe tener entre 8 y 15 dígitos, con código de país.",
+          );
+        }
+        result.storefront = { whatsapp: digits };
+      }
+    }
+
     if (input.inventory !== undefined) {
       const inventory = input.inventory as Record<string, unknown>;
       assertKnownKeys("inventory", inventory, [
@@ -489,5 +508,6 @@ export function mergeTenantSettings(
     },
     purchases: { ...base.purchases, ...(patch.purchases ?? {}) },
     inventory: { ...base.inventory, ...(patch.inventory ?? {}) },
+    storefront: { ...base.storefront, ...(patch.storefront ?? {}) },
   });
 }

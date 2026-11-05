@@ -60,6 +60,8 @@ export interface TenantSettings {
    * the BOM section; `useServices` shows the Services screen.
    */
   inventory: { useRawMaterials: boolean; useServices: boolean };
+  /** Public storefront contact: digits with country code. */
+  storefront: { whatsapp: string };
   /**
    * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
    * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the

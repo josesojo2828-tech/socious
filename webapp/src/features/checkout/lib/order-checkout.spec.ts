@@ -4,6 +4,12 @@ import type { CheckoutConfig, CheckoutForm } from "../types/checkout.type";
 import type { CartLine } from "../../sales/lib/pos-form";
 
 const config: CheckoutConfig = {
+  store: {
+    name: "Socius Demo",
+    slug: "socius-demo",
+    logoUrl: null,
+    whatsapp: null,
+  },
   fulfillmentTypes: ["PICKUP", "DELIVERY", "SHIPPING"],
   coordination: "WHATSAPP",
   delivery: { enabled: true, feeUSD: 3.5 },
