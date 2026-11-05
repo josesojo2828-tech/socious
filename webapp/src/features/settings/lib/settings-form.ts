@@ -79,6 +79,15 @@ export function patchInventoryUseRawMaterials(
   };
 }
 
+/** Toggle "trabajar con servicios" (optional Services screen). */
+export function patchInventoryUseServices(
+  current: TenantSettings,
+): TenantSettingsPatch {
+  return {
+    inventory: { useServices: !current.inventory.useServices },
+  };
+}
+
 export function patchCurrency(
   current: TenantSettings,
   key: CurrencyVisibilityKey,

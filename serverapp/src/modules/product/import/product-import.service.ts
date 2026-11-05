@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
+import { TenantSettingsService } from "src/shared/services/tenant-settings.service";
 import { ProductService, type ProductScope } from "../product.service";
 import { CreateProductDto } from "../dto/product.dto";
 import { NAME_MAX, NOTES_MAX, SKU_MAX, SKU_PATTERN } from "../dto/product.dto";
@@ -42,7 +43,7 @@ const TEMPLATE_HEADER = TEMPLATE_COLUMNS.join(",");
  */
 const TEMPLATE_EXAMPLES = [
   "ARROZ-1KG,Arroz blanco 1 kg,producto,7790001000011,Arroz de grano largo,1.20,1.80,50,UND,Almacén,Distribuidora del Sur,true",
-  "CONSULT-01,Consulta nutricional,servicio,,Sesión de 45 minutos,0.00,25.00,0,UND,Servicios,,false",
+  "CAFE-500G,Café molido 500 g,producto,7790001000028,Café tostado natural,3.50,5.20,20,UND,Almacén,Distribuidora del Sur,false",
 ];
 
 /** S1: hard limits measured on the raw request content. */
@@ -75,6 +76,10 @@ interface RowValidationContext {
   supplierByName: Map<string, string>;
   /** Flat error list filled while rows are validated. */
   fieldErrors: ImportFieldError[];
+  /** `inventory.useRawMaterials`: material rows require it. */
+  allowMaterials: boolean;
+  /** `inventory.useServices`: servicio rows require it. */
+  allowServices: boolean;
 }
 
 interface ValidatedRow {
@@ -103,6 +108,7 @@ export class ProductImportService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly productService: ProductService,
+    private readonly tenantSettings: TenantSettingsService,
   ) {}
 
   /** CSV text with a UTF-8 BOM so Excel renders accents correctly. */
@@ -165,6 +171,7 @@ export class ProductImportService {
     const uniqueSkus = [...new Set(skuCells)];
 
     const lookups = await this.loadLookups(scope, uniqueSkus);
+    const settings = await this.tenantSettings.get(scope.organizationId);
 
     const rows: ImportPreviewRow[] = [];
     const fieldErrors: ImportFieldError[] = [];
@@ -172,6 +179,8 @@ export class ProductImportService {
       ...lookups,
       seenSkus: new Set<string>(),
       fieldErrors,
+      allowMaterials: settings.inventory.useRawMaterials,
+      allowServices: settings.inventory.useServices,
     };
 
     for (const row of parsed.rows) {
@@ -252,11 +261,14 @@ export class ProductImportService {
     ];
 
     const lookups = await this.loadLookups(scope, uniqueSkus);
+    const settings = await this.tenantSettings.get(scope.organizationId);
 
     const context: RowValidationContext = {
       ...lookups,
       seenSkus: new Set<string>(),
       fieldErrors: errors,
+      allowMaterials: settings.inventory.useRawMaterials,
+      allowServices: settings.inventory.useServices,
     };
 
     const valid: ValidCommitRow[] = [];
@@ -468,6 +480,18 @@ export class ProductImportService {
       pushError("tipo", "el tipo es obligatorio.");
     } else if ((IMPORT_TIPOS as readonly string[]).includes(rawTipo)) {
       tipo = rawTipo as ImportTipo;
+      if (tipo === "material" && !context.allowMaterials) {
+        pushError(
+          "tipo",
+          'el tipo material requiere habilitar "Materia prima" en Configuración.',
+        );
+      }
+      if (tipo === "servicio" && !context.allowServices) {
+        pushError(
+          "tipo",
+          'el tipo servicio requiere habilitar "Servicios" en Configuración.',
+        );
+      }
     } else {
       pushError("tipo", "el tipo debe ser producto, servicio o material.");
     }

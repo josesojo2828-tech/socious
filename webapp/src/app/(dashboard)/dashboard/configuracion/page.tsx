@@ -13,6 +13,7 @@ import {
   Building2,
   Sparkles,
   Boxes,
+  Briefcase,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -65,6 +66,7 @@ import {
   patchDeliveryFee,
   patchFulfillmentType,
   patchInventoryUseRawMaterials,
+  patchInventoryUseServices,
   patchRoutesEnabled,
 } from "@/features/settings/lib/settings-form";
 import {
@@ -637,15 +639,32 @@ export default function SettingsPage() {
             <SectionPanel
               icon={<Boxes className="h-5 w-5" />}
               title="Materia prima"
-              description="Productos compuestos (BOM): al vender, el sistema descuenta los insumos del inventario."
+              description="Productos compuestos (BOM): al vender, el sistema descuenta los insumos del inventario. Activa también la pantalla Materiales."
             >
               <SectionRow
                 label="Trabajar con materia prima"
-                hint="Activo: el form de producto muestra la sección de componentes y las ventas bloquean si falta insumo."
+                hint="Activo: aparece la pantalla Materiales, el form de producto muestra la sección de componentes y las ventas bloquean si falta insumo."
               >
                 <Toggle
                   checked={settings.inventory.useRawMaterials}
                   onChange={() => void save(patchInventoryUseRawMaterials)}
+                />
+              </SectionRow>
+            </SectionPanel>
+          ) : null}
+          {settings ? (
+            <SectionPanel
+              icon={<Briefcase className="h-5 w-5" />}
+              title="Servicios"
+              description="Habilita la pantalla de servicios: productos sin stock que se venden desde el POS."
+            >
+              <SectionRow
+                label="Trabajar con servicios"
+                hint="Activo: aparece la pantalla Servicios para cargar y editar servicios. Inactivo: la pantalla y su entrada del menú quedan ocultas."
+              >
+                <Toggle
+                  checked={settings.inventory.useServices}
+                  onChange={() => void save(patchInventoryUseServices)}
                 />
               </SectionRow>
             </SectionPanel>

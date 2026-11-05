@@ -11,7 +11,11 @@ import type { SidebarSection } from "src/shared/types/dashboard.type";
  */
 const makeService = (
   activeModules: { key: string; name: string; icon: string | null }[] = [],
-  settings: { routes?: { enabled?: boolean }; cash?: { shiftControl?: boolean } } = {
+  settings: {
+    routes?: { enabled?: boolean };
+    cash?: { shiftControl?: boolean };
+    inventory?: { useRawMaterials?: boolean; useServices?: boolean };
+  } = {
     routes: { enabled: false },
   },
 ) =>
@@ -21,6 +25,11 @@ const makeService = (
     get: jest.fn().mockResolvedValue({
       cash: { shiftControl: true, ...(settings.cash ?? {}) },
       routes: settings.routes ?? { enabled: false },
+      inventory: {
+        useRawMaterials: false,
+        useServices: false,
+        ...(settings.inventory ?? {}),
+      },
     }),
   } as any);
 
@@ -60,10 +69,41 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain("/dashboard/ventas");
     expect(links).toContain("/dashboard/productos");
     expect(links).toContain("/dashboard/clientes");
-    // Materiales (S6): raw-materials screen under Inventario.
+    // Materiales y Servicios son opt-in: apagados por defecto.
+    expect(links).not.toContain("/dashboard/materiales");
+    expect(links).not.toContain("/dashboard/servicios");
+  });
+
+  it("shows Materiales and Servicios only when the tenant enables them", async () => {
+    const links = linksOf(
+      await makeService([], {
+        inventory: { useRawMaterials: true, useServices: true },
+      }).getSidebarSections({
+        id: "u1",
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: "org-1",
+      }),
+    );
+
     expect(links).toContain("/dashboard/materiales");
-    // Servicios (S7): create/list isService products, parallel to Materiales.
     expect(links).toContain("/dashboard/servicios");
+  });
+
+  it("shows them independently", async () => {
+    const links = linksOf(
+      await makeService([], {
+        inventory: { useRawMaterials: true, useServices: false },
+      }).getSidebarSections({
+        id: "u1",
+        permits: BASE_PERMITS,
+        modules: [],
+        organizationId: "org-1",
+      }),
+    );
+
+    expect(links).toContain("/dashboard/materiales");
+    expect(links).not.toContain("/dashboard/servicios");
   });
 
   it("never renders the retired nutrition routes", async () => {

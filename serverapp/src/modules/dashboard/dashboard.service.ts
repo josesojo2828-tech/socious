@@ -289,17 +289,23 @@ export class DashboardService {
             icon: "arrows-down-up",
             link: "/dashboard/inventario",
           },
-          {
+        ];
+        // Materiales y Servicios son opcionales por negocio: solo aparecen si
+        // la configuración los habilita (inventory.useRawMaterials/useServices).
+        if (settings.inventory.useRawMaterials) {
+          inventoryItems.push({
             title: "Materiales",
             icon: "database",
             link: "/dashboard/materiales",
-          },
-          {
+          });
+        }
+        if (settings.inventory.useServices) {
+          inventoryItems.push({
             title: "Servicios",
             icon: "briefcase",
             link: "/dashboard/servicios",
-          },
-        ];
+          });
+        }
         sections.push({
           title: "Inventario",
           icon: "package",

@@ -55,8 +55,11 @@ export interface TenantSettings {
    * `false` (default) = mostrar todos los productos.
    */
   purchases: { onlySupplierProducts: boolean };
-  /** BOM mode (S2): show/hide the raw-materials section on product forms. */
-  inventory: { useRawMaterials: boolean };
+  /**
+   * Optional catalog features: `useRawMaterials` shows the Materials screen and
+   * the BOM section; `useServices` shows the Services screen.
+   */
+  inventory: { useRawMaterials: boolean; useServices: boolean };
   /**
    * Module keys of the active plan (entitlements). Básico lacks SHIPPING,
    * ROUTES, ORDERS and CATALOG_ONLINE — the settings screen hides the

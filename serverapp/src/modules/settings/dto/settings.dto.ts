@@ -178,6 +178,12 @@ export class InventorySettingsDto {
     message: "inventory.useRawMaterials debe ser verdadero o falso.",
   })
   useRawMaterials?: boolean;
+
+  @IsOptional()
+  @IsBoolean({
+    message: "inventory.useServices debe ser verdadero o falso.",
+  })
+  useServices?: boolean;
 }
 
 export class UpdateTenantSettingsDto {

@@ -19,6 +19,7 @@ import {
   TABLE_ROW,
 } from "@/shared/lib/maison-style";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
+import { getTenantSettings } from "@/features/settings/services/settings.service";
 import { MaterialFormModal } from "@/features/products/components/MaterialFormModal";
 import type { RawMaterialRow } from "@/features/products/types/product.type";
 
@@ -37,9 +38,25 @@ export default function MaterialesPage() {
   const { openModal, closeModal } = useModalStore();
   const [rows, setRows] = useState<RawMaterialRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  /** `null` while the tenant settings load; `false` = feature not enabled. */
+  const [enabled, setEnabled] = useState<boolean | null>(null);
   const [query, setQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const pageSize = 25;
+
+  useEffect(() => {
+    let alive = true;
+    void getTenantSettings()
+      .then((settings) => {
+        if (alive) setEnabled(Boolean(settings.inventory?.useRawMaterials));
+      })
+      .catch(() => {
+        if (alive) setEnabled(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -89,7 +106,27 @@ export default function MaterialesPage() {
   const safePage = Math.min(page, totalPages);
   const pageRows = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
-  if (loading) {
+  if (enabled === false) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16">
+        <div className={`rounded-2xl p-8 text-center ${CARD}`}>
+          <h1 className={PAGE_TITLE}>Materiales</h1>
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+            Esta sección está desactivada. Habilitala en Configuración →
+            Inventario → Materia prima.
+          </p>
+          <Link
+            href="/dashboard/configuracion"
+            className={`mt-6 px-5 py-2.5 text-sm ${CTA_BRASS}`}
+          >
+            Ir a Configuración
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (enabled === null || loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-slate-400" />

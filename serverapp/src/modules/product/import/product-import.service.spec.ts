@@ -44,10 +44,28 @@ const makeProductService = (
   create: jest.Mock = jest.fn().mockResolvedValue({ id: "p-1" }),
 ) => ({ create });
 
+const makeTenantSettings = (
+  inventory: { useRawMaterials?: boolean; useServices?: boolean } = {},
+) => ({
+  get: jest.fn().mockResolvedValue({
+    inventory: {
+      useRawMaterials: true,
+      useServices: true,
+      ...inventory,
+    },
+  }),
+});
+
 const makeService = (
   prisma = makePrisma(),
   productService = makeProductService(),
-) => new ProductImportService(prisma as any, productService as any);
+  tenantSettings = makeTenantSettings(),
+) =>
+  new ProductImportService(
+    prisma as any,
+    productService as any,
+    tenantSettings as any,
+  );
 
 const FAKE_TX = { __tx: true };
 
@@ -289,6 +307,57 @@ describe("ProductImportService.validate", () => {
     expect(result.rows[0].errors).toContain(
       "Fila 2: el tipo debe ser producto, servicio o material.",
     );
+  });
+
+  it("rejects a material row when Materia prima is disabled", async () => {
+    const service = makeService(
+      makePrisma(),
+      makeProductService(),
+      makeTenantSettings({ useRawMaterials: false }),
+    );
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([
+        rowOf({ sku: "A-1", nombre: "Harina", tipo: "material" }),
+      ]),
+    });
+
+    expect(result.rows[0].include).toBe(false);
+    expect(result.rows[0].errors).toContain(
+      'Fila 2: el tipo material requiere habilitar "Materia prima" en Configuración.',
+    );
+  });
+
+  it("rejects a servicio row when Servicios is disabled", async () => {
+    const service = makeService(
+      makePrisma(),
+      makeProductService(),
+      makeTenantSettings({ useServices: false }),
+    );
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([
+        rowOf({ sku: "A-1", nombre: "Consulta", tipo: "servicio" }),
+      ]),
+    });
+
+    expect(result.rows[0].include).toBe(false);
+    expect(result.rows[0].errors).toContain(
+      'Fila 2: el tipo servicio requiere habilitar "Servicios" en Configuración.',
+    );
+  });
+
+  it("accepts material and servicio rows when both are enabled", async () => {
+    const service = makeService();
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([
+        rowOf({ sku: "A-1", nombre: "Harina", tipo: "material" }),
+        rowOf({ sku: "B-2", nombre: "Consulta", tipo: "servicio" }),
+      ]),
+    });
+
+    expect(result.summary.valid).toBe(2);
   });
 
   it("rejects an unparseable publico value", async () => {

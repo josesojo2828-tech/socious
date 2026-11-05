@@ -9,6 +9,7 @@ import {
   patchDeliveryFee,
   patchFulfillmentType,
   patchInventoryUseRawMaterials,
+  patchInventoryUseServices,
   patchRoutesEnabled,
   toggleListValue,
 } from "./settings-form";
@@ -46,7 +47,7 @@ const base: TenantSettings = {
   },
   payments: { disabledCodes: [] },
   purchases: { onlySupplierProducts: false },
-  inventory: { useRawMaterials: false },
+  inventory: { useRawMaterials: false, useServices: false },
 };
 
 describe("settings-form (S4)", () => {
@@ -119,6 +120,20 @@ describe("settings-form (S4)", () => {
       });
       expect(next.inventory.useRawMaterials).toBe(true);
       expect(next.cash).toEqual(base.cash);
+    });
+  });
+
+  describe("inventory services", () => {
+    it("flips the useServices flag", () => {
+      expect(patchInventoryUseServices(base)).toEqual({
+        inventory: { useServices: true },
+      });
+      const on = applySettingsPatch(base, patchInventoryUseServices(base));
+      expect(on.inventory.useServices).toBe(true);
+      expect(on.inventory.useRawMaterials).toBe(false);
+      expect(
+        patchInventoryUseServices(on),
+      ).toEqual({ inventory: { useServices: false } });
     });
   });
 

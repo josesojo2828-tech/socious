@@ -387,16 +387,30 @@ export class TenantSettingsService {
 
     if (input.inventory !== undefined) {
       const inventory = input.inventory as Record<string, unknown>;
-      assertKnownKeys("inventory", inventory, ["useRawMaterials"]);
+      assertKnownKeys("inventory", inventory, [
+        "useRawMaterials",
+        "useServices",
+      ]);
+      const nextInventory: { useRawMaterials?: boolean; useServices?: boolean } =
+        {};
       if (inventory.useRawMaterials !== undefined) {
         if (typeof inventory.useRawMaterials !== "boolean") {
           throw new BadRequestException(
             "inventory.useRawMaterials debe ser verdadero o falso.",
           );
         }
-        result.inventory = {
-          useRawMaterials: inventory.useRawMaterials,
-        };
+        nextInventory.useRawMaterials = inventory.useRawMaterials;
+      }
+      if (inventory.useServices !== undefined) {
+        if (typeof inventory.useServices !== "boolean") {
+          throw new BadRequestException(
+            "inventory.useServices debe ser verdadero o falso.",
+          );
+        }
+        nextInventory.useServices = inventory.useServices;
+      }
+      if (Object.keys(nextInventory).length > 0) {
+        result.inventory = nextInventory;
       }
     }
 
