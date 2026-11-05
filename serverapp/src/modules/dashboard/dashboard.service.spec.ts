@@ -69,6 +69,9 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain("/dashboard/ventas");
     expect(links).toContain("/dashboard/productos");
     expect(links).toContain("/dashboard/clientes");
+    // The plans screen must stay reachable after onboarding: the login flow
+    // sends tenants without a subscription there, and there was no way back.
+    expect(links).toContain("/dashboard/subscription");
     // Materiales y Servicios son opt-in: apagados por defecto.
     expect(links).not.toContain("/dashboard/materiales");
     expect(links).not.toContain("/dashboard/servicios");

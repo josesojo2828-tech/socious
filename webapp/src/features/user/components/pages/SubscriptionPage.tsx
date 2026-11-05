@@ -154,7 +154,7 @@ function NutritionistSubscriptionPage() {
           <div className="space-y-2 max-w-lg font-sans">
             <h3 className="text-2xl font-bold text-base-content tracking-tight">No tienes un plan activo</h3>
             <p className="text-base-content/70 text-sm leading-relaxed">
-              Para poder seguir gestionando pacientes, diseñar planes de alimentación y utilizar todas las funcionalidades avanzadas de la plataforma, necesitas adquirir o renovar tu suscripción.
+              Para usar todas las funcionalidades de la plataforma necesitás adquirir o renovar tu suscripción.
             </p>
           </div>
 
@@ -169,7 +169,7 @@ function NutritionistSubscriptionPage() {
               Ver Planes Disponibles
             </button>
             <a
-              href="https://wa.me/584243153383?text=Hola,%20necesito%20soporte%20con%20mi%20suscripción%20en%20Nutringest"
+              href="https://wa.me/584243153383?text=Hola,%20necesito%20soporte%20con%20mi%20suscripción%20en%20Socius"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 bg-base-200 hover:bg-base-300 text-base-content border border-base-300 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
@@ -323,11 +323,12 @@ function ClinicSubscriptionSelection() {
     <div className="w-full max-w-6xl mx-auto p-6 md:p-8 space-y-8 animate-fade-in">
       <div className="flex flex-col gap-2">
         <Text as={'h2'} variant={'h1'}>
-          {t('common.subscription.clinic_title') || 'Suscripción de la Clínica'}
+          Su plan
         </Text>
         <p className="text-base-content/70 text-sm">
-          Seleccioná el plan para <strong>{activeWorkspace?.name}</strong>. 
-          Con la suscripción de clínica, todos los nutricionistas invitados tendrán acceso al software.
+          Elegí el plan para <strong>{activeWorkspace?.name}</strong>. La
+          suscripción habilita los módulos del negocio y los asientos del
+          equipo.
         </p>
       </div>
 
@@ -340,7 +341,7 @@ function ClinicSubscriptionSelection() {
           <div>
             <h4 className="font-bold text-emerald-800 dark:text-emerald-300">Suscripción Activa</h4>
             <p className="text-emerald-600 dark:text-emerald-400 text-sm">
-              Tu clínica tiene una suscripción activa. Los nutricionistas invitados tienen acceso.
+              Tu negocio tiene una suscripción activa.
             </p>
           </div>
         </div>

@@ -289,6 +289,13 @@ export class DashboardService {
               icon: "settings",
               link: "/dashboard/configuracion",
             },
+            {
+              // Always reachable: the login flow sends a tenant without a
+              // plan here, and it must not become a dead end afterwards.
+              title: "Suscripción",
+              icon: "card-fill",
+              link: "/dashboard/subscription",
+            },
           ],
         });
       }
@@ -301,11 +308,11 @@ export class DashboardService {
         permits.includes(this.permitRepository.PERMIT_DASHBOARD)
       ) {
         sections.push({
-          title: "common.sidebar.my_clinic",
+          title: "Organización",
           icon: "building",
           items: [
             {
-              title: "common.sidebar.organization",
+              title: "Organización",
               icon: "building",
               link: "/dashboard/organization",
             },

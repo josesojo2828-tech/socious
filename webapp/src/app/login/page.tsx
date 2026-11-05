@@ -33,10 +33,19 @@ export default function LoginPage() {
   // Lógica de Autenticación
   const { login, isLoading, error: authError, user } = useAuthStore();
 
+  // Single source of truth for the post-login destination. Previously a
+  // mount effect pushed `/dashboard` while the submit handler scheduled
+  // `/dashboard/subscription`, so the two raced and the plans screen could be
+  // skipped (or shown and then yanked away).
   useEffect(() => {
-    if (user) {
-      router.replace("/dashboard");
+    if (!user) return;
+    if (user.mustChangePassword) {
+      router.replace("/change-password");
+      return;
     }
+    router.replace(
+      user.subscriptions?.length ? "/dashboard" : "/dashboard/subscription",
+    );
   }, [user, router]);
 
   // Estados Locales
@@ -54,22 +63,8 @@ export default function LoginPage() {
     try {
       await login(email, password);
 
-      const { user } = useAuthStore.getState();
-      if (user?.mustChangePassword) {
-        router.push("/change-password");
-        return;
-      }
-
+      // Navigation is owned by the effect above, which reacts to `user`.
       setIsSuccess(true);
-
-      setTimeout(() => {
-        const { user } = useAuthStore.getState();
-        if (!user?.subscriptions?.length) {
-          router.push("/dashboard/subscription");
-        } else {
-          router.push("/dashboard");
-        }
-      }, 1200);
     } catch (err) {
       console.error("Login fallido", err);
     }
