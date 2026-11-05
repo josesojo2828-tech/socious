@@ -13,14 +13,12 @@ import {
   Calendar,
   Loader2,
   AlertCircle,
-  UtensilsCrossed,
   Package,
   BarChart3,
 } from "lucide-react";
 import { Tabs } from "@/shared/components/organisms/Tabs";
 import type { TabEntry } from "@/shared/components/organisms/Tabs/Tabs.types";
 import { GeneralTab } from "@/features/dashboard/components/user-detail/GeneralTab";
-import { NutritionalTab } from "@/features/dashboard/components/user-detail/NutritionalTab";
 import { ModulesTab } from "@/features/dashboard/components/user-detail/ModulesTab";
 import { BillingTab } from "@/features/dashboard/components/user-detail/BillingTab";
 import { StatsTab } from "@/features/dashboard/components/user-detail/StatsTab";
@@ -94,14 +92,6 @@ export default function UserDetailPage() {
             subscription={subscription}
             stats={stats}
           />
-        ),
-      },
-      {
-        label: "Nutricional",
-        value: "nutritional",
-        icon: UtensilsCrossed,
-        content: (
-          <NutritionalTab user={user} stats={stats} onRefetch={refetch} />
         ),
       },
       {

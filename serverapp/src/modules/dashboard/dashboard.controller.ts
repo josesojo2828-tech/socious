@@ -18,6 +18,7 @@ import { Logger } from "@nestjs/common";
 import { EntitlementService } from "../permit/service/entitlement.service";
 import type { ResolvedEntitlements } from "../permit/service/entitlement-resolver";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
+import { startOfDayInZone } from "src/shared/utils/day-boundary";
 const logger = new Logger("dashboard.controller");
 
 @Controller("api/dashboard")
@@ -99,8 +100,9 @@ export class DashboardController {
 
   /**
    * Platform-wide ERP numbers for the admin panel (analytics rewrite):
-   * real counts only — organizations, users, active subscriptions per plan
-   * and the MRR those subscriptions add up to. Global roles only.
+   * real counts only — organizations, users (total, active today and new
+   * today), the latest sign-ups, active subscriptions per plan and the MRR
+   * those subscriptions add up to. Global roles only.
    */
   @Get("/platform-stats")
   @UseGuards(SessionAuthGuard)
@@ -115,14 +117,45 @@ export class DashboardController {
       );
     }
 
-    const [organizations, users, subscriptions] = await Promise.all([
-      this.prisma.organization.count(),
-      this.prisma.user.count({ where: { deletedAt: null } }),
-      this.prisma.subscription.findMany({
-        where: { status: "ACTIVE" },
-        include: { plan: { select: { id: true, name: true, price: true } } },
-      }),
-    ]);
+    // "Today" is the business day, not the server's UTC day.
+    const timeZone = process.env.BILLING_TIMEZONE || "America/Caracas";
+    const startOfToday = startOfDayInZone(new Date(), timeZone);
+
+    const [organizations, users, activeToday, newToday, recentUsers, subscriptions] =
+      await Promise.all([
+        this.prisma.organization.count(),
+        this.prisma.user.count({ where: { deletedAt: null } }),
+        this.prisma.userSession.findMany({
+          where: {
+            deletedAt: null,
+            startedAt: { gte: startOfToday },
+          },
+          select: { userId: true },
+          distinct: ["userId"],
+        }),
+        this.prisma.user.count({
+          where: { deletedAt: null, createdAt: { gte: startOfToday } },
+        }),
+        this.prisma.user.findMany({
+          where: { deletedAt: null },
+          orderBy: { createdAt: "desc" },
+          take: 5,
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            fullName: true,
+            email: true,
+            status: true,
+            createdAt: true,
+            permits: { select: { name: true } },
+          },
+        }),
+        this.prisma.subscription.findMany({
+          where: { status: "ACTIVE" },
+          include: { plan: { select: { id: true, name: true, price: true } } },
+        }),
+      ]);
 
     const byPlan = new Map<
       string,
@@ -147,6 +180,19 @@ export class DashboardController {
     return {
       organizations,
       users,
+      activeUsersToday: activeToday.length,
+      newUsersToday: newToday,
+      recentUsers: recentUsers.map((row) => ({
+        id: row.id,
+        name:
+          row.fullName?.trim() ||
+          `${row.firstName ?? ""} ${row.lastName ?? ""}`.trim() ||
+          row.email,
+        email: row.email,
+        status: row.status,
+        createdAt: row.createdAt,
+        permitName: row.permits?.name ?? null,
+      })),
       activeSubscriptions: subscriptions.length,
       mrrUSD: Math.round(mrrUSD * 100) / 100,
       plans: [...byPlan.values()].sort((a, b) =>

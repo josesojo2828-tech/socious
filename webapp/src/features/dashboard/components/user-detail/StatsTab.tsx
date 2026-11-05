@@ -57,12 +57,6 @@ export function StatsTab({ user, stats, activityFeed, activityLoading }: StatsTa
       <SectionCard title="Estadísticas y Resumen" icon={BarChart3}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <MetricCard
-            icon={Users}
-            iconClassName="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
-            value={stats.totalPatients}
-            label="Total pacientes"
-          />
-          <MetricCard
             icon={CreditCard}
             iconClassName="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
             value={stats.totalTransactions}

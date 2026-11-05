@@ -1,6 +1,15 @@
 'use client';
 
-import { Info, Wallet, CreditCard, LogIn, Users, Calendar } from 'lucide-react';
+import {
+  Activity,
+  Calendar,
+  CreditCard,
+  Info,
+  LogIn,
+  Receipt,
+  Users,
+  Wallet,
+} from 'lucide-react';
 import { Field, SectionCard, StatusPill } from './SectionCard';
 import type {
   UserDetailStats,
@@ -57,7 +66,7 @@ export function GeneralTab({ user, wallet, subscription, stats }: GeneralTabProp
   return (
     <div className="space-y-6">
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           icon={Wallet}
           iconClassName="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
@@ -82,6 +91,18 @@ export function GeneralTab({ user, wallet, subscription, stats }: GeneralTabProp
           iconClassName="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
           value={String(stats.totalReferrals)}
           label="Referidos"
+        />
+        <StatCard
+          icon={Receipt}
+          iconClassName="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400"
+          value={String(stats.totalTransactions)}
+          label="Transacciones"
+        />
+        <StatCard
+          icon={Activity}
+          iconClassName="bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300"
+          value={String(stats.totalActivityLogs)}
+          label="Registros de actividad"
         />
       </div>
 

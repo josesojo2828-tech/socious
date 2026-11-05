@@ -45,7 +45,24 @@ const makeController = (members: Member[]) => {
       }),
     },
     organization: { count: jest.fn(async () => 7) },
-    user: { count: jest.fn(async () => 42) },
+    user: {
+      count: jest.fn(async () => 42),
+      findMany: jest.fn(async () => [
+        {
+          id: "u-9",
+          firstName: "Ana",
+          lastName: "Pérez",
+          fullName: null,
+          email: "ana@x.dev",
+          status: "ACTIVE",
+          createdAt: new Date("2026-11-05T10:00:00.000Z"),
+          permits: { name: "USER" },
+        },
+      ]),
+    },
+    userSession: {
+      findMany: jest.fn(async () => [{ userId: "u-1" }, { userId: "u-2" }]),
+    },
     subscription: {
       findMany: jest.fn(async () => [
         {
@@ -191,6 +208,18 @@ describe("DashboardController — /platform-stats (ERP analytics)", () => {
     expect(stats).toEqual({
       organizations: 7,
       users: 42,
+      activeUsersToday: 2,
+      newUsersToday: 42,
+      recentUsers: [
+        {
+          id: "u-9",
+          name: "Ana Pérez",
+          email: "ana@x.dev",
+          status: "ACTIVE",
+          createdAt: new Date("2026-11-05T10:00:00.000Z"),
+          permitName: "USER",
+        },
+      ],
       activeSubscriptions: 1,
       mrrUSD: 9.99,
       plans: [
