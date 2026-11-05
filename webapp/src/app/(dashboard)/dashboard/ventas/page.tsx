@@ -835,7 +835,7 @@ export default function SalesPage() {
                   </span>
                   <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400">
                     {currencies.showVES
-                      ? `≈ Bs ${(
+                      ? `≈ BCV Bs ${(
                           remainingUSD * (Number(selected.rateBcv) || 1)
                         ).toLocaleString("es-VE", {
                           minimumFractionDigits: 2,
@@ -845,7 +845,8 @@ export default function SalesPage() {
                     {currencies.showVES && currencies.showUSDT ? " · " : null}
                     {currencies.showUSDT
                       ? `USDT ${(
-                          remainingUSD / (Number(selected.rateUsdt) || 1)
+                          (remainingUSD * (Number(selected.rateBcv) || 1)) /
+                          (Number(selected.rateUsdt) || 1)
                         ).toFixed(2)}`
                       : null}
                   </span>
