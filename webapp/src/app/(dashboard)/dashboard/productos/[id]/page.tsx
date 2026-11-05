@@ -7,10 +7,10 @@ import {
   AlertCircle,
   ArrowLeft,
   Copy,
+  History,
   Layers,
   Loader2,
   Pencil,
-  StickyNote,
   Tag,
   Trash2,
 } from "lucide-react";
@@ -29,11 +29,11 @@ import { ProductEndpoints } from "@/features/products/services/products.endpoint
 import type {
   Product,
   ProductStatus,
+  StockMovement,
 } from "@/features/products/types/product.type";
 import { PRODUCT_STATUS_OPTIONS } from "@/features/products/lib/product-form";
 import { BarcodePreview } from "@/features/products/components/BarcodePreview";
 import { PresentationsCard } from "@/features/products/components/PresentationsCard";
-import { publicFileUrl } from "@/features/products/lib/product-images";
 import { ProductImagesCard } from "@/features/products/components/ProductImagesCard";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 
@@ -92,6 +92,15 @@ function statusBadge(status: ProductStatus): { label: string; className: string 
   };
 }
 
+const MOVEMENT_LABELS: Record<StockMovement["type"], string> = {
+  IN: "Entrada",
+  OUT: "Salida",
+  ADJUSTMENT: "Ajuste",
+  SALE: "Venta",
+  PURCHASE: "Compra",
+  RETURN: "Devolución",
+};
+
 function money(amount: string | number): string {
   return `$${Number(amount).toFixed(2)}`;
 }
@@ -111,16 +120,24 @@ export default function ProductDetailPage() {
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
+  const [movements, setMovements] = useState<StockMovement[]>([]);
 
   const bootstrap = useCallback(async () => {
     if (!productId) return;
     setLoading(true);
     try {
-      const [detail, settings] = await Promise.all([
+      const [detail, settings, movementsPage] = await Promise.all([
         apiClient.get<Product>(ProductEndpoints.detail(productId)),
         getTenantSettings().catch(() => null),
+        apiClient
+          .get<{ list: StockMovement[] }>(
+            ProductEndpoints.stockMovements(productId),
+            { params: { limit: 6 } },
+          )
+          .catch(() => ({ data: { list: [] as StockMovement[] } })),
       ]);
       setProduct(detail.data);
+      setMovements(movementsPage.data.list ?? []);
       setPlanModules(settings?.planModules ?? []);
       setImageLimits(settings?.imageLimits ?? null);
     } catch (error) {
@@ -259,7 +276,7 @@ export default function ProductDetailPage() {
             className={BTN_GHOST}
             title="Crea una copia de este producto como variante nueva"
           >
-            <Copy className="h-4 w-4" /> Crear variante
+            <Copy className="h-4 w-4" /> Copiar
           </button>
           <Link
             href={`/dashboard/productos/${product.id}/editar`}
@@ -419,15 +436,47 @@ export default function ProductDetailPage() {
         <section className={`rounded-2xl ${CARD}`}>
           <div className={CARD_HEADER}>
             <h3 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
-              Notas
+              Últimos movimientos
             </h3>
-            <StickyNote className="h-4 w-4 text-[#b2944a]" />
+            <History className="h-4 w-4 text-[#b2944a]" />
           </div>
-          <div className="p-5 text-sm text-[#111018] dark:text-slate-100 whitespace-pre-wrap">
-            {product.description?.trim() ? product.description : (
-              <span className="text-slate-400">Sin notas.</span>
-            )}
-          </div>
+          {movements.length === 0 ? (
+            <p className="p-5 text-sm text-slate-400">
+              Sin movimientos de stock todavía.
+            </p>
+          ) : (
+            <ul className="divide-y divide-[#1b1d21]/8 dark:divide-white/5">
+              {movements.map((movement) => (
+                <li
+                  key={movement.id}
+                  className="flex items-center justify-between gap-3 px-5 py-2.5 text-sm"
+                >
+                  <span className="min-w-0">
+                    <span className="font-medium text-[#111018] dark:text-slate-100">
+                      {MOVEMENT_LABELS[movement.type] ?? movement.type}
+                    </span>
+                    <span className="ml-2 font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
+                      {Number(movement.quantity) > 0 ? "+" : ""}
+                      {Number(movement.quantity)}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-right">
+                    <span className="block font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
+                      {Number(movement.previousStock)} →{" "}
+                      {Number(movement.newStock)}
+                    </span>
+                    <span className="block text-[11px] text-slate-400">
+                      {new Date(movement.createdAt).toLocaleDateString("es-VE", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </div>
 
@@ -448,59 +497,6 @@ export default function ProductDetailPage() {
         />
       ) : null}
 
-      {/* Sub-productos / variantes (round 5, #3): copias con stock e imagen propios */}
-      <section className={`rounded-2xl ${CARD}`}>
-        <div className={CARD_HEADER}>
-          <h2 className="font-semibold text-[15px] tracking-tight text-[#111018] dark:text-slate-100">
-            Variantes
-          </h2>
-          <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-[0.14em]">
-            {(product.variants ?? []).length} sub-producto(s)
-          </span>
-        </div>
-        {(product.variants ?? []).length === 0 ? (
-          <p className="px-5 py-4 text-sm text-slate-500 dark:text-slate-400">
-            Sin variantes todavía — usá el botón Crear variante para copiar
-            este producto (tallas, colores…) con su propio stock, imagen y
-            precios.
-          </p>
-        ) : (
-          <ul className="divide-y divide-[#1b1d21]/8 dark:divide-white/5">
-            {(product.variants ?? []).map((variant) => (
-              <li key={variant.id}>
-                <a
-                  href={`/dashboard/productos/${variant.id}`}
-                  className="flex items-center gap-3 px-5 py-2.5 hover:bg-[#1a2a46]/[0.03] dark:hover:bg-white/5 transition-colors no-underline"
-                >
-                  <span className="w-9 h-9 rounded-lg overflow-hidden bg-[#1a2a46]/5 dark:bg-white/5 flex items-center justify-center shrink-0">
-                    {variant.images?.[0]?.key ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={publicFileUrl(variant.images[0].key)}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-sm font-semibold text-[#1a2a46]/40 dark:text-white/40">
-                        {variant.name.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </span>
-                  <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-medium text-[#111018] dark:text-slate-100 truncate">
-                      {variant.name}
-                    </span>
-                    <span className="block font-mono text-[11px] text-slate-500 dark:text-slate-400">
-                      {variant.sku} · stock {Number(variant.stock)} {variant.unit}
-                      {variant.isService ? " · servicio" : ""}
-                    </span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
     </div>
   );
 }
