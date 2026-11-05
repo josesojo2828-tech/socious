@@ -250,6 +250,40 @@ export class ExchangeService {
     return { rateBcv: latest.rateBcv, rateUsdt: latest.rateUsdt };
   }
 
+  /**
+   * Snapshot of the rate in force on `at` (the latest row recorded on or
+   * before that instant). Used by collections so an abono is valued with the
+   * rate of the day it actually happened, not the one frozen on the sale.
+   */
+  async resolveRatesAt(
+    organizationId: string | null | undefined,
+    at: Date,
+  ): Promise<RateSnapshot> {
+    const organizationFilter = organizationId
+      ? [{ organizationId }, { organizationId: null }]
+      : [{ organizationId: null }];
+
+    // The whole calendar day counts: a rate captured at 15:00 still values a
+    // collection registered at noon of the same day.
+    const endOfDay = new Date(at);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    const row = await this.prisma.exchangeRate.findFirst({
+      where: { OR: organizationFilter, date: { lte: endOfDay } },
+      orderBy: { date: 'desc' },
+    });
+
+    if (row) {
+      return {
+        rateBcv: Number(row.rateBcv),
+        rateUsdt: Number(row.rateUsdt),
+      };
+    }
+
+    // No history before that date: fall back to the latest known rate.
+    return this.resolveRates(organizationId);
+  }
+
   /** Stores a rate row (manual capture or a scheduled API pull). */
   async recordRates(input: RecordRatesInput): Promise<PersistedRateView> {
     if (!(input.rateBcv > 0) || !(input.rateUsdt > 0)) {

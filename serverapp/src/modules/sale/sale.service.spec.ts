@@ -58,6 +58,8 @@ const makeService = () => {
   };
   const exchangeService = {
     resolveRates: jest.fn().mockResolvedValue(RATES),
+    // Collections use the rate of the day the abono happened.
+    resolveRatesAt: jest.fn().mockResolvedValue(RATES),
   };
   const sequenceService = {
     nextFormatted: jest.fn().mockResolvedValue("VTA-00001"),
@@ -669,13 +671,14 @@ describe("SaleService", () => {
       tx.salePayment.create.mockResolvedValue({ id: "p-1" });
 
       await service.addPayment({ organizationId: ORG_A }, "s-1", {
-        amountOriginal: 800,
+        amountOriginal: 795,
         currency: "USD",
         paymentMethod: "PAGO_MOVIL",
       });
 
       const data = tx.salePayment.create.mock.calls[0][0].data;
-      // Pago Móvil is VES: 800 Bs / 800 = $1, regardless of the "USD" sent.
+      // Pago Móvil is VES: 795 Bs / 795 (rate on the collection day) = $1,
+      // regardless of the "USD" the client sent.
       expect(data.currency).toBe("VES");
       expect(data.amountUSD).toBe(1);
     });

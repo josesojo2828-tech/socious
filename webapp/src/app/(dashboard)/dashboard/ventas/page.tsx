@@ -46,6 +46,7 @@ import {
 } from "@/features/sales/lib/sales-list";
 import { todayISO } from "@/features/cash/lib/cash-form";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
+import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 
 interface Paged<T> {
   list: T[];
@@ -124,6 +125,15 @@ export default function SalesPage() {
   const [reasonChoice, setReasonChoice] = useState<string>("");
   const [returnable, setReturnable] = useState<Record<string, number>>({});
 
+  /**
+   * Current rate snapshot. An abono is valued with the rate in force the day
+   * it happens, so the pending balance and the client-side guard quote with
+   * these, not with the rate frozen on the sale.
+   */
+  const [liveRates, setLiveRates] = useState<{
+    rateBcv: number;
+    rateUsdt: number;
+  } | null>(null);
   /** Which currency equivalents the tenant chose to show. */
   const [currencies, setCurrencies] = useState<{
     showVES: boolean;
@@ -131,6 +141,24 @@ export default function SalesPage() {
   }>({ showVES: true, showUSDT: true });
   const [report, setReport] = useState<SalesReport | null>(null);
   const [reportOpen, setReportOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    let alive = true;
+    void apiClient
+      .get<{ rateBcv: number | string; rateUsdt: number | string }>(
+        ExchangeEndpoints.latest,
+      )
+      .then(({ data }) => {
+        if (!alive) return;
+        const rateBcv = Number(data?.rateBcv) || 0;
+        const rateUsdt = Number(data?.rateUsdt) || 0;
+        if (rateBcv > 0) setLiveRates({ rateBcv, rateUsdt: rateUsdt || 1 });
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     void getTenantSettings()
@@ -238,8 +266,8 @@ export default function SalesPage() {
 
       // Same converted-USD math the backend applies, so an overpayment is
       // caught before the request and named with the real remaining balance.
-      const saleBcv = Number(selected.rateBcv) || 1;
-      const saleUsdt = Number(selected.rateUsdt) || 1;
+      const saleBcv = liveRates?.rateBcv || Number(selected.rateBcv) || 1;
+      const saleUsdt = liveRates?.rateUsdt || Number(selected.rateUsdt) || 1;
       const amountUSD =
         payCurrency === "USD"
           ? amount
@@ -836,7 +864,8 @@ export default function SalesPage() {
                   <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400">
                     {currencies.showVES
                       ? `≈ BCV Bs ${(
-                          remainingUSD * (Number(selected.rateBcv) || 1)
+                          remainingUSD *
+                          (liveRates?.rateBcv || Number(selected.rateBcv) || 1)
                         ).toLocaleString("es-VE", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
@@ -845,8 +874,9 @@ export default function SalesPage() {
                     {currencies.showVES && currencies.showUSDT ? " · " : null}
                     {currencies.showUSDT
                       ? `USDT ${(
-                          (remainingUSD * (Number(selected.rateBcv) || 1)) /
-                          (Number(selected.rateUsdt) || 1)
+                          (remainingUSD *
+                            (liveRates?.rateBcv || Number(selected.rateBcv) || 1)) /
+                          (liveRates?.rateUsdt || Number(selected.rateUsdt) || 1)
                         ).toFixed(2)}`
                       : null}
                   </span>

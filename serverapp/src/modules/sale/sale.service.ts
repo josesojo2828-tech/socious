@@ -249,10 +249,13 @@ export class SaleService {
         );
       }
 
-      const rates: RateSnapshot = {
-        rateBcv: Number(sale.rateBcv),
-        rateUsdt: Number(sale.rateUsdt),
-      };
+      // A collection is valued with the rate of the day it actually happened
+      // (the latest snapshot on or before `paidAt`), not the sale's rate.
+      const paidAt = data.paidAt ? new Date(data.paidAt) : new Date();
+      const rates: RateSnapshot = await this.exchangeService.resolveRatesAt(
+        scope.organizationId ?? null,
+        paidAt,
+      );
 
       // An abono can never collect more than the document still owes: the
       // historical overpayments (client "credit") are not a supported flow.
