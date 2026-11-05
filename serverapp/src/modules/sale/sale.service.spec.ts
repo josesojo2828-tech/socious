@@ -602,10 +602,14 @@ describe("SaleService", () => {
         clientId: "c-1",
         organizationId: ORG_A,
       });
-      tx.salePayment.findMany.mockResolvedValue([
-        { amountUSD: "40.00" },
-        { amountUSD: "60.00" },
-      ]);
+      // Pre-check reads the existing payments; the post-insert read includes
+      // the one just created.
+      tx.salePayment.findMany
+        .mockResolvedValueOnce([{ amountUSD: "40.00" }])
+        .mockResolvedValueOnce([
+          { amountUSD: "40.00" },
+          { amountUSD: "60.00" },
+        ]);
 
       const result = await service.addPayment(
         { organizationId: ORG_A, createdById: "u-1" },
@@ -629,7 +633,9 @@ describe("SaleService", () => {
         clientId: "c-1",
         organizationId: ORG_A,
       });
-      tx.salePayment.findMany.mockResolvedValue([{ amountUSD: "60.00" }]);
+      tx.salePayment.findMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([{ amountUSD: "60.00" }]);
       tx.salePayment.create.mockResolvedValue({
         id: "p-1",
         amountUSD: "60.00",
@@ -645,6 +651,31 @@ describe("SaleService", () => {
       expect(tx.client.update.mock.calls[0][0].data).toEqual({
         currentBalanceUSD: { increment: -60 },
       });
+    });
+
+    it("rejects an abono larger than what the sale still owes", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        totalUSD: "80.00",
+        rateBcv: "894.8900",
+        rateUsdt: "1016.9700",
+        clientId: null,
+        organizationId: ORG_A,
+      });
+      tx.salePayment.findMany.mockResolvedValue([{ amountUSD: "70.00" }]);
+
+      await expect(
+        service.addPayment({ organizationId: ORG_A }, "s-1", {
+          amountOriginal: 20,
+          currency: "USD",
+          paymentMethod: "CASH_USD",
+        }),
+      ).rejects.toThrow(/supera lo que resta/);
+
+      expect(tx.salePayment.create).not.toHaveBeenCalled();
     });
   });
 

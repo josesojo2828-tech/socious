@@ -239,6 +239,25 @@ export default function SalesPage() {
         return;
       }
 
+      // Same converted-USD math the backend applies, so an overpayment is
+      // caught before the request and named with the real remaining balance.
+      const saleBcv = Number(selected.rateBcv) || 1;
+      const saleUsdt = Number(selected.rateUsdt) || 1;
+      const amountUSD =
+        payCurrency === "USD"
+          ? amount
+          : payCurrency === "VES"
+            ? amount / saleBcv
+            : (amount * saleUsdt) / saleBcv;
+      if (amountUSD > remainingUSD + 0.01) {
+        addToast({
+          type: "warning",
+          title: "Abono",
+          message: `El abono supera lo que resta de la venta ($${remainingUSD.toFixed(2)}).`,
+        });
+        return;
+      }
+
       try {
         await apiClient.post(SaleEndpoints.payments(selected.id), {
           amountOriginal: amount,

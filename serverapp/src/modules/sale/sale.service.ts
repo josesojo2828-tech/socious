@@ -253,6 +253,27 @@ export class SaleService {
         rateUsdt: Number(sale.rateUsdt),
       };
 
+      // An abono can never collect more than the document still owes: the
+      // historical overpayments (client "credit") are not a supported flow.
+      const existing = await tx.salePayment.findMany({
+        where: { saleId: sale.id },
+        select: { amountUSD: true },
+      });
+      const paidBefore = round2(
+        existing.reduce((sum, row) => sum + Number(row.amountUSD), 0),
+      );
+      const remaining = remainingBalance(Number(sale.totalUSD), paidBefore);
+      const incoming = buildPaymentAmounts(
+        Number(data.amountOriginal),
+        data.currency,
+        rates,
+      );
+      if (incoming.amountUSD > remaining + 0.01) {
+        throw new BadRequestException(
+          `El abono ($${incoming.amountUSD.toFixed(2)}) supera lo que resta de la venta ($${remaining.toFixed(2)}).`,
+        );
+      }
+
       const [payment] = await this.persistPayments(
         tx,
         scope,
