@@ -201,7 +201,7 @@ describe("OrderService", () => {
       tx.product.findMany.mockResolvedValue([PUBLISHED_PRODUCT]);
     };
 
-    it("rejects an order without a contact email", async () => {
+    it("rejects an order with no contact channel at all", async () => {
       const { service, tx } = makeService();
       publishShop(tx);
 
@@ -211,7 +211,21 @@ describe("OrderService", () => {
           customerName: "Ana",
           items: [{ productId: "prod-1", quantity: 1 }],
         } as any),
-      ).rejects.toThrow(/correo del cliente es obligatorio/);
+      ).rejects.toThrow(/WhatsApp o un correo/);
+    });
+
+    it("accepts an order with only a WhatsApp number", async () => {
+      const { service, tx } = makeService();
+      publishShop(tx);
+
+      await expect(
+        service.createPublicOrder({
+          organizationSlug: "tienda",
+          customerName: "Ana",
+          customerPhone: "584241234567",
+          items: [{ productId: "prod-1", quantity: 1 }],
+        } as any),
+      ).resolves.toBeDefined();
     });
 
     it("links the order to the client that already matches by email", async () => {

@@ -35,7 +35,7 @@ export interface PublicProduct {
 
 export interface CheckoutForm {
   customerName: string;
-  customerEmail: string;
+  customerEmail?: string;
   customerPhone?: string;
   customerAddress?: string;
   fulfillmentType: FulfillmentType;

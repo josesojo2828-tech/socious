@@ -464,24 +464,15 @@ export function PublicStorefront({ slug }: { slug: string }) {
                     />
                   </label>
                   <label className={LABEL_SM}>
-                    Correo *
+                    WhatsApp *
                     <input
-                      type="email"
-                      value={form.customerEmail}
-                      onChange={(event) =>
-                        setForm((f) => ({ ...f, customerEmail: event.target.value }))
-                      }
-                      className={`mt-1 ${INPUT}`}
-                    />
-                  </label>
-                  <label className={LABEL_SM}>
-                    Teléfono
-                    <input
+                      inputMode="tel"
                       value={form.customerPhone}
                       onChange={(event) =>
                         setForm((f) => ({ ...f, customerPhone: event.target.value }))
                       }
-                      className={`mt-1 ${INPUT}`}
+                      placeholder="584241234567"
+                      className={`mt-1 font-mono ${INPUT}`}
                     />
                   </label>
 
@@ -544,17 +535,6 @@ export function PublicStorefront({ slug }: { slug: string }) {
                     </label>
                   ) : null}
 
-                  <label className={LABEL_SM}>
-                    Notas
-                    <textarea
-                      value={form.notes}
-                      onChange={(event) =>
-                        setForm((f) => ({ ...f, notes: event.target.value }))
-                      }
-                      rows={2}
-                      className={`mt-1 ${INPUT}`}
-                    />
-                  </label>
                 </div>
 
                 {!needsFulfillmentStep ? (

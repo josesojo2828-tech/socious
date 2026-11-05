@@ -54,11 +54,14 @@ export class CreateOrderDto {
   customerName: string;
 
   /**
-   * Contact is mandatory (S5): it is how the order gets linked to the shop's
-   * client list (email first, phone as fallback).
+   * Contact (S5): the order needs at least one channel. The storefront asks
+   * for the WhatsApp number; the email stays optional and is validated when
+   * present.
    */
-  @IsEmail({}, { message: "El correo del cliente es obligatorio y debe ser válido." })
-  customerEmail: string;
+  @IsOptional()
+  @IsEmail({}, { message: "El correo del cliente debe ser válido." })
+  @MaxLength(160)
+  customerEmail?: string;
 
   @IsOptional()
   @IsString()

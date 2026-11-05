@@ -14,8 +14,11 @@ export function validateCheckout(
   config: CheckoutConfig | null,
 ): string | null {
   if (!form.customerName?.trim()) return "Tu nombre es obligatorio.";
-  if (!form.customerEmail?.trim()) return "Tu correo es obligatorio.";
-  if (!EMAIL_PATTERN.test(form.customerEmail.trim())) {
+  if (!form.customerPhone?.trim()) {
+    return "Dejanos tu WhatsApp para contactarte.";
+  }
+  // Email is optional now; validate it only when the customer typed one.
+  if (form.customerEmail?.trim() && !EMAIL_PATTERN.test(form.customerEmail.trim())) {
     return "El correo no tiene un formato válido.";
   }
 
@@ -56,7 +59,9 @@ export function buildPublicOrderPayload(
   return {
     organizationSlug,
     customerName: form.customerName.trim(),
-    customerEmail: form.customerEmail.trim(),
+    ...(form.customerEmail?.trim()
+      ? { customerEmail: form.customerEmail.trim() }
+      : {}),
     ...(form.customerPhone?.trim()
       ? { customerPhone: form.customerPhone.trim() }
       : {}),

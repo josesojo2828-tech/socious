@@ -103,12 +103,15 @@ export class OrderService {
     // S5: the visitor leaves a name and a real contact; that is also what the
     // order is linked to in the shop's client list.
     const customerName = data.customerName?.trim();
-    const customerEmail = data.customerEmail?.trim();
+    const customerEmail = data.customerEmail?.trim() || null;
+    const customerPhone = data.customerPhone?.trim() || null;
     if (!customerName) {
       throw new BadRequestException("El nombre del cliente es obligatorio.");
     }
-    if (!customerEmail) {
-      throw new BadRequestException("El correo del cliente es obligatorio.");
+    if (!customerEmail && !customerPhone) {
+      throw new BadRequestException(
+        "Dejanos un WhatsApp o un correo para contactarte.",
+      );
     }
 
     const settings = await this.tenantSettings.get(organization.id);
@@ -468,24 +471,27 @@ export class OrderService {
       return owned.id;
     }
 
-    const email = data.customerEmail.trim();
+    const email = data.customerEmail?.trim() || null;
+    const phone = data.customerPhone?.trim() || null;
 
-    const byEmail = await tx.client.findFirst({
-      where: {
-        organizationId,
-        deletedAt: null,
-        email: { equals: email, mode: "insensitive" },
-      },
-      select: { id: true },
-    });
-    if (byEmail) return byEmail.id;
+    if (email) {
+      const byEmail = await tx.client.findFirst({
+        where: {
+          organizationId,
+          deletedAt: null,
+          email: { equals: email, mode: "insensitive" },
+        },
+        select: { id: true },
+      });
+      if (byEmail) return byEmail.id;
+    }
 
-    if (data.customerPhone?.trim()) {
+    if (phone) {
       const byPhone = await tx.client.findFirst({
         where: {
           organizationId,
           deletedAt: null,
-          phone: data.customerPhone.trim(),
+          phone,
         },
         select: { id: true },
       });
@@ -496,7 +502,7 @@ export class OrderService {
       data: {
         name: data.customerName.trim(),
         email,
-        phone: data.customerPhone?.trim() || null,
+        phone,
         address: data.customerAddress?.trim() || null,
         organizationId,
         notes: "Creado desde pedido web",

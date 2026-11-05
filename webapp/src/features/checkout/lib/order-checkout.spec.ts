@@ -18,6 +18,7 @@ const config: CheckoutConfig = {
 
 const form = (overrides: Partial<CheckoutForm> = {}): CheckoutForm => ({
   customerName: "  Ana Pérez ",
+  customerPhone: " 584241234567 ",
   customerEmail: "  ana@cliente.test ",
   fulfillmentType: "PICKUP",
   ...overrides,
@@ -47,13 +48,17 @@ describe("validateCheckout", () => {
       expect(validateCheckout(form(), config)).toBeNull();
     });
 
-    it("requires name and a well-formed email", () => {
+    it("requires the name and the WhatsApp number", () => {
       expect(validateCheckout(form({ customerName: " " }), config)).toMatch(
         /nombre/i,
       );
-      expect(validateCheckout(form({ customerEmail: "" }), config)).toMatch(
-        /correo/i,
+      expect(validateCheckout(form({ customerPhone: "" }), config)).toMatch(
+        /whatsapp/i,
       );
+    });
+
+    it("keeps the email optional but validates it when present", () => {
+      expect(validateCheckout(form({ customerEmail: "" }), config)).toBeNull();
       expect(
         validateCheckout(form({ customerEmail: "no-correo" }), config),
       ).toMatch(/formato/i);
@@ -148,7 +153,6 @@ describe("validateCheckout", () => {
 
       expect(payload).not.toHaveProperty("coordination");
       expect(payload).not.toHaveProperty("agencyId");
-      expect(payload).not.toHaveProperty("customerPhone");
     });
 
     it("keeps the agency when shipping", () => {
