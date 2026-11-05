@@ -494,7 +494,10 @@ export default function ShopPage() {
                 }
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm"
               >
-                {(config?.fulfillmentTypes ?? ["PICKUP"]).map((type) => (
+                {(config?.fulfillmentTypes?.length
+                  ? config.fulfillmentTypes
+                  : (["PICKUP"] as const)
+                ).map((type) => (
                   <option key={type} value={type}>
                     {TYPE_LABELS[type] ?? type}
                   </option>

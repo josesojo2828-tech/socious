@@ -1,6 +1,5 @@
 import { Type } from "class-transformer";
 import {
-  ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsIn,
@@ -61,7 +60,6 @@ export class CurrencyVisibilityDto {
 export class FulfillmentSettingsDto {
   @IsOptional()
   @IsArray({ message: "fulfillment.enabledTypes debe ser una lista." })
-  @ArrayNotEmpty({ message: "Selecciona al menos un tipo de entrega." })
   @IsIn(FULFILLMENT_TYPES, {
     each: true,
     message: `Tipo de entrega no válido. Valores: ${FULFILLMENT_TYPES.join(", ")}.`,

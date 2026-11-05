@@ -405,11 +405,13 @@ export default function SettingsPage() {
             );
           })}
         </div>
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          Sin ningún tipo marcado, todos los pedidos se coordinan con el dueño.
+        </p>
         <div className="mt-3 flex items-center justify-between gap-4 border-t border-[#1a2a46]/10 pt-3 dark:border-white/10">
           <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
             Coordinación por defecto
-          </p>
-          <select
+          </p>          <select
             className={`w-auto ${INPUT}`}
             value={settings.fulfillment.coordination}
             onChange={(event) =>
