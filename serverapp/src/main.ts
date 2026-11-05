@@ -80,6 +80,7 @@ async function bootstrap() {
       "Authorization",
       "X-Access-Token",
       "X-Refresh-Token",
+      "X-Workspace-Id",
     ],
   });
 
