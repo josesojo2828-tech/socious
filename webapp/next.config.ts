@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
     if (!target) return [];
     return [{ source: "/api/:path*", destination: `${target}/api/:path*` }];
   },
+  /**
+   * Mientras el producto está en rollout privado, `/` manda directo al login y
+   * la landing no se renderiza (ni su JS se envía). Pasar `permanent` a `true`
+   * cuando la landing quede retirada definitivamente.
+   */
+  async redirects() {
+    return [{ source: "/", destination: "/login", permanent: false }];
+  },
 
   images: {
     remotePatterns: [
