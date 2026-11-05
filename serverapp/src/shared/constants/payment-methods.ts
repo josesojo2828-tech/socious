@@ -37,6 +37,14 @@ export const BUSINESS_PAYMENT_METHODS: readonly BusinessPaymentMethodOption[] =
 export const BUSINESS_PAYMENT_METHOD_CODES: readonly string[] =
   BUSINESS_PAYMENT_METHODS.map((method) => method.code);
 
+/**
+ * Currency a business payment method is captured in. The method owns the
+ * currency: amounts are converted from it, never from a client-sent field.
+ */
+export function currencyForPaymentMethod(code: string): CurrencyCode | null {
+  return BUSINESS_PAYMENT_METHODS.find((method) => method.code === code)?.currency ?? null;
+}
+
 export function isBusinessPaymentMethod(code: string): boolean {
   return BUSINESS_PAYMENT_METHOD_CODES.includes(code);
 }

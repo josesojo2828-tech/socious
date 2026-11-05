@@ -59,12 +59,6 @@ interface PaymentOption {
   currency: "USD" | "VES" | "USDT";
 }
 
-const STORAGE_CURRENCIES = [
-  { code: "USD", label: "USD" },
-  { code: "VES", label: "Bs" },
-  { code: "USDT", label: "USDT" },
-] as const;
-
 const PAYMENT_STATUS_OPTIONS = [
   { value: "", label: "Todos los estados" },
   { value: "UNPAID", label: "Impagas" },
@@ -176,7 +170,10 @@ export default function SalesPage() {
       setRows(salePage.data.list);
       setTotal(salePage.data.total);
       setMethods(optionList.data);
-      if (optionList.data[0]) setPayMethod(optionList.data[0].code);
+      if (optionList.data[0]) {
+        setPayMethod(optionList.data[0].code);
+        setPayCurrency(optionList.data[0].currency);
+      }
     } catch {
       addToast({
         type: "error",
@@ -783,8 +780,12 @@ export default function SalesPage() {
                 </p>
                 {(selected.payments ?? []).map((payment) => {
                   const paidUSDFromPayment = Number(payment.amountUSD);
-                  const paymentBcv = Number(payment.rateBcv) || 1;
-                  const paymentUsdt = Number(payment.rateUsdt) || 1;
+                  // The payment froze its own BCV/USDT snapshot: use the stored
+                  // VES amount instead of re-deriving it from the rounded USD
+                  // (which drifted, e.g. 100 VES showing as Bs 98,44).
+                  const paymentVes = Number(payment.amountVES);
+                  const paymentUsdtRate = Number(payment.rateUsdt) || 1;
+                  const paymentUsdt = paymentVes / paymentUsdtRate;
                   return (
                     <SectionRow
                       key={payment.id}
@@ -798,16 +799,14 @@ export default function SalesPage() {
                         </span>
                         <span className="block text-[11px] text-slate-500 dark:text-slate-400">
                           {currencies.showVES
-                            ? `Bs ${(
-                                paidUSDFromPayment * paymentBcv
-                              ).toLocaleString("es-VE", {
+                            ? `Bs ${paymentVes.toLocaleString("es-VE", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                               })}`
                             : null}
                           {currencies.showVES && currencies.showUSDT ? " · " : null}
                           {currencies.showUSDT
-                            ? `USDT ${(paidUSDFromPayment / paymentUsdt).toFixed(2)}`
+                            ? `USDT ${paymentUsdt.toFixed(2)}`
                             : null}
                         </span>
                       </span>
@@ -862,27 +861,22 @@ export default function SalesPage() {
                   placeholder="Monto"
                   className={`w-28 font-mono tabular-nums ${INLINE_INPUT}`}
                 />
-                <select
-                  value={payCurrency}
-                  onChange={(event) =>
-                    setPayCurrency(event.target.value as "USD" | "VES" | "USDT")
-                  }
-                  className={INLINE_INPUT}
-                >
-                  {STORAGE_CURRENCIES.map((option) => (
-                    <option key={option.code} value={option.code}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <span className="inline-flex h-9 items-center rounded-xl border border-[#1b1d21]/12 px-3 text-xs font-semibold text-slate-500 dark:border-white/10 dark:text-slate-400">
+                  {payCurrency}
+                </span>
                 <select
                   value={payMethod}
-                  onChange={(event) => setPayMethod(event.target.value)}
+                  onChange={(event) => {
+                    const code = event.target.value;
+                    setPayMethod(code);
+                    const method = methods.find((item) => item.code === code);
+                    if (method) setPayCurrency(method.currency);
+                  }}
                   className={INLINE_INPUT}
                 >
                   {methods.map((method) => (
                     <option key={method.code} value={method.code}>
-                      {method.label}
+                      {method.label} ({method.currency})
                     </option>
                   ))}
                 </select>

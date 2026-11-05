@@ -21,6 +21,7 @@ import {
   type RateSnapshot,
 } from "src/shared/utils/money";
 import { applyBomStock } from "src/shared/utils/bom-stock";
+import { currencyForPaymentMethod } from "src/shared/constants/payment-methods";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { emitEvent } from "src/shared/event/event-envelope";
 import type { EventName } from "src/shared/event/event-taxonomy";
@@ -934,9 +935,13 @@ export class SaleService {
     const created: any[] = [];
 
     for (const input of inputs as Array<Record<string, any>>) {
+      // The method owns the currency: a Pago Móvil is VES no matter what the
+      // client sent, so the conversion never uses a mismatched unit.
+      const currency =
+        currencyForPaymentMethod(input.paymentMethod) ?? input.currency;
       const amounts = buildPaymentAmounts(
         Number(input.amountOriginal),
-        input.currency,
+        currency,
         rates,
       );
 
@@ -947,7 +952,7 @@ export class SaleService {
           amountUSD: amounts.amountUSD,
           amountVES: amounts.amountVES,
           amountOriginal: amounts.amountOriginal,
-          currency: input.currency,
+          currency,
           paymentMethod: input.paymentMethod,
           rateBcv: rates.rateBcv,
           rateUsdt: rates.rateUsdt,

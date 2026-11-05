@@ -653,6 +653,33 @@ describe("SaleService", () => {
       });
     });
 
+    it("uses the method's currency, not the client-sent field", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        totalUSD: "1000.00",
+        rateBcv: "800.0000",
+        rateUsdt: "1000.0000",
+        clientId: null,
+        organizationId: ORG_A,
+      });
+      tx.salePayment.findMany.mockResolvedValue([]);
+      tx.salePayment.create.mockResolvedValue({ id: "p-1" });
+
+      await service.addPayment({ organizationId: ORG_A }, "s-1", {
+        amountOriginal: 800,
+        currency: "USD",
+        paymentMethod: "PAGO_MOVIL",
+      });
+
+      const data = tx.salePayment.create.mock.calls[0][0].data;
+      // Pago Móvil is VES: 800 Bs / 800 = $1, regardless of the "USD" sent.
+      expect(data.currency).toBe("VES");
+      expect(data.amountUSD).toBe(1);
+    });
+
     it("rejects an abono larger than what the sale still owes", async () => {
       const { service, tx } = makeService();
       tx.sale.findFirst.mockResolvedValue({
