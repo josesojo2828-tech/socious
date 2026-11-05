@@ -21,7 +21,12 @@ export function validateCheckout(
 
   if (!config) return null; // config still loading: the backend has the say
 
-  if (!config.fulfillmentTypes.includes(form.fulfillmentType)) {
+  // No type configured = "coordinate with the seller": the order still goes
+  // through and the backend records it as a pickup.
+  if (
+    config.fulfillmentTypes.length > 0 &&
+    !config.fulfillmentTypes.includes(form.fulfillmentType)
+  ) {
     return "Ese tipo de entrega no está habilitado en esta tienda.";
   }
 

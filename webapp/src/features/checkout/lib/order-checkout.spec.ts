@@ -34,7 +34,15 @@ const cart: CartLine[] = [
 ];
 
 describe("order-checkout (S12)", () => {
-  describe("validateCheckout", () => {
+  describe("validateCheckout — shop without delivery types", () => {
+  it("accepts the order so it can be coordinated with the seller", () => {
+    expect(
+      validateCheckout(form(), { ...config, fulfillmentTypes: [] }),
+    ).toBeNull();
+  });
+});
+
+describe("validateCheckout", () => {
     it("accepts a complete pickup", () => {
       expect(validateCheckout(form(), config)).toBeNull();
     });

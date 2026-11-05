@@ -380,11 +380,17 @@ export class OrderService {
     coordination: CoordinationMethod;
     deliveryFeeUSD: number | null;
   }> {
-    const type: FulfillmentType = data.fulfillmentType ?? "PICKUP";
+    // A shop with no delivery type configured sells under "coordinate with the
+    // seller": the order still registers (as a pickup) instead of being
+    // rejected, and the coordination channel carries the conversation.
+    const noTypesConfigured = settings.fulfillment.enabledTypes.length === 0;
+    const type: FulfillmentType = noTypesConfigured
+      ? "PICKUP"
+      : (data.fulfillmentType ?? "PICKUP");
     const coordination: CoordinationMethod =
       data.coordination ?? settings.fulfillment.coordination;
 
-    if (!settings.fulfillment.enabledTypes.includes(type)) {
+    if (!noTypesConfigured && !settings.fulfillment.enabledTypes.includes(type)) {
       throw new ConflictException(
         `El tipo de entrega "${type}" no está habilitado en esta tienda.`,
       );

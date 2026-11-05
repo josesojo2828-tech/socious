@@ -557,6 +557,12 @@ export function PublicStorefront({ slug }: { slug: string }) {
                   </label>
                 </div>
 
+                {!needsFulfillmentStep ? (
+                  <p className="mt-3 rounded-lg bg-[#1a2a46]/5 px-3 py-2 text-[11px] text-slate-600 dark:bg-white/5 dark:text-slate-400">
+                    La entrega se coordina directamente con la tienda.
+                  </p>
+                ) : null}
+
                 <button
                   type="button"
                   onClick={() => void submit()}
