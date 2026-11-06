@@ -217,6 +217,16 @@ export default function LoginPage() {
               </div>
             </form>
 
+            <p className="text-center text-xs text-[#1a2a46]/55 dark:text-[#f0ede4]/45 font-medium">
+              ¿Primera vez?{" "}
+              <Link
+                href="/tutoriales"
+                className="text-[#8e7538] dark:text-[#d8c084] underline hover:text-[#b2944a] font-semibold transition-colors"
+              >
+                Mirá los tutoriales
+              </Link>
+            </p>
+
             {/* Legal Notice */}
             <p className="text-center text-xs text-[#1a2a46]/45 dark:text-[#f0ede4]/40 leading-relaxed font-medium">
               Al iniciar sesión, aceptás nuestros{" "}
