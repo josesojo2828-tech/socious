@@ -1731,3 +1731,28 @@ model EnabledCountry {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+/// Public tutorial catalog, managed from the admin panel. Pasting a YouTube
+/// link pre-fills title and thumbnail through oEmbed; description and duration
+/// stay manual because oEmbed does not return them.
+model Tutorial {
+  id           String    @id @default(uuid())
+  /// YouTube video id; null while the tutorial is only planned.
+  youtubeId    String?   @unique
+  youtubeUrl   String?
+  title        String
+  description  String?
+  thumbnailUrl String?
+  /// primeros-pasos | dia-a-dia | diferencias
+  series       String    @default("primeros-pasos")
+  duration     String?
+  code         String?
+  featured     Boolean   @default(false)
+  published    Boolean   @default(false)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@index([published, sortOrder])
+}

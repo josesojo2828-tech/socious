@@ -58,6 +58,7 @@ const iconMap: Record<string, LucideIcon> = {
   activity: LucideIcons.Activity,
   globe: LucideIcons.Globe,
   message: LucideIcons.MessageSquare,
+  video: LucideIcons.Video,
   permit: LucideIcons.ShieldCheck,
   building: LucideIcons.Building2,
   "arrow-left-right": LucideIcons.ArrowLeftRight,

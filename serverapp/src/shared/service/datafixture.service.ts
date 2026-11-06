@@ -8,6 +8,7 @@ import { PrismaService } from "nestjs-prisma";
 import { seedPlans } from "src/database/seeds/plans.seed";
 import { seedCategories } from "src/database/seeds/categories.seed";
 import { seedShippingAgencies } from "src/database/seeds/shipping-agencies.seed";
+import { seedTutorials } from "src/database/seeds/tutorials.seed";
 import { seedModuleCatalog } from "src/database/seeds/module-catalog.seed";
 import { seedModuleEntitlements } from "src/database/seeds/module-entitlements.seed";
 
@@ -52,6 +53,7 @@ export class DataFixtureService implements OnApplicationBootstrap {
     await seedModuleEntitlements(this.prisma);
     await seedCategories(this.prisma);
     await seedShippingAgencies(this.prisma);
+    await seedTutorials(this.prisma, (message) => this.logger.log(message.trim()));
 
     return {
       subscription: { superadmin, admin, user, patient },

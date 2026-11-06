@@ -63,6 +63,7 @@ import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
 import { CashModule } from "./modules/cash/cash.module";
 import { SaleModule } from "./modules/sale/sale.module";
+import { TutorialModule } from "./modules/tutorial/tutorial.module";
 import { PurchaseModule } from "./modules/purchase/purchase.module";
 import { OrderModule } from "./modules/order/order.module";
 import { SettingsModule } from "./modules/settings/settings.module";
@@ -226,6 +227,7 @@ imports: [
     ProductModule,
     CashModule,
     SaleModule,
+    TutorialModule,
     PurchaseModule,
     OrderModule,
     SettingsModule,

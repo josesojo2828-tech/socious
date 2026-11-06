@@ -95,6 +95,11 @@ export class DashboardService {
             icon: "fingerprint",
             link: "/dashboard/users/subscriptions",
           },
+          {
+            title: "Tutoriales",
+            icon: "video",
+            link: "/dashboard/admin/tutorials",
+          },
         ],
       });
     } else {

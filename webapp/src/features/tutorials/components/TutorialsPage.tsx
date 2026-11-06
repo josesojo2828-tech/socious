@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
+import { apiClient } from "@/shared/api/api.client";
 import {
   CARD,
   CTA_BRASS,
@@ -31,6 +32,7 @@ import {
   type SeriesFilter,
 } from "../lib/tutorial-filter";
 import { TutorialVideoModal } from "./TutorialVideoModal";
+import { TutorialEndpoints } from "../services/tutorials.endpoints";
 import type { Tutorial, TutorialSeriesKey } from "../types";
 
 const SALES_WHATSAPP = "584243153383";
@@ -46,8 +48,34 @@ function seriesMeta(key: TutorialSeriesKey) {
   return TUTORIAL_SERIES.find((item) => item.key === key);
 }
 
-function seriesCount(key: TutorialSeriesKey): number {
-  return TUTORIALS.filter((tutorial) => tutorial.series === key).length;
+function seriesCount(list: Tutorial[], key: TutorialSeriesKey): number {
+  return list.filter((tutorial) => tutorial.series === key).length;
+}
+
+interface ApiTutorial {
+  id: string;
+  youtubeId: string | null;
+  title: string;
+  description: string | null;
+  thumbnailUrl: string | null;
+  series: string;
+  duration: string | null;
+  code: string | null;
+  featured: boolean;
+}
+
+function toTutorial(row: ApiTutorial): Tutorial {
+  return {
+    id: row.id,
+    code: row.code ?? "",
+    title: row.title,
+    description: row.description ?? "",
+    series: (row.series as TutorialSeriesKey) ?? "primeros-pasos",
+    duration: row.duration ?? "",
+    youtubeId: row.youtubeId ?? undefined,
+    cover: row.thumbnailUrl ?? undefined,
+    featured: row.featured,
+  };
 }
 
 function TutorialCard({
@@ -176,20 +204,38 @@ export function TutorialsPage() {
   const { openModal, closeModal } = useModalStore();
   const [query, setQuery] = useState("");
   const [series, setSeries] = useState<SeriesFilter>("todos");
+  /** Live catalog from the admin panel; the static list covers a cold start. */
+  const [catalog, setCatalog] = useState<Tutorial[]>(TUTORIALS);
+
+  useEffect(() => {
+    let alive = true;
+    void apiClient
+      .get<ApiTutorial[]>(TutorialEndpoints.list)
+      .then(({ data }) => {
+        if (!alive) return;
+        if (Array.isArray(data) && data.length > 0) {
+          setCatalog(data.map(toTutorial));
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const browsing = series === "todos" && query.trim() === "";
   const visible = useMemo(
-    () => filterTutorials(TUTORIALS, query, series),
-    [query, series],
+    () => filterTutorials(catalog, query, series),
+    [catalog, query, series],
   );
   // Prefer a featured tutorial that is already published; while nothing is
   // uploaded, the first featured one keeps the slot (as "próximamente").
   const hero = useMemo(
     () =>
-      TUTORIALS.find((tutorial) => tutorial.featured && isPublished(tutorial)) ??
-      TUTORIALS.find((tutorial) => tutorial.featured) ??
-      TUTORIALS[0],
-    [],
+      catalog.find((tutorial) => tutorial.featured && isPublished(tutorial)) ??
+      catalog.find((tutorial) => tutorial.featured) ??
+      catalog[0],
+    [catalog],
   );
 
   const open = (tutorial: Tutorial) => {
@@ -256,7 +302,7 @@ export function TutorialsPage() {
             <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-1.5">
                 <Play className="h-3.5 w-3.5 text-[#b2944a]" />
-                {TUTORIALS.length} tutoriales
+                {catalog.length} tutoriales
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-[#b2944a]" />3 minutos promedio
@@ -290,7 +336,7 @@ export function TutorialsPage() {
                   : "border border-[#1a2a46]/15 text-slate-600 hover:bg-[#1a2a46]/5 dark:border-white/15 dark:text-slate-300 dark:hover:bg-white/5"
               }`}
             >
-              Todos · {TUTORIALS.length}
+              Todos · {catalog.length}
             </button>
             {TUTORIAL_SERIES.map((item) => (
               <button
@@ -304,7 +350,7 @@ export function TutorialsPage() {
                     : "border border-[#1a2a46]/15 text-slate-600 hover:bg-[#1a2a46]/5 dark:border-white/15 dark:text-slate-300 dark:hover:bg-white/5"
                 }`}
               >
-                {item.label} · {seriesCount(item.key)}
+                {item.label} · {seriesCount(catalog, item.key)}
               </button>
             ))}
           </div>
@@ -314,7 +360,7 @@ export function TutorialsPage() {
           // Browsing: one section per series, with its own heading.
           <div className="space-y-12">
             {TUTORIAL_SERIES.map((serie, index) => {
-              const items = TUTORIALS.filter(
+              const items = catalog.filter(
                 (tutorial) => tutorial.series === serie.key,
               );
               if (items.length === 0) return null;
