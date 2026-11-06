@@ -134,6 +134,8 @@ export const PLAN_SEEDS = [
     id: "BASICO",
     name: "Básico",
     price: 7.99,
+    /** Published in the public pricing list. */
+    selected: true,
     badge: null as string | null,
     description:
       "Lo esencial para operar: cartera de clientes, catálogo, caja y ventas.",
@@ -153,6 +155,8 @@ export const PLAN_SEEDS = [
     id: "AVANZADO",
     name: "Avanzado",
     price: 22.99,
+    /** Published in the public pricing list. */
+    selected: true,
     badge: "Más elegido" as string | null,
     description:
       "Todo el Básico más la tienda, los pedidos y la logística.",
@@ -172,6 +176,11 @@ export const PLAN_SEEDS = [
     id: "PREMIUM",
     name: "Negocio",
     price: 99.99,
+    /**
+     * Hidden from the public pricing/checkout for now. Existing
+     * organizations keep their subscription; only the offer is unpublished.
+     */
+    selected: false,
     badge: null as string | null,
     description:
       "Todo el Avanzado con sucursales y equipo incluidos.",
@@ -262,7 +271,7 @@ export async function seedPlans(
         name: plan.name,
         price: plan.price,
         currency: "USD",
-        selected: true,
+        selected: plan.selected,
         badge: plan.badge,
         description: plan.description,
         content,
@@ -271,7 +280,7 @@ export async function seedPlans(
         name: plan.name,
         price: plan.price,
         currency: "USD",
-        selected: true,
+        selected: plan.selected,
         badge: plan.badge,
         description: plan.description,
         content,
