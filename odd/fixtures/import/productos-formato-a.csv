@@ -1,0 +1,21 @@
+﻿sku,nombre,tipo,barcode,Descripción,costo_usd,venta_usd,stock_inicial,unidad,categoria,proveedor,publico
+CAM-ROJA-M,Camisa roja talla M,producto,7790001000011,Camisa de algodón manga larga,9.50,16.00,40,UND,Ropa,Textiles del Sur,true
+CAM-AZUL-L,Camisa azul talla L,producto,7790001000028,Camisa de algodón manga larga,9.50,16.00,35,UND,Ropa,Textiles del Sur,true
+PANT-NEG-32,Pantalón negro 32,producto,7790001000035,Pantalón de gabardina,14.00,24.00,22,UND,Ropa,Textiles del Sur,true
+MED-100,Medias deportivas (par),producto,,Medias de algodón,1.20,3.00,120,PAR,Ropa,Textiles del Sur,false
+ARROZ-1KG,Arroz blanco 1 kg,producto,7590002000018,Arroz de grano largo,1.10,1.80,80,KG,Alimentos,Distribuidora del Sur,true
+HARINA-PAN,Harina de maíz 1 kg,producto,7590002000025,Harina precocida,0.90,1.60,65,KG,Alimentos,Distribuidora del Sur,true
+CAFE-500,Café molido 500 g,producto,7590002000032,Café tostado natural,3.20,5.20,30,UND,Alimentos,Distribuidora del Sur,true
+ACEITE-1L,Aceite vegetal 1 L,producto,7590002000049,Aceite de girasol,2.10,3.40,48,UND,Alimentos,Distribuidora del Sur,true
+AZUCAR-1KG,Azúcar refinada 1 kg,producto,7590002000056,Azúcar blanca,0.80,1.40,90,KG,Alimentos,Distribuidora del Sur,false
+LECHE-1L,Leche entera 1 L,producto,7590002000063,Leche pasteurizada,1.00,1.75,70,UND,Alimentos,Distribuidora del Sur,true
+JABON-90,Jabón de baño 90 g,producto,7590003000014,Jabón de glicerina,0.45,0.95,150,UND,Cuidado personal,Higiene Total,false
+SHAMPOO-400,Shampoo 400 ml,producto,7590003000021,Shampoo anticaspa,2.30,4.20,45,UND,Cuidado personal,Higiene Total,true
+CREMA-200,Crema corporal 200 ml,producto,7590003000038,Crema humectante,1.80,3.50,38,UND,Cuidado personal,Higiene Total,false
+CALCETIN,Calcetín deportivo,producto,,Calcetín unisex,0.90,2.20,200,PAR,Ropa,Textiles del Sur,false
+SILLA-P,Silla plástica,producto,7790004000010,Silla de plástico reforzado,6.00,11.00,12,UND,Hogar,Muebles Andinos,true
+MESA-P,Mesa plástica 1.2 m,producto,7790004000027,Mesa plegable,15.00,26.00,8,UND,Hogar,Muebles Andinos,true
+BOMBILLO-9W,Bombillo LED 9W,producto,7790004000034,Bombillo luz blanca,1.10,2.10,60,UND,Hogar,Muebles Andinos,false
+CONSULT-01,Consulta de asesoría,servicio,,Sesión de 45 minutos,0.00,15.00,0,UND,Servicios,,false
+INSTAL-01,Instalación a domicilio,servicio,,Servicio de instalación,0.00,12.00,0,UND,Servicios,,false
+HARINA-TRIGO,Harina de trigo (insumo),material,,Harina a granel para producción,0.70,0.00,100,KG,Alimentos,Distribuidora del Sur,false

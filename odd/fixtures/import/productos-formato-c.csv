@@ -1,0 +1,21 @@
+﻿unidad;sku;nombre;venta_usd;costo_usd;stock_inicial;tipo;categoria;publico;barcode;proveedor;Descripción
+UND;CAM-ROJA-M;Camisa roja talla M;16,00;9,50;40;producto;Ropa;true;7790001000011;Textiles del Sur;Camisa de algodón manga larga
+UND;CAM-AZUL-L;Camisa azul talla L;16,00;9,50;35;producto;Ropa;true;7790001000028;Textiles del Sur;Camisa de algodón manga larga
+UND;PANT-NEG-32;Pantalón negro 32;24,00;14,00;22;producto;Ropa;true;7790001000035;Textiles del Sur;Pantalón de gabardina
+PAR;MED-100;Medias deportivas (par);3,00;1,20;120;producto;Ropa;false;;Textiles del Sur;Medias de algodón
+KG;ARROZ-1KG;Arroz blanco 1 kg;1,80;1,10;80;producto;Alimentos;true;7590002000018;Distribuidora del Sur;Arroz de grano largo
+KG;HARINA-PAN;Harina de maíz 1 kg;1,60;0,90;65;producto;Alimentos;true;7590002000025;Distribuidora del Sur;Harina precocida
+UND;CAFE-500;Café molido 500 g;5,20;3,20;30;producto;Alimentos;true;7590002000032;Distribuidora del Sur;Café tostado natural
+UND;ACEITE-1L;Aceite vegetal 1 L;3,40;2,10;48;producto;Alimentos;true;7590002000049;Distribuidora del Sur;Aceite de girasol
+KG;AZUCAR-1KG;Azúcar refinada 1 kg;1,40;0,80;90;producto;Alimentos;false;7590002000056;Distribuidora del Sur;Azúcar blanca
+UND;LECHE-1L;Leche entera 1 L;1,75;1,00;70;producto;Alimentos;true;7590002000063;Distribuidora del Sur;Leche pasteurizada
+UND;JABON-90;Jabón de baño 90 g;0,95;0,45;150;producto;Cuidado personal;false;7590003000014;Higiene Total;Jabón de glicerina
+UND;SHAMPOO-400;Shampoo 400 ml;4,20;2,30;45;producto;Cuidado personal;true;7590003000021;Higiene Total;Shampoo anticaspa
+UND;CREMA-200;Crema corporal 200 ml;3,50;1,80;38;producto;Cuidado personal;false;7590003000038;Higiene Total;Crema humectante
+PAR;CALCETIN;Calcetín deportivo;2,20;0,90;200;producto;Ropa;false;;Textiles del Sur;Calcetín unisex
+UND;SILLA-P;Silla plástica;11,00;6,00;12;producto;Hogar;true;7790004000010;Muebles Andinos;Silla de plástico reforzado
+UND;MESA-P;Mesa plástica 1.2 m;26,00;15,00;8;producto;Hogar;true;7790004000027;Muebles Andinos;Mesa plegable
+UND;BOMBILLO-9W;Bombillo LED 9W;2,10;1,10;60;producto;Hogar;false;7790004000034;Muebles Andinos;Bombillo luz blanca
+UND;CONSULT-01;Consulta de asesoría;15,00;0,00;0;servicio;Servicios;false;;;Sesión de 45 minutos
+UND;INSTAL-01;Instalación a domicilio;12,00;0,00;0;servicio;Servicios;false;;;Servicio de instalación
+KG;HARINA-TRIGO;Harina de trigo (insumo);0,00;0,70;100;material;Alimentos;false;;Distribuidora del Sur;Harina a granel para producción
