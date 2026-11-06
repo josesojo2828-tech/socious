@@ -11,9 +11,11 @@ import {
   Receipt,
   RotateCcw,
   Search,
+  Upload,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { SectionRow } from "@/shared/components/molecules/SectionCard";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import {
@@ -31,6 +33,7 @@ import {
   TABLE_ROW,
 } from "@/shared/lib/maison-style";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
+import { SaleImportModal } from "@/features/sales/components/SaleImportModal";
 import { PaymentMethodEndpoints } from "@/features/payment-method/services/payment-method.endpoints";
 import type {
   SalesReport,
@@ -89,6 +92,7 @@ function apiMessage(error: unknown, fallback: string): string {
  */
 export default function SalesPage() {
   const { addToast } = useToastStore();
+  const { openModal, closeModal } = useModalStore();
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
   const [rows, setRows] = useState<Sale[]>([]);
@@ -447,17 +451,34 @@ export default function SalesPage() {
             {total} venta(s) · cada cobro guarda su fecha y la tasa del día.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            const next = !reportOpen;
-            setReportOpen(next);
-            if (next && !report) void loadReport().catch(() => undefined);
-          }}
-          className={`px-3 py-2 text-sm ${BTN_GHOST}`}
-        >
-          <Receipt className="h-4 w-4" /> {reportOpen ? "Ocultar reporte" : "Ver reporte"}
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              openModal(
+                <SaleImportModal
+                  onClose={closeModal}
+                  onSuccess={() => void loadList().catch(() => undefined)}
+                />,
+                { size: "lg" },
+              )
+            }
+            className={`px-3 py-2 text-sm ${BTN_GHOST}`}
+          >
+            <Upload className="h-4 w-4" /> Importar
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const next = !reportOpen;
+              setReportOpen(next);
+              if (next && !report) void loadReport().catch(() => undefined);
+            }}
+            className={`px-3 py-2 text-sm ${BTN_GHOST}`}
+          >
+            <Receipt className="h-4 w-4" /> {reportOpen ? "Ocultar reporte" : "Ver reporte"}
+          </button>
+        </div>
       </header>
 
       <div className={`rounded-2xl p-4 ${GLASS}`}>

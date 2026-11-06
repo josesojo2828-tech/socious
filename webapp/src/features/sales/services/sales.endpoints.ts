@@ -9,4 +9,7 @@ export const SaleEndpoints = {
   returnsOfSale: (saleId: string) => `/api/sales/${saleId}/returns`,
   createReturn: (saleId: string) => `/api/sales/${saleId}/returns`,
   report: "/api/sales/report",
+  importTemplate: "/api/sales/import/template",
+  importValidate: "/api/sales/import/validate",
+  import: "/api/sales/import",
 };

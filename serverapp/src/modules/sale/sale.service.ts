@@ -99,7 +99,17 @@ export class SaleService {
   // Create
   // ------------------------------------------------------------------
 
-  async create(scope: SaleScope, data: CreateSaleDto) {
+  /**
+   * Creates a sale. `options.skipStock` is the financial-only path used by the
+   * historical import: it still validates the products and computes totals,
+   * payments and the client balance, but neither checks nor moves stock.
+   */
+  async create(
+    scope: SaleScope,
+    data: CreateSaleDto,
+    options: { skipStock?: boolean } = {},
+  ) {
+    const skipStock = options.skipStock === true;
     if (!data.items?.length) {
       throw new BadRequestException("La venta necesita al menos un artículo.");
     }
@@ -116,7 +126,7 @@ export class SaleService {
     );
 
     return this.prisma.$transaction(async (tx) => {
-      const items = await this.resolveItems(scope, data.items, tx);
+      const items = await this.resolveItems(scope, data.items, tx, skipStock);
 
       const subtotalUSD = round2(
         items.reduce((sum, item) => sum + item.quantity * item.unitPriceUSD, 0),
@@ -178,7 +188,9 @@ export class SaleService {
       });
 
       await this.persistItems(tx, sale.id, items);
-      await this.applyStock(scope, tx, items, sale.saleNumber);
+      if (!skipStock) {
+        await this.applyStock(scope, tx, items, sale.saleNumber);
+      }
 
       const payments = await this.persistPayments(
         tx,
@@ -680,6 +692,7 @@ export class SaleService {
     scope: SaleScope,
     inputs: SaleItemInputDto[],
     tx: Prisma.TransactionClient,
+    skipStock = false,
   ): Promise<ResolvedItem[]> {
     const resolved: ResolvedItem[] = [];
 
@@ -713,7 +726,7 @@ export class SaleService {
             "La presentación no pertenece a ese producto.",
           );
         }
-        if (Number(presentation.stock ?? 0) < quantity) {
+        if (!skipStock && Number(presentation.stock ?? 0) < quantity) {
           throw new BadRequestException(
             `Stock insuficiente para "${presentation.name}": hay ${Number(presentation.stock ?? 0)} y se piden ${quantity}.`,
           );
@@ -747,7 +760,7 @@ export class SaleService {
         productName = product.name;
         productId = product.id;
 
-        if (!isService) {
+        if (!isService && !skipStock) {
           const stock = await tx.product.findFirst({
             where: { id: product.id },
             select: { stock: true },

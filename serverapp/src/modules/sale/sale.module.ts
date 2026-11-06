@@ -5,6 +5,7 @@ import {  Module, forwardRef } from "@nestjs/common";
 import { SaleController } from "./sale.controller";
 import { SaleService } from "./sale.service";
 import { SaleReturnService } from "./sale-return.service";
+import { SaleImportService } from "./import/sale-import.service";
 import { ExchangeModule } from "../exchange/exchange.module";
 
 /**
@@ -20,6 +21,7 @@ ExchangeModule],
   providers: [
     SaleService,
     SaleReturnService,
+    SaleImportService,
     JwtService,
   ],
   exports: [SaleService, SaleReturnService],

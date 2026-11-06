@@ -6,12 +6,16 @@ import {
   Post,
   Query,
   Req,
+  Res,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
+import type { FastifyReply } from "fastify";
 import { PrismaService } from "nestjs-prisma";
 import { SaleService, SaleScope } from "./sale.service";
 import { SaleReturnService } from "./sale-return.service";
+import { SaleImportService } from "./import/sale-import.service";
+import type { ImportSalesDto } from "./import/sale-import.dto";
 import { CreateSaleReturnDto, ListSaleReturnsQueryDto } from "./dto/sale-return.dto";
 import {
   AddSalePaymentDto,
@@ -36,6 +40,7 @@ export class SaleController {
   constructor(
     private readonly saleService: SaleService,
     private readonly saleReturnService: SaleReturnService,
+    private readonly saleImportService: SaleImportService,
     private readonly workspaceContext: WorkspaceContextService,
     private readonly prisma: PrismaService,
   ) {
@@ -67,6 +72,35 @@ export class SaleController {
   ) {
     const scope = await this.resolveScope(request);
     return this.saleService.getReport(scope, query);
+  }
+
+  @Get("import/template")
+  importTemplate(@Res({ passthrough: true }) reply: FastifyReply) {
+    reply
+      .header("Content-Type", "text/csv; charset=utf-8")
+      .header(
+        "Content-Disposition",
+        'attachment; filename="plantilla-ventas.csv"',
+      );
+    return this.saleImportService.template();
+  }
+
+  @Post("import/validate")
+  async validateImport(
+    @Req() request: RequestWithUser,
+    @Body() body: ImportSalesDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleImportService.validate(scope, body);
+  }
+
+  @Post("import")
+  async importSales(
+    @Req() request: RequestWithUser,
+    @Body() body: ImportSalesDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleImportService.commit(scope, body);
   }
 
   @Get()
