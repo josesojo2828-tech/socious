@@ -9,9 +9,7 @@ import {
   User,
   Mail,
   Lock,
-  Tag,
   ArrowRight,
-  CheckCircle2,
   Loader2,
   Eye,
   EyeOff,
@@ -60,6 +58,14 @@ function requireTranslation(
 const AUTH_INPUT =
   "w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/80 dark:bg-[#0c101c]/60 px-4 py-3.5 text-[#111018] dark:text-[#f0ede4] placeholder:text-[#1a2a46]/35 dark:placeholder:text-[#f0ede4]/30 focus:border-[#b2944a] focus:ring-4 focus:ring-[#b2944a]/15 outline-none transition-all font-medium";
 
+/**
+ * Same fallback the backend applies in `OrganizationService.resolveTrialDays`
+ * when the platform setting is missing: `DEFAULT_TRIAL_DAYS` setting → env →
+ * 14 days. Keeping them in sync means the CTA never promises a length the
+ * workspace creation would not grant.
+ */
+const DEFAULT_TRIAL_DAYS = 14;
+
 function RegisterFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -88,6 +94,32 @@ function RegisterFormContent() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [termsError, setTermsError] = useState(false);
+
+  // La duración del trial es una configuración de plataforma que el admin
+  // edita en Configuración (`DEFAULT_TRIAL_DAYS`). Es la misma clave que el
+  // backend resuelve al crear el workspace, así que el CTA no puede tener un
+  // número fijo: si el admin la cambia, el botón miente.
+  const [trialDays, setTrialDays] = useState(DEFAULT_TRIAL_DAYS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    apiClient
+      .get<{ value?: string }>('/api/system-settings/public/DEFAULT_TRIAL_DAYS')
+      .then((res) => {
+        const parsed = Number.parseInt(String(res.data?.value ?? ''), 10);
+        if (!cancelled && Number.isFinite(parsed) && parsed > 0) {
+          setTrialDays(parsed);
+        }
+      })
+      .catch(() => {
+        // Sin configuración o sin red: el backend otorga el mismo fallback.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const {
     register,
@@ -339,29 +371,6 @@ function RegisterFormContent() {
           </div>
         </div>
 
-        {/* Código de Referido */}
-        <div className="space-y-1.5">
-          <label className="flex items-center justify-between ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#1a2a46]/60 dark:text-[#f0ede4]/50">
-            <span>{t('auth.referral_code_optional') || 'Código de Referido (Opcional)'}</span>
-            {refParam && (
-              <span className="text-[10px] bg-[#128454]/10 text-[#128454] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
-                <CheckCircle2 size={10} /> {t('auth.referral_applied') || 'Aplicado'}
-              </span>
-            )}
-          </label>
-          <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
-              <Tag size={18} />
-            </div>
-            <input
-              type="text"
-              {...register('referralCode')}
-              className={`${AUTH_INPUT} pl-11`}
-              placeholder={t('form.placeholders.referral_code') || 'OPCIONAL'}
-            />
-          </div>
-        </div>
-
         {/* Checkbox Términos y Condiciones */}
         <div className="pt-2">
           <label className="flex items-start gap-2.5 cursor-pointer group select-none">
@@ -408,7 +417,7 @@ function RegisterFormContent() {
               </>
             ) : (
               <>
-                <span>Crear mi cuenta gratis (14 días)</span>
+                <span>Crear mi cuenta gratis ({trialDays} días)</span>
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </>
             )}

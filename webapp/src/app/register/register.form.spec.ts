@@ -127,3 +127,41 @@ describe('register — los inputs con icono reservan espacio para el icono', () 
     }
   });
 });
+
+/**
+ * El código de referido ya no se tipea en el formulario, pero el link de
+ * invitación (`/register?ref=...`, ver `UserReferenceSection`) sigue siendo el
+ * mecanismo de atribución: el `ref` tiene que llegar al backend en silencio.
+ * Sin estos guardas, "limpiar" el campo puede llevarse puesta la atribución de
+ * todos los links ya compartidos.
+ */
+describe('register — código de referido', () => {
+  it('no renderiza el input de código de referido', () => {
+    const source = readRepoFile('page.tsx');
+
+    expect(source).not.toMatch(/register\(\s*['"]referralCode['"]\s*\)/);
+    expect(source).not.toMatch(/form\.placeholders\.referral_code/);
+  });
+
+  it('sigue enviando el ?ref= al backend como referralCode', () => {
+    const source = readRepoFile('page.tsx');
+
+    expect(source).toMatch(/searchParams\.get\(\s*['"]ref['"]\s*\)/);
+    expect(source).toMatch(/referralCode:\s*refParam/);
+  });
+});
+
+/**
+ * El trial no es una constante del frontend: es la configuración
+ * `DEFAULT_TRIAL_DAYS` que el admin edita en Configuración y que el backend
+ * resuelve al crear el workspace.
+ */
+describe('register — días de prueba', () => {
+  it('lee DEFAULT_TRIAL_DAYS del endpoint público en vez de hardcodear el número', () => {
+    const source = readRepoFile('page.tsx');
+
+    expect(source).toMatch(/\/api\/system-settings\/public\/DEFAULT_TRIAL_DAYS/);
+    expect(source).toMatch(/Crear mi cuenta gratis \(\{trialDays\} días\)/);
+    expect(source).not.toMatch(/Crear mi cuenta gratis \(14 días\)/);
+  });
+});
