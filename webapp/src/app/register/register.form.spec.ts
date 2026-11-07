@@ -101,3 +101,29 @@ describe('register — guardián de la clave form.labels.birth_date', () => {
     expect(source).toMatch(/requireTranslation\([^)]*['"]form\.labels\.birth_date['"]/);
   });
 });
+
+/**
+ * Los iconos de los campos son absolutos sobre el input (`absolute left-4`).
+ * Si el control no reserva ese espacio con `pl-11`, el texto y el placeholder
+ * quedan debajo del icono. Login ya lo hacía; el registro era el que no.
+ */
+describe('register — los inputs con icono reservan espacio para el icono', () => {
+  it('todo control con icono a la izquierda aplica pl-11', () => {
+    const source = readRepoFile('page.tsx');
+    const ICON_WRAPPER = 'absolute left-4 top-1/2 -translate-y-1/2';
+    const chunks = source.split(ICON_WRAPPER).slice(1);
+
+    expect(chunks.length).toBeGreaterThan(0);
+
+    for (const chunk of chunks) {
+      const controlStart = chunk.search(/<(input|select)\b/);
+      expect(controlStart).toBeGreaterThanOrEqual(0);
+
+      const control = chunk.slice(controlStart);
+      const tagEnd = control.indexOf('>');
+      const tag = control.slice(0, tagEnd);
+
+      expect(tag).toMatch(/\bpl-11\b/);
+    }
+  });
+});

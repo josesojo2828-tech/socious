@@ -193,14 +193,14 @@ function RegisterFormContent() {
               {t('form.labels.firstName') || 'Nombre'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
                 <User size={18} />
               </div>
               <input
                 type="text"
                 {...register('firstName')}
                 placeholder={t('form.placeholders.first_name') || 'Tu nombre'}
-                className={`${AUTH_INPUT} ${errors.firstName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
+                className={`${AUTH_INPUT} pl-11 ${errors.firstName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
             </div>
             {errors.firstName && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.firstName.message}</span>}
@@ -211,14 +211,14 @@ function RegisterFormContent() {
               {t('form.labels.lastName') || 'Apellido'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
                 <User size={18} />
               </div>
               <input
                 type="text"
                 {...register('lastName')}
                 placeholder={t('form.placeholders.last_name') || 'Tu apellido'}
-                className={`${AUTH_INPUT} ${errors.lastName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
+                className={`${AUTH_INPUT} pl-11 ${errors.lastName ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
             </div>
             {errors.lastName && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.lastName.message}</span>}
@@ -231,14 +231,14 @@ function RegisterFormContent() {
             {t('form.labels.email') || 'Correo electrónico'}
           </label>
           <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
               <Mail size={18} />
             </div>
               <input
                 type="email"
                 {...register('email')}
                 placeholder={t('form.placeholders.email') || 'correo@ejemplo.com'}
-                className={`${AUTH_INPUT} ${errors.email ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
+                className={`${AUTH_INPUT} pl-11 ${errors.email ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
               />
           </div>
           {errors.email && <span className="text-[#c63749] text-xs font-semibold ml-1">{errors.email.message}</span>}
@@ -255,7 +255,7 @@ function RegisterFormContent() {
             </div>
             <select
               {...register('gender')}
-              className={`${AUTH_INPUT} appearance-none ${errors.gender ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
+              className={`${AUTH_INPUT} pl-11 pr-10 appearance-none ${errors.gender ? 'border-[#c63749] ring-4 ring-[#c63749]/15' : ''}`}
             >
               <option value="">{t('form.placeholders.select_gender') || 'Seleccionar género'}</option>
               <option value="MALE">{t('form.gender_options.male') || 'Masculino'}</option>
@@ -291,7 +291,7 @@ function RegisterFormContent() {
               {t('form.labels.password') || 'Contraseña'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
                 <Lock size={18} />
               </div>
               <input
@@ -317,7 +317,7 @@ function RegisterFormContent() {
               {t('form.labels.password_confirm') || 'Confirmar Contraseña'}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
                 <Lock size={18} />
               </div>
               <input
@@ -350,7 +350,7 @@ function RegisterFormContent() {
             )}
           </label>
           <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1a2a46]/40 group-focus-within:text-[#b2944a] transition-colors dark:text-[#f0ede4]/40 pointer-events-none">
               <Tag size={18} />
             </div>
             <input
