@@ -6,6 +6,7 @@ import NotificationRepository from '../notification/repository/notification.repo
 import { NotificationType } from 'src/shared/types/schema.types';
 import { Logger } from "@nestjs/common";
 import { readPlanCapacity } from "src/shared/utils/plan-capacity";
+import { resolveTrialDays } from "src/shared/utils/trial-days";
 const logger = new Logger("organization.service");
 
 
@@ -28,35 +29,6 @@ export class OrganizationService {
     private readonly notificationRepo: NotificationRepository,
   ) {}
 
-  /**
-   * Trial length for a new workspace. Source of truth is the platform setting
-   * the admin edits in Configuración (`DEFAULT_TRIAL_DAYS`); the env value and
-   * then 14 days are fallbacks for a database that never saw the seed.
-   */
-  private async resolveTrialDays(): Promise<number> {
-    let setting: { value: string } | null = null;
-    try {
-      setting =
-        (await this.prisma.systemSetting?.findUnique({
-          where: { key: "DEFAULT_TRIAL_DAYS" },
-          select: { value: true },
-        })) ?? null;
-    } catch {
-      setting = null;
-    }
-
-    const fromSetting = Number(setting?.value);
-    const fromEnv = Number(process.env.DEFAULT_TRIAL_DAYS);
-
-    const days =
-      Number.isFinite(fromSetting) && fromSetting > 0
-        ? fromSetting
-        : Number.isFinite(fromEnv) && fromEnv > 0
-          ? fromEnv
-          : 14;
-
-    return Math.min(Math.max(Math.floor(days), 1), 365);
-  }
 
   /**
    * Default plan a new business lands on (S9). Seeded by `seedPlans` on boot,
@@ -155,7 +127,7 @@ export class OrganizationService {
       // until the merchant picks a plan.
       const startDate = new Date();
       const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + (await this.resolveTrialDays()));
+      endDate.setDate(endDate.getDate() + (await resolveTrialDays(this.prisma)));
 
       await this.prisma.subscription.create({
         data: {

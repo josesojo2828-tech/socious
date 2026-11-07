@@ -27,6 +27,12 @@ export class SystemSettingController {
     return this.systemSettingService.update(dto);
   }
 
+  @Get("trial-days")
+  @Public()
+  async findTrialDays() {
+    return this.systemSettingService.findPublicTrialDays();
+  }
+
   @Get("public/:key")
   @Public()
   async findPublicByKey(@Param("key") key: string) {

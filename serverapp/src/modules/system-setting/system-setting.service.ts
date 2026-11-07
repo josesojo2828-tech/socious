@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import { UpdateSystemSettingDto } from "./dto/update-system-setting.dto";
+import { resolveTrialDays } from "src/shared/utils/trial-days";
 
 @Injectable()
 export class SystemSettingService {
@@ -20,6 +21,17 @@ export class SystemSettingService {
       throw new NotFoundException(`Configuración con clave '${key}' no encontrada`);
     }
     return setting;
+  }
+
+  /**
+   * Trial length a new workspace will actually get, resolved the same way
+   * `OrganizationService.createOrganization` resolves it. Never 404s: the
+   * setting may not exist yet and the env fallback is not readable by the
+   * browser, so returning the raw row would force the client to invent a
+   * number.
+   */
+  async findPublicTrialDays(): Promise<{ days: number }> {
+    return { days: await resolveTrialDays(this.prisma) };
   }
 
   async update(dto: UpdateSystemSettingDto) {
