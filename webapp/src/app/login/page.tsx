@@ -20,7 +20,6 @@ import { useTranslation } from "@/context/i18n.context";
 
 // Componentes
 import { AuthHeroSlider } from "@/shared/components/molecules/AuthHeroSlider/AuthHeroSlider";
-import { AuthHeader } from "@/shared/components/molecules/AuthHeader/AuthHeader";
 
 /** Auth field language — Maison navy border, brass focus (not Daisy indigo). */
 const AUTH_INPUT =
@@ -72,9 +71,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f0ede4]/50 dark:bg-[#0c101c] text-[#111018] dark:text-[#f0ede4] font-sans antialiased selection:bg-[#b2944a] selection:text-[#111018]">
-      {/* Auth Navigation Header */}
-      <AuthHeader />
-
       {/* Main Content Area */}
       <div className="flex-1 flex w-full overflow-hidden">
         {/* Left Panel: Desktop Hero Branding */}
