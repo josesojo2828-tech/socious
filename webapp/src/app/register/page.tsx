@@ -58,14 +58,6 @@ function requireTranslation(
 const AUTH_INPUT =
   "w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/80 dark:bg-[#0c101c]/60 px-4 py-3.5 text-[#111018] dark:text-[#f0ede4] placeholder:text-[#1a2a46]/35 dark:placeholder:text-[#f0ede4]/30 focus:border-[#b2944a] focus:ring-4 focus:ring-[#b2944a]/15 outline-none transition-all font-medium";
 
-/**
- * Same fallback the backend applies in `OrganizationService.resolveTrialDays`
- * when the platform setting is missing: `DEFAULT_TRIAL_DAYS` setting → env →
- * 14 days. Keeping them in sync means the CTA never promises a length the
- * workspace creation would not grant.
- */
-const DEFAULT_TRIAL_DAYS = 14;
-
 function RegisterFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -96,24 +88,28 @@ function RegisterFormContent() {
   const [termsError, setTermsError] = useState(false);
 
   // La duración del trial es una configuración de plataforma que el admin
-  // edita en Configuración (`DEFAULT_TRIAL_DAYS`). Es la misma clave que el
-  // backend resuelve al crear el workspace, así que el CTA no puede tener un
-  // número fijo: si el admin la cambia, el botón miente.
-  const [trialDays, setTrialDays] = useState(DEFAULT_TRIAL_DAYS);
+  // edita en Configuración (`DEFAULT_TRIAL_DAYS`). El endpoint devuelve el
+  // valor ya resuelto (setting → env → 14), el mismo que el backend aplica al
+  // crear el workspace, así que el CTA nunca promete un número distinto.
+  //
+  // Arranca en `null` a propósito: hasta que llega la respuesta no mostramos
+  // ningún número. Inventar un default acá es exactamente el bug que se está
+  // corrigiendo.
+  const [trialDays, setTrialDays] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     apiClient
-      .get<{ value?: string }>('/api/system-settings/public/DEFAULT_TRIAL_DAYS')
+      .get<{ days?: number }>('/api/system-settings/trial-days')
       .then((res) => {
-        const parsed = Number.parseInt(String(res.data?.value ?? ''), 10);
-        if (!cancelled && Number.isFinite(parsed) && parsed > 0) {
-          setTrialDays(parsed);
+        const days = Number(res.data?.days);
+        if (!cancelled && Number.isFinite(days) && days > 0) {
+          setTrialDays(days);
         }
       })
       .catch(() => {
-        // Sin configuración o sin red: el backend otorga el mismo fallback.
+        // Sin red: el botón queda sin número antes que mostrar uno falso.
       });
 
     return () => {
@@ -417,7 +413,11 @@ function RegisterFormContent() {
               </>
             ) : (
               <>
-                <span>Crear mi cuenta gratis ({trialDays} días)</span>
+                <span>
+                  {trialDays
+                    ? `Crear mi cuenta gratis (${trialDays} días)`
+                    : 'Crear mi cuenta gratis'}
+                </span>
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </>
             )}

@@ -154,14 +154,22 @@ describe('register — código de referido', () => {
 /**
  * El trial no es una constante del frontend: es la configuración
  * `DEFAULT_TRIAL_DAYS` que el admin edita en Configuración y que el backend
- * resuelve al crear el workspace.
+ * resuelve (setting → env → 14) en `resolveTrialDays`. El endpoint público
+ * devuelve ese valor ya resuelto; el cliente no calcula ni inventa nada.
  */
 describe('register — días de prueba', () => {
-  it('lee DEFAULT_TRIAL_DAYS del endpoint público en vez de hardcodear el número', () => {
+  it('lee los días resueltos del backend en vez de hardcodear el número', () => {
     const source = readRepoFile('page.tsx');
 
-    expect(source).toMatch(/\/api\/system-settings\/public\/DEFAULT_TRIAL_DAYS/);
-    expect(source).toMatch(/Crear mi cuenta gratis \(\{trialDays\} días\)/);
+    expect(source).toMatch(/\/api\/system-settings\/trial-days/);
+    expect(source).toMatch(/res\.data\?\.days/);
     expect(source).not.toMatch(/Crear mi cuenta gratis \(14 días\)/);
+  });
+
+  it('no muestra ningún número hasta que el backend responde', () => {
+    const source = readRepoFile('page.tsx');
+
+    expect(source).toMatch(/useState<number \| null>\(null\)/);
+    expect(source).not.toMatch(/DEFAULT_TRIAL_DAYS\s*=\s*14/);
   });
 });

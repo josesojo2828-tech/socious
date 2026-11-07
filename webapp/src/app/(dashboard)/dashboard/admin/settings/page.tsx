@@ -17,13 +17,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-interface SystemSetting {
-  id?: string;
-  key: string;
-  value: string;
-  description?: string;
-}
-
 interface CmsItem {
   id?: string;
   key: string;
@@ -54,14 +47,15 @@ export default function AdminSettingsPage() {
     const fetchSettings = async () => {
       setLoadingGeneral(true);
       try {
-        const res = await apiClient.get<SystemSetting>("/api/system-settings/public/DEFAULT_TRIAL_DAYS");
-        if (!cancelled && res.data && res.data.value) {
-          const parsed = parseInt(res.data.value, 10);
-          if (!isNaN(parsed)) setTrialDays(parsed);
-        }
+        // Valor ya resuelto (setting → env → 14), el mismo que el backend
+        // aplica al crear un workspace. Si la clave no está guardada, el
+        // formulario precarga el valor efectivo en vez de un 14 fijo que el
+        // admin podía guardar sin querer, bajando el trial real.
+        const res = await apiClient.get<{ days?: number }>("/api/system-settings/trial-days");
+        const days = Number(res.data?.days);
+        if (!cancelled && Number.isFinite(days) && days > 0) setTrialDays(days);
       } catch {
-        // Fallback default
-        if (!cancelled) setTrialDays(14);
+        // Sin red no podemos saber el valor efectivo; queda el último conocido.
       } finally {
         if (!cancelled) setLoadingGeneral(false);
       }
