@@ -13,7 +13,6 @@ import { ThemeToggle } from "@/shared/components/molecules/ThemeToggle";
 import { useTranslation } from "@/context/i18n.context";
 import { useNotifications } from "@/features/user/hooks/useNotifications";
 import { UserNotificationsSection } from "@/features/user/components/sections/UserNotificationSection";
-import { WorkspaceSwitcher } from "@/shared/components/layout/WorkspaceSwitcher";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { roleLabel } from "@/features/user/lib/role-label";
 import { planBadge } from "@/features/user/lib/plan-badge";
@@ -22,7 +21,6 @@ import { planBadge } from "@/features/user/lib/plan-badge";
 
 export const PrivateHeader = () => {
   const { user, logout } = useAuthStore();
-  const isPatient = user?.permits?.name === 'PATIENT';
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
   const { t } = useTranslation();
   const { toggle, toggleCollapse } = useSidebarStore();
@@ -101,7 +99,6 @@ export const PrivateHeader = () => {
           <Menu size={22} className="text-[#1a2a46]/70 dark:text-[#c9ced6]" />
         </Button>
 
-        {!isPatient && <WorkspaceSwitcher />}
       </div>
 
       {/* Derecha: Notificaciones y Perfil */}
