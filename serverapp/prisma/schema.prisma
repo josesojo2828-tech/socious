@@ -1183,10 +1183,21 @@ enum OrderStatus {
   CANCELLED
 }
 
+/**
+ * Where the order came from. The storefront and the POS share the same create
+ * path, so `createdById` cannot tell them apart; metrics count only
+ * `STOREFRONT`.
+ */
+enum OrderChannel {
+  STOREFRONT
+  MANUAL
+}
+
 model Order {
   id              String        @id @default(uuid())
   orderNumber     String        // PED-00001
   organizationId  String?
+  channel         OrderChannel  @default(MANUAL)
   clientId        String?
   customerName    String
   customerPhone   String?
@@ -1227,6 +1238,7 @@ model Order {
   @@index([status])
   @@index([createdAt])
   @@index([organizationId, fulfillmentType])
+  @@index([organizationId, channel, createdAt])
   @@index([agencyId])
 }
 

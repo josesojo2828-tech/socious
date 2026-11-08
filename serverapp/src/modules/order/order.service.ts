@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
-import { OrderStatus, ProductStatus } from "@prisma/client";
+import { OrderChannel, OrderStatus, ProductStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { ExchangeService } from "../exchange/exchange.service";
 import { SaleService } from "../sale/sale.service";
@@ -205,6 +205,11 @@ export class OrderService {
         data: {
           orderNumber,
           organizationId: organization.id,
+          // The POS order shares this create path: only the public call has no
+          // `internalOk`, so it is the one that counts as storefront traffic.
+          channel: options.internalOk
+            ? OrderChannel.MANUAL
+            : OrderChannel.STOREFRONT,
           clientId: await this.resolveClientId(tx, organization.id, data),
           customerName: customerName,
           customerPhone: data.customerPhone?.trim() || null,
