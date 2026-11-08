@@ -19,7 +19,7 @@ export class DashboardService {
     private readonly tenantSettings: TenantSettingsService,
   ) { }
 
-  async getSidebarSections({ id, permits, modules = [], isPremium = false, isGlobalRole = false, organizationId }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isGlobalRole?: boolean; organizationId?: string | null }): Promise<SidebarSection[]> {
+  async getSidebarSections({ id, permits, modules = [], isPremium = false, isGlobalRole = false, organizationId, organizationSlug }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isGlobalRole?: boolean; organizationId?: string | null; organizationSlug?: string | null }): Promise<SidebarSection[]> {
     if (!permits || permits.length === 0) return [];
 
     const moduleKeys = new Set(modules);
@@ -122,27 +122,33 @@ export class DashboardService {
 
       // 2. Tienda pública (catálogo online, módulo AVANZADO del plan)
       if (hasModule("CATALOG_ONLINE")) {
-        sections.push({
-          title: "common.sidebar.online_store",
-          icon: "globe",
-          items: [
-            {
-              title: "common.sidebar.shop",
-              icon: "globe",
-              link: "/shop",
-            },
-            // Ofertas (S9): módulo OFFERS (Avanzado/Premium).
-            ...(hasModule("OFFERS")
-              ? [
-                  {
-                    title: "Ofertas",
-                    icon: "megaphone",
-                    link: "/dashboard/ofertas",
-                  },
-                ]
-              : []),
-          ],
-        });
+        const storefrontItems: SidebarItem[] = [];
+
+        // Canonical store URL is `/<slug>`; `/shop` alone is not a route.
+        if (organizationSlug) {
+          storefrontItems.push({
+            title: "common.sidebar.shop",
+            icon: "globe",
+            link: `/${organizationSlug}`,
+          });
+        }
+
+        // Ofertas (S9): módulo OFFERS (Avanzado/Premium).
+        if (hasModule("OFFERS")) {
+          storefrontItems.push({
+            title: "Ofertas",
+            icon: "megaphone",
+            link: "/dashboard/ofertas",
+          });
+        }
+
+        if (storefrontItems.length > 0) {
+          sections.push({
+            title: "common.sidebar.online_store",
+            icon: "globe",
+            items: storefrontItems,
+          });
+        }
       }
 
       // ERP sections require an organization: without one every mutation
@@ -293,13 +299,6 @@ export class DashboardService {
               title: "Configuración del negocio",
               icon: "settings",
               link: "/dashboard/configuracion",
-            },
-            {
-              // Always reachable: the login flow sends a tenant without a
-              // plan here, and it must not become a dead end afterwards.
-              title: "Suscripción",
-              icon: "card-fill",
-              link: "/dashboard/subscription",
             },
           ],
         });

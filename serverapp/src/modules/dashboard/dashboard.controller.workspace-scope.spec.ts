@@ -44,7 +44,11 @@ const makeController = (members: Member[]) => {
         return rows[0] ?? null;
       }),
     },
-    organization: { count: jest.fn(async () => 7) },
+    organization: {
+      count: jest.fn(async () => 7),
+      // Sidebar: the shop entry links to the resolved workspace slug.
+      findUnique: jest.fn(async () => ({ slug: "mi-tienda" })),
+    },
     user: {
       count: jest.fn(async () => 42),
       findMany: jest.fn(async () => [

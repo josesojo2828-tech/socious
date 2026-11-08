@@ -32,6 +32,8 @@ export function buildSidebarSections(
   resolved?: SidebarEntitlements | null,
   /** Resolved workspace of the caller: gates tenant-only entries (S8). */
   organizationId?: string | null,
+  /** Public storefront slug: the shop entry links to `/<slug>`. */
+  organizationSlug?: string | null,
 ): Promise<SidebarSection[]> {
   const permits = resolved?.permissions ?? [
     ...(user.permits?.list ?? []),
@@ -41,14 +43,32 @@ export function buildSidebarSections(
   const isGlobalRole =
     user.permits?.name === "SUPERADMIN" || user.permits?.name === "ADMIN";
 
-  console.log('[SIDEBAR DEBUG] Permits count:', permits?.length, 'Modules:', JSON.stringify(modules));
-  console.log('[SIDEBAR DEBUG] Has INSTITUTIONAL_FOOD_ACCESS?', permits?.includes('INSTITUTIONAL_FOOD_ACCESS'), 'Has INSTITUTIONAL_FOOD module?', modules?.includes('INSTITUTIONAL_FOOD'));
-
   return dashboardService.getSidebarSections({
     id: user.id,
     permits,
     modules,
     isGlobalRole,
     organizationId,
+    organizationSlug,
   });
+}
+
+/**
+ * Public storefront slug of the resolved workspace. The shop entry must point
+ * at `/<slug>`: `/shop` alone is not a route, only `/shop/<slug>` is, and the
+ * canonical URL is the root slug.
+ */
+export async function resolveOrganizationSlug(
+  prisma: { organization: { findUnique: (args: unknown) => Promise<unknown> } },
+  organizationId?: string | null,
+): Promise<string | null> {
+  if (!organizationId) return null;
+
+  const organization = (await prisma.organization.findUnique({
+    where: { id: organizationId },
+    select: { slug: true },
+  })) as { slug?: string | null } | null;
+
+  const slug = organization?.slug?.trim();
+  return slug ? slug : null;
 }

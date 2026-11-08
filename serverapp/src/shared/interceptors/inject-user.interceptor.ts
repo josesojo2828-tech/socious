@@ -12,7 +12,10 @@ import { DashboardService } from "src/modules/dashboard/dashboard.service";
 import { PrismaService } from "nestjs-prisma";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
-import { buildSidebarSections } from "src/modules/dashboard/sidebar.helper";
+import {
+  buildSidebarSections,
+  resolveOrganizationSlug,
+} from "src/modules/dashboard/sidebar.helper";
 import { Logger } from "@nestjs/common";
 const logger = new Logger("inject-user.interceptor");
 
@@ -71,6 +74,13 @@ export class InjectUserInterceptor implements NestInterceptor {
             request,
             currentUser ?? {},
           );
+          // Only a CATALOG_ONLINE workspace renders a shop entry: skip the
+          // extra lookup for every other request.
+          const organizationSlug = (
+            currentUser?.entitlements?.modules ?? []
+          ).some((module: { key?: string }) => module.key === "CATALOG_ONLINE")
+            ? await resolveOrganizationSlug(this.prisma, organizationId)
+            : null;
 
           next
             .handle()
@@ -93,6 +103,7 @@ export class InjectUserInterceptor implements NestInterceptor {
                       user,
                       resolved,
                       organizationId,
+                      organizationSlug,
                     ),
                   ).pipe(
                     map((sidebar) => ({

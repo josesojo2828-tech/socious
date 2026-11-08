@@ -9,7 +9,10 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { DashboardService } from "./dashboard.service";
-import { buildSidebarSections } from "./sidebar.helper";
+import {
+  buildSidebarSections,
+  resolveOrganizationSlug,
+} from "./sidebar.helper";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import type { RequestWithUser } from "src/shared/types/server.type";
 import { UserDetailService } from "./service/user-detail.service";
@@ -207,21 +210,25 @@ export class DashboardController {
     const user = request.user;
     if (!user) return { sections: [] };
 
-    console.log('[SIDEBAR DEBUG] User:', user?.email, 'ID:', user?.id);
-
     const entitlements = await this.getOrResolveEntitlements(request);
-
-    console.log('[SIDEBAR DEBUG] Resolved Entitlements:', JSON.stringify(entitlements));
 
     // Shared with `InjectUserInterceptor` so both sidebar build sites cannot
     // drift (task 3.4). The resolved workspace drives tenant-only entries
-    // like the delivery routes (S8).
+    // like the delivery routes (S8) and the public storefront URL.
     const organizationId = await this.getOrganizationId(request);
+    // Only a CATALOG_ONLINE workspace renders a shop entry; skip the lookup
+    // for every other tenant.
+    const organizationSlug = (entitlements?.modules ?? []).some(
+      (module) => module.key === "CATALOG_ONLINE",
+    )
+      ? await resolveOrganizationSlug(this.prisma, organizationId)
+      : null;
     const sections = await buildSidebarSections(
       this.dashboardService,
       user,
       entitlements,
       organizationId,
+      organizationSlug,
     );
     return { sections };
   }

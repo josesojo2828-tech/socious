@@ -69,9 +69,10 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain("/dashboard/ventas");
     expect(links).toContain("/dashboard/productos");
     expect(links).toContain("/dashboard/clientes");
-    // The plans screen must stay reachable after onboarding: the login flow
-    // sends tenants without a subscription there, and there was no way back.
-    expect(links).toContain("/dashboard/subscription");
+    // The subscription screen is NOT advertised in the tenant sidebar. A
+    // workspace without a plan still reaches it through the dashboard guard
+    // redirect, so hiding the link cannot become a dead end.
+    expect(links).not.toContain("/dashboard/subscription");
     // Materiales y Servicios son opt-in: apagados por defecto.
     expect(links).not.toContain("/dashboard/materiales");
     expect(links).not.toContain("/dashboard/servicios");
@@ -132,18 +133,38 @@ describe("DashboardService — entitlement-driven sidebar", () => {
         id: "u1",
         permits: BASE_PERMITS,
         modules: ["INVENTORY", "POS"],
+        organizationSlug: "mi-tienda",
       }),
     );
-    expect(withoutCatalog).not.toContain("/shop");
+    expect(withoutCatalog).not.toContain("/mi-tienda");
 
     const withCatalog = linksOf(
       await makeService().getSidebarSections({
         id: "u1",
         permits: BASE_PERMITS,
         modules: ["INVENTORY", "CATALOG_ONLINE"],
+        organizationId: "org-1",
+        organizationSlug: "mi-tienda",
       }),
     );
-    expect(withCatalog).toContain("/shop");
+    // Canonical storefront URL is the root slug, never the dead `/shop`.
+    expect(withCatalog).toContain("/mi-tienda");
+    expect(withCatalog).not.toContain("/shop");
+  });
+
+  it("hides the shop entry when the workspace has no storefront slug", async () => {
+    const links = linksOf(
+      await makeService().getSidebarSections({
+        id: "u1",
+        permits: BASE_PERMITS,
+        modules: ["INVENTORY", "CATALOG_ONLINE"],
+        organizationId: "org-1",
+        organizationSlug: null,
+      }),
+    );
+
+    expect(links).not.toContain("/shop");
+    expect(links.some((link) => link === "/")).toBe(false);
   });
 
   it("keeps the fixed global-role sections regardless of modules", async () => {
@@ -307,7 +328,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(links).toContain('/dashboard/configuracion');
     expect(links).not.toContain('/dashboard/pedidos');
     expect(links).not.toContain('/dashboard/rutas');
-    expect(links).not.toContain('/shop');
+    expect(links).not.toContain('/mi-tienda');
   });
 
   it("shows pedidos, shop and routes for an Avanzado plan", async () => {
@@ -317,12 +338,13 @@ describe("DashboardService — entitlement-driven sidebar", () => {
         permits: BASE_PERMITS,
         modules: ADVANCED_MODULES,
         organizationId: 'org-1',
+        organizationSlug: 'mi-tienda',
       }),
     );
 
     expect(links).toContain('/dashboard/pedidos');
     expect(links).toContain('/dashboard/rutas');
-    expect(links).toContain('/shop');
+    expect(links).toContain('/mi-tienda');
   });
 
   it("hides every ERP section for a user without an organization", async () => {
