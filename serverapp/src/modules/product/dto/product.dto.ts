@@ -319,6 +319,18 @@ export class ListProductsQueryDto {
   @IsBoolean()
   isService?: boolean;
 
+  /** Only raw materials (`isRawMaterial`) — the Materiales filter. */
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === true || value === "true"
+      ? true
+      : value === false || value === "false"
+        ? false
+        : undefined,
+  )
+  @IsBoolean()
+  isRawMaterial?: boolean;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

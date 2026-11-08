@@ -52,6 +52,58 @@ interface RateSnapshot {
 
 type Paged<T> = { list: T[]; total: number };
 
+/**
+ * POS type filter. The backend does the filtering (`isService`,
+ * `isRawMaterial`) so the grid never depends on how many products fit in one
+ * page; the text search stays local for instant feedback.
+ */
+type ProductKindFilter = "todos" | "producto" | "material" | "servicio";
+
+const PRODUCT_KIND_LABELS: Record<ProductKindFilter, string> = {
+  todos: "Todos",
+  producto: "Productos",
+  material: "Materiales",
+  servicio: "Servicios",
+};
+
+const PRODUCT_KIND_NOUN: Record<ProductKindFilter, string> = {
+  todos: "productos",
+  producto: "productos",
+  material: "materiales",
+  servicio: "servicios",
+};
+
+const PRODUCT_PAGE_SIZE = 100;
+const PRODUCT_FETCH_CAP = 1000;
+
+function kindParams(kind: ProductKindFilter): Record<string, unknown> {
+  switch (kind) {
+    case "producto":
+      return { excludeRawMaterials: true, isService: false };
+    case "material":
+      return { isRawMaterial: true };
+    case "servicio":
+      return { isService: true };
+    default:
+      return {};
+  }
+}
+
+/** Every page of the selected kind, so a >100 catalog is not silently cut. */
+async function fetchProductsByKind(kind: ProductKindFilter): Promise<Product[]> {
+  const all: Product[] = [];
+
+  for (let page = 1; all.length < PRODUCT_FETCH_CAP; page += 1) {
+    const { data } = await apiClient.get<Paged<Product>>(ProductEndpoints.list, {
+      params: { ...kindParams(kind), limit: PRODUCT_PAGE_SIZE, page },
+    });
+    all.push(...data.list);
+    if (data.list.length < PRODUCT_PAGE_SIZE) break;
+  }
+
+  return all;
+}
+
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as { response?: { data?: { message?: string } } };
   return maybe?.response?.data?.message || fallback;
@@ -90,6 +142,8 @@ export default function PosPage() {
   const [shiftControl, setShiftControl] = useState<boolean>(true);
 
   const [query, setQuery] = useState<string>("");
+  const [kind, setKind] = useState<ProductKindFilter>("todos");
+  const [productsLoading, setProductsLoading] = useState<boolean>(true);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [clientId, setClientId] = useState<string>("");
   const [methodCode, setMethodCode] = useState<string>("");
@@ -123,12 +177,36 @@ export default function PosPage() {
 
   const totals = useMemo(() => cartTotals(cart), [cart]);
 
-  const loadProducts = useCallback(async () => {
-    const { data } = await apiClient.get<Paged<Product>>(ProductEndpoints.list, {
-      params: { limit: 100 },
-    });
-    setProducts(data.list);
+  const loadProducts = useCallback(async (nextKind: ProductKindFilter) => {
+    setProducts(await fetchProductsByKind(nextKind));
   }, []);
+
+  // The type filter is server-side: refetch whenever it changes.
+  useEffect(() => {
+    let cancelled = false;
+    setProductsLoading(true);
+
+    void (async () => {
+      try {
+        const list = await fetchProductsByKind(kind);
+        if (!cancelled) setProducts(list);
+      } catch {
+        if (!cancelled) {
+          addToast({
+            type: "error",
+            title: "Punto de venta",
+            message: "No se pudieron cargar los productos.",
+          });
+        }
+      } finally {
+        if (!cancelled) setProductsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [kind, addToast]);
 
   useEffect(() => {
     let cancelled = false;
@@ -136,16 +214,12 @@ export default function PosPage() {
     void (async () => {
       try {
         const [
-          productPage,
           clientPage,
           optionList,
           rateView,
           currentShift,
           settings,
         ] = await Promise.all([
-          apiClient.get<Paged<Product>>(ProductEndpoints.list, {
-            params: { limit: 100 },
-          }),
           apiClient.get<Paged<Client>>(ClientEndpoints.list, {
             params: { limit: 100 },
           }),
@@ -160,7 +234,6 @@ export default function PosPage() {
         ]);
 
         if (cancelled) return;
-        setProducts(productPage.data.list);
         setClients(clientPage.data.list);
         setMethods(optionList.data);
         setRates(rateView.data);
@@ -393,7 +466,7 @@ export default function PosPage() {
         });
         setCart([]);
         setNotes("");
-        await loadProducts();
+        await loadProducts(kind);
       } catch (error) {
         addToast({
           type: "error",
@@ -441,7 +514,7 @@ export default function PosPage() {
       });
       setCart([]);
       setNotes("");
-      await loadProducts(); // stock moved: show it fresh
+      await loadProducts(kind); // stock moved: show it fresh
     } catch (error) {
       addToast({
         type: "error",
@@ -596,19 +669,42 @@ export default function PosPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* --------- Productos --------- */}
         <section className="lg:col-span-8">
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              Mostrando {filtered.length} de {products.length} productos
-            </span>
-            {query.trim() ? (
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                className="text-[11px] uppercase tracking-[0.16em] text-[#b2944a] font-semibold hover:underline"
-              >
-                Limpiar búsqueda
-              </button>
-            ) : null}
+          <div className="mb-4 space-y-3">
+            <div className="flex flex-wrap gap-1.5">
+              {(Object.keys(PRODUCT_KIND_LABELS) as ProductKindFilter[]).map(
+                (value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setKind(value)}
+                    aria-pressed={kind === value}
+                    className={
+                      kind === value
+                        ? "rounded-full bg-[#1a2a46] px-3.5 py-1.5 text-xs font-semibold text-[#f0ede4]"
+                        : "rounded-full border border-[#1a2a46]/15 px-3.5 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-[#1a2a46]/5 dark:border-white/15 dark:text-slate-300 dark:hover:bg-white/5"
+                    }
+                  >
+                    {PRODUCT_KIND_LABELS[value]}
+                  </button>
+                ),
+              )}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                {productsLoading
+                  ? "Cargando…"
+                  : `Mostrando ${filtered.length} de ${products.length} ${PRODUCT_KIND_NOUN[kind]}`}
+              </span>
+              {query.trim() ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="text-[11px] uppercase tracking-[0.16em] text-[#b2944a] font-semibold hover:underline"
+                >
+                  Limpiar búsqueda
+                </button>
+              ) : null}
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

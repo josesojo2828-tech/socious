@@ -77,6 +77,8 @@ export class ProductService {
     if (query.variantOfId) filters.push({ variantOfId: query.variantOfId });
     if (query.isPublic !== undefined) filters.push({ isPublic: query.isPublic });
     if (query.isService !== undefined) filters.push({ isService: query.isService });
+    if (query.isRawMaterial !== undefined)
+      filters.push({ isRawMaterial: query.isRawMaterial });
     // Catalog screen hides materials; POS/compras omit the flag and still see them.
     if (query.excludeRawMaterials) filters.push({ isRawMaterial: false });
 
