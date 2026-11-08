@@ -29,10 +29,9 @@ describe("client-form (S8)", () => {
       expect(validateClientForm(form({ name: "   " }))).toMatch(/nombre/i);
     });
 
-    it("requires the email and rejects a malformed one", () => {
-      expect(validateClientForm(form({ email: "" }))).toBe(
-        "El correo es obligatorio.",
-      );
+    it("treats the email as optional but still rejects a malformed one", () => {
+      expect(validateClientForm(form({ email: "" }))).toBeNull();
+      expect(validateClientForm(form({ email: "   " }))).toBeNull();
       expect(validateClientForm(form({ email: "no-es-correo" }))).toMatch(
         /formato válido/,
       );
@@ -60,8 +59,16 @@ describe("client-form (S8)", () => {
       expect(payload).not.toHaveProperty("state");
     });
 
+    it("omits the email when it was left empty", () => {
+      const payload = buildClientPayload(form({ email: "   " }));
+
+      expect(payload).not.toHaveProperty("email");
+      expect(payload.name).toBe("Almacén El Sol");
+    });
+
     it("never sends a negative credit limit", () => {
       const payload = buildClientPayload(form({ creditLimitUSD: -20 }));
+
       expect(payload.creditLimitUSD).toBe(0);
     });
   });

@@ -22,8 +22,13 @@ export class CreateClientDto {
   @MaxLength(40, { message: "El documento no puede exceder 40 caracteres." })
   taxId?: string;
 
-  @IsEmail({}, { message: "El email es obligatorio y debe ser válido." })
-  email: string;
+  /** Optional: a client can be identified by phone or document alone. */
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === "string" && value.trim() === "" ? undefined : value,
+  )
+  @IsEmail({}, { message: "El correo no tiene un formato válido." })
+  email?: string;
 
   @IsOptional()
   @IsString({ message: "El teléfono debe ser una cadena de texto." })
@@ -74,6 +79,9 @@ export class UpdateClientDto {
   taxId?: string;
 
   @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === "string" && value.trim() === "" ? undefined : value,
+  )
   @IsEmail({}, { message: "Formato de email inválido." })
   email?: string;
 

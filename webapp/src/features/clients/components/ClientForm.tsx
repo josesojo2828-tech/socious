@@ -180,10 +180,9 @@ export function ClientForm({ clientId }: { clientId?: string }) {
             />
           </label>
           <label className={LABEL_SM}>
-            Correo *
+            Correo
             <input
               type="email"
-              required
               className={`${INPUT} mt-1`}
               value={form.email ?? ""}
               onChange={(event) => patchForm({ email: event.target.value })}
