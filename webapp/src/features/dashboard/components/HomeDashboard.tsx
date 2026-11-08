@@ -23,6 +23,8 @@ import type { TenantSettings } from "@/features/settings/types/tenant-settings.t
 import { buildDailyRateLines, type DailyRateSnapshot } from "../lib/daily-rates";
 import {
   buildWeekHeat,
+  dayEndIso,
+  dayStartIso,
   isoDaysAgo,
   localDayKey,
   percentDelta,
@@ -36,6 +38,12 @@ import {
  */
 
 interface PurchasesReportSlice {
+  aging: {
+    current: number;
+    days1_30: number;
+    days31_60: number;
+    over60: number;
+  };
   openItems: {
     id: string;
     purchaseNumber: string;
@@ -135,6 +143,7 @@ export default function HomeDashboard() {
   const [apItems, setApItems] = useState<PurchasesReportSlice["openItems"]>(
     [],
   );
+  const [apTotalUSD, setApTotalUSD] = useState(0);
   const [heat, setHeat] = useState<WeekHeat | null>(null);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
   const [rates, setRates] = useState<DailyRateSnapshot | null>(null);
@@ -145,6 +154,9 @@ export default function HomeDashboard() {
     try {
       const today = localDayKey(new Date());
       const yesterday = isoDaysAgo(1);
+      // Whole local days: a bare date on both edges only matches midnight.
+      const todayRange = `from=${dayStartIso(today)}&to=${dayEndIso(today)}`;
+      const yesterdayRange = `from=${dayStartIso(yesterday)}&to=${dayEndIso(yesterday)}`;
 
       const [
         todayReport,
@@ -158,12 +170,12 @@ export default function HomeDashboard() {
       ] = await Promise.all([
         apiClient
           .get<SalesReportSlice>(
-            `${SaleEndpoints.report}?from=${today}&to=${today}`,
+            `${SaleEndpoints.report}?${todayRange}`,
           )
           .then((r) => r.data),
         apiClient
           .get<SalesReportSlice>(
-            `${SaleEndpoints.report}?from=${yesterday}&to=${yesterday}`,
+            `${SaleEndpoints.report}?${yesterdayRange}`,
           )
           .then((r) => r.data),
         apiClient
@@ -235,6 +247,10 @@ export default function HomeDashboard() {
             new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
         ),
       );
+      const apAging = apReport.aging;
+      setApTotalUSD(
+        apAging.current + apAging.days1_30 + apAging.days31_60 + apAging.over60,
+      );
       setPendingOrders(pendingRes.total);
       setRecentOrders(ordersRes.list ?? []);
       setHeat(buildWeekHeat(saleRows, 4));
@@ -288,14 +304,14 @@ export default function HomeDashboard() {
       deltaPct,
     },
     {
-      label: "Dinero en la calle",
+      label: "Cuentas por cobrar",
       value: usd(arTotalUSD),
-      sub: "Saldo total por cobrar",
+      sub: `${openItems.length} factura${openItems.length === 1 ? "" : "s"} abierta${openItems.length === 1 ? "" : "s"}`,
     },
     {
-      label: "Cuentas por cobrar",
-      value: String(openItems.length),
-      sub: "Facturas abiertas",
+      label: "Cuentas por pagar",
+      value: usd(apTotalUSD),
+      sub: `${apItems.length} factura${apItems.length === 1 ? "" : "s"} pendiente${apItems.length === 1 ? "" : "s"}`,
     },
     {
       label: "Pedidos pendientes",

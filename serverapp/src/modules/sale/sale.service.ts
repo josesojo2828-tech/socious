@@ -5,6 +5,7 @@ import {  BadRequestException,
 } from "@nestjs/common";
 import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { computeCreditDueDate } from "./util/credit-due-date";
+import { resolveReportRange } from "./util/report-range";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, ProductStatus, SaleStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
@@ -439,13 +440,7 @@ export class SaleService {
    * cobradas en mayo" view.
    */
   async getReport(scope: SaleScope, query: SalesReportQueryDto) {
-    const from = query.from ? new Date(query.from) : undefined;
-    const to = query.to ? new Date(query.to) : undefined;
-
-    const issueRange = {
-      ...(from ? { gte: from } : {}),
-      ...(to ? { lte: to } : {}),
-    };
+    const issueRange = resolveReportRange(query);
 
     const [accrued, collected, sales, unpaid] = await Promise.all([
       this.prisma.sale.findMany({

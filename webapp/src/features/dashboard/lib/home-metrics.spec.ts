@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   buildWeekHeat,
+  dayEndIso,
+  dayStartIso,
   isoDaysAgo,
   localDayKey,
   percentDelta,
@@ -15,6 +17,41 @@ describe("localDayKey / isoDaysAgo", () => {
   it("walks days back in local time", () => {
     expect(isoDaysAgo(1, new Date(2026, 9, 5))).toBe("2026-10-04");
     expect(isoDaysAgo(0, new Date(2026, 9, 5))).toBe("2026-10-05");
+  });
+});
+
+describe("dayStartIso / dayEndIso", () => {
+  it("covers the whole local day, not just its first instant", () => {
+    const start = new Date(dayStartIso("2026-11-08"));
+    const end = new Date(dayEndIso("2026-11-08"));
+
+    expect([
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate(),
+      start.getHours(),
+      start.getMinutes(),
+      start.getSeconds(),
+      start.getMilliseconds(),
+    ]).toEqual([2026, 10, 8, 0, 0, 0, 0]);
+
+    expect([
+      end.getFullYear(),
+      end.getMonth(),
+      end.getDate(),
+      end.getHours(),
+      end.getMinutes(),
+      end.getSeconds(),
+      end.getMilliseconds(),
+    ]).toEqual([2026, 10, 8, 23, 59, 59, 999]);
+  });
+
+  it("keeps start and end inside the same local day", () => {
+    expect(localDayKey(new Date(dayStartIso("2026-11-08")))).toBe("2026-11-08");
+    expect(localDayKey(new Date(dayEndIso("2026-11-08")))).toBe("2026-11-08");
+    expect(new Date(dayEndIso("2026-11-08")).getTime()).toBeGreaterThan(
+      new Date(dayStartIso("2026-11-08")).getTime(),
+    );
   });
 });
 

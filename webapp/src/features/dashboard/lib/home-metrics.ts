@@ -35,6 +35,22 @@ export function isoDaysAgo(days: number, from: Date = new Date()): string {
   return localDayKey(date);
 }
 
+/**
+ * Start of the local day as a full ISO instant. A report that receives
+ * `YYYY-MM-DD` on both edges only matches midnight, so the dashboard sends the
+ * exact boundaries of the user's day instead.
+ */
+export function dayStartIso(dayKey: string): string {
+  const [year, month, day] = dayKey.split("-").map(Number);
+  return new Date(year, (month ?? 1) - 1, day ?? 1, 0, 0, 0, 0).toISOString();
+}
+
+/** End of the local day as a full ISO instant (inclusive). */
+export function dayEndIso(dayKey: string): string {
+  const [year, month, day] = dayKey.split("-").map(Number);
+  return new Date(year, (month ?? 1) - 1, day ?? 1, 23, 59, 59, 999).toISOString();
+}
+
 /** Monday (local) of the week containing `date`. */
 function mondayOf(date: Date): Date {
   const day = date.getDay(); // 0 domingo
