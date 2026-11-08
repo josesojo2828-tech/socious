@@ -5,7 +5,7 @@ import {  BadRequestException,
 } from "@nestjs/common";
 import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
 import { computeCreditDueDate } from "./util/credit-due-date";
-import { resolveReportRange } from "./util/report-range";
+import { resolveReportRange } from "src/shared/utils/report-range";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, ProductStatus, SaleStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
