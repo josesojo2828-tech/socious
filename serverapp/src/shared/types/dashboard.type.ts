@@ -10,6 +10,8 @@ export interface SidebarItem {
   title: string;
   icon: string;
   link: string;
+  /** Public pages (the storefront) open in a new tab so the panel is kept. */
+  newTab?: boolean;
   badge?: string;
   badgeColor?: string;
 }

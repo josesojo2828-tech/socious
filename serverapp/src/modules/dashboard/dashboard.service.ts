@@ -124,12 +124,23 @@ export class DashboardService {
       if (hasModule("CATALOG_ONLINE")) {
         const storefrontItems: SidebarItem[] = [];
 
+        // Metrics need a workspace to aggregate; the public link needs a slug.
+        if (organizationId) {
+          storefrontItems.push({
+            title: "common.sidebar.storefront_metrics",
+            icon: "activity",
+            link: "/dashboard/tienda",
+          });
+        }
+
         // Canonical store URL is `/<slug>`; `/shop` alone is not a route.
+        // Opens in a new tab so the merchant keeps the panel open.
         if (organizationSlug) {
           storefrontItems.push({
             title: "common.sidebar.shop",
             icon: "globe",
             link: `/${organizationSlug}`,
+            newTab: true,
           });
         }
 

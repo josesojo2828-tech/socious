@@ -152,6 +152,34 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(withCatalog).not.toContain("/shop");
   });
 
+  it("adds storefront metrics and opens the shop in a new tab", async () => {
+    const sections = await makeService().getSidebarSections({
+      id: "u1",
+      permits: BASE_PERMITS,
+      modules: ["CATALOG_ONLINE"],
+      organizationId: "org-1",
+      organizationSlug: "mi-tienda",
+    });
+
+    const store = sections.find(
+      (section) => section.title === "common.sidebar.online_store",
+    );
+
+    expect(store?.items).toEqual([
+      {
+        title: "common.sidebar.storefront_metrics",
+        icon: "activity",
+        link: "/dashboard/tienda",
+      },
+      {
+        title: "common.sidebar.shop",
+        icon: "globe",
+        link: "/mi-tienda",
+        newTab: true,
+      },
+    ]);
+  });
+
   it("hides the shop entry when the workspace has no storefront slug", async () => {
     const links = linksOf(
       await makeService().getSidebarSections({
@@ -163,6 +191,7 @@ describe("DashboardService — entitlement-driven sidebar", () => {
       }),
     );
 
+    expect(links).toContain("/dashboard/tienda");
     expect(links).not.toContain("/shop");
     expect(links.some((link) => link === "/")).toBe(false);
   });

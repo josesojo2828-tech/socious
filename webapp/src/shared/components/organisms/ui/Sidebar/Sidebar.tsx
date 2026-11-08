@@ -78,7 +78,7 @@ function SidebarLink({
   pathname,
   close,
 }: {
-  item: { title: string; icon: string; link: string };
+  item: { title: string; icon: string; link: string; newTab?: boolean };
   isCollapsed: boolean;
   pathname: string | null;
   close: () => void;
@@ -93,6 +93,8 @@ function SidebarLink({
     <InternalLink
       href={item?.link || "#"}
       onClick={close}
+      target={item?.newTab ? "_blank" : undefined}
+      rel={item?.newTab ? "noopener noreferrer" : undefined}
       title={isCollapsed ? t(item?.title || "") : undefined}
       className={clsx(
         "flex items-center gap-3 h-9 px-3 rounded-[7px] text-[15px] font-medium tracking-[0.012em] transition-colors duration-[180ms] ease-[cubic-bezier(0.16,1,0.3,1)] group mb-px",
