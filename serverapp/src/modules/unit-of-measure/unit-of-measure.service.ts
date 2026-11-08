@@ -58,15 +58,33 @@ export class UnitOfMeasureService implements OnModuleInit {
     this.logger.log("System units of measure ready");
   }
 
-  /** System catalog plus the tenant's own units (active and inactive). */
+  /** System catalog plus the tenant's own units, with its overrides applied. */
   async list(organizationId: string | null) {
-    return this.prisma.unitOfMeasure.findMany({
+    const units = await this.prisma.unitOfMeasure.findMany({
       where: {
         OR: organizationId
           ? [{ organizationId: null }, { organizationId }]
           : [{ organizationId: null }],
       },
       orderBy: [{ organizationId: "asc" }, { kind: "asc" }, { name: "asc" }],
+    });
+
+    if (!organizationId) return units;
+
+    // System units are shared: a tenant hides one for itself through an
+    // override row instead of mutating the catalog everyone sees.
+    const overrides = await this.prisma.unitOfMeasureOverride.findMany({
+      where: { organizationId },
+      select: { unitId: true, active: true },
+    });
+    if (overrides.length === 0) return units;
+
+    const activeByUnit = new Map(
+      overrides.map((override) => [override.unitId, override.active]),
+    );
+    return units.map((unit) => {
+      const active = activeByUnit.get(unit.id);
+      return active === undefined ? unit : { ...unit, active };
     });
   }
 
@@ -91,25 +109,54 @@ export class UnitOfMeasureService implements OnModuleInit {
     });
   }
 
-  private async ownUnit(organizationId: string, id: string) {
+  /** A unit this tenant can see: a system unit or one of its own. */
+  private async visibleUnit(organizationId: string, id: string) {
     const unit = await this.prisma.unitOfMeasure.findFirst({
       where: { id },
     });
     if (!unit) throw new NotFoundException("Unidad no encontrada.");
-    if (!unit.organizationId) {
-      throw new ForbiddenException(
-        "Las unidades del sistema no se pueden modificar.",
-      );
-    }
-    // Never leak or mutate a foreign tenant's row.
-    if (unit.organizationId !== organizationId) {
+    // Another tenant's row is a 404 so it neither leaks nor becomes mutable.
+    if (unit.organizationId && unit.organizationId !== organizationId) {
       throw new NotFoundException("Unidad no encontrada.");
     }
     return unit;
   }
 
+  private async ownUnit(organizationId: string, id: string) {
+    const unit = await this.visibleUnit(organizationId, id);
+    if (!unit.organizationId) {
+      throw new ForbiddenException(
+        "Las unidades del sistema no se pueden modificar.",
+      );
+    }
+    return unit;
+  }
+
   async update(organizationId: string, id: string, dto: UpdateUnitDto) {
-    await this.ownUnit(organizationId, id);
+    const unit = await this.visibleUnit(organizationId, id);
+
+    // System unit: shared and read-only, except for the tenant's own
+    // visibility. Disabling it here hides it across the whole workspace.
+    if (!unit.organizationId) {
+      const mutatesShared =
+        dto.name !== undefined ||
+        dto.abbreviation !== undefined ||
+        dto.kind !== undefined;
+      if (mutatesShared) {
+        throw new ForbiddenException(
+          "Las unidades del sistema no se pueden modificar.",
+        );
+      }
+      if (dto.active === undefined) return unit;
+
+      await this.prisma.unitOfMeasureOverride.upsert({
+        where: { organizationId_unitId: { organizationId, unitId: id } },
+        create: { organizationId, unitId: id, active: dto.active },
+        update: { active: dto.active },
+      });
+      return { ...unit, active: dto.active };
+    }
+
     return this.prisma.unitOfMeasure.update({
       where: { id },
       data: {

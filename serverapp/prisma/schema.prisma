@@ -563,6 +563,7 @@ model Organization {
   products           Product[]
   suppliers          Supplier[]
   units              UnitOfMeasure[]
+  unitOverrides      UnitOfMeasureOverride[]
   offers             Offer[]
   tenantPaymentMethods TenantPaymentMethod[]
   cashRegisters      CashRegister[]
@@ -915,9 +916,30 @@ model UnitOfMeasure {
   updatedAt      DateTime  @updatedAt
 
   organization   Organization? @relation(fields: [organizationId], references: [id])
+  overrides      UnitOfMeasureOverride[]
 
   @@index([organizationId])
   @@index([abbreviation])
+}
+
+/**
+ * Per-tenant visibility of a unit. System units (`organizationId = null`) are
+ * shared and read-only; a tenant hides one for itself through this row instead
+ * of mutating the shared catalog.
+ */
+model UnitOfMeasureOverride {
+  id             String   @id @default(uuid())
+  organizationId String
+  unitId         String
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization   @relation(fields: [organizationId], references: [id])
+  unit         UnitOfMeasure @relation(fields: [unitId], references: [id])
+
+  @@unique([organizationId, unitId])
+  @@index([organizationId])
 }
 
 // ======================================

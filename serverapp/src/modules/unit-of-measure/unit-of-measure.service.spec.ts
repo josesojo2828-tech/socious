@@ -3,11 +3,13 @@ import { UnitOfMeasureService } from "./unit-of-measure.service";
 import { UnitKind } from "@prisma/client";
 
 /**
- * Units of measure contract (S2): system defaults are read-only, tenants own
- * their rows, and `Product.unit` keeps storing the abbreviation string.
+ * Units of measure contract (S2): system defaults are shared and read-only,
+ * but each tenant can hide them for itself; tenants own their own rows, and
+ * `Product.unit` keeps storing the abbreviation string.
  */
 const makeService = (overrides: Record<string, unknown> = {}) => {
   const store: Record<string, unknown[]> = {};
+  const unitOverrides: any[] = [];
   const prisma = {
     unitOfMeasure: {
       findFirst: jest.fn(async ({ where }: any) => {
@@ -24,7 +26,12 @@ const makeService = (overrides: Record<string, unknown> = {}) => {
         );
       }),
       create: jest.fn(async ({ data }: any) => {
-        const row = { id: `u-${(store.units ?? []).length + 1}`, ...data };
+        // Mirrors the Prisma default: `active` defaults to true.
+        const row = {
+          id: `u-${(store.units ?? []).length + 1}`,
+          active: true,
+          ...data,
+        };
         store.units = [...((store.units ?? []) as any[]), row];
         return row;
       }),
@@ -45,8 +52,36 @@ const makeService = (overrides: Record<string, unknown> = {}) => {
       findMany: jest.fn(async () => store.units ?? []),
       ...((overrides.unitOfMeasure as object) ?? {}),
     },
+    unitOfMeasureOverride: {
+      findMany: jest.fn(async ({ where }: any) =>
+        unitOverrides.filter(
+          (row) => row.organizationId === where.organizationId,
+        ),
+      ),
+      upsert: jest.fn(async ({ where, create, update }: any) => {
+        const key = where.organizationId_unitId;
+        const existing = unitOverrides.find(
+          (row) =>
+            row.organizationId === key.organizationId &&
+            row.unitId === key.unitId,
+        );
+        if (existing) {
+          Object.assign(existing, update);
+          return existing;
+        }
+        const row = { id: `ov-${unitOverrides.length + 1}`, ...create };
+        unitOverrides.push(row);
+        return row;
+      }),
+      ...((overrides.unitOfMeasureOverride as object) ?? {}),
+    },
   };
-  return { service: new UnitOfMeasureService(prisma as any), prisma, store };
+  return {
+    service: new UnitOfMeasureService(prisma as any),
+    prisma,
+    store,
+    unitOverrides,
+  };
 };
 
 const ORG = "org-1";
@@ -130,5 +165,57 @@ describe("UnitOfMeasureService", () => {
 
     const updated = await service.update(ORG, unit.id, { active: false });
     expect(updated.active).toBe(false);
+  });
+
+  it("lets a tenant disable a system unit without mutating the shared row", async () => {
+    const { service, store, unitOverrides } = makeService();
+    await service.ensureSystemDefaults();
+    const kg = ((store.units ?? []) as any[]).find(
+      (row) => row.abbreviation === "kg",
+    );
+
+    const updated = await service.update(ORG, kg.id, { active: false });
+
+    expect(updated.active).toBe(false);
+    expect(
+      ((store.units ?? []) as any[]).find((row) => row.id === kg.id).active,
+    ).toBe(true);
+    expect(unitOverrides).toEqual([
+      expect.objectContaining({
+        organizationId: ORG,
+        unitId: kg.id,
+        active: false,
+      }),
+    ]);
+
+    const rows = await service.list(ORG);
+    expect(rows.find((row: any) => row.id === kg.id).active).toBe(false);
+  });
+
+  it("keeps a system-unit override scoped to its own tenant", async () => {
+    const { service, store } = makeService();
+    await service.ensureSystemDefaults();
+    const kg = ((store.units ?? []) as any[]).find(
+      (row) => row.abbreviation === "kg",
+    );
+
+    await service.update(ORG, kg.id, { active: false });
+
+    const otherTenant = await service.list("org-2");
+    expect(otherTenant.find((row: any) => row.id === kg.id).active).toBe(true);
+  });
+
+  it("re-enables a system unit for the tenant", async () => {
+    const { service, store } = makeService();
+    await service.ensureSystemDefaults();
+    const kg = ((store.units ?? []) as any[]).find(
+      (row) => row.abbreviation === "kg",
+    );
+
+    await service.update(ORG, kg.id, { active: false });
+    await service.update(ORG, kg.id, { active: true });
+
+    const rows = await service.list(ORG);
+    expect(rows.find((row: any) => row.id === kg.id).active).toBe(true);
   });
 });
