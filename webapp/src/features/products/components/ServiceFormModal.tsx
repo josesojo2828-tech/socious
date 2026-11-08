@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Briefcase } from "lucide-react";
+import Link from "next/link";
+import { Briefcase, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/shared/components/atoms/Button";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -43,6 +44,10 @@ export function ServiceFormModal({
   const { closeModal } = useModalStore();
 
   const [units, setUnits] = useState<UnitOfMeasure[]>([]);
+  const [materials, setMaterials] = useState<Product[]>([]);
+  const [components, setComponents] = useState<
+    { componentId: string; quantity: string }[]
+  >([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
   const [sku, setSku] = useState("");
   const [name, setName] = useState("");
@@ -55,17 +60,21 @@ export function ServiceFormModal({
   useEffect(() => {
     let alive = true;
     void (async () => {
-      const [unitList, ratesData] = await Promise.all([
+      const [unitList, ratesData, rawMaterials] = await Promise.all([
         apiClient
           .get<UnitOfMeasure[]>(UnitEndpoints.list)
           .catch(() => ({ data: [] as UnitOfMeasure[] })),
         apiClient
           .get<ExchangeRates>(ExchangeEndpoints.latest)
           .catch(() => ({ data: null as ExchangeRates | null })),
+        apiClient
+          .get<{ list: Product[] }>(ProductEndpoints.rawMaterials)
+          .catch(() => ({ data: { list: [] as Product[] } })),
       ]);
       if (!alive) return;
       const list = Array.isArray(unitList.data) ? unitList.data : [];
       setUnits(list);
+      setMaterials(rawMaterials.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
           rateBcv: Number(ratesData.data.rateBcv),
@@ -85,6 +94,28 @@ export function ServiceFormModal({
   const close = () => {
     closeModal();
     onClose();
+  };
+
+  const addComponent = () => {
+    const first = materials[0];
+    if (!first) return;
+    setComponents((current) => [
+      ...current,
+      { componentId: first.id, quantity: "1" },
+    ]);
+  };
+
+  const updateComponent = (
+    index: number,
+    patch: Partial<{ componentId: string; quantity: string }>,
+  ) => {
+    setComponents((current) =>
+      current.map((row, i) => (i === index ? { ...row, ...patch } : row)),
+    );
+  };
+
+  const removeComponent = (index: number) => {
+    setComponents((current) => current.filter((_, i) => i !== index));
   };
 
   const parseAmount = (raw: string, label: string): number | null => {
@@ -116,6 +147,20 @@ export function ServiceFormModal({
     const saleNumber = parseAmount(salePriceUSD, "El precio de venta");
     if (saleNumber === null) return;
 
+    // BOM: a service consumes materials without holding stock of its own.
+    const bom = components.map((row) => ({
+      componentId: row.componentId,
+      quantity: Number(row.quantity),
+    }));
+    if (
+      bom.some(
+        (row) => !row.componentId || !Number.isFinite(row.quantity) || row.quantity <= 0,
+      )
+    ) {
+      setError("La cantidad de cada material debe ser mayor que cero.");
+      return;
+    }
+
     setBusy(true);
     setError(null);
     try {
@@ -126,6 +171,7 @@ export function ServiceFormModal({
         salePriceUSD: saleNumber,
         unit: unit.trim() || "UND",
         isService: true,
+        ...(bom.length > 0 ? { components: bom } : {}),
       });
       addToast({
         type: "success",
@@ -248,9 +294,108 @@ export function ServiceFormModal({
         </label>
       </div>
 
+      <div className="rounded-xl border border-[#1a2a46]/10 dark:border-white/10 p-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-semibold text-[#111018] dark:text-slate-100">
+              Materiales que consume
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Cada servicio vendido descuenta estas cantidades del stock.
+            </p>
+          </div>
+          {materials.length > 0 ? (
+            <button
+              type="button"
+              onClick={addComponent}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
+            >
+              <Plus className="h-3.5 w-3.5" /> Agregar
+            </button>
+          ) : (
+            <Link
+              href="/dashboard/materiales"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#b2944a] hover:underline"
+            >
+              <Plus className="h-3.5 w-3.5" /> Cargar material
+            </Link>
+          )}
+        </div>
+
+        {materials.length === 0 ? (
+          <p className="text-xs text-slate-400 py-1">
+            No hay materiales cargados.{" "}
+            <Link
+              href="/dashboard/materiales"
+              className="text-[#b2944a] font-semibold hover:underline"
+            >
+              Cargá el material
+            </Link>{" "}
+            (ej. Hoja A4) y volvé a crear el servicio.
+          </p>
+        ) : null}
+
+        {components.length === 0 ? (
+          materials.length > 0 ? (
+            <p className="text-xs text-slate-400 py-1">
+              Sin materiales: el servicio se cobra sin consumir inventario.
+            </p>
+          ) : null
+        ) : (
+          <ul className="space-y-2">
+            {components.map((row, index) => (
+              <li
+                key={`${row.componentId}-${index}`}
+                className="grid gap-2 sm:grid-cols-[1fr_110px_36px] items-end"
+              >
+                <label className={LABEL_SM}>
+                  Material
+                  <select
+                    className={`mt-1 ${INPUT}`}
+                    value={row.componentId}
+                    onChange={(event) =>
+                      updateComponent(index, {
+                        componentId: event.target.value,
+                      })
+                    }
+                  >
+                    {materials.map((material) => (
+                      <option key={material.id} value={material.id}>
+                        {material.name} ({material.sku})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className={LABEL_SM}>
+                  Cantidad
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="any"
+                    className={`mt-1 ${INPUT}`}
+                    value={row.quantity}
+                    onChange={(event) =>
+                      updateComponent(index, { quantity: event.target.value })
+                    }
+                  />
+                </label>
+                <button
+                  type="button"
+                  aria-label="Quitar material"
+                  onClick={() => removeComponent(index)}
+                  className="rounded-lg border border-[#1a2a46]/15 dark:border-white/15 p-2 text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       <p className="text-xs text-slate-400">
-        Los servicios no llevan stock: se venden desde el POS sin control de
-        existencias.
+        Los servicios no llevan stock propio: se venden desde el POS y, si tienen
+        materiales, se descuentan de su inventario.
       </p>
 
       <div className="flex justify-end gap-2 border-t border-slate-200 pt-4 dark:border-white/10">
