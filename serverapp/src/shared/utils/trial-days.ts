@@ -21,7 +21,7 @@ const asPositiveNumber = (raw: unknown): number | null => {
  * (`DEFAULT_TRIAL_DAYS`); the env value and then 14 days are fallbacks for a
  * database that never saw the setting.
  *
- * Every consumer MUST go through this function — workspace creation and the
+ * Every consumer MUST go through this function — the first plan pick and the
  * public endpoint the register page reads. That is the whole point: the page
  * promises exactly the length the backend is going to grant, instead of a
  * number hardcoded in a component that drifts from the configuration.
@@ -48,4 +48,11 @@ export async function resolveTrialDays(
     TRIAL_DAYS_FALLBACK;
 
   return Math.min(Math.max(Math.floor(days), MIN_TRIAL_DAYS), MAX_TRIAL_DAYS);
+}
+
+/** Calendar-day addition in local time, matching how trials are granted. */
+export function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
 }

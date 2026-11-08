@@ -6,7 +6,6 @@ import NotificationRepository from '../notification/repository/notification.repo
 import { NotificationType } from 'src/shared/types/schema.types';
 import { Logger } from "@nestjs/common";
 import { readPlanCapacity } from "src/shared/utils/plan-capacity";
-import { resolveTrialDays } from "src/shared/utils/trial-days";
 const logger = new Logger("organization.service");
 
 
@@ -120,34 +119,10 @@ export class OrganizationService {
       },
     });
 
-    if (plan) {
-      // The workspace is born on a trial: the length comes from the platform
-      // setting the admin edits (`DEFAULT_TRIAL_DAYS`), not from a hardcoded
-      // month. Once `endDate` passes, the subscription guard blocks writes
-      // until the merchant picks a plan.
-      const startDate = new Date();
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + (await resolveTrialDays(this.prisma)));
-
-      await this.prisma.subscription.create({
-        data: {
-          userId: adminUserId,
-          organizationId: org.id,
-          planId: plan.id,
-          status: "ACTIVE",
-          startDate,
-          endDate,
-          autoRenew: false,
-        },
-      });
-    } else {
-      // The plans seed runs on every boot; without it the org would ship
-      // unlocked, so the warning must be loud instead of silent.
-      console.error(
-        `[Organization] WARNING: plan ${OrganizationService.DEFAULT_PLAN_ID} missing — organization ${org.id} has no subscription.`,
-      );
-    }
-
+    // The workspace is born WITHOUT a plan on purpose: the merchant picks it
+    // explicitly from the plans screen (the dashboard guard sends a workspace
+    // with no active subscription there). The first pick runs as the free
+    // trial; see `SubscriptionService.create`.
     return org;
   }
 

@@ -8,7 +8,6 @@ const makePrisma = (opts: {
   plan?: any;
   slugTaken?: boolean;
   slugTakenTwice?: boolean;
-  trialDaysSetting?: string | null;
 } = {}) => {
   const slugProbe = opts.slugTakenTwice
     ? jest
@@ -40,13 +39,6 @@ const makePrisma = (opts: {
     },
     branch: {
       create: jest.fn(async (args: any) => ({ id: "branch-1", ...args.data })),
-    },
-    systemSetting: {
-      findUnique: jest.fn(async () =>
-        opts.trialDaysSetting === undefined
-          ? null
-          : { value: opts.trialDaysSetting },
-      ),
     },
   };
 
@@ -85,46 +77,13 @@ describe("OrganizationService.createOrganization (S9/S10)", () => {
     );
   });
 
-  it("subscribes the owner to the default plan so the modules resolve", async () => {
+  it("does not assign a plan: the merchant picks it explicitly", async () => {
     const { service, prisma } = makeService({ plan: DEFAULT_PLAN });
 
     const org = await service.createOrganization({ name: "Tienda" } as any, ADMIN);
 
-    expect(prisma.subscription.create.mock.calls[0][0].data).toMatchObject({
-      userId: ADMIN,
-      organizationId: "org-1",
-      planId: "BASICO",
-      status: "ACTIVE",
-      autoRenew: false,
-    });
+    expect(prisma.subscription.create).not.toHaveBeenCalled();
     expect(org.id).toBe("org-1");
-  });
-
-  it("ends the trial after the days the admin configured", async () => {
-    const { service, prisma } = makeService({
-      plan: DEFAULT_PLAN,
-      trialDaysSetting: "30",
-    });
-
-    await service.createOrganization({ name: "Tienda" } as any, ADMIN);
-
-    const { endDate, startDate } = prisma.subscription.create.mock.calls[0][0].data;
-    const days = Math.round(
-      (new Date(endDate).getTime() - new Date(startDate).getTime()) / 86_400_000,
-    );
-    expect(days).toBe(30);
-  });
-
-  it("falls back to 14 days when the platform setting is missing", async () => {
-    const { service, prisma } = makeService({ plan: DEFAULT_PLAN });
-
-    await service.createOrganization({ name: "Tienda" } as any, ADMIN);
-
-    const { endDate, startDate } = prisma.subscription.create.mock.calls[0][0].data;
-    const days = Math.round(
-      (new Date(endDate).getTime() - new Date(startDate).getTime()) / 86_400_000,
-    );
-    expect(days).toBe(14);
   });
 
   it("takes the seat floor from the plan capacity, not from the old 5", async () => {

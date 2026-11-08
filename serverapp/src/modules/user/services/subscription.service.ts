@@ -26,6 +26,7 @@ import { CreateSubscriptionDto } from "../dto/user.types";
 import { LoggerService } from "src/shared/logger/logger.service";
 import { PrismaService } from "nestjs-prisma";
 import { ExchangeService } from "../../exchange/exchange.service";
+import { addDays, resolveTrialDays } from "src/shared/utils/trial-days";
 
 @Injectable()
 export class SubscriptionService {
@@ -441,6 +442,21 @@ export class SubscriptionService {
 
     const planPrice = Number(plan.price);
 
+    // The first explicit pick in a workspace IS the free trial: it lasts
+    // exactly the days the register page promises (platform setting -> env ->
+    // 14). Later picks are paid months. Workspaces are never born with a plan,
+    // so a fresh signup always lands here.
+    const trialDays = isFirstSubscription
+      ? await resolveTrialDays(this.prisma)
+      : null;
+    const resolveEndDate = (startDate: Date): Date | null => {
+      if (data.endDate) return new Date(data.endDate);
+      if (planPrice === 0) return null;
+      return trialDays
+        ? addDays(startDate, trialDays)
+        : this.subscriptionRepository.addOneMonth(startDate);
+    };
+
     if (planPrice > 0 && !data.ignorePayment) {
       if (!wallet || Number(wallet.balance) < planPrice) {
         throw new BadRequestException(
@@ -472,9 +488,7 @@ export class SubscriptionService {
       this.eventEmitter.emit(this.subscriptionRepository.EVENT_UPDATED, prev);
 
       const startDate = new Date();
-      const endDate = data.endDate
-        ? new Date(data.endDate)
-        : (planPrice === 0 ? null : this.subscriptionRepository.addOneMonth(startDate));
+      const endDate = resolveEndDate(startDate);
 
       try {
         const entityPromise = this.subscriptionRepository.update({
@@ -531,9 +545,7 @@ export class SubscriptionService {
     this.eventEmitter.emit(this.subscriptionRepository.EVENT_CREATED, prev);
 
     const startDate = new Date();
-    const endDate = data.endDate
-      ? new Date(data.endDate)
-      : (planPrice === 0 ? null : this.subscriptionRepository.addOneMonth(startDate));
+    const endDate = resolveEndDate(startDate);
 
     const objectCreated: Prisma.SubscriptionCreateInput = {
       user: { connect: { id: data.userId } },
