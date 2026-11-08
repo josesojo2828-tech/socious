@@ -295,6 +295,9 @@ export default function SettingsPage() {
   const planModules = settings.planModules ?? [];
   const canManageShipping = planModules.includes("SHIPPING");
   const canManageRoutes = planModules.includes("ROUTES");
+  // The public storefront is AVANZADO+ (`CATALOG_ONLINE`); Básico must not
+  // see the tab at all, not even a disabled one.
+  const canManageStore = planModules.includes("CATALOG_ONLINE");
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -331,7 +334,9 @@ export default function SettingsPage() {
         {(
           [
             ["general", "General"],
-            ["store", "Tienda"],
+            ...(canManageStore
+              ? ([["store", "Tienda"]] as const)
+              : []),
             ["inventory", "Inventario"],
             ["payments", "Pagos"],
             ["credit", "Ventas a crédito"],
@@ -649,7 +654,7 @@ export default function SettingsPage() {
         </>
       ) : null}
 
-      {tab === "store" && settings ? (
+      {tab === "store" && canManageStore && settings ? (
         <>
       <SectionPanel
         icon={<Store className="h-5 w-5" />}
