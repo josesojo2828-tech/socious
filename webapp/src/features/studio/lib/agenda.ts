@@ -63,3 +63,102 @@ function parseDay(dateISO: string): [number, number, number] {
   const [year, month, day] = dateISO.split("-").map(Number);
   return [year, month, day];
 }
+
+/** Calendar granularity shown by the agenda screen. */
+export type AgendaView = "month" | "week" | "day";
+
+export interface MonthCell {
+  dateISO: string;
+  /** False for the leading/trailing days that belong to a neighbour month. */
+  inMonth: boolean;
+}
+
+/** `YYYY-MM-DD` of the Monday that starts the week containing `dateISO`. */
+export function startOfWeek(dateISO: string): string {
+  const [year, month, day] = parseDay(dateISO);
+  const date = new Date(year, month - 1, day);
+  const weekday = date.getDay(); // 0 = domingo
+  const offset = weekday === 0 ? 6 : weekday - 1;
+  date.setDate(date.getDate() - offset);
+  return toDateInputValue(date);
+}
+
+/**
+ * The 6×7 grid a month calendar paints: whole weeks (Monday→Sunday) covering
+ * the month, including the days of the neighbour months at both edges.
+ */
+export function monthGrid(dateISO: string): MonthCell[][] {
+  const [year, month] = parseDay(dateISO);
+  const firstOfMonth = new Date(year, month - 1, 1);
+  const lastOfMonth = new Date(year, month, 0);
+  const cursor = startOfWeek(toDateInputValue(firstOfMonth));
+  const lastWeekStart = startOfWeek(toDateInputValue(lastOfMonth));
+
+  const weeks: MonthCell[][] = [];
+  let weekStart = cursor;
+  while (weekStart <= lastWeekStart) {
+    const week: MonthCell[] = [];
+    for (let index = 0; index < 7; index += 1) {
+      // `addDays` parses the day key as LOCAL; `new Date("YYYY-MM-DD")` would
+      // read it as UTC midnight and shift the cell one day in UTC-negative zones.
+      const cellISO = addDays(weekStart, index);
+      week.push({
+        dateISO: cellISO,
+        inMonth: parseDay(cellISO)[1] === month,
+      });
+    }
+    weeks.push(week);
+    weekStart = addDays(weekStart, 7);
+  }
+  return weeks;
+}
+
+/** Month + year heading, e.g. "noviembre de 2026". */
+export function monthLabel(dateISO: string): string {
+  const [year, month] = parseDay(dateISO);
+  return new Date(year, month - 1, 1).toLocaleDateString("es-VE", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/** Move the selected day by one period of the active view. */
+export function shiftPeriod(
+  dateISO: string,
+  view: AgendaView,
+  direction: number,
+): string {
+  if (view === "day") return addDays(dateISO, direction);
+  if (view === "week") return addDays(dateISO, 7 * direction);
+
+  const [year, month, day] = parseDay(dateISO);
+  const target = new Date(year, month - 1 + direction, 1);
+  const y = target.getFullYear();
+  const m = target.getMonth();
+  const lastDay = new Date(y, m + 1, 0).getDate();
+  return toDateInputValue(new Date(y, m, Math.min(day, lastDay)));
+}
+
+/** The `[from, to)` window the active view needs to load. */
+export function viewRange(
+  dateISO: string,
+  view: AgendaView,
+): { from: string; to: string } {
+  if (view === "day") return dayRange(dateISO);
+
+  if (view === "week") {
+    const start = startOfWeek(dateISO);
+    return { from: dayRange(start).from, to: dayRange(addDays(start, 6)).to };
+  }
+
+  const cells = monthGrid(dateISO).flat();
+  return {
+    from: dayRange(cells[0].dateISO).from,
+    to: dayRange(cells[cells.length - 1].dateISO).to,
+  };
+}
+
+/** Local `YYYY-MM-DD` of an ISO timestamp (which day an appointment belongs to). */
+export function dayKeyOf(iso: string): string {
+  return toDateInputValue(new Date(iso));
+}

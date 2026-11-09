@@ -30,11 +30,18 @@ import {
 } from "@/features/studio/types/studio.type";
 import {
   addDays,
-  dayRange,
+  dayKeyOf,
   defaultSlot,
   formatRange,
+  formatTime,
+  monthGrid,
+  monthLabel,
+  shiftPeriod,
+  startOfWeek,
   toDateTimeLocal,
   todayISO,
+  viewRange,
+  type AgendaView,
 } from "@/features/studio/lib/agenda";
 
 interface AppointmentForm {
@@ -54,6 +61,7 @@ interface Paged<T> {
 }
 
 const TERMINAL: AppointmentStatus[] = ["DONE", "CANCELED", "NO_SHOW"];
+const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
 const STATUS_TONE: Record<AppointmentStatus, string> = {
   SCHEDULED: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
@@ -63,17 +71,37 @@ const STATUS_TONE: Record<AppointmentStatus, string> = {
   NO_SHOW: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
 };
 
+const VIEW_LABELS: Record<AgendaView, string> = {
+  month: "Mes",
+  week: "Semana",
+  day: "Día",
+};
+
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as { response?: { data?: { message?: string } } };
   return maybe?.response?.data?.message || fallback;
 }
 
+function formatDay(dateISO: string): string {
+  const [year, month, day] = dateISO.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("es-VE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+}
+
+function dayNumber(dateISO: string): number {
+  return Number(dateISO.split("-")[2]);
+}
+
 /**
- * Agenda diaria (plan STUDIO): una columna por mesa/silla, las citas del día
- * ordenadas por hora. Crear, editar, marcar atendida o cancelar.
+ * Agenda (plan STUDIO): calendario con vistas de mes, semana y día. Las citas
+ * se crean y editan en un modal; la vista de día las separa por espacio.
  */
 export default function StudioAgendaPage() {
   const { addToast } = useToastStore();
+  const [view, setView] = useState<AgendaView>("month");
   const [date, setDate] = useState<string>(() => todayISO());
   const [stations, setStations] = useState<StudioStation[]>([]);
   const [appointments, setAppointments] = useState<StudioAppointment[]>([]);
@@ -83,29 +111,30 @@ export default function StudioAgendaPage() {
   const [form, setForm] = useState<AppointmentForm | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
 
-  const loadDay = useCallback(async (): Promise<void> => {
+  const range = useMemo(() => viewRange(date, view), [date, view]);
+
+  const loadRange = useCallback(async (): Promise<void> => {
     setLoading(true);
-    const { from, to } = dayRange(date);
     try {
       const { data } = await apiClient.get<StudioAppointment[]>(
         StudioEndpoints.appointments,
-        { params: { from, to } },
+        { params: { from: range.from, to: range.to } },
       );
       setAppointments(Array.isArray(data) ? data : []);
     } catch (error) {
       addToast({
         type: "error",
         title: "Agenda",
-        message: apiMessage(error, "No se pudo cargar la agenda del día."),
+        message: apiMessage(error, "No se pudo cargar la agenda."),
       });
     } finally {
       setLoading(false);
     }
-  }, [addToast, date]);
+  }, [addToast, range.from, range.to]);
 
   useEffect(() => {
-    void loadDay();
-  }, [loadDay]);
+    void loadRange();
+  }, [loadRange]);
 
   useEffect(() => {
     let alive = true;
@@ -135,30 +164,30 @@ export default function StudioAgendaPage() {
     };
   }, []);
 
-  const columns = useMemo(() => {
-    // An inactive station that still has appointments must keep its column:
-    // hiding it would make those slots disappear from the day.
-    const usedStationIds = new Set(
-      appointments
-        .map((appointment) => appointment.stationId)
-        .filter((stationId): stationId is string => Boolean(stationId)),
-    );
-    const visible = stations.filter(
-      (station) => station.isActive || usedStationIds.has(station.id),
-    );
-    const unassigned = appointments.filter(
-      (appointment) => !appointment.stationId,
-    );
-    return { active: visible, unassigned };
-  }, [appointments, stations]);
+  const byDay = useMemo(() => {
+    const map = new Map<string, StudioAppointment[]>();
+    for (const appointment of appointments) {
+      const key = dayKeyOf(appointment.startAt);
+      const list = map.get(key) ?? [];
+      list.push(appointment);
+      map.set(key, list);
+    }
+    for (const list of map.values()) {
+      list.sort((a, b) => a.startAt.localeCompare(b.startAt));
+    }
+    return map;
+  }, [appointments]);
 
-  const openCreate = (stationId = ""): void =>
+  const dayAppointments = byDay.get(date) ?? [];
+  const today = todayISO();
+
+  const openCreate = (stationId = "", dayISO = date): void =>
     setForm({
       clientId: "",
       serviceId: "",
       stationId,
-      start: defaultSlot(date),
-      end: defaultSlot(date, 10),
+      start: defaultSlot(dayISO),
+      end: defaultSlot(dayISO, 10),
       status: "SCHEDULED",
       notes: "",
     });
@@ -218,7 +247,7 @@ export default function StudioAgendaPage() {
         message: form.id ? "Cita actualizada." : "Cita creada.",
       });
       setForm(null);
-      await loadDay();
+      await loadRange();
     } catch (error) {
       addToast({
         type: "error",
@@ -238,7 +267,7 @@ export default function StudioAgendaPage() {
       await apiClient.patch(StudioEndpoints.appointment(appointment.id), {
         status,
       });
-      await loadDay();
+      await loadRange();
     } catch (error) {
       addToast({
         type: "error",
@@ -252,7 +281,7 @@ export default function StudioAgendaPage() {
     if (!window.confirm("¿Cancelar esta cita?")) return;
     try {
       await apiClient.delete(StudioEndpoints.appointment(appointment.id));
-      await loadDay();
+      await loadRange();
     } catch (error) {
       addToast({
         type: "error",
@@ -262,6 +291,13 @@ export default function StudioAgendaPage() {
     }
   };
 
+  const headerLabel =
+    view === "month"
+      ? monthLabel(date)
+      : view === "week"
+        ? `Semana del ${formatDay(startOfWeek(date))}`
+        : formatDay(date);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -269,17 +305,55 @@ export default function StudioAgendaPage() {
           <div className={EYEBROW}>Studio</div>
           <h1 className={PAGE_TITLE}>Agenda</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Las citas del día por mesa y silla.
+            Tus citas por día y por espacio.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <button type="button" className={CTA_BRASS} onClick={() => openCreate()}>
+          <Plus className="h-4 w-4" /> Nueva cita
+        </button>
+      </header>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="inline-flex rounded-lg border border-slate-300 p-0.5 dark:border-slate-700">
+          {(Object.keys(VIEW_LABELS) as AgendaView[]).map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setView(option)}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                view === option
+                  ? "bg-[#1a2a46] text-white dark:bg-white/15"
+                  : "text-slate-600 hover:bg-slate-500/10 dark:text-slate-300"
+              }`}
+            >
+              {VIEW_LABELS[option]}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10"
-            onClick={() => setDate((current) => addDays(current, -1))}
-            aria-label="Día anterior"
+            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10 dark:border-slate-700"
+            onClick={() => setDate((current) => shiftPeriod(current, view, -1))}
+            aria-label="Anterior"
           >
             <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm hover:bg-slate-500/10 dark:border-slate-700"
+            onClick={() => setDate(todayISO())}
+          >
+            Hoy
+          </button>
+          <button
+            type="button"
+            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10 dark:border-slate-700"
+            onClick={() => setDate((current) => shiftPeriod(current, view, 1))}
+            aria-label="Siguiente"
+          >
+            <ChevronRight className="h-4 w-4" />
           </button>
           <input
             type="date"
@@ -287,93 +361,149 @@ export default function StudioAgendaPage() {
             value={date}
             onChange={(event) => setDate(event.target.value || todayISO())}
           />
-          <button
-            type="button"
-            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10"
-            onClick={() => setDate((current) => addDays(current, 1))}
-            aria-label="Día siguiente"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm hover:bg-slate-500/10"
-            onClick={() => setDate(todayISO())}
-          >
-            Hoy
-          </button>
-          <button type="button" className={CTA_BRASS} onClick={() => openCreate()}>
-            <Plus className="h-4 w-4" /> Nueva cita
-          </button>
         </div>
-      </header>
+      </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-48">
           <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {columns.active.map((station) => (
-            <section key={station.id} className={CARD}>
-              <div className={CARD_HEADER}>
-                <h2 className="text-sm font-semibold">{station.name}</h2>
-                <button
-                  type="button"
-                  className="text-xs text-[#b2944a] hover:underline"
-                  onClick={() => openCreate(station.id)}
-                >
-                  + Agendar
-                </button>
-              </div>
-              <div className="space-y-2 p-3">
-                {appointmentsForStation(appointments, station.id).length === 0 ? (
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Sin citas.
-                  </p>
-                ) : (
-                  appointmentsForStation(appointments, station.id).map((appointment) => (
-                    <AppointmentCard
-                      key={appointment.id}
-                      appointment={appointment}
-                      onEdit={() => openEdit(appointment)}
-                      onStatus={(status) => void setStatus(appointment, status)}
-                      onCancel={() => void cancel(appointment)}
-                    />
-                  ))
-                )}
-              </div>
-            </section>
-          ))}
-
-          {columns.unassigned.length > 0 ? (
+        <>
+          {view === "month" ? (
             <section className={CARD}>
               <div className={CARD_HEADER}>
-                <h2 className="text-sm font-semibold">Sin mesa asignada</h2>
+                <h2 className="text-sm font-semibold capitalize">
+                  {headerLabel}
+                </h2>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-400">
+                  {appointments.length} citas
+                </span>
               </div>
-              <div className="space-y-2 p-3">
-                {columns.unassigned.map((appointment) => (
-                  <AppointmentCard
-                    key={appointment.id}
-                    appointment={appointment}
-                    onEdit={() => openEdit(appointment)}
-                    onStatus={(status) => void setStatus(appointment, status)}
-                    onCancel={() => void cancel(appointment)}
-                  />
-                ))}
+              <div className="p-3">
+                <div className="grid grid-cols-7 gap-1">
+                  {WEEKDAYS.map((weekday) => (
+                    <span
+                      key={weekday}
+                      className="pb-1 text-center font-mono text-[10px] text-slate-400"
+                    >
+                      {weekday}
+                    </span>
+                  ))}
+                  {monthGrid(date).flat().map((cell) => {
+                    const list = byDay.get(cell.dateISO) ?? [];
+                    const isToday = cell.dateISO === today;
+                    return (
+                      <button
+                        key={cell.dateISO}
+                        type="button"
+                        onClick={() => {
+                          setDate(cell.dateISO);
+                          setView("day");
+                        }}
+                        className={`flex h-20 flex-col items-start gap-1 rounded-lg border p-1.5 text-left transition-colors ${
+                          cell.inMonth
+                            ? "border-slate-200 hover:border-[#b2944a]/60 hover:bg-[#b2944a]/5 dark:border-slate-700"
+                            : "border-transparent text-slate-300 dark:text-slate-600"
+                        } ${isToday ? "ring-1 ring-[#b2944a]" : ""}`}
+                      >
+                        <span
+                          className={`font-mono text-[11px] tabular-nums ${
+                            isToday ? "font-semibold text-[#8e7538]" : ""
+                          }`}
+                        >
+                          {dayNumber(cell.dateISO)}
+                        </span>
+                        {list.length > 0 ? (
+                          <span className="rounded-full bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-violet-700 dark:text-violet-300">
+                            {list.length} {list.length === 1 ? "cita" : "citas"}
+                          </span>
+                        ) : null}
+                        <span className="mt-auto w-full truncate text-[10px] text-slate-500 dark:text-slate-400">
+                          {list[0]?.client?.name ?? ""}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </section>
           ) : null}
 
-          {columns.active.length === 0 && columns.unassigned.length === 0 ? (
+          {view === "week" ? (
             <section className={CARD}>
-              <div className="p-6 text-sm text-slate-500 dark:text-slate-400">
-                <CalendarDays className="mb-2 h-5 w-5 text-slate-400" />
-                Creá al menos una mesa o silla para organizar la agenda.
+              <div className={CARD_HEADER}>
+                <h2 className="text-sm font-semibold capitalize">
+                  {headerLabel}
+                </h2>
+              </div>
+              <div className="grid grid-cols-7 gap-2 p-3">
+                {Array.from({ length: 7 }, (_, index) =>
+                  addDays(startOfWeek(date), index),
+                ).map((dayISO, index) => {
+                  const list = byDay.get(dayISO) ?? [];
+                  return (
+                    <div key={dayISO} className="min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDate(dayISO);
+                          setView("day");
+                        }}
+                        className={`mb-2 w-full rounded-md px-1 py-1 text-center ${
+                          dayISO === today ? "bg-[#b2944a]/10" : ""
+                        }`}
+                      >
+                        <span className="block font-mono text-[10px] uppercase text-slate-400">
+                          {WEEKDAYS[index]}
+                        </span>
+                        <span className="block font-mono text-[13px] font-semibold tabular-nums">
+                          {dayNumber(dayISO)}
+                        </span>
+                      </button>
+                      <div className="space-y-1">
+                        {list.map((appointment) => (
+                          <button
+                            key={appointment.id}
+                            type="button"
+                            onClick={() => openEdit(appointment)}
+                            className="w-full rounded-md border border-violet-500/20 bg-violet-500/[0.07] p-1.5 text-left"
+                          >
+                            <span className="block font-mono text-[10px] tabular-nums text-slate-500">
+                              {formatTime(appointment.startAt)}
+                            </span>
+                            <span className="block truncate text-[11px] font-medium text-slate-800 dark:text-slate-100">
+                              {appointment.client?.name ?? "Sin cliente"}
+                            </span>
+                          </button>
+                        ))}
+                        {list.length === 0 ? (
+                          <span className="block text-center text-[10px] text-slate-300 dark:text-slate-600">
+                            —
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
           ) : null}
-        </div>
+
+          {view === "day" ? (
+            <DayBoard
+              date={date}
+              stations={stations}
+              appointments={dayAppointments}
+              onCreate={openCreate}
+              onEdit={openEdit}
+              onStatus={(appointment, status) =>
+                void setStatus(appointment, status)
+              }
+              onCancel={(appointment) => void cancel(appointment)}
+            />
+          ) : null}
+        </>
       )}
 
       {form ? (
@@ -429,7 +559,7 @@ export default function StudioAgendaPage() {
                 </select>
               </label>
               <label className="block">
-                <span className="text-xs text-slate-500">Mesa / silla</span>
+                <span className="text-xs text-slate-500">Espacio</span>
                 <select
                   className={INPUT}
                   value={form.stationId}
@@ -441,7 +571,7 @@ export default function StudioAgendaPage() {
                   {stations.map((station) => (
                     <option key={station.id} value={station.id}>
                       {station.name}
-                      {station.isActive ? "" : " (inactiva)"}
+                      {station.isActive ? "" : " (inactivo)"}
                     </option>
                   ))}
                 </select>
@@ -529,12 +659,102 @@ export default function StudioAgendaPage() {
   );
 }
 
-function appointmentsForStation(
-  appointments: StudioAppointment[],
-  stationId: string,
-): StudioAppointment[] {
-  return appointments.filter(
-    (appointment) => appointment.stationId === stationId,
+function DayBoard({
+  date,
+  stations,
+  appointments,
+  onCreate,
+  onEdit,
+  onStatus,
+  onCancel,
+}: {
+  date: string;
+  stations: StudioStation[];
+  appointments: StudioAppointment[];
+  onCreate: (stationId: string, dayISO: string) => void;
+  onEdit: (appointment: StudioAppointment) => void;
+  onStatus: (appointment: StudioAppointment, status: AppointmentStatus) => void;
+  onCancel: (appointment: StudioAppointment) => void;
+}) {
+  const usedStationIds = new Set(
+    appointments
+      .map((appointment) => appointment.stationId)
+      .filter((stationId): stationId is string => Boolean(stationId)),
+  );
+  const visible = stations.filter(
+    (station) => station.isActive || usedStationIds.has(station.id),
+  );
+  const unassigned = appointments.filter(
+    (appointment) => !appointment.stationId,
+  );
+
+  if (visible.length === 0 && unassigned.length === 0) {
+    return (
+      <section className={CARD}>
+        <div className="p-6 text-sm text-slate-500 dark:text-slate-400">
+          <CalendarDays className="mb-2 h-5 w-5 text-slate-400" />
+          Creá al menos un espacio para organizar el día.
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {visible.map((station) => (
+        <section key={station.id} className={CARD}>
+          <div className={CARD_HEADER}>
+            <h2 className="text-sm font-semibold">{station.name}</h2>
+            <button
+              type="button"
+              className="text-xs text-[#b2944a] hover:underline"
+              onClick={() => onCreate(station.id, date)}
+            >
+              + Agendar
+            </button>
+          </div>
+          <div className="space-y-2 p-3">
+            {appointments
+              .filter((appointment) => appointment.stationId === station.id)
+              .map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  appointment={appointment}
+                  onEdit={() => onEdit(appointment)}
+                  onStatus={(status) => onStatus(appointment, status)}
+                  onCancel={() => onCancel(appointment)}
+                />
+              ))}
+            {appointments.filter(
+              (appointment) => appointment.stationId === station.id,
+            ).length === 0 ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Sin citas.
+              </p>
+            ) : null}
+          </div>
+        </section>
+      ))}
+
+      {unassigned.length > 0 ? (
+        <section className={CARD}>
+          <div className={CARD_HEADER}>
+            <h2 className="text-sm font-semibold">Sin espacio asignado</h2>
+          </div>
+          <div className="space-y-2 p-3">
+            {unassigned.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                appointment={appointment}
+                onEdit={() => onEdit(appointment)}
+                onStatus={(status) => onStatus(appointment, status)}
+                onCancel={() => onCancel(appointment)}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+    </div>
   );
 }
 
