@@ -119,6 +119,41 @@ export function buildWeekHeat(
   return { labels, weekdays: WEEKDAY_LABELS, cells, max };
 }
 
+export interface StudioWeekHeat {
+  labels: string[];
+  weekdays: string[];
+  /** Sales per cell — null for days that have not happened yet. */
+  sales: (number | null)[][];
+  /** Appointments per cell — same grid as `sales`. */
+  agenda: (number | null)[][];
+  maxSales: number;
+  maxAgenda: number;
+}
+
+/**
+ * STUDIO dashboard heat: sales and agenda share one calendar grid, so a day
+ * that has both can render as a split cell with two independent intensities.
+ * Reusing `buildWeekHeat` for each series keeps the axes aligned cell by cell.
+ */
+export function buildStudioHeat(
+  salesRows: DatedRow[],
+  agendaRows: DatedRow[],
+  weeks = 4,
+  now: Date = new Date(),
+): StudioWeekHeat {
+  const sales = buildWeekHeat(salesRows, weeks, now);
+  const agenda = buildWeekHeat(agendaRows, weeks, now);
+
+  return {
+    labels: sales.labels,
+    weekdays: sales.weekdays,
+    sales: sales.cells,
+    agenda: agenda.cells,
+    maxSales: sales.max,
+    maxAgenda: agenda.max,
+  };
+}
+
 /** Day-over-day percent; null when there is no meaningful baseline. */
 export function percentDelta(current: number, previous: number): number | null {
   if (!Number.isFinite(previous) || previous <= 0) return null;

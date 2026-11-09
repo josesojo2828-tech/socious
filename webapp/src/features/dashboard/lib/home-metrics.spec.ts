@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildStudioHeat,
   buildWeekHeat,
   dayEndIso,
   dayStartIso,
@@ -123,5 +124,46 @@ describe("usd", () => {
   it("formats with two decimals and grouping", () => {
     expect(usd(1234.5)).toBe("$1,234.50");
     expect(usd(0)).toBe("$0.00");
+  });
+});
+
+describe("buildStudioHeat", () => {
+  const now = new Date(2026, 9, 7, 15); // miércoles 7 oct 2026
+
+  it("aligns sales and agenda on the same grid with separate maxima", () => {
+    const heat = buildStudioHeat(
+      [
+        { issueDate: new Date(2026, 9, 5).toISOString() },
+        { issueDate: new Date(2026, 9, 5).toISOString() },
+      ],
+      [
+        { issueDate: new Date(2026, 9, 5, 9).toISOString() },
+        { issueDate: new Date(2026, 9, 6, 9).toISOString() },
+        { issueDate: new Date(2026, 9, 6, 11).toISOString() },
+        { issueDate: new Date(2026, 9, 6, 15).toISOString() },
+      ],
+      4,
+      now,
+    );
+
+    expect(heat.sales[3][0]).toBe(2); // lunes: ventas
+    expect(heat.agenda[3][0]).toBe(1); // lunes: una cita
+    expect(heat.agenda[3][1]).toBe(3); // martes: tres citas
+    expect(heat.maxSales).toBe(2);
+    expect(heat.maxAgenda).toBe(3);
+    expect(heat.sales.length).toBe(heat.agenda.length);
+  });
+
+  it("keeps a series empty without disturbing the other", () => {
+    const heat = buildStudioHeat(
+      [],
+      [{ issueDate: new Date(2026, 9, 7, 10).toISOString() }],
+      4,
+      now,
+    );
+
+    expect(heat.sales[3][2]).toBe(0);
+    expect(heat.agenda[3][2]).toBe(1);
+    expect(heat.maxAgenda).toBe(1);
   });
 });

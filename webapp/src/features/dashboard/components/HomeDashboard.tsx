@@ -20,8 +20,10 @@ import { PurchaseEndpoints } from "@/features/purchases/services/purchases.endpo
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 import type { TenantSettings } from "@/features/settings/types/tenant-settings.type";
+import { StudioEndpoints } from "@/features/studio/services/studio.endpoints";
 import { buildDailyRateLines, type DailyRateSnapshot } from "../lib/daily-rates";
 import {
+  buildStudioHeat,
   buildWeekHeat,
   dayEndIso,
   dayStartIso,
@@ -29,6 +31,7 @@ import {
   localDayKey,
   percentDelta,
   usd,
+  type StudioWeekHeat,
   type WeekHeat,
 } from "../lib/home-metrics";
 
@@ -84,6 +87,11 @@ interface OrderRow {
 interface SaleRow {
   id: string;
   issueDate: string;
+}
+
+/** Subset of `GET /api/studio/appointments` the heat grid needs. */
+interface AppointmentHeatRow {
+  startAt: string;
 }
 
 const ORDER_STATUS: Record<OrderRow["status"], { label: string; className: string }> = {
@@ -145,6 +153,7 @@ export default function HomeDashboard() {
   );
   const [apTotalUSD, setApTotalUSD] = useState(0);
   const [heat, setHeat] = useState<WeekHeat | null>(null);
+  const [studioHeat, setStudioHeat] = useState<StudioWeekHeat | null>(null);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
   const [rates, setRates] = useState<DailyRateSnapshot | null>(null);
 
@@ -158,6 +167,13 @@ export default function HomeDashboard() {
       const todayRange = `from=${dayStartIso(today)}&to=${dayEndIso(today)}`;
       const yesterdayRange = `from=${dayStartIso(yesterday)}&to=${dayEndIso(yesterday)}`;
 
+      // The plan decides which widgets exist: Básico has no ORDERS tray and
+      // only STUDIO paints the agenda half of the heat grid.
+      const tenantSettings = await getTenantSettings().catch(() => null);
+      const planModules = tenantSettings?.planModules ?? [];
+      const hasOrders = planModules.includes("ORDERS");
+      const hasAgenda = planModules.includes("AGENDA");
+
       const [
         todayReport,
         yesterdayReport,
@@ -165,7 +181,6 @@ export default function HomeDashboard() {
         apReport,
         pendingRes,
         ordersRes,
-        tenantSettings,
         rateView,
       ] = await Promise.all([
         apiClient
@@ -184,18 +199,20 @@ export default function HomeDashboard() {
         apiClient
           .get<PurchasesReportSlice>(PurchaseEndpoints.report)
           .then((r) => r.data),
-        apiClient
-          .get<{ total: number }>(OrderEndpoints.list, {
-            params: { status: "PENDING", limit: 1 },
-          })
-          .then((r) => r.data),
-        apiClient
-          .get<{ list: OrderRow[] }>(OrderEndpoints.list, {
-            params: { limit: 5 },
-          })
-          .then((r) => r.data),
-        // Tasa del día: monedas visibles + snapshot; nunca rompen el panel.
-        getTenantSettings().catch(() => null),
+        hasOrders
+          ? apiClient
+              .get<{ total: number }>(OrderEndpoints.list, {
+                params: { status: "PENDING", limit: 1 },
+              })
+              .then((r) => r.data)
+          : Promise.resolve({ total: 0 }),
+        hasOrders
+          ? apiClient
+              .get<{ list: OrderRow[] }>(OrderEndpoints.list, {
+                params: { limit: 5 },
+              })
+              .then((r) => r.data)
+          : Promise.resolve({ list: [] as OrderRow[] }),
         apiClient
           .get<DailyRateSnapshot>(ExchangeEndpoints.latest)
           .catch(() => ({ data: null as DailyRateSnapshot | null })),
@@ -225,6 +242,24 @@ export default function HomeDashboard() {
         ...firstPage.list,
         ...restPages.flatMap((page) => page.list),
       ];
+
+      // Agendas: the STUDIO heat needs the appointment counts of the same
+      // four weeks. A failed read degrades to a sales-only grid.
+      if (hasAgenda) {
+        const agendaRows = await apiClient
+          .get<AppointmentHeatRow[]>(StudioEndpoints.appointments, {
+            params: { from: dayStartIso(from), to: dayEndIso(today) },
+          })
+          .then((r) =>
+            (Array.isArray(r.data) ? r.data : []).map((row) => ({
+              issueDate: row.startAt,
+            })),
+          )
+          .catch(() => [] as { issueDate: string }[]);
+        setStudioHeat(buildStudioHeat(saleRows, agendaRows, 4));
+      } else {
+        setStudioHeat(null);
+      }
 
       const aging = arReport.aging;
       setTodayCount(todayReport.issued.count);
@@ -291,6 +326,11 @@ export default function HomeDashboard() {
     );
   }
 
+  // Básico has no ORDERS module: its dashboard never shows the tray nor the
+  // "Pedidos pendientes" KPI.
+  const planModules = settings?.planModules ?? [];
+  const hasOrders = planModules.includes("ORDERS");
+
   const kpis: {
     label: string;
     value: string;
@@ -313,11 +353,15 @@ export default function HomeDashboard() {
       value: usd(apTotalUSD),
       sub: `${apItems.length} factura${apItems.length === 1 ? "" : "s"} pendiente${apItems.length === 1 ? "" : "s"}`,
     },
-    {
-      label: "Pedidos pendientes",
-      value: String(pendingOrders),
-      sub: "En la bandeja",
-    },
+    ...(hasOrders
+      ? [
+          {
+            label: "Pedidos pendientes",
+            value: String(pendingOrders),
+            sub: "En la bandeja",
+          },
+        ]
+      : []),
   ];
 
   const arTop = openItems.slice(0, 5);
@@ -445,9 +489,14 @@ export default function HomeDashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <section className="xl:col-span-7">
           <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
-            <CardHeader title="Ventas por día" note="últimas 4 semanas" />
+            <CardHeader
+              title={studioHeat ? "Ventas y agenda por día" : "Ventas por día"}
+              note="últimas 4 semanas"
+            />
             <div className="p-5">
-              {heat ? (
+              {studioHeat ? (
+                <DualHeatGrid heat={studioHeat} />
+              ) : heat ? (
                 <>
                   <div className="overflow-x-auto">
                     <div className="min-w-[420px]">
@@ -617,6 +666,7 @@ export default function HomeDashboard() {
             )}
           </div>
 
+          {hasOrders ? (
           <div className="rounded-xl bg-white dark:bg-slate-900 border border-[#1b1d21]/12 dark:border-white/10 shadow-[0_1px_2px_rgba(27,29,33,0.05)] overflow-hidden">
             <CardHeader title="Pedidos" note="recientes" />
             {recentOrders.length === 0 ? (
@@ -653,8 +703,131 @@ export default function HomeDashboard() {
               </ul>
             )}
           </div>
+          ) : null}
         </section>
       </div>
+    </div>
+  );
+}
+
+/**
+ * STUDIO heat: one grid, two series. A day with sales only is blue; agenda
+ * only is violet; both are split diagonally, each half carrying its own
+ * intensity. Future days keep the dashed placeholder of the sales grid.
+ */
+function DualHeatGrid({ heat }: { heat: StudioWeekHeat }) {
+  return (
+    <>
+      <div className="overflow-x-auto">
+        <div className="min-w-[420px]">
+          <div
+            className="grid gap-1"
+            style={{ gridTemplateColumns: "64px repeat(7, minmax(0,1fr))" }}
+          >
+            <span />
+            {heat.weekdays.map((day) => (
+              <span
+                key={day}
+                className="text-center font-mono text-[10px] text-[#1b1d21]/55 dark:text-slate-400 pb-1"
+              >
+                {day}
+              </span>
+            ))}
+            {heat.sales.map((row, weekIdx) => (
+              <Fragment key={heat.labels[weekIdx]}>
+                <span className="flex items-center justify-end pr-2 font-mono text-[10px] text-[#1b1d21]/55 dark:text-slate-400">
+                  {heat.labels[weekIdx]}
+                </span>
+                {row.map((salesCount, dayIdx) => {
+                  const agendaCount = heat.agenda[weekIdx][dayIdx];
+                  if (salesCount === null) {
+                    return (
+                      <div
+                        key={dayIdx}
+                        className="h-9 rounded-[3px] border border-dashed border-[#1b1d21]/10 dark:border-white/10"
+                      />
+                    );
+                  }
+                  const s = salesCount ?? 0;
+                  const a = agendaCount ?? 0;
+                  const hasS = s > 0;
+                  const hasA = a > 0;
+                  const sOpacity = hasS ? 0.18 + (s / heat.maxSales) * 0.74 : 0;
+                  const aOpacity = hasA ? 0.18 + (a / heat.maxAgenda) * 0.74 : 0;
+                  const background =
+                    hasS && hasA
+                      ? `linear-gradient(135deg, rgba(79,70,229,${sOpacity}) 0 50%, rgba(139,92,246,${aOpacity}) 50% 100%)`
+                      : hasS
+                        ? `rgba(79,70,229,${sOpacity})`
+                        : hasA
+                          ? `rgba(139,92,246,${aOpacity})`
+                          : "rgba(27,29,33,0.04)";
+                  const single = hasS !== hasA;
+                  const ratio = hasS && !hasA
+                    ? s / heat.maxSales
+                    : a / heat.maxAgenda;
+                  return (
+                    <div
+                      key={dayIdx}
+                      title={`Ventas: ${s} · Citas: ${a}`}
+                      className="h-9 rounded-[3px] flex items-center justify-center font-mono text-[11px] tnum"
+                      style={{
+                        background,
+                        color:
+                          single && ratio > 0.55
+                            ? "rgba(255,255,255,0.95)"
+                            : "rgba(27,29,33,0.55)",
+                      }}
+                    >
+                      {hasS && hasA ? "" : hasS ? s : hasA ? a : ""}
+                    </div>
+                  );
+                })}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 pt-4 border-t border-[#1b1d21]/12 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-4">
+          <HeatLegend color="79,70,229" label="Ventas" max={heat.maxSales} />
+          <HeatLegend color="139,92,246" label="Agenda" max={heat.maxAgenda} />
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#1b1d21]/55 dark:text-slate-400">
+          mitad azul + mitad violeta = ambas
+        </span>
+      </div>
+    </>
+  );
+}
+
+function HeatLegend({
+  color,
+  label,
+  max,
+}: {
+  color: string;
+  label: string;
+  max: number;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#1b1d21]/65 dark:text-slate-400">
+        {label}
+      </span>
+      <div className="flex">
+        {[0.08, 0.25, 0.45, 0.68, 0.9].map((opacity) => (
+          <div
+            key={opacity}
+            className="w-5 h-3"
+            style={{ backgroundColor: `rgba(${color},${opacity})` }}
+          />
+        ))}
+      </div>
+      <span className="font-mono text-[10px] text-[#1b1d21]/65 dark:text-slate-400">
+        {max}
+      </span>
     </div>
   );
 }
