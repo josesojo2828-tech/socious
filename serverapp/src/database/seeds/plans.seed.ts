@@ -109,7 +109,7 @@ const NEW_MODULES = [
   },
   {
     key: "STATIONS",
-    name: "Mesas y sillas",
+    name: "Espacios",
     description:
       "Puestos de trabajo del negocio: mesas, sillas o cabinas para la agenda.",
     icon: "building",
@@ -198,10 +198,10 @@ export const PLAN_SEEDS = [
     selected: true,
     badge: null as string | null,
     description:
-      "Agenda, mesas y sillas para negocios de servicios: barberías, salones y estudios.",
+      "Agenda y espacios para negocios de servicios: barberías, salones y estudios.",
     features: [
       "Servicios",
-      "Mesas y sillas",
+      "Espacios",
       "Agenda diaria",
       "Clientes",
       "Inventario",

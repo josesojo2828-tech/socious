@@ -288,9 +288,9 @@ export class DashboardService {
         const studioItems: SidebarItem[] = [];
         if (hasModule("STATIONS")) {
           studioItems.push({
-            title: "Mesas y sillas",
+            title: "Espacios",
             icon: "building",
-            link: "/dashboard/mesas-sillas",
+            link: "/dashboard/espacios",
           });
         }
         if (hasModule("AGENDA")) {
