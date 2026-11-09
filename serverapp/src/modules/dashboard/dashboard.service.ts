@@ -283,6 +283,31 @@ export class DashboardService {
           items: inventoryItems,
         });
 
+        // 4b. Studio (plan STUDIO): mesas/sillas y agenda diaria. Cada entrada
+        // depende de su módulo; los planes sin ellos no ven la sección.
+        const studioItems: SidebarItem[] = [];
+        if (hasModule("STATIONS")) {
+          studioItems.push({
+            title: "Mesas y sillas",
+            icon: "building",
+            link: "/dashboard/mesas-sillas",
+          });
+        }
+        if (hasModule("AGENDA")) {
+          studioItems.push({
+            title: "Agenda",
+            icon: "calendar",
+            link: "/dashboard/agenda",
+          });
+        }
+        if (studioItems.length > 0) {
+          sections.push({
+            title: "Studio",
+            icon: "briefcase",
+            items: studioItems,
+          });
+        }
+
         // 5b. Rutas de entrega (S8): módulo ROUTES del plan (AVANZADO+) más
         // el check de configuración — sin el check la API también devuelve 409.
         // `settings` was resolved above for the cash title.

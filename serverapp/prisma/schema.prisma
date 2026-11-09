@@ -102,6 +102,7 @@ model User {
   createdOrders                 Order[]                @relation("CreatedOrderRecords")
   createdStockMovements         StockMovement[]        @relation("CreatedStockMovementRecords")
   createdExchangeRates          ExchangeRate[]         @relation("CreatedExchangeRateRecords")
+  studioAppointments            StudioAppointment[]    @relation("StudioStaffAppointments")
 
   @@index([isDemo])
 }
@@ -575,6 +576,8 @@ model Organization {
   saleReturns        SaleReturn[]
   branches           Branch[]
   deliveryRoutes     DeliveryRoute[]
+  studioStations     StudioStation[]
+  studioAppointments StudioAppointment[]
 }
 
 model OrganizationMember {
@@ -782,6 +785,63 @@ model Branch {
 }
 
 // ======================================
+// STUDIO (MESAS/SILLAS Y AGENDA)
+// ======================================
+
+/**
+ * A physical workstation of a service business (a table, a chair, a cabin).
+ * Studio plan module STATIONS.
+ */
+model StudioStation {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  kind           String   @default("TABLE") // TABLE | CHAIR
+  capacity       Int      @default(1)
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization?       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  appointments   StudioAppointment[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+/**
+ * A booked service slot. Studio plan module AGENDA. Overlaps are rejected per
+ * station and per staff member while the appointment is still alive.
+ */
+model StudioAppointment {
+  id             String   @id @default(uuid())
+  organizationId String
+  clientId       String?
+  serviceId      String?
+  stationId      String?
+  staffId        String?
+  startAt        DateTime
+  endAt          DateTime
+  status         String   @default("SCHEDULED") // SCHEDULED | CONFIRMED | DONE | CANCELED | NO_SHOW
+  notes          String?
+  createdById    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  client         Client?         @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  service        Product?        @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  station        StudioStation?  @relation(fields: [stationId], references: [id], onDelete: SetNull)
+  staff          User?           @relation("StudioStaffAppointments", fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, startAt])
+  @@index([organizationId, stationId, startAt])
+  @@index([organizationId, staffId, startAt])
+  @@index([clientId])
+}
+
+// ======================================
 // CLIENTES (CRM)
 // ======================================
 
@@ -809,6 +869,7 @@ model Client {
   sales          Sale[]
   orders         Order[]
   saleReturns    SaleReturn[]
+  studioAppointments StudioAppointment[]
 
   @@index([organizationId])
   @@index([taxId])
@@ -998,6 +1059,7 @@ model Product {
   saleReturnItems   SaleReturnItem[]
   components        ProductComponent[] @relation("CompositeComponents")
   componentsUsedIn  ProductComponent[] @relation("RawMaterialOf")
+  studioAppointments StudioAppointment[]
 
   @@index([organizationId])
   @@index([sku])

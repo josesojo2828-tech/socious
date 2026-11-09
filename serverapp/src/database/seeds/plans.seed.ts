@@ -1,13 +1,14 @@
 /**
  * Commercial plans seed (S9, S11).
  *
- * Seeds the three Socius plans, their module grants and the capacity each plan
+ * Seeds the four Socius plans, their module grants and the capacity each plan
  * buys, plus the two quantity add-ons. Idempotent: keyed by id, re-running
  * rewrites the repository's own values (the catalog always wins) and never
  * touches rows of plans it does not own.
  *
  * Capacity (the reading adopted in the plan, L8 of the feature doc):
  *   BASICO   → 1 sucursal (la oculta por defecto), 1 empleado (el dueño)
+ *   STUDIO   → 1 sucursal, 1 empleado (agenda + mesas/sillas)
  *   AVANZADO → 1 sucursal, 1 empleado
  *   NEGOCIO  → 3 sucursales (1 por defecto + 2), 4 empleados por sucursal
  * Empleados y sucursales adicionales se compran con los add-ons EXTRA_EMPLOYEE
@@ -97,15 +98,52 @@ const NEW_MODULES = [
     category: "INVENTORY",
     sortOrder: 80,
   },
+  {
+    key: "SERVICES",
+    name: "Servicios",
+    description:
+      "Servicios sin control de stock, vendibles desde el POS y agendables.",
+    icon: "briefcase",
+    category: "COMMERCIAL",
+    sortOrder: 95,
+  },
+  {
+    key: "STATIONS",
+    name: "Mesas y sillas",
+    description:
+      "Puestos de trabajo del negocio: mesas, sillas o cabinas para la agenda.",
+    icon: "building",
+    category: "OPERATIONS",
+    sortOrder: 105,
+  },
+  {
+    key: "AGENDA",
+    name: "Agenda",
+    description:
+      "Vista diaria de citas por mesa y profesional, ligada a los servicios.",
+    icon: "calendar",
+    category: "OPERATIONS",
+    sortOrder: 110,
+  },
 ] as const;
 
 const PLAN_MODULES = {
-  BASICO: ["CLIENTS", "INVENTORY", "POS", "BILLING_SALES"],
+  BASICO: ["CLIENTS", "INVENTORY", "POS", "BILLING_SALES", "SERVICES"],
+  STUDIO: [
+    "CLIENTS",
+    "INVENTORY",
+    "POS",
+    "BILLING_SALES",
+    "SERVICES",
+    "STATIONS",
+    "AGENDA",
+  ],
   AVANZADO: [
     "CLIENTS",
     "INVENTORY",
     "POS",
     "BILLING_SALES",
+    "SERVICES",
     "ORDERS",
     "CATALOG_ONLINE",
     "SHIPPING",
@@ -119,6 +157,7 @@ const PLAN_MODULES = {
     "INVENTORY",
     "POS",
     "BILLING_SALES",
+    "SERVICES",
     "ORDERS",
     "CATALOG_ONLINE",
     "SHIPPING",
@@ -149,6 +188,26 @@ export const PLAN_SEEDS = [
       "Compras a crédito",
     ],
     modules: [...PLAN_MODULES.BASICO],
+    capacity: { maxBranches: 1, includedSeats: 1 },
+  },
+  {
+    id: "STUDIO",
+    name: "Studio",
+    price: 9.99,
+    /** Published in the public pricing list. */
+    selected: true,
+    badge: null as string | null,
+    description:
+      "Agenda, mesas y sillas para negocios de servicios: barberías, salones y estudios.",
+    features: [
+      "Servicios",
+      "Mesas y sillas",
+      "Agenda diaria",
+      "Clientes",
+      "Inventario",
+      "Caja",
+    ],
+    modules: [...PLAN_MODULES.STUDIO],
     capacity: { maxBranches: 1, includedSeats: 1 },
   },
   {

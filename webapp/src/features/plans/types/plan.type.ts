@@ -13,5 +13,5 @@ export interface Plan {
   } | null;
 }
 
-/** Labels the pricing cards show when the plan is one of the three. */
-export const PLAN_ORDER = ["BASICO", "AVANZADO", "PREMIUM"] as const;
+/** Labels the pricing cards show when the plan is one of the catalog. */
+export const PLAN_ORDER = ["BASICO", "STUDIO", "AVANZADO", "PREMIUM"] as const;

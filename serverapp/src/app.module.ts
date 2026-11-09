@@ -70,6 +70,7 @@ import { SettingsModule } from "./modules/settings/settings.module";
 import { ShippingAgencyModule } from "./modules/shipping/shipping-agency.module";
 import { DeliveryRouteModule } from "./modules/delivery-route/delivery-route.module";
 import { BranchModule } from "./modules/branch/branch.module";
+import { StudioModule } from "./modules/studio/studio.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
 import { SystemSettingModule } from "./modules/system-setting/system-setting.module";
@@ -234,6 +235,7 @@ imports: [
     ShippingAgencyModule,
     DeliveryRouteModule,
     BranchModule,
+    StudioModule,
   ],
   controllers: [AppController, SelectController],
   providers: [
