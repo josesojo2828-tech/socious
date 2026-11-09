@@ -298,6 +298,9 @@ export default function SettingsPage() {
   // The public storefront is AVANZADO+ (`CATALOG_ONLINE`); Básico must not
   // see the tab at all, not even a disabled one.
   const canManageStore = planModules.includes("CATALOG_ONLINE");
+  // STUDIO bundles materials + services: both switches ship ON and stay
+  // locked, so the plan's promise is not undone by an accidental toggle.
+  const isStudioPlan = settings.planId === "STUDIO";
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -700,10 +703,15 @@ export default function SettingsPage() {
             >
               <SectionRow
                 label="Trabajar con materia prima"
-                hint="Activo: aparece la pantalla Materiales, el form de producto muestra la sección de componentes y las ventas bloquean si falta insumo."
+                hint={
+                  isStudioPlan
+                    ? "Incluido en el plan Studio: siempre activo."
+                    : "Activo: aparece la pantalla Materiales, el form de producto muestra la sección de componentes y las ventas bloquean si falta insumo."
+                }
               >
                 <Toggle
                   checked={settings.inventory.useRawMaterials}
+                  disabled={isStudioPlan}
                   onChange={() => void save(patchInventoryUseRawMaterials)}
                 />
               </SectionRow>
@@ -717,10 +725,15 @@ export default function SettingsPage() {
             >
               <SectionRow
                 label="Trabajar con servicios"
-                hint="Activo: aparece la pantalla Servicios para cargar y editar servicios. Inactivo: la pantalla y su entrada del menú quedan ocultas."
+                hint={
+                  isStudioPlan
+                    ? "Incluido en el plan Studio: siempre activo."
+                    : "Activo: aparece la pantalla Servicios para cargar y editar servicios. Inactivo: la pantalla y su entrada del menú quedan ocultas."
+                }
               >
                 <Toggle
                   checked={settings.inventory.useServices}
+                  disabled={isStudioPlan}
                   onChange={() => void save(patchInventoryUseServices)}
                 />
               </SectionRow>

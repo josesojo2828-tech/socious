@@ -42,10 +42,25 @@ export class TenantSettingsService {
 
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },
-      select: { settings: true },
+      select: {
+        settings: true,
+        subscriptions: {
+          where: { status: "ACTIVE" },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { planId: true },
+        },
+      },
     });
 
-    return normalizeTenantSettings(organization?.settings);
+    const settings = normalizeTenantSettings(organization?.settings);
+    // STUDIO is a service-business plan: materials and services ship enabled,
+    // so the merchant never lands on a panel where the two screens are hidden.
+    if (organization?.subscriptions?.[0]?.planId === "STUDIO") {
+      settings.inventory.useRawMaterials = true;
+      settings.inventory.useServices = true;
+    }
+    return settings;
   }
 
   /**

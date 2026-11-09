@@ -50,6 +50,9 @@ const makeController = (
     moduleGrant: {
       findMany: jest.fn(async () => []),
     },
+    subscription: {
+      findFirst: jest.fn().mockResolvedValue(null),
+    },
     organizationMember: {
       findFirst: jest.fn(async ({ where }: any) => {
         const row = members.find(

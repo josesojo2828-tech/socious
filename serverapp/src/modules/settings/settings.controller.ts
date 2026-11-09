@@ -97,7 +97,13 @@ export class SettingsController {
     request: RequestWithUser,
     settings: T,
     organizationId: string | null,
-  ): Promise<T & { planModules: string[]; manualGrants: string[] }> {
+  ): Promise<
+    T & {
+      planModules: string[];
+      manualGrants: string[];
+      planId: string | null;
+    }
+  > {
     const entitlements = (request.user as { entitlements?: {
       modules?: { key: string }[];
     } })?.entitlements;
@@ -111,11 +117,19 @@ export class SettingsController {
           select: { module: { select: { key: true } } },
         })
       : [];
+    const activeSubscription = organizationId
+      ? await this.prisma.subscription.findFirst({
+          where: { organizationId, status: "ACTIVE" },
+          orderBy: { createdAt: "desc" },
+          select: { planId: true },
+        })
+      : null;
     const imageLimits = await this.tenantSettings.imageLimits(organizationId);
     return {
       ...settings,
       planModules,
       manualGrants: [...new Set(grants.map((g) => g.module.key))],
+      planId: activeSubscription?.planId ?? null,
       imageLimits,
     };
   }

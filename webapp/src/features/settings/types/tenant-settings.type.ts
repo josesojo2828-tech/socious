@@ -69,6 +69,8 @@ export interface TenantSettings {
    * in higher plans.
    */
   planModules?: string[];
+  /** Id of the active subscription plan (e.g. `STUDIO`). */
+  planId?: string | null;
   /** Manual org grants (e.g. BRANCHES) — admin-assigned, flag-independent. */
   manualGrants?: string[];
   /**
