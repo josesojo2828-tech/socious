@@ -166,7 +166,7 @@ export default function SettingsPage() {
             .catch(() => ({ data: [] as Branch[] })),
           apiClient
             .get<{ list: Plan[] }>(PlanEndpoints.list, {
-              params: { limit: 20 },
+              params: { limit: 20, selected: true },
             })
             .catch(() => ({ data: { list: [] as Plan[] } })),
         ]);

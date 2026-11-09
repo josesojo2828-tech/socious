@@ -51,7 +51,9 @@ export function ChangePlanModal({ currentPlanId, onSuccess }: ChangePlanModalPro
   useEffect(() => {
     let active = true;
     apiClient
-      .get(SubscriptionPlanEndpoints.data.list)
+      .get(SubscriptionPlanEndpoints.data.list, {
+        params: { selected: true },
+      })
       .then((res) => {
         if (!active) return;
         const fetchedPlans: SubscriptionPlan[] = res.data?.list || [];
