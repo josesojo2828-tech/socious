@@ -7,10 +7,12 @@ import {
   Building2,
   Construction,
   Eye,
+  FileSpreadsheet,
   Loader2,
   Plus,
   Upload,
 } from "lucide-react";
+import { ReceivableImportPanel } from "@/features/initial-load/components/ReceivableImportPanel";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
@@ -373,10 +375,13 @@ export default function InitialLoadPage() {
       ) : null}
 
       {step === 2 ? (
-        <PendingPanel
+        <StepPanel
+          icon={<FileSpreadsheet className="h-5 w-5" />}
           title="Clientes y cuentas por cobrar"
-          description="El paso donde se cargan los clientes y su deuda inicial."
-        />
+          description="Carga los clientes y su deuda inicial desde un archivo CSV."
+        >
+          <ReceivableImportPanel />
+        </StepPanel>
       ) : null}
 
       {step === 3 ? (
