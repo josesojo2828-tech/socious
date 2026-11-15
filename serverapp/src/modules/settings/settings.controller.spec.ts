@@ -39,6 +39,8 @@ const makeController = (
         name: "Socius Demo",
         slug: "socius-demo",
         logoUrl: null,
+        brandPrimary: "#1A2B3C",
+        brandAccent: "#A1B2C3",
       }),
     },
     shippingAgency: {
@@ -260,6 +262,8 @@ describe("SettingsController — public checkout config (S12)", () => {
       name: "Socius Demo",
       slug: "socius-demo",
       logoUrl: null,
+      brandPrimary: "#1A2B3C",
+      brandAccent: "#A1B2C3",
       whatsapp: "584241234567",
     });
     expect(config.fulfillmentTypes).toEqual(["PICKUP", "DELIVERY"]);

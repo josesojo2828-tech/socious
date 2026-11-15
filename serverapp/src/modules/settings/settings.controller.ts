@@ -16,13 +16,9 @@ import { WorkspaceContextService } from "src/shared/services/workspace-context.s
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
 import { Public } from "src/shared/decorators/public.decorator";
 import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
-import { isAdmin } from "../permit/authz";
+import { assertCanEditOrganization } from "src/shared/services/organization-write-access";
 import { UpdateTenantSettingsDto } from "./dto/settings.dto";
 import type { RequestWithUser } from "src/shared/types/server.type";
-
-// CLINIC_ADMIN is the legacy org-admin role: `module-framework` still
-// checks it, so it keeps editing settings until roles are audited.
-const EDITABLE_ROLES = ["OWNER", "ADMIN", "CLINIC_ADMIN"] as const;
 
 /**
  * Tenant configuration surface (S1).
@@ -67,24 +63,11 @@ export class SettingsController {
     request: RequestWithUser,
     organizationId: string,
   ): Promise<void> {
-    const user = request.user;
-    if (isAdmin(user as any)) return;
-
-    const membership = await this.prisma.organizationMember.findFirst({
-      where: {
-        userId: user.id,
-        organizationId,
-        status: "ACTIVE",
-        role: { in: [...EDITABLE_ROLES] },
-      },
-      select: { id: true },
-    });
-
-    if (!membership) {
-      throw new ForbiddenException(
-        "Solo el propietario o un administrador de la organización puede cambiar la configuración.",
-      );
-    }
+    await assertCanEditOrganization(
+      this.prisma,
+      request.user as any,
+      organizationId,
+    );
   }
 
   /**
@@ -152,7 +135,15 @@ export class SettingsController {
   async getPublicCheckoutConfig(@Param("slug") slug: string) {
     const organization = await this.prisma.organization.findUnique({
       where: { slug },
-      select: { id: true, status: true, name: true, slug: true, logoUrl: true },
+      select: {
+        id: true,
+        status: true,
+        name: true,
+        slug: true,
+        logoUrl: true,
+        brandPrimary: true,
+        brandAccent: true,
+      },
     });
 
     if (!organization || organization.status !== "ACTIVE") {
@@ -170,6 +161,8 @@ export class SettingsController {
         name: organization.name,
         slug: organization.slug,
         logoUrl: organization.logoUrl,
+        brandPrimary: organization.brandPrimary,
+        brandAccent: organization.brandAccent,
         whatsapp: settings.storefront?.whatsapp || null,
       },
       fulfillmentTypes: settings.fulfillment.enabledTypes,
