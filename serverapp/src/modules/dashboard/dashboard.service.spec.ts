@@ -435,4 +435,28 @@ describe("DashboardService — entitlement-driven sidebar", () => {
     expect(withCheck).toContain("/dashboard/rutas");
   });
 
+  it("uses the simplified raw sidebar titles (S4)", async () => {
+    const sections = await makeService().getSidebarSections({
+      id: "u1",
+      permits: BASE_PERMITS,
+      modules: ["ORDERS"],
+      organizationId: "org-1",
+    });
+
+    const titles = sections.flatMap((section) =>
+      section.items.map((item) => item.title),
+    );
+
+    expect(titles).toEqual(
+      expect.arrayContaining([
+        "Punto de venta",
+        "Historial",
+        "Pedidos",
+        "Productos",
+        "Movimientos",
+        "Negocio",
+      ]),
+    );
+  });
+
 });
