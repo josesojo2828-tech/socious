@@ -4,6 +4,9 @@ export interface CheckoutStore {
   name: string;
   slug: string | null;
   logoUrl: string | null;
+  /** Tenant brand palette from the public settings payload; null = unbranded. */
+  brandPrimary?: string | null;
+  brandAccent?: string | null;
   /** Digits with country code; null hides the WhatsApp actions. */
   whatsapp: string | null;
 }

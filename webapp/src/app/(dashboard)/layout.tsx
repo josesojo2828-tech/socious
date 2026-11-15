@@ -14,6 +14,7 @@ import { useTranslation } from "@/context/i18n.context";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
 import { FeedbackDrawer } from "@/shared/components/organisms/ui/Sidebar/FeedbackDrawer";
 import { ComponentStackBoundary } from "@/shared/components/providers/ComponentStackBoundary";
+import { TenantTheme } from "@/shared/components/TenantTheme";
 
 const isTokenExpired = (token: string): boolean => {
     try {
@@ -36,7 +37,7 @@ export default function DashboardLayout({
     const router = useRouter();
     const pathname = usePathname();
     const { user, isAuthenticated, sidebar, refreshSession, logout } = useAuthStore();
-    const { hasLoaded, isLoading, fetchWorkspaces, workspaces } = useWorkspaceStore();
+    const { hasLoaded, isLoading, fetchWorkspaces, workspaces, activeWorkspace } = useWorkspaceStore();
     const [isAuthorized, setIsAuthorized] = useState(false);
 
     const isSuperAdminOrAdmin =
@@ -148,6 +149,7 @@ export default function DashboardLayout({
         // error instance, and rethrows so root app/error.tsx still renders
         // the fallback and remains the single reporting path.
         <ComponentStackBoundary>
+            <TenantTheme primary={activeWorkspace.brandPrimary} accent={activeWorkspace.brandAccent}>
             <FeedbackDrawer>
                 <div className="flex min-h-screen md:h-screen bg-base-200 text-base-content font-sans">
                     {/* 1. Sidebar (Componente autónomo) */}
@@ -172,6 +174,7 @@ export default function DashboardLayout({
 
                 </div>
             </FeedbackDrawer>
+            </TenantTheme>
         </ComponentStackBoundary>
     );
 }

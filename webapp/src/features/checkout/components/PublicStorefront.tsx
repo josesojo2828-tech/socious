@@ -23,6 +23,7 @@ import {
   PAGE_TITLE,
 } from "@/shared/lib/maison-style";
 import { CheckoutEndpoints } from "@/features/checkout/services/checkout.endpoints";
+import { TenantTheme } from "@/shared/components/TenantTheme";
 import {
   buildPublicOrderPayload,
   validateCheckout,
@@ -224,6 +225,10 @@ export function PublicStorefront({ slug }: { slug: string }) {
   const storeName = config?.store.name ?? slug;
 
   return (
+    <TenantTheme
+      primary={config?.store.brandPrimary}
+      accent={config?.store.brandAccent}
+    >
     <div className="min-h-screen bg-[#f0ede4]/50 dark:bg-[#0c101c] pb-24">
       <header className={`${GLASS} sticky top-0 z-30 border-b border-white/60 dark:border-white/10`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
@@ -583,6 +588,7 @@ export function PublicStorefront({ slug }: { slug: string }) {
         </a>
       ) : null}
     </div>
+    </TenantTheme>
   );
 }
 

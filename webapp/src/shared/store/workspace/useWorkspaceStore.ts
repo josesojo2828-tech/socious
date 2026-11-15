@@ -15,6 +15,9 @@ export interface WorkspaceItem {
   role?: string;
   userColorHex?: string;
   logoUrl?: string;
+  /** Tenant brand palette (my-workspaces); null/absent means no branding. */
+  brandPrimary?: string | null;
+  brandAccent?: string | null;
   maxSeats?: number;
   requiresSubscription?: boolean;
   subscriptionStatus?: 'ACTIVE' | 'TRIAL' | 'GRACE_PERIOD' | 'NONE';
@@ -72,6 +75,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           userRole?: string;
           userColorHex?: string;
           logoUrl?: string;
+          brandPrimary?: string | null;
+          brandAccent?: string | null;
           maxSeats?: number;
           requiresSubscription?: boolean;
           subscriptionStatus?: WorkspaceItem['subscriptionStatus'];
@@ -86,6 +91,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           role: org.userRole,
           userColorHex: org.userColorHex || '#4F46E5',
           logoUrl: org.logoUrl,
+          brandPrimary: org.brandPrimary ?? null,
+          brandAccent: org.brandAccent ?? null,
           maxSeats: org.maxSeats,
           requiresSubscription: org.requiresSubscription || false,
           subscriptionStatus: org.subscriptionStatus || 'NONE',
