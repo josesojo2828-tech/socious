@@ -274,7 +274,7 @@ export class UserService {
         if (referrer && referrer.email) {
           this.mailService.sendMail({
             to: referrer.email,
-            subject: "¡Nuevo referido registrado en Nutringest! 🎉",
+            subject: "¡Nuevo referido registrado en Socius! 🎉",
             html: `
               <!DOCTYPE html>
               <html>
@@ -285,7 +285,7 @@ export class UserService {
                     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                       <tr>
                         <td style="background:#059669;padding:32px 40px;text-align:center;">
-                          <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                          <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                           <p style="color:#a7f3d0;margin:8px 0 0;font-size:14px;">Programa de Referidos</p>
                         </td>
                       </tr>
@@ -293,20 +293,20 @@ export class UserService {
                         <td style="padding:40px;">
                           <h2 style="color:#1e293b;margin:0 0 8px;font-size:22px;">¡Ganaste un nuevo crédito! 🎁</h2>
                           <p style="color:#64748b;line-height:1.7;font-size:16px;margin:0 0 16px;">
-                            Hola <strong>${referrer.firstName || "Nutricionista"}</strong>, el colega <strong>${data.firstName} ${data.lastName}</strong> se registró exitosamente con tu código de referido.
+                            Hola <strong>${referrer.firstName || "Usuario"}</strong>, el colega <strong>${data.firstName} ${data.lastName}</strong> se registró exitosamente con tu código de referido.
                           </p>
                           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px;text-align:center;margin:24px 0;">
                             <p style="color:#166534;font-size:15px;margin:0 0 4px;">Se acreditó en tu billetera:</p>
                             <p style="color:#15803d;font-size:32px;font-weight:800;margin:0;">+1 Crédito / $1.00 USD</p>
                           </div>
                           <p style="color:#94a3b8;font-size:14px;line-height:1.6;margin:0;">
-                            ¡Seguí compartiendo tu código para acumular más beneficios en tu cuenta de Nutringest!
+                            ¡Seguí compartiendo tu código para acumular más beneficios en tu cuenta de Socius!
                           </p>
                         </td>
                       </tr>
                       <tr>
                         <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                          <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                          <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                         </td>
                       </tr>
                     </table>

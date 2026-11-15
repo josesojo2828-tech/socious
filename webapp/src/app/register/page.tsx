@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   User,
   Mail,
@@ -26,6 +27,7 @@ import { RegisterFormData, registerSchema } from '@/features/user/schemas/auth.s
 import { useTranslation } from "@/context/i18n.context";
 
 import { AuthHeroSlider } from "@/shared/components/molecules/AuthHeroSlider/AuthHeroSlider";
+import { SociusBulb } from "@/shared/components/atoms/SociusBulb";
 
 /**
  * `t()` devuelve el PATH de la clave cuando no la encuentra (ver
@@ -196,7 +198,21 @@ function RegisterFormContent() {
   return (
     <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header text */}
-      <div className="space-y-3 text-center lg:text-left">
+      <div className="space-y-4 text-center lg:text-left">
+        <Link href="/" className="inline-flex items-center gap-3 group mb-1">
+          <SociusBulb
+            size={52}
+            className="text-[#1a2a46] dark:text-[#f0ede4] shrink-0 transition-transform group-hover:scale-105"
+          />
+          <div className="flex flex-col text-left">
+            <span className="font-display text-2xl font-bold tracking-tight text-[#111018] dark:text-[#f0ede4] leading-none">
+              Socius
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#b2944a] font-semibold mt-1">
+              ERP
+            </span>
+          </div>
+        </Link>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a]">
           {t('form.title.create_user') || 'Crear cuenta'}
         </p>
@@ -388,7 +404,7 @@ function RegisterFormContent() {
               <Link href="/privacy" className="text-[#b2944a] underline font-semibold hover:underline">
                 Política de Privacidad
               </Link>{' '}
-              de Stockira.
+              de Socius.
             </span>
           </label>
           {termsError && (

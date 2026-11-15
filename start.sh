@@ -10,7 +10,7 @@ BOLD='\033[1m'
 
 echo -e "${CYAN}${BOLD}"
 echo "=========================================================="
-echo "          🥦 NUTRINGEST - LAUNCHPAD 🥦                    "
+echo "          🚀 SOCIUS ERP - LAUNCHPAD 🚀                    "
 echo "=========================================================="
 echo -e "${NC}"
 

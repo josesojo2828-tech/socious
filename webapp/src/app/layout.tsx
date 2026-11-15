@@ -31,15 +31,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Stockira — Gestión Comercial, Inventario y Sucursales",
-    template: "%s | Stockira",
+    default: "Socius — Gestión Comercial, Inventario y Sucursales",
+    template: "%s | Socius",
   },
   description:
-    "Stockira administra inventario en tiempo real, Kardex, punto de venta (POS), caja multimoneda, clientes, ventas y control de sucursales en una plataforma ágil y centralizada.",
+    "Socius administra inventario en tiempo real, Kardex, punto de venta (POS), caja multimoneda, clientes, ventas y control de sucursales en una plataforma ágil y centralizada.",
   // File conventions (favicon.ico / icon.png / apple-icon.png) already emit
   // the tags; the explicit map pins them for crawlers that ignore files.
   icons: {
     icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/icon.png", sizes: "192x192", type: "image/png" },
       { url: "/favicon.ico", sizes: "32x32" },
     ],

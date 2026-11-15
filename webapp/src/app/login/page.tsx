@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Mail,
   Lock,
@@ -20,6 +21,7 @@ import { useTranslation } from "@/context/i18n.context";
 
 // Componentes
 import { AuthHeroSlider } from "@/shared/components/molecules/AuthHeroSlider/AuthHeroSlider";
+import { SociusBulb } from "@/shared/components/atoms/SociusBulb";
 
 /** Auth field language — Maison navy border, brass focus (not Daisy indigo). */
 const AUTH_INPUT =
@@ -82,7 +84,21 @@ export default function LoginPage() {
         <section className="flex-1 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-20">
           <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header / Intro */}
-            <div className="space-y-3 text-center lg:text-left">
+            <div className="space-y-4 text-center lg:text-left">
+              <Link href="/" className="inline-flex items-center gap-3 group mb-1">
+                <SociusBulb
+                  size={52}
+                  className="text-[#1a2a46] dark:text-[#f0ede4] shrink-0 transition-transform group-hover:scale-105"
+                />
+                <div className="flex flex-col text-left">
+                  <span className="font-display text-2xl font-bold tracking-tight text-[#111018] dark:text-[#f0ede4] leading-none">
+                    Socius
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#b2944a] font-semibold mt-1">
+                    ERP
+                  </span>
+                </div>
+              </Link>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a]">
                 {t("auth.welcome_back") || "Bienvenido de nuevo"}
               </p>

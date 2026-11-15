@@ -97,7 +97,7 @@ export function buildTelegramHtmlMessage(data: TelegramAlertData): string {
       : "";
 
   return (
-    `🚨 <b>NUTRINGEST ${escapeHtml(env)} CRASH</b> 🚨\n\n` +
+    `🚨 <b>SOCIUS ${escapeHtml(env)} CRASH</b> 🚨\n\n` +
     `📌 <b>Fuente:</b> <code>${escapeHtml(data.source || "Client Crash")}</code>\n` +
     `🌐 <b>URL:</b> ${formatUrl(data.pageUrl)}\n` +
     `🧭 <b>Referrer:</b> ${formatReferrer(data.referrer)}\n` +

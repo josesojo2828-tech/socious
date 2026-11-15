@@ -77,7 +77,7 @@ describe("telegram-formatter", () => {
         commitSha: "abcdef123456",
       });
 
-      expect(message).toContain("🚨 <b>NUTRINGEST PRODUCTION CRASH</b> 🚨");
+      expect(message).toContain("🚨 <b>SOCIUS PRODUCTION CRASH</b> 🚨");
       expect(message).toContain("📌 <b>Fuente:</b> <code>React Error Boundary</code>");
       expect(message).toContain('🌐 <b>URL:</b> <a href="https://nutringest.com/dashboard/patients">https://nutringest.com/dashboard/patients</a>');
       expect(message).toContain('🧭 <b>Referrer:</b> <a href="https://nutringest.com/dashboard">https://nutringest.com/dashboard</a>');
@@ -97,7 +97,7 @@ describe("telegram-formatter", () => {
         environment: "staging",
       });
 
-      expect(message).toContain("🚨 <b>NUTRINGEST STAGING CRASH</b> 🚨");
+      expect(message).toContain("🚨 <b>SOCIUS STAGING CRASH</b> 🚨");
       expect(message).toContain("👤 <b>Usuario ID:</b> <i>Anónimo / No autenticado</i>");
       expect(message).toContain("🧭 <b>Referrer:</b> <i>Directo / Ninguno</i>");
       expect(message).toContain("🌐 <b>URL:</b> <i>No disponible</i>");

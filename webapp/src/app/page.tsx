@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -151,20 +152,20 @@ const CAPABILITIES = [
 
 const FAQS = [
   {
-    q: "¿Qué tan rápido puedo comenzar a operar con Stockira?",
+    q: "¿Qué tan rápido puedo comenzar a operar con Socius?",
     a: "En menos de 10 minutos. Creas tu cuenta, defines tus datos comerciales y puedes empezar a facturar de inmediato importando tus productos desde Excel o cargándolos desde el formulario ágil.",
   },
   {
     q: "¿Cómo se maneja el cobro en múltiples monedas (USD, Bs, USDT)?",
-    a: "Stockira cuenta con un convertidor multimoneda nativo. Configuras la tasa del día y el POS calcula automáticamente el monto en cada moneda, admitiendo pagos mixtos en una sola venta (ejemplo: una parte en USD efectivo y el resto en transferencia bancaria local).",
+    a: "Socius cuenta con un convertidor multimoneda nativo. Configuras la tasa del día y el POS calcula automáticamente el monto en cada moneda, admitiendo pagos mixtos en una sola venta (ejemplo: una parte en USD efectivo y el resto en transferencia bancaria local).",
   },
   {
     q: "¿Puedo controlar más de una sucursal o almacén?",
-    a: "Sí. Stockira está diseñado para la escala multisede. Puedes crear sucursales independientes, asignar personal a cada tienda y realizar traslados de mercancía entre depósitos con auditoría completa.",
+    a: "Sí. Socius está diseñado para la escala multisede. Puedes crear sucursales independientes, asignar personal a cada tienda y realizar traslados de mercancía entre depósitos con auditoría completa.",
   },
   {
     q: "¿Necesito instalar algún software local o servidor en mi negocio?",
-    a: "No. Stockira funciona 100% en la nube a través de cualquier navegador web en PC, laptop o tablet. Tus datos se respaldan de forma continua y automática.",
+    a: "No. Socius funciona 100% en la nube a través de cualquier navegador web en PC, laptop o tablet. Tus datos se respaldan de forma continua y automática.",
   },
   {
     q: "¿Puedo migrar mi catálogo y cartera de clientes desde Excel?",
@@ -246,12 +247,17 @@ export default function LandingPage() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo de Marca */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#1a2a46] text-[#b2944a] shadow-xs transition-transform group-hover:scale-105">
-              <Boxes className="h-5 w-5" />
-            </div>
+            <Image
+              src="/icon.png"
+              alt="Socius"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full shadow-xs transition-transform group-hover:scale-105"
+              priority
+            />
             <div className="flex flex-col">
               <span className="font-display text-2xl font-semibold tracking-tight text-[#111018] dark:text-slate-50 leading-none">
-                Stockira
+                Socius
               </span>
               <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a2a46]/70 dark:text-slate-400 mt-1">
                 ERP · POS · KARDEX
@@ -288,7 +294,7 @@ export default function LandingPage() {
               href="/register"
               className={`${CTA_BRASS} px-4 py-2 text-xs sm:text-sm`}
             >
-              <span>Probar Stockira</span>
+              <span>Probar Socius</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -316,7 +322,7 @@ export default function LandingPage() {
 
             {/* Subtítulo */}
             <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-[#1b1d21]/70 dark:text-slate-300 leading-relaxed font-sans">
-              <strong className="font-semibold text-[#111018] dark:text-slate-100">Stockira</strong> unifica
+              <strong className="font-semibold text-[#111018] dark:text-slate-100">Socius</strong> unifica
               Kardex con costo ponderado en tiempo real, cobros en USD, Bs y USDT, arqueo de caja por turnos
               y control multi-sucursal con el lenguaje visual sobrio y rápido que tu equipo necesita.
             </p>
@@ -364,7 +370,7 @@ export default function LandingPage() {
                   <span>VISTAS DEL SOFTWARE</span>
                 </div>
                 <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#111018] dark:text-slate-50">
-                  Experimenta la interfaz de Stockira
+                  Experimenta la interfaz de Socius
                 </h2>
               </div>
 
@@ -435,7 +441,7 @@ export default function LandingPage() {
                           Dashboard
                         </h3>
                         <p className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 mt-1">
-                          DATOS EN VIVO · STOCKIRA ERP
+                          DATOS EN VIVO · SOCIUS ERP
                         </p>
                       </div>
                       <span className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 tnum">
@@ -985,10 +991,10 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#b2944a] mb-4">
               <span>PRODUCCIÓN Y CONTROL</span>
               <span className="inline-block w-[3px] h-[3px] rounded-full bg-[#b2944a]" />
-              <span>STOCKIRA ERP</span>
+              <span>SOCIUS ERP</span>
             </div>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#f0ede4]">
-              Comienza hoy a operar con Stockira
+              Comienza hoy a operar con Socius
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed font-sans">
               Crea tu organización, activa tus sucursales y toma el control riguroso de tus ventas,
@@ -1022,7 +1028,7 @@ export default function LandingPage() {
                 <Boxes className="h-4 w-4" />
               </div>
               <span className="font-display text-lg font-semibold tracking-tight text-[#111018] dark:text-slate-100">
-                Stockira
+                Socius
               </span>
               <span className="font-mono text-xs text-[#1a2a46]/60 dark:text-slate-400">
                 · Sistema Operativo Comercial
@@ -1040,7 +1046,7 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#1a2a46]/60 dark:text-slate-400 font-mono">
-            <p>© {new Date().getFullYear()} Stockira. Todos los derechos reservados.</p>
+            <p>© {new Date().getFullYear()} Socius. Todos los derechos reservados.</p>
             <p className="flex items-center gap-2">
               <Truck className="h-3.5 w-3.5 text-[#b2944a]" />
               <span>Multi-sucursal, rutas de entrega y despachos por encomienda.</span>

@@ -80,7 +80,7 @@ export class SubscriptionRenewalJobService {
         if (sub.user?.email) {
           this.mailService.sendMail({
             to: sub.user.email,
-            subject: "Tu plan Nutringest vence en 5 días ⏳",
+            subject: "Tu plan Socius vence en 5 días ⏳",
             html: `
               <!DOCTYPE html>
               <html>
@@ -91,14 +91,14 @@ export class SubscriptionRenewalJobService {
                     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                       <tr>
                         <td style="background:#4f46e5;padding:32px 40px;text-align:center;">
-                          <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                          <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:40px;">
                           <h2 style="color:#1e293b;margin:0 0 8px;font-size:22px;">Aviso de Próximo Vencimiento</h2>
                           <p style="color:#64748b;line-height:1.7;font-size:16px;margin:0 0 16px;">
-                            Hola <strong>${sub.user.firstName || "Nutricionista"}</strong>, tu suscripción al plan <strong>${sub.plan?.name || "Nutringest"}</strong> vencerá en 5 días (${new Date(sub.endDate!).toLocaleDateString("es-ES")}).
+                            Hola <strong>${sub.user.firstName || "Usuario"}</strong>, tu suscripción al plan <strong>${sub.plan?.name || "Socius"}</strong> vencerá en 5 días (${new Date(sub.endDate!).toLocaleDateString("es-ES")}).
                           </p>
                           <p style="color:#64748b;line-height:1.7;font-size:16px;">
                             Asegurate de contar con saldo suficiente en tu billetera virtual para evitar interrupciones en tu servicio.
@@ -107,7 +107,7 @@ export class SubscriptionRenewalJobService {
                       </tr>
                       <tr>
                         <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                          <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                          <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                         </td>
                       </tr>
                     </table>
@@ -173,14 +173,14 @@ export class SubscriptionRenewalJobService {
                       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                         <tr>
                           <td style="background:#d97706;padding:32px 40px;text-align:center;">
-                            <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                            <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                           </td>
                         </tr>
                         <tr>
                           <td style="padding:40px;">
                             <h2 style="color:#1e293b;margin:0 0 8px;font-size:22px;">Inicio de Período de Gracia</h2>
                             <p style="color:#64748b;line-height:1.7;font-size:16px;margin:0 0 16px;">
-                              Hola <strong>${sub.user.firstName || "Nutricionista"}</strong>, tu plan <strong>${sub.plan?.name}</strong> venció y disponés de un <strong>período de gracia de 5 a 10 días</strong> para recargar tu saldo antes de que se restrinjan las acciones de escritura en la plataforma.
+                              Hola <strong>${sub.user.firstName || "Usuario"}</strong>, tu plan <strong>${sub.plan?.name}</strong> venció y disponés de un <strong>período de gracia de 5 a 10 días</strong> para recargar tu saldo antes de que se restrinjan las acciones de escritura en la plataforma.
                             </p>
                             <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:12px;padding:20px;margin:24px 0;">
                               <p style="color:#b45309;font-size:14px;margin:0;">
@@ -191,7 +191,7 @@ export class SubscriptionRenewalJobService {
                         </tr>
                         <tr>
                           <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                            <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                            <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                           </td>
                         </tr>
                       </table>

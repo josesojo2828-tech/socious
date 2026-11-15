@@ -377,7 +377,7 @@ export default function HomeDashboard() {
             Dashboard
           </h1>
           <p className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 mt-1">
-            DATOS EN VIVO · SOCIOUS ERP
+            DATOS EN VIVO · SOCIUS ERP
           </p>
         </div>
         <span className="font-mono text-[11px] text-[#1b1d21]/65 dark:text-slate-400 tnum">

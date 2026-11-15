@@ -70,7 +70,7 @@ describe("POST /api/report-error", () => {
     expect(sentBody.chat_id).toBe("mock-chat-id");
     expect(sentBody.parse_mode).toBe("HTML");
     expect(sentBody.disable_web_page_preview).toBe(true);
-    expect(sentBody.text).toContain("🚨 <b>NUTRINGEST STAGING CRASH</b> 🚨");
+    expect(sentBody.text).toContain("🚨 <b>SOCIUS STAGING CRASH</b> 🚨");
     expect(sentBody.text).toContain("👤 <b>Usuario ID:</b> <code>usr_42</code> (Rol: <code>ADMIN</code>)");
     expect(sentBody.text).toContain("Test crash &amp; error &lt;script&gt;");
   });

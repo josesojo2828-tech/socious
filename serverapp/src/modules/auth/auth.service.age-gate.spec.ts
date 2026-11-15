@@ -32,7 +32,7 @@ const MINOR = "2009-06-15";
 const ADULT = "1990-05-15";
 
 const AGE_ERROR =
-  "Debes ser mayor de 18 años para crear una cuenta en Nutringest.";
+  "Debes ser mayor de 18 años para crear una cuenta en Socius.";
 
 const makeHarness = () => {
   const userService = {

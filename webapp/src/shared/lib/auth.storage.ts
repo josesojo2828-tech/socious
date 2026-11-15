@@ -1,5 +1,7 @@
-const ACCESS_TOKEN_KEY = 'nutringest_at';
-const REFRESH_TOKEN_KEY = 'nutringest_rt';
+const ACCESS_TOKEN_KEY = 'socius_at';
+const REFRESH_TOKEN_KEY = 'socius_rt';
+const LEGACY_ACCESS_TOKEN_KEY = 'nutringest_at';
+const LEGACY_REFRESH_TOKEN_KEY = 'nutringest_rt';
 
 export const isTokenExpired = (token: string | null): boolean => {
     if (!token) return true;
@@ -18,14 +20,14 @@ export const isTokenExpired = (token: string | null): boolean => {
 export const authStorage = {
     getAccessToken: () => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem(ACCESS_TOKEN_KEY);
+            return localStorage.getItem(ACCESS_TOKEN_KEY) || localStorage.getItem(LEGACY_ACCESS_TOKEN_KEY);
         }
         return null;
     },
 
     getRefreshToken: () => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem(REFRESH_TOKEN_KEY);
+            return localStorage.getItem(REFRESH_TOKEN_KEY) || localStorage.getItem(LEGACY_REFRESH_TOKEN_KEY);
         }
         return null;
     },
@@ -34,6 +36,9 @@ export const authStorage = {
         if (typeof window !== 'undefined') {
             localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
             localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+            // Clean up legacy keys if they exist
+            localStorage.removeItem(LEGACY_ACCESS_TOKEN_KEY);
+            localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
         }
     },
 
@@ -41,6 +46,8 @@ export const authStorage = {
         if (typeof window !== 'undefined') {
             localStorage.removeItem(ACCESS_TOKEN_KEY);
             localStorage.removeItem(REFRESH_TOKEN_KEY);
+            localStorage.removeItem(LEGACY_ACCESS_TOKEN_KEY);
+            localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
         }
     }
 };

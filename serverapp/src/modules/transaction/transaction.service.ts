@@ -188,7 +188,7 @@ export class TransactionService {
 
         this.mailService.sendMail({
           to: entity.user.email,
-          subject: `${titleText} — Nutringest`,
+          subject: `${titleText} — Socius`,
           html: `
             <!DOCTYPE html>
             <html>
@@ -199,7 +199,7 @@ export class TransactionService {
                   <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                     <tr>
                       <td style="background:${isApproved ? "#059669" : "#dc2626"};padding:32px 40px;text-align:center;">
-                        <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                        <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                         <p style="color:#ffffff;opacity:0.9;margin:8px 0 0;font-size:14px;">Comprobante de Transacción</p>
                       </td>
                     </tr>
@@ -216,7 +216,7 @@ export class TransactionService {
                           </div>
                           <p style="color:#334155;font-size:14px;margin:8px 0;"><strong>Código Referencia:</strong> ${entity.referenceCode || entity.id}</p>
                           <p style="color:#334155;font-size:14px;margin:8px 0;"><strong>Monto:</strong> $${entity.amount} USD</p>
-                          <p style="color:#334155;font-size:14px;margin:8px 0;"><strong>Descripción:</strong> ${entity.description || "Recarga de saldo Nutringest"}</p>
+                          <p style="color:#334155;font-size:14px;margin:8px 0;"><strong>Descripción:</strong> ${entity.description || "Recarga de saldo Socius"}</p>
                           <p style="color:#334155;font-size:14px;margin:8px 0 0;"><strong>Fecha:</strong> ${new Date(entity.createdAt).toLocaleDateString("es-ES")}</p>
                         </div>
                         <p style="color:#94a3b8;font-size:14px;line-height:1.6;margin:0;">
@@ -226,7 +226,7 @@ export class TransactionService {
                     </tr>
                     <tr>
                       <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                        <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                        <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                       </td>
                     </tr>
                   </table>

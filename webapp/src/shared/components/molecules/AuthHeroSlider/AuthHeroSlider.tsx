@@ -1,5 +1,7 @@
 import { Check } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { SociusBulb } from "@/shared/components/atoms/SociusBulb";
 import { useTranslation } from "@/context/i18n.context";
 
 /**
@@ -26,16 +28,17 @@ export const AuthHeroSlider = () => {
         }}
       />
 
-      {/* Wordmark — same S mark as the landing header */}
-      <div className="relative z-10 flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b2944a] text-[#111018] text-sm font-bold shadow-[0_8px_20px_-10px_rgba(178,148,74,0.8)]">
-          S
-        </span>
+      {/* Wordmark — Socius lightbulb pure vector (no background) */}
+      <div className="relative z-10 flex items-center gap-3.5">
+        <SociusBulb
+          size={54}
+          className="text-[#f0ede4] shrink-0"
+        />
         <span className="flex flex-col">
-          <span className="font-display text-base font-semibold tracking-tight leading-none">
+          <span className="font-display text-2xl font-bold tracking-tight leading-none text-[#f0ede4]">
             Socius
           </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#b2944a]/85 mt-1">
+          <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#b2944a] mt-1.5 font-semibold">
             ERP
           </span>
         </span>
@@ -70,6 +73,25 @@ export const AuthHeroSlider = () => {
             </li>
           ))}
         </ul>
+
+        {/* Mascot Assistant Card */}
+        <div className="flex items-center gap-3.5 bg-white/[0.04] backdrop-blur-xs border border-white/10 px-4 py-3 rounded-2xl max-w-sm mt-6">
+          <Image
+            src="/mascot.png"
+            alt="Socius"
+            width={48}
+            height={55}
+            className="shrink-0 drop-shadow-[0_8px_16px_rgba(245,158,11,0.25)]"
+          />
+          <div className="flex flex-col">
+            <span className="font-semibold text-xs text-[#f0ede4]">
+              ¡Tu negocio inteligente!
+            </span>
+            <span className="text-[11px] text-[#f0ede4]/65 leading-tight mt-0.5">
+              Inventario, caja multimoneda y ventas en tiempo real sin planillas sueltas.
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Footer */}

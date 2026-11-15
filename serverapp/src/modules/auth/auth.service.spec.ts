@@ -218,7 +218,7 @@ describe("AuthService.registerLocal — S7 gate de edad", () => {
     userService.findForAuthByEmail.mockResolvedValue(null);
 
     await expect(service.registerLocal(REGISTER_DTO)).rejects.toThrow(
-      "Debes ser mayor de 18 años para crear una cuenta en Nutringest.",
+      "Debes ser mayor de 18 años para crear una cuenta en Socius.",
     );
 
     expect(userService.createUser).not.toHaveBeenCalled();

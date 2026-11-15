@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { SociusBulb } from "@/shared/components/atoms/SociusBulb";
 import { Sun, Moon, ArrowLeft } from "lucide-react";
 import { useTranslation } from "@/context/i18n.context";
 
@@ -26,14 +27,15 @@ export const AuthHeader = () => {
 
   return (
     <header className="w-full bg-[#f0ede4]/95 dark:bg-[#111527]/95 backdrop-blur-md border-b border-[#1a2a46]/10 dark:border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between z-30 transition-colors">
-      {/* Brand mark — identical to the landing header */}
+      {/* Brand mark — Socius lightbulb pure vector (no background) */}
       <Link
         href="/"
         className="flex items-center gap-2.5 group transition-transform active:scale-95"
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#1a2a46] dark:bg-[#b2944a] text-[#b2944a] dark:text-[#111018] text-sm font-bold shadow-xs group-hover:scale-105 transition-transform">
-          S
-        </span>
+        <SociusBulb
+          size={32}
+          className="text-[#1a2a46] dark:text-[#f0ede4] shrink-0 group-hover:scale-105 transition-transform"
+        />
         <span className="flex flex-col leading-none">
           <span className="font-display text-sm font-semibold tracking-tight text-[#111018] dark:text-[#f0ede4]">
             Socius
