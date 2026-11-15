@@ -277,7 +277,7 @@ export class ProductService {
 
     const created = await tx.product.create({
       data: {
-        sku: data.sku.trim(),
+        sku: (data.sku ?? "").trim(),
         barcode: data.barcode?.trim() || null,
         color: data.color?.trim() || null,
         name: data.name.trim(),
@@ -348,7 +348,7 @@ export class ProductService {
     await this.prisma.product.update({
       where: { id },
       data: {
-        ...(data.sku !== undefined && { sku: data.sku.trim() }),
+        ...(data.sku !== undefined && { sku: (data.sku ?? "").trim() }),
         ...(data.name !== undefined && { name: data.name.trim() }),
         ...(data.barcode !== undefined && { barcode: data.barcode?.trim() || null }),
         ...(data.color !== undefined && { color: data.color?.trim() || null }),
