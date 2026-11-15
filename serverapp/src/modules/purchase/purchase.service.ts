@@ -34,6 +34,14 @@ import {
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
+/**
+ * Accounts-payable open items are listed with a hard cap so a tenant with
+ * thousands of unpaid purchases does not ship an unbounded payload. The cap is
+ * explicit and the response reports `openItemsTotal`/`truncated`, so nothing is
+ * hidden silently: the UI can say "showing the first N of M".
+ */
+const OPEN_ITEMS_CAP = 1000;
+
 export interface PurchaseScope {
   organizationId: string | null;
   createdById?: string | null;
@@ -504,7 +512,7 @@ export class PurchaseService {
       ...(to ? { lte: to } : {}),
     };
 
-    const [accrued, paid, purchases, unpaid] = await Promise.all([
+    const [accrued, paid, purchases, unpaid, openItemsTotal] = await Promise.all([
       this.prisma.purchase.findMany({
         where: {
           ...this.scopeWhere(scope.organizationId),
@@ -544,9 +552,31 @@ export class PurchaseService {
           supplier: { select: { id: true, name: true } },
         },
         orderBy: { issueDate: "asc" },
-        take: 200,
+        take: OPEN_ITEMS_CAP,
+      }),
+      this.prisma.purchase.count({
+        where: {
+          ...this.scopeWhere(scope.organizationId),
+          status: { not: PurchaseStatus.CANCELLED },
+          paymentStatus: { in: [PaymentStatus.UNPAID, PaymentStatus.PARTIAL] },
+        },
       }),
     ]);
+
+    // The open item's amount is what is still owed, not what was invoiced: a
+    // partially paid purchase must only contribute its remaining balance.
+    const openPurchaseIds = unpaid.map((row) => row.id);
+    const paidByPurchase = new Map<string, number>();
+    if (openPurchaseIds.length > 0) {
+      const paymentTotals = await this.prisma.purchasePayment.groupBy({
+        by: ["purchaseId"],
+        where: { purchaseId: { in: openPurchaseIds } },
+        _sum: { amountUSD: true },
+      });
+      for (const row of paymentTotals) {
+        paidByPurchase.set(row.purchaseId, Number(row._sum.amountUSD ?? 0));
+      }
+    }
 
     const monthKey = (date: Date) =>
       `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
@@ -570,24 +600,47 @@ export class PurchaseService {
     }
 
     const today = new Date();
-    const aging = { current: 0, days1_30: 0, days31_60: 0, over60: 0 };
+    const aging = {
+      current: 0,
+      days1_30: 0,
+      days31_60: 0,
+      over60: 0,
+      open: 0,
+    };
 
     const openItems = unpaid.map((row) => {
-      const due = row.dueDate ? new Date(row.dueDate) : new Date(row.issueDate);
-      const days = Math.floor((today.getTime() - due.getTime()) / 86_400_000);
-      const amount = Number(row.totalUSD);
-      if (days <= 0) aging.current = round2(aging.current + amount);
-      else if (days <= 30) aging.days1_30 = round2(aging.days1_30 + amount);
-      else if (days <= 60) aging.days31_60 = round2(aging.days31_60 + amount);
-      else aging.over60 = round2(aging.over60 + amount);
+      const totalUSD = Number(row.totalUSD);
+      const balanceUSD = round2(
+        Math.max(0, totalUSD - (paidByPurchase.get(row.id) ?? 0)),
+      );
+
+      // No due date is an OPEN ACCOUNT: it is not overdue, it simply has no
+      // agreed term yet, so it gets its own bucket and reports 0 days overdue.
+      const isOpen = row.dueDate == null;
+      let daysOverdue = 0;
+
+      if (isOpen) {
+        aging.open = round2(aging.open + balanceUSD);
+      } else {
+        const due = new Date(row.dueDate as Date);
+        const days = Math.floor((today.getTime() - due.getTime()) / 86_400_000);
+        daysOverdue = Math.max(0, days);
+
+        if (days <= 0) aging.current = round2(aging.current + balanceUSD);
+        else if (days <= 30) aging.days1_30 = round2(aging.days1_30 + balanceUSD);
+        else if (days <= 60) aging.days31_60 = round2(aging.days31_60 + balanceUSD);
+        else aging.over60 = round2(aging.over60 + balanceUSD);
+      }
 
       return {
         id: row.id,
         purchaseNumber: row.purchaseNumber,
         issueDate: row.issueDate,
         dueDate: row.dueDate,
-        totalUSD: Number(row.totalUSD),
-        daysOverdue: Math.max(0, days),
+        totalUSD,
+        balanceUSD,
+        daysOverdue,
+        isOpen,
         supplier: row.supplier,
       };
     });
@@ -607,6 +660,8 @@ export class PurchaseService {
         .map(([month, value]) => ({ month, ...value })),
       aging,
       openItems,
+      openItemsTotal,
+      truncated: openItemsTotal > openItems.length,
     };
   }
 

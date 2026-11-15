@@ -35,6 +35,7 @@ const makeTx = () => ({
     ),
     findMany: jest.fn().mockResolvedValue([]),
     aggregate: jest.fn().mockResolvedValue({ _sum: { amountUSD: 0 } }),
+    groupBy: jest.fn().mockResolvedValue([]),
   },
   product: {
     findFirst: jest.fn().mockResolvedValue(null),
@@ -225,6 +226,116 @@ describe("PurchaseService", () => {
     expect(report.paymentsByMonth).toEqual([
       { month: "2026-04", totalUSD: 200, count: 1 },
     ]);
+  });
+
+  it("contributes only the remaining balance of a partially paid purchase", async () => {
+    const { service, prisma } = makeService();
+
+    prisma.purchase.findMany
+      .mockResolvedValueOnce([]) // accrued
+      .mockResolvedValueOnce([
+        {
+          id: "partial",
+          purchaseNumber: "COM-00010",
+          issueDate: new Date("2025-01-01T00:00:00Z"),
+          dueDate: new Date("2020-01-01T00:00:00Z"),
+          totalUSD: "100.00",
+          supplier: { id: "sup-1", name: "Acme" },
+        },
+      ]);
+    prisma.purchase.count.mockResolvedValue(1);
+    prisma.purchasePayment.groupBy.mockResolvedValue([
+      { purchaseId: "partial", _sum: { amountUSD: "30.00" } },
+    ]);
+
+    const report = await service.getReport({ organizationId: ORG_A }, {});
+
+    // $100 purchased − $30 paid = $70 still owed.
+    expect(report.aging.over60).toBe(70);
+    expect(report.openItems[0]).toMatchObject({
+      totalUSD: 100,
+      balanceUSD: 70,
+      isOpen: false,
+    });
+  });
+
+  it("books a purchase without a due date as an open account, never overdue", async () => {
+    const { service, prisma } = makeService();
+
+    prisma.purchase.findMany
+      .mockResolvedValueOnce([]) // accrued
+      .mockResolvedValueOnce([
+        {
+          id: "no-due",
+          purchaseNumber: "COM-00011",
+          issueDate: new Date("2020-01-01T00:00:00Z"),
+          dueDate: null,
+          totalUSD: "50.00",
+          supplier: null,
+        },
+      ]);
+    prisma.purchase.count.mockResolvedValue(1);
+
+    const report = await service.getReport({ organizationId: ORG_A }, {});
+
+    expect(report.aging.open).toBe(50);
+    expect(report.aging.current).toBe(0);
+    expect(report.aging.days1_30).toBe(0);
+    expect(report.aging.days31_60).toBe(0);
+    expect(report.aging.over60).toBe(0);
+    expect(report.openItems[0]).toMatchObject({
+      balanceUSD: 50,
+      daysOverdue: 0,
+      isOpen: true,
+    });
+  });
+
+  it("reports truncated=true only when the open count exceeds the cap", async () => {
+    const { service, prisma } = makeService();
+
+    prisma.purchase.findMany
+      .mockResolvedValueOnce([]) // accrued
+      .mockResolvedValueOnce([
+        {
+          id: "only-one-returned",
+          purchaseNumber: "COM-00012",
+          issueDate: new Date("2025-01-01T00:00:00Z"),
+          dueDate: new Date("2020-01-01T00:00:00Z"),
+          totalUSD: "10.00",
+          supplier: null,
+        },
+      ]);
+    prisma.purchase.count.mockResolvedValue(1001);
+
+    const report = await service.getReport({ organizationId: ORG_A }, {});
+
+    // The list query is capped at the documented constant.
+    expect(prisma.purchase.findMany.mock.calls[1][0].take).toBe(1000);
+    expect(report.openItemsTotal).toBe(1001);
+    expect(report.truncated).toBe(true);
+  });
+
+  it("reports truncated=false when every open purchase fits under the cap", async () => {
+    const { service, prisma } = makeService();
+
+    prisma.purchase.findMany
+      .mockResolvedValueOnce([]) // accrued
+      .mockResolvedValueOnce([
+        {
+          id: "fits",
+          purchaseNumber: "COM-00013",
+          issueDate: new Date("2025-01-01T00:00:00Z"),
+          dueDate: new Date("2020-01-01T00:00:00Z"),
+          totalUSD: "10.00",
+          supplier: null,
+        },
+      ]);
+    prisma.purchase.count.mockResolvedValue(1);
+
+    const report = await service.getReport({ organizationId: ORG_A }, {});
+
+    expect(report.openItemsTotal).toBe(1);
+    expect(report.truncated).toBe(false);
   });
 
   it("persists the optional invoiceKey on create (S14 #5)", async () => {
