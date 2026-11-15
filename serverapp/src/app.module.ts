@@ -89,7 +89,7 @@ imports: [
 
         LoggerModule.forRoot({
             pinoHttp: {
-                name: "nutringest-backend",
+                name: "socius-backend",
                 level: process.env.NODE_ENV !== "production" ? "debug" : "info",
                 transport:
                     process.env.NODE_ENV !== "production"

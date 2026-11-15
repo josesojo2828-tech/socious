@@ -284,7 +284,7 @@ export function TutorialFormModal({
           loading={busy}
           loadingText="Guardando…"
         >
-          {tutorial ? "Guardar cambios" : "Agregar tutorial"}
+          {tutorial ? "Guardar" : "Crear"}
         </Button>
       </div>
     </form>

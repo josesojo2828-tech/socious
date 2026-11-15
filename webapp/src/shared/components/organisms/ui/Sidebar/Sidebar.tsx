@@ -19,6 +19,7 @@ import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
 import { clsx } from "clsx";
 import { useTranslation } from "@/context/i18n.context";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
+import Image from "next/image";
 import { slugify } from "@/shared/lib/utils";
 import type { SidebarProps } from "./Sidebar.types";
 
@@ -354,14 +355,13 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 isCollapsed && "justify-center px-0",
               )}
             >
-              <span
-                className="w-7 h-7 flex-none rounded-full grid place-items-center bg-[#1a2a46] shadow-[0_0_0_2px_rgba(178,148,74,0.45)]"
-                aria-label="Socius ERP"
-              >
-                <span className="text-[#f0ede4] font-semibold text-sm leading-none">
-                  S
-                </span>
-              </span>
+              <Image
+                src="/icon.png"
+                alt="Socius ERP"
+                width={28}
+                height={28}
+                className="w-7 h-7 flex-none rounded-full shadow-[0_0_0_2px_rgba(178,148,74,0.45)] object-cover"
+              />
               {!isCollapsed && (
                 <span className="flex-1 min-w-0">
                   <b className="block text-[14.5px] font-semibold leading-tight tracking-[-0.012em] truncate">
@@ -388,11 +388,11 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   "focus-visible:outline-2 focus-visible:outline-[#b2944a] focus-visible:outline-offset-2",
                   isCollapsed && "justify-center px-0",
                 )}
-                title={isCollapsed ? "Nueva venta" : undefined}
+                title={isCollapsed ? "Vender" : undefined}
               >
                 <Plus size={15} strokeWidth={2.3} className="flex-none" />
                 {!isCollapsed && (
-                  <span className="flex-1 text-left">Nueva venta</span>
+                  <span className="flex-1 text-left">Vender</span>
                 )}
               </InternalLink>
             )}

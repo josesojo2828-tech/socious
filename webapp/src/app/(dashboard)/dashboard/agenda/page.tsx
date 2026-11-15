@@ -313,7 +313,7 @@ export default function StudioAgendaPage() {
           </p>
         </div>
         <button type="button" className={CTA_BRASS} onClick={() => openCreate()}>
-          <Plus className="h-4 w-4" /> Nueva cita
+          <Plus className="h-4 w-4" /> Crear
         </button>
       </header>
 

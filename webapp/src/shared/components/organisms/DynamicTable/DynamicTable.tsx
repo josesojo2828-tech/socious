@@ -38,7 +38,7 @@ export const DynamicTable = <T,>({ tableDef, actions, isLoading, handleChangePag
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-16 bg-base-100 border border-base-300 rounded-xl">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600"></div>
-          <p className="text-sm text-base-content/70 mt-4 font-semibold animate-pulse">Cargando registros...</p>
+          <p className="text-sm text-base-content/70 mt-4 font-semibold animate-pulse">Cargando...</p>
         </div>
       ) : tableDef.list && tableDef.list.length > 0 ? (
         <Table

@@ -185,7 +185,7 @@ export const DynamicForm = ({ formData, onSubmit, isLoading }: DynamicFormProps)
             loading={isLoading}
             loadingText={t('common.actions.saving')}
           >
-            {ensureString(formData.submitLabel ? t(formData.submitLabel) : 'Guardar Cambios')}
+            {ensureString(formData.submitLabel ? t(formData.submitLabel) : 'Guardar')}
           </Button>
         </div>
 

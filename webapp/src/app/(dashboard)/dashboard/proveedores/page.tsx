@@ -131,7 +131,7 @@ export default function SuppliersPage() {
           href="/dashboard/proveedores/nuevo"
           className={`${CTA_BRASS} px-4 py-2.5 text-sm no-underline`}
         >
-          <Plus className="h-4 w-4" /> Nuevo proveedor
+          <Plus className="h-4 w-4" /> Crear
         </InternalLink>
       </header>
 

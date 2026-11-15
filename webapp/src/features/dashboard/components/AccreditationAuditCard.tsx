@@ -119,7 +119,7 @@ export function AccreditationAuditCard({
       <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-          <h3 className="font-bold text-slate-900 dark:text-slate-100">Auditoría de Acreditación Profesional</h3>
+          <h3 className="font-bold text-slate-900 dark:text-slate-100">Auditoría de acreditación profesional</h3>
         </div>
 
         {/* Status Pill Badge */}
@@ -266,7 +266,7 @@ export function AccreditationAuditCard({
           <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2 text-red-600 dark:text-red-400 border-b border-slate-100 dark:border-slate-800 pb-3">
               <AlertTriangle className="w-6 h-6" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Rechazar Acreditación</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Rechazar acreditación</h3>
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-400">

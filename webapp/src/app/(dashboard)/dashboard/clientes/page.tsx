@@ -122,7 +122,7 @@ export default function ClientsPage() {
           href="/dashboard/clientes/nuevo"
           className={`${CTA_BRASS} h-11 px-5 text-sm`}
         >
-          <Plus className="h-4 w-4" /> Nuevo cliente
+          <Plus className="h-4 w-4" /> Crear
         </Link>
       </header>
 
@@ -221,7 +221,7 @@ export default function ClientsPage() {
                   >
                     {query.trim()
                       ? "Sin clientes para esa búsqueda."
-                      : "Todavía no hay clientes: creá el primero con “Nuevo cliente”."}
+                      : "Todavía no hay clientes: creá el primero con “Crear”."}
                   </td>
                 </tr>
               ) : null}

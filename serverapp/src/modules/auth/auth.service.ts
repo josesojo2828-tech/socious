@@ -245,7 +245,7 @@ export class AuthService {
       throw new ForbiddenException("Fecha de nacimiento inválida.");
     if (this.calculateAge(birth) < 18)
       throw new ForbiddenException(
-        "Debes ser mayor de 18 años para crear una cuenta en Nutringest.",
+        "Debes ser mayor de 18 años para crear una cuenta en Socius.",
       );
 
     // S1: la aceptación es requisito del DTO; aquí queda registrada como prueba.
@@ -301,7 +301,7 @@ export class AuthService {
 
     await this.mailService.sendMail({
       to: user.email,
-      subject: "Bienvenido a Nutringest — Verifica tu correo",
+      subject: "Bienvenido a Socius — Verifica tu correo",
       html: this.renderVerifyEmailHtml(user.firstName || "", verifyLink),
     });
   }
@@ -352,7 +352,7 @@ export class AuthService {
 
     await this.mailService.sendMail({
       to: email,
-      subject: "Código de recuperación — Nutringest",
+      subject: "Código de recuperación — Socius",
       html: this.renderResetPasswordHtml(user.firstName || "", code),
     });
 
@@ -503,14 +503,14 @@ export class AuthService {
             <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
               <tr>
                 <td style="background:#059669;padding:32px 40px;text-align:center;">
-                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                 </td>
               </tr>
               <tr>
                 <td style="padding:40px;">
                   <h2 style="color:#1e293b;margin:0 0 8px;font-size:22px;">¡Bienvenido${name ? ", " + name : ""}!</h2>
                   <p style="color:#64748b;line-height:1.7;font-size:16px;margin:0 0 24px;">
-                    Gracias por registrarte en Nutringest. Solo falta un paso: verificá tu correo electrónico para activar tu cuenta.
+                    Gracias por registrarte en Socius. Solo falta un paso: verificá tu correo electrónico para activar tu cuenta.
                   </p>
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                     <tr><td align="center" style="padding:0 0 24px;">
@@ -518,13 +518,13 @@ export class AuthService {
                     </td></tr>
                   </table>
                   <p style="color:#94a3b8;font-size:14px;line-height:1.6;margin:0;">
-                    Si no creaste una cuenta en Nutringest, ignorá este mensaje.
+                    Si no creaste una cuenta en Socius, ignorá este mensaje.
                   </p>
                 </td>
               </tr>
               <tr>
                 <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                  <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                  <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                 </td>
               </tr>
             </table>
@@ -546,7 +546,7 @@ export class AuthService {
             <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
               <tr>
                 <td style="background:#059669;padding:32px 40px;text-align:center;">
-                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                 </td>
               </tr>
               <tr>
@@ -565,7 +565,7 @@ export class AuthService {
               </tr>
               <tr>
                 <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                  <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                  <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                 </td>
               </tr>
             </table>
@@ -584,7 +584,7 @@ export class AuthService {
 
     await this.mailService.sendMail({
       to: user.email,
-      subject: "Alerta de Seguridad — Nuevo inicio de sesión en Nutringest",
+      subject: "Alerta de Seguridad — Nuevo inicio de sesión en Socius",
       html: this.renderSecurityAlertHtml(
         user.firstName || "",
         loginTime,
@@ -610,7 +610,7 @@ export class AuthService {
             <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
               <tr>
                 <td style="background:#4338ca;padding:32px 40px;text-align:center;">
-                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Nutringest</h1>
+                  <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:800;">Socius</h1>
                   <p style="color:#c7d2fe;margin:8px 0 0;font-size:14px;">Alerta de Seguridad</p>
                 </td>
               </tr>
@@ -618,7 +618,7 @@ export class AuthService {
                 <td style="padding:40px;">
                   <h2 style="color:#1e293b;margin:0 0 8px;font-size:22px;">Hola${name ? ", " + name : ""}</h2>
                   <p style="color:#64748b;line-height:1.7;font-size:16px;margin:0 0 16px;">
-                    Se detectó un <strong>nuevo inicio de sesión</strong> en tu cuenta de Nutringest.
+                    Se detectó un <strong>nuevo inicio de sesión</strong> en tu cuenta de Socius.
                   </p>
                   <div style="background:#f1f5f9;border-radius:12px;padding:20px;margin:24px 0;">
                     <p style="color:#334155;font-size:14px;margin:0 0 8px;"><strong>Fecha y Hora:</strong> ${time}</p>
@@ -632,7 +632,7 @@ export class AuthService {
               </tr>
               <tr>
                 <td style="background:#f1f5f9;padding:20px 40px;text-align:center;">
-                  <p style="color:#94a3b8;font-size:12px;margin:0;">Nutringest — Tu salud en tus manos</p>
+                  <p style="color:#94a3b8;font-size:12px;margin:0;">Socius ERP — Gestión Comercial y de Negocios</p>
                 </td>
               </tr>
             </table>

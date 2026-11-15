@@ -436,7 +436,7 @@ export function ProductFormPanel({
           <div className="flex items-center justify-between gap-3">
             <div>
               <h3 className="text-sm font-semibold text-[#111018] dark:text-slate-100">
-                Componentes (materia prima)
+                Componentes
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Al vender este producto se descuentan del stock, uno por unidad
@@ -550,7 +550,7 @@ export function ProductFormPanel({
           onClick={submit}
           className={`h-11 px-5 text-sm ${CTA_BRASS}`}
         >
-          {editing ? "Guardar cambios" : "Crear producto"}
+          {editing ? "Guardar" : "Crear"}
         </button>
         <button
           type="button"

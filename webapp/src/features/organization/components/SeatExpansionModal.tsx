@@ -80,7 +80,7 @@ export function SeatExpansionModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black tracking-tight text-white">Ampliación de Capacidad</h2>
+                <h2 className="text-lg font-black tracking-tight text-white">Ampliación de capacidad</h2>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                   ${SEAT_UNIT_PRICE} USD / mes
                 </span>

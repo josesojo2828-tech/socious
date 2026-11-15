@@ -25,13 +25,13 @@ export class StorageService {
     ) {
         const endpoint = this.configService.get<string>("MINIO_ENDPOINT", "minio");
         const port = this.configService.get<string>("MINIO_PORT", "9000");
-        const accessKey = this.configService.get<string>("MINIO_ACCESS_KEY", "nutrigest_minio");
-        const secretKey = this.configService.get<string>("MINIO_SECRET_KEY", "nutrigest_secret_minio");
+        const accessKey = this.configService.get<string>("MINIO_ACCESS_KEY", "socius_minio");
+        const secretKey = this.configService.get<string>("MINIO_SECRET_KEY", "socius_secret_minio");
         const region = this.configService.get<string>("MINIO_REGION", "us-east-1");
         const fullEndpoint = this.configService.get<string>("MINIO_ENDPOINT_URL", "");
         const useSsl = this.configService.get<string>("MINIO_USE_SSL", "false") === "true";
 
-        this.bucket = this.configService.get<string>("MINIO_BUCKET", "nutringest-uploads");
+        this.bucket = this.configService.get<string>("MINIO_BUCKET", "socius-uploads");
         this.publicBaseUrl = this.configService.get<string>("MINIO_PUBLIC_URL", "");
 
         const protocol = useSsl ? "https" : "http";

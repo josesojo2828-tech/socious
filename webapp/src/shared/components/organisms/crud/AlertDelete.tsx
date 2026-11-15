@@ -16,8 +16,8 @@ export const DeleteAlert = ({
     isOpen,
     onClose,
     onConfirm,
-    title = "¿Estás seguro?",
-    description = "Esta acción no se puede deshacer. Esto eliminará permanentemente el registro.",
+    title = "¿Eliminar?",
+    description = "Esta acción no se puede deshacer.",
     isLoading = false,
 }: DeleteAlertProps) => {
 
@@ -62,7 +62,7 @@ export const DeleteAlert = ({
                     onClick={() => {onConfirm(); onClose();}}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Eliminando...' : 'Sí, Eliminar'}
+                    {isLoading ? 'Eliminando...' : 'Eliminar'}
                 </Button>
 
                 <Button

@@ -19,7 +19,7 @@ export const TableActions = ({ onDelete, onUpdate, onView, actions, t }: TableAc
                     size="sm"
                     className="!p-0 !w-8 !h-8 !min-h-8 !min-w-8 text-success hover:bg-success/10"
                     onClick={onView}
-                    title={t('Ver Ficha')}
+                    title={t('Ver')}
                 >
                     <Eye size={16} />
                 </Button>
@@ -30,7 +30,7 @@ export const TableActions = ({ onDelete, onUpdate, onView, actions, t }: TableAc
                     size="sm"
                     className="!p-0 !w-8 !h-8 !min-h-8 !min-w-8 text-warning hover:bg-warning/10"
                     onClick={onUpdate}
-                    title={t('Actualizar')}
+                    title={t('Editar')}
                 >
                     <Pencil size={16} />
                 </Button>

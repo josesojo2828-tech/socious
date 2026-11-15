@@ -212,7 +212,7 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-3xl font-black text-base-content tracking-tight flex items-center gap-3">
             <Settings className="text-primary" size={32} />
-            Configuración de Administración & Website
+            Configuración de administración y sitio web
           </h1>
           <p className="text-base-content/70 mt-1 text-sm">
             Gestioná los parámetros del sistema (Días de Prueba) y actualizá la información corporativa del CMS.
@@ -256,7 +256,7 @@ export default function AdminSettingsPage() {
                 <Sparkles className="w-7 h-7" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-base-content">Días de Prueba Gratuitos (Trial Days)</h2>
+                <h2 className="text-xl font-black text-base-content">Días de prueba</h2>
                 <p className="text-sm text-base-content/70 mt-1">
                   Define cuántos días de acceso PRO gratuito se le otorgarán automáticamente a los nuevos usuarios al registrarse.
                 </p>
@@ -319,7 +319,7 @@ export default function AdminSettingsPage() {
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
-                    Guardar Configuración
+                    Guardar
                   </button>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function AdminSettingsPage() {
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
-                    Guardar Cambios CMS
+                    Guardar
                   </button>
                 </div>
               </div>

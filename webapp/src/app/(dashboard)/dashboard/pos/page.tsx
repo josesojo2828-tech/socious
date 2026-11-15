@@ -622,7 +622,7 @@ export default function PosPage() {
             </span>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-none text-[#111018] dark:text-slate-50">
-            Punto de Venta
+            Punto de venta
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             Elegí los artículos y cobrá: las tasas del día quedan congeladas en
@@ -1164,7 +1164,7 @@ export default function PosPage() {
                 ) : (
                   <Receipt className="h-4 w-4" />
                 )}
-                {mode === "order" ? "Crear pedido" : "Registrar venta"}
+                {mode === "order" ? "Crear" : "Cobrar"}
               </button>
             </div>
           </div>

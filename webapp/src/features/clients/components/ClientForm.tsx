@@ -252,7 +252,7 @@ export function ClientForm({ clientId }: { clientId?: string }) {
             className={`${CTA_BRASS} h-11 px-5 text-sm`}
           >
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {clientId ? "Guardar cambios" : "Crear cliente"}
+            {clientId ? "Guardar" : "Crear"}
           </button>
           <button
             type="button"

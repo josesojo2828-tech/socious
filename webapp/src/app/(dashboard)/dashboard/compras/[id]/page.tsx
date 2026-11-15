@@ -566,7 +566,7 @@ export default function PurchaseDetailPage() {
         <section className={`rounded-2xl ${GLASS} p-5 sm:p-6 space-y-4`}>
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
-              Registrar pago
+              Pago
             </h2>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               Saldo pendiente {money(outstanding)}
@@ -626,7 +626,7 @@ export default function PurchaseDetailPage() {
                 disabled={actionBusy}
                 className={`px-5 py-2.5 text-sm ${CTA_BRASS}`}
               >
-                <Save className="h-4 w-4" /> Registrar pago
+                <Save className="h-4 w-4" /> Pagar
               </button>
             </div>
           </form>

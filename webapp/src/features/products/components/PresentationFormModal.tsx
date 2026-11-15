@@ -244,7 +244,7 @@ export function PresentationFormModal({
           loading={busy}
           loadingText="Guardando…"
         >
-          {presentation ? "Guardar cambios" : "Crear presentación"}
+          {presentation ? "Guardar" : "Crear"}
         </Button>
       </div>
     </form>

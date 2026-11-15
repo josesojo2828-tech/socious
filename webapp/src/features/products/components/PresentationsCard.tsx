@@ -233,7 +233,7 @@ export function PresentationsCard({
               onClick={() => openForm()}
               className={`h-10 px-4 text-sm ${CTA_BRASS}`}
             >
-              <Plus className="h-4 w-4" /> Nueva presentación
+              <Plus className="h-4 w-4" /> Crear
             </button>
           </div>
 

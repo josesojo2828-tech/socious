@@ -188,7 +188,7 @@ export function PermitFormModal({ permit, groups, onClose, onSuccess }: PermitFo
           Cancelar
         </Button>
         <Button variant="primary" onClick={handleSubmit} loading={saving}>
-          {isEditing ? "Guardar Cambios" : "Crear Rol"}
+          {isEditing ? "Guardar" : "Crear"}
         </Button>
       </div>
     </div>

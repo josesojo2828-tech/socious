@@ -390,7 +390,7 @@ export default function NewSupplierPage() {
             ) : (
               <Plus className="h-4 w-4" />
             )}
-            Crear proveedor
+            Crear
           </button>
           <button
             type="button"

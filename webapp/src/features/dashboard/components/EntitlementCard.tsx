@@ -139,7 +139,7 @@ export function EntitlementCard({
         <div className="flex items-center gap-2">
           <Package size={18} className="text-slate-400 dark:text-slate-500" />
           <h3 className="font-bold text-slate-900 dark:text-slate-100">
-            Módulos / Add-ons
+            Módulos
           </h3>
         </div>
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">

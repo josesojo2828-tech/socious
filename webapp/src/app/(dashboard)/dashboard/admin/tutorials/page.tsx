@@ -124,7 +124,7 @@ export default function AdminTutorialsPage() {
           onClick={() => openForm()}
           className={`h-11 px-5 text-sm ${CTA_BRASS}`}
         >
-          <Plus className="h-4 w-4" /> Nuevo tutorial
+          <Plus className="h-4 w-4" /> Crear
         </button>
       </header>
 

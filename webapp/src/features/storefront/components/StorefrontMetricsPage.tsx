@@ -126,7 +126,7 @@ export function StorefrontMetricsPage() {
         <div className="min-w-0">
           <div className={EYEBROW}>
             <span className="truncate max-w-[180px]">
-              {workspaceName ?? "Stockira"}
+              {workspaceName ?? "Socius"}
             </span>
             <span className={BRASS_DOT} aria-hidden />
             <span>Tienda online</span>

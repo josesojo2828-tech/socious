@@ -185,7 +185,7 @@ function NutritionistSubscriptionPage() {
       {history.length > 0 && (
         <div className="space-y-4 font-sans">
           <div className="flex flex-col gap-1">
-            <h3 className="text-xl font-bold text-base-content">Historial de Facturación Personal</h3>
+            <h3 className="text-xl font-bold text-base-content">Historial de facturación personal</h3>
             <p className="text-base-content/70 text-xs">Registro detallado de tus suscripciones personales y solicitudes previas en la plataforma.</p>
           </div>
 
@@ -235,7 +235,7 @@ function NutritionistSubscriptionPage() {
       {Object.keys(workspaceSubscriptions).length > 0 && (
         <div className="space-y-4 font-sans">
           <div className="flex flex-col gap-1">
-            <h3 className="text-xl font-bold text-base-content">Suscripciones de Espacios de Trabajo</h3>
+            <h3 className="text-xl font-bold text-base-content">Suscripciones de espacios de trabajo</h3>
             <p className="text-base-content/70 text-xs">Gestiona las suscripciones asociadas a tus espacios de trabajo organizacionales.</p>
           </div>
 

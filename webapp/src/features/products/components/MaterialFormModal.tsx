@@ -251,7 +251,7 @@ export function MaterialFormModal({
           loading={busy}
           loadingText="Guardando…"
         >
-          Guardar material
+          Crear
         </Button>
       </div>
     </form>

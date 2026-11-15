@@ -511,12 +511,12 @@ export class OrganizationService {
               <strong>${adminDisplayName}</strong> te ha invitado a formar parte del equipo de <strong>${org.name}</strong> como <strong>${dto.role === 'NUTRITIONIST' ? 'Nutricionista' : dto.role}</strong>.
             </p>
             <p style="color: #334155; font-size: 16px; line-height: 1.6; margin: 0 0 30px;">
-              Para aceptar o rechazar esta invitación, ingresa a tu cuenta de Nutringest y revisa tu panel de notificaciones.
+              Para aceptar o rechazar esta invitación, ingresa a tu cuenta de Socius y revisa tu panel de notificaciones.
             </p>
           </div>
           <div style="background-color: #f8fafc; padding: 20px 30px; text-align: center;">
             <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-              Nutringest - Sistema de Gestión Nutricional
+              Socius ERP - Sistema de Gestión Comercial
             </p>
           </div>
         </div>
@@ -527,7 +527,7 @@ export class OrganizationService {
     try {
       await this.mailService.sendMail({
         to: user.email,
-        subject: `Invitación a ${org.name} - Nutringest`,
+        subject: `Invitación a ${org.name} - Socius`,
         html: emailHtml,
       });
     } catch (error) {

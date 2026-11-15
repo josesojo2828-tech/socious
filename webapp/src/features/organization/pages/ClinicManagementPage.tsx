@@ -134,7 +134,7 @@ export const ClinicManagementPage: React.FC = () => {
         <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-indigo-100">
           <Users className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-900">Gestión de Clínica B2B</h2>
+        <h2 className="text-xl font-bold text-slate-900">Gestión de clínica B2B</h2>
         <p className="text-xs text-slate-500 mt-2 leading-relaxed">
           Actualmente estás en el contexto <strong className="text-slate-700 font-semibold">«Consulta Personal»</strong>. Seleccioná una clínica en el desplegable superior de workspaces para gestionar los colaboradores y la agenda compartida.
         </p>
@@ -237,7 +237,7 @@ export const ClinicManagementPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Colaboradores y Personal de la Clínica
+                Colaboradores y personal de la clínica
               </h3>
               <p className="text-xs text-slate-500">
                 Visualizá el perfil operativo, asigná colores para el calendario y gestioná el equipo.
@@ -350,7 +350,7 @@ export const ClinicManagementPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="w-full max-w-2xl bg-base-100 text-base-content rounded-3xl border border-base-300 shadow-2xl p-6 sm:p-8 space-y-4 max-h-[85vh] overflow-y-auto">
             <h3 className="text-lg font-extrabold text-base-content">
-              Invitar Colaborador a la Clínica
+              Invitar colaborador a la clínica
             </h3>
             <p className="text-xs text-base-content/70 leading-relaxed">
               El profesional recibirá acceso a los pacientes y agenda de la clínica manteniendo su cuenta personal independiente.

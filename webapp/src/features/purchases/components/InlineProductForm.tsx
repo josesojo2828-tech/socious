@@ -162,7 +162,7 @@ export function InlineProductForm({
               <Loader2 className="mr-1 inline h-4 w-4 animate-spin" /> Creando…
             </>
           ) : (
-            "Crear producto"
+            "Crear"
           )}
         </button>
       </div>

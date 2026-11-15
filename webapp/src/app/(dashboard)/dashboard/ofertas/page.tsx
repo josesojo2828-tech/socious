@@ -194,7 +194,7 @@ export default function OffersPage() {
           href="/dashboard/ofertas/nueva"
           className={`px-4 py-2.5 text-sm ${CTA_BRASS}`}
         >
-          <Plus className="h-4 w-4" /> Nueva oferta
+          <Plus className="h-4 w-4" /> Crear
         </Link>
       </header>
 
@@ -257,7 +257,7 @@ export default function OffersPage() {
         {rows.length === 0 ? (
           <p className="px-4 py-10 text-center text-sm text-slate-500">
             {total === 0 && !query
-              ? "Todavía no hay ofertas. Crea la primera con el botón “Nueva oferta”."
+              ? "Todavía no hay ofertas. Crea la primera con el botón “Crear”."
               : "Ninguna oferta coincide con la búsqueda."}
           </p>
         ) : (
