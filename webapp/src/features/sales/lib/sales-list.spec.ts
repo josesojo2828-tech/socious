@@ -53,8 +53,26 @@ describe("sales-list (S6/S13)", () => {
   describe("agingTotal", () => {
     it("sums the four buckets with two decimals", () => {
       expect(
-        agingTotal({ current: 10, days1_30: 5.25, days31_60: 0, over60: 1 }),
+        agingTotal({
+          current: 10,
+          days1_30: 5.25,
+          days31_60: 0,
+          over60: 1,
+          open: 0,
+        }),
       ).toBe(16.25);
+    });
+
+    it("includes open accounts (sales without a due date) in the total", () => {
+      expect(
+        agingTotal({
+          current: 10,
+          days1_30: 5.25,
+          days31_60: 0,
+          over60: 1,
+          open: 20,
+        }),
+      ).toBe(36.25);
     });
   });
 

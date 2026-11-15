@@ -11,6 +11,11 @@ export interface FinancialAging {
   days1_30: number;
   days31_60: number;
   over60: number;
+  /**
+   * Sales report only: open accounts (no due date). Purchases does not send
+   * it yet, so it stays optional and counts as zero when absent.
+   */
+  open?: number;
 }
 
 export interface FinancialMonthBucket {
@@ -27,6 +32,11 @@ export interface FinancialOpenItem {
   issueDate: string;
   dueDate?: string | null;
   totalUSD: number;
+  /**
+   * Sales report only: what is still owed after payments. Purchases sends
+   * only `totalUSD` until it adopts net balances, so this is optional.
+   */
+  balanceUSD?: number;
   daysOverdue: number;
   client?: { id: string; name: string } | null;
   supplier?: { id: string; name: string } | null;
@@ -85,7 +95,8 @@ function sumAging(aging: FinancialAging): number {
     Number(aging.current || 0) +
       Number(aging.days1_30 || 0) +
       Number(aging.days31_60 || 0) +
-      Number(aging.over60 || 0),
+      Number(aging.over60 || 0) +
+      Number(aging.open || 0),
   );
 }
 
@@ -139,12 +150,19 @@ export function filterOpenItemsByRange(
   });
 }
 
+/**
+ * Amount an open item still owes. The sales report sends the net
+ * `balanceUSD`; purchases (until it adopts net balances) only sends
+ * `totalUSD`, so the fallback keeps that path working.
+ */
+export function openItemBalance(item: FinancialOpenItem): number {
+  return Number(item.balanceUSD ?? item.totalUSD ?? 0);
+}
+
 /** Total of a filtered open-item list, rounded to cents. */
 export function sumOpenItems(items: FinancialOpenItem[]): number {
   if (!Array.isArray(items)) return 0;
-  return round2(
-    items.reduce((sum, item) => sum + Number(item.totalUSD || 0), 0),
-  );
+  return round2(items.reduce((sum, item) => sum + openItemBalance(item), 0));
 }
 
 /** Display name of an open item: client for sales, supplier for purchases. */

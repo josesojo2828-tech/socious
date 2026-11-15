@@ -23,6 +23,7 @@ const BUCKETS: { key: keyof SalesReport["aging"]; label: string }[] = [
   { key: "days1_30", label: "1 a 30 días" },
   { key: "days31_60", label: "31 a 60 días" },
   { key: "over60", label: "Más de 60 días" },
+  { key: "open", label: "Sin vencimiento" },
 ];
 
 /** Receivables: who owes you, how old the debt is (fed by /api/sales/report). */
@@ -73,8 +74,12 @@ export default function ReceivablesPage() {
     );
   }
 
-  const total = report.aging.current + report.aging.days1_30 +
-    report.aging.days31_60 + report.aging.over60;
+  const total =
+    report.aging.current +
+    report.aging.days1_30 +
+    report.aging.days31_60 +
+    report.aging.over60 +
+    report.aging.open;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
@@ -86,9 +91,16 @@ export default function ReceivablesPage() {
         </div>
         <h1 className={PAGE_TITLE}>Cuentas por cobrar</h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          {report.openItems.length} factura(s) sin cobrar del todo.
+          {report.openItemsTotal} factura(s) sin cobrar del todo.
         </p>
       </header>
+
+      {report.truncated ? (
+        <p className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 text-sm text-amber-700 dark:text-amber-300">
+          Mostrando los primeros {report.openItems.length} de{" "}
+          {report.openItemsTotal} documentos abiertos.
+        </p>
+      ) : null}
 
       <div className={`rounded-2xl ${CARD}`}>
         <div className={CARD_HEADER}>
@@ -103,7 +115,7 @@ export default function ReceivablesPage() {
           <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">
             Agrupada por antigüedad desde la fecha de la venta.
           </p>
-          <div className="grid gap-3 sm:grid-cols-5">
+          <div className="grid gap-3 sm:grid-cols-6">
             <div className="rounded-2xl border border-[#1a2a46]/8 dark:border-white/10 bg-white/60 dark:bg-slate-950/30 px-4 py-3.5">
               <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
                 Total por cobrar
@@ -152,7 +164,7 @@ export default function ReceivablesPage() {
                 <th className="px-4 py-2.5 text-left font-medium">Cliente</th>
                 <th className="px-4 py-2.5 text-left font-medium">Fecha</th>
                 <th className="px-4 py-2.5 text-right font-medium">
-                  Total USD
+                  Saldo USD
                 </th>
                 <th className="px-4 py-2.5 text-right font-medium">
                   Días vencidos
@@ -172,18 +184,24 @@ export default function ReceivablesPage() {
                     {new Date(item.issueDate).toLocaleDateString("es-VE")}
                   </td>
                   <td className="px-4 py-2.5 text-right font-mono tabular-nums text-[#111018] dark:text-slate-100">
-                    ${item.totalUSD.toFixed(2)}
+                    ${(item.balanceUSD ?? item.totalUSD).toFixed(2)}
                   </td>
                   <td
                     className={`px-4 py-2.5 text-right font-mono tabular-nums ${
-                      item.daysOverdue > 60
-                        ? "font-semibold text-red-600 dark:text-red-400"
-                        : item.daysOverdue > 0
-                          ? "text-amber-600 dark:text-amber-400"
-                          : "text-slate-400 dark:text-slate-500"
+                      item.isOpen
+                        ? "text-slate-400 dark:text-slate-500"
+                        : item.daysOverdue > 60
+                          ? "font-semibold text-red-600 dark:text-red-400"
+                          : item.daysOverdue > 0
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-slate-400 dark:text-slate-500"
                     }`}
                   >
-                    {item.daysOverdue > 0 ? item.daysOverdue : "al día"}
+                    {item.isOpen
+                      ? "Sin vencimiento"
+                      : item.daysOverdue > 0
+                        ? item.daysOverdue
+                        : "al día"}
                   </td>
                 </tr>
               ))}

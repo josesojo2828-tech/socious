@@ -31,6 +31,7 @@ const makeTx = () => ({
     create: jest.fn((args: any) => Promise.resolve({ id: "p-1", ...args.data })),
     findMany: jest.fn().mockResolvedValue([]),
     aggregate: jest.fn().mockResolvedValue({ _sum: { amountUSD: 0 } }),
+    groupBy: jest.fn().mockResolvedValue([]),
   },
   product: {
     findFirst: jest.fn().mockResolvedValue(null),
@@ -696,6 +697,116 @@ describe("SaleService", () => {
         saleNumber: "VTA-00009",
         daysOverdue: expect.any(Number),
       });
+    });
+
+    it("contributes only the remaining balance of a partially paid sale", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "partial",
+            saleNumber: "VTA-00010",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "100.00",
+            client: { id: "c-1", name: "Acme" },
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+      prisma.salePayment.groupBy.mockResolvedValue([
+        { saleId: "partial", _sum: { amountUSD: "30.00" } },
+      ]);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      // $100 invoiced − $30 collected = $70 still owed.
+      expect(report.aging.over60).toBe(70);
+      expect(report.openItems[0]).toMatchObject({
+        totalUSD: 100,
+        balanceUSD: 70,
+        isOpen: false,
+      });
+    });
+
+    it("books a sale without a due date as an open account, never overdue", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "no-due",
+            saleNumber: "VTA-00011",
+            issueDate: new Date("2020-01-01T00:00:00Z"),
+            dueDate: null,
+            totalUSD: "50.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      expect(report.aging.open).toBe(50);
+      expect(report.aging.current).toBe(0);
+      expect(report.aging.days1_30).toBe(0);
+      expect(report.aging.days31_60).toBe(0);
+      expect(report.aging.over60).toBe(0);
+      expect(report.openItems[0]).toMatchObject({
+        balanceUSD: 50,
+        daysOverdue: 0,
+        isOpen: true,
+      });
+    });
+
+    it("reports truncated=true only when the open count exceeds the cap", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "only-one-returned",
+            saleNumber: "VTA-00012",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "10.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1001);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      // The list query is capped at the documented constant.
+      expect(prisma.sale.findMany.mock.calls[1][0].take).toBe(1000);
+      expect(report.openItemsTotal).toBe(1001);
+      expect(report.truncated).toBe(true);
+    });
+
+    it("reports truncated=false when every open sale fits under the cap", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "fits",
+            saleNumber: "VTA-00013",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "10.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      expect(report.openItemsTotal).toBe(1);
+      expect(report.truncated).toBe(false);
     });
   });
 
