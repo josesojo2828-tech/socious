@@ -200,7 +200,12 @@ export const SearchableSelect = forwardRef<
                 // Keep the input focused so the click selects instead of blurring.
                 onMouseDown={(event) => event.preventDefault()}
                 onMouseEnter={() => setActive(index)}
-                onClick={() => choose(option)}
+                onClick={(event) => {
+                  // The list lives inside a <label>: stop its default activation.
+                  event.preventDefault();
+                  event.stopPropagation();
+                  choose(option);
+                }}
                 className={`${OPTION_BASE} ${
                   index === active ? OPTION_ACTIVE : OPTION_IDLE
                 } ${option.disabled ? "cursor-not-allowed opacity-50" : ""}`}
