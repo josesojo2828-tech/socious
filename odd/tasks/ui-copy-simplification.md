@@ -36,17 +36,22 @@ Los tests que fijan etiquetas visibles (`webapp/src/**/lib/*.spec.ts`, `serverap
 
 ## Tasks
 
-- [ ] **T1** · S1-S6 · inline · Registrar este documento en `odd/tasks/` · commit: _pending_
-- [ ] **T2** · S4 · inline · Sidebar: backend (`getSidebarSections`), claves `common.sidebar.*` en `webapp/src/i18n/es/common.json` y pie del sidebar (`Sidebar.tsx`) · commit: _pending_
-- [ ] **T3** · S1-S3 · inline · Primitivas compartidas: `DynamicForm` (default `Guardar Cambios`), `DeleteAlert` (`crud/AlertDelete.tsx`), `TableActions`, `ModalActions`, `DynamicTable` · commit: _pending_
-- [ ] **T4** · S1-S3 · inline · Pantallas de catálogo y CRM: botones y títulos a verbo único + sustantivo en el título · commit: _pending_
-- [ ] **T5** · S1-S3 · inline · Pantallas transaccionales: POS, ventas, compras, pedidos, rutas y caja (`Anular` se conserva; `Agregar` solo para líneas de documento) · commit: _pending_
-- [ ] **T6** · S3 · inline · Títulos de página y de card en sentence case · commit: _pending_
-- [ ] **T7** · S6 · inline · Verificación: `npm run typecheck` webapp/serverapp + suites (`npm test`, `npx jest`) y actualización de los specs de etiquetas visibles · commit: _pending_
-- [ ] **T8** · S1-S6 · inline · Cierre: barrido de `Registrar`, `Añadir`, `Nuevo`/`Nueva` y `Guardar Cambios`, más log final · commit: _pending_
+- [x] **T1** · S1-S6 · inline · Registrar este documento en `odd/tasks/` · commit: `71e7226`
+- [x] **T2** · S4 · inline · Sidebar: backend (`getSidebarSections`), claves `common.sidebar.*` en `webapp/src/i18n/es/common.json` y pie del sidebar (`Sidebar.tsx`) · commit: `2beef6b`
+- [x] **T3** · S1-S3 · inline · Primitivas compartidas: `DynamicForm` (default `Guardar Cambios`), `AlertDelete` (`crud/AlertDelete.tsx`), `TableActions` y `DynamicTable` · commit: `ff67949`
+- [x] **T4** · S1-S3 · inline · Pantallas de catálogo y CRM: botones y títulos a verbo único + sustantivo en el título · commit: `0c01542`
+- [x] **T5** · S1-S3 · inline · Pantallas transaccionales: POS, ventas, compras, pedidos, rutas y caja (`Anular` se conserva; `Agregar` solo para líneas de documento) · commit: `a2d4811`
+- [x] **T6** · S3 · inline · Títulos con paréntesis técnicos: se retira el término entre paréntesis cuando no aporta · commit: `67e8f39`
+- [x] **T7** · S3 · inline · Títulos de página y de card en sentence case · commit: `d50d4b6`
+- [x] **T8** · S6 · inline · Verificación: `npm run typecheck` webapp/serverapp + suites (`npx vitest run`, `npx jest`) y actualización de los specs de etiquetas visibles · commit: — (ver L4)
 
 ## Log
 
 - **L1** (verbatim): "activo? sabes que me estan solicitando que los nombres sean mas faciles, o sea, estan muy tecnicos y asi, deben ser cosas que uno pueda leer e identificar ahi mismo"
 - **L2** (verbatim): "o sea, en el sidebar, en las cards, en los botones y asi que sea solo "Crear" y no "Registrar nuevo cliente" sabes?"
 - **L3** (verbatim): "dale a todo bro. vas haciendo commits."
+- **L4** — Verificación en `feat/simplificar-copy-ui`:
+  - `webapp`: `npm run typecheck` sin errores; `npx vitest run` 60 archivos / 585 tests en verde.
+  - `serverapp`: `npm run typecheck` sin errores; `npx jest src/modules/dashboard` 2 suites / 28 tests en verde.
+  - Las etiquetas de estado/enum y las claves i18n no se renombraron; no se migró copy al sistema i18n.
+  - El working tree contenía cambios de otro workstream (rebrand Stockira/Socious a Socius y un filtro de planes publicados), que se dejaron intactos y fuera de estos commits.
