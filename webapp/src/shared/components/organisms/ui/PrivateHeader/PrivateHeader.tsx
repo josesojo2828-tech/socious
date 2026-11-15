@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, Menu, ChevronDown, User, LogOut, CheckCheck, Clock } from "lucide-react";
+import { Bell, Menu, ChevronDown, User, LogOut, CheckCheck, Clock, Palette } from "lucide-react";
 import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { useSidebarStore } from "@/shared/store/ui/useSidebarStore";
 import { authStorage } from "@/shared/lib/auth.storage";
@@ -228,6 +228,14 @@ export const PrivateHeader = () => {
                 onClick={() => setIsProfileOpen(false)}
               >
                 <User size={16} /> {t('common.auth.profile')}
+              </InternalLink>
+
+              <InternalLink
+                href={'/dashboard/identidad'}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-base-content/70 hover:bg-base-200 hover:text-primary transition-colors"
+                onClick={() => setIsProfileOpen(false)}
+              >
+                <Palette size={16} /> Identidad
               </InternalLink>
 
               <div className="h-px bg-base-300 my-1 mx-2"></div>
