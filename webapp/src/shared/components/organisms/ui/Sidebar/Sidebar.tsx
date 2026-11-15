@@ -272,6 +272,8 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
   const { sidebar: storeSidebar } = useAuthStore();
   const sidebar = customSidebar !== undefined ? customSidebar : storeSidebar;
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  // Tenant logo when the workspace has one; the app icon is the fallback.
+  const workspaceLogo = activeWorkspace?.logoUrl?.trim() || null;
   const { currentRole, isGlobalAdmin } = useWorkspaceRole();
   const { t } = useTranslation();
 
@@ -355,13 +357,23 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 isCollapsed && "justify-center px-0",
               )}
             >
-              <Image
-                src="/icon.png"
-                alt="Socius ERP"
-                width={28}
-                height={28}
-                className="w-7 h-7 flex-none rounded-full shadow-[0_0_0_2px_rgba(178,148,74,0.45)] object-cover"
-              />
+              {workspaceLogo ? (
+                // The logo host (MinIO) is not in `images.remotePatterns`.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={workspaceLogo}
+                  alt={activeWorkspace?.name || "Logo del negocio"}
+                  className="w-7 h-7 flex-none rounded-full object-cover shadow-[0_0_0_2px_rgba(178,148,74,0.45)] dark:bg-white/90 dark:p-0.5"
+                />
+              ) : (
+                <Image
+                  src="/icon.png"
+                  alt="Socius ERP"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 flex-none rounded-full shadow-[0_0_0_2px_rgba(178,148,74,0.45)] object-cover dark:bg-white/90 dark:p-0.5"
+                />
+              )}
               {!isCollapsed && (
                 <span className="flex-1 min-w-0">
                   <b className="block text-[14.5px] font-semibold leading-tight tracking-[-0.012em] truncate">

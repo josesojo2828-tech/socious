@@ -391,7 +391,26 @@ export default function IdentityPage() {
     }
 
     try {
-      await save(payload);
+      const saved = await save(payload);
+      // Sidebar and tenant theme read the active workspace, so the fresh
+      // identity repaints them without waiting for a reload. The personal
+      // workspace has no tenant identity and is never overwritten.
+      const currentWorkspace = useWorkspaceStore.getState().activeWorkspace;
+      if (currentWorkspace.type !== "PERSONAL") {
+        useWorkspaceStore.getState().setActiveWorkspace({
+          ...currentWorkspace,
+          // `null` means the logo was removed: `undefined` renders the fallback.
+          logoUrl: saved.logoUrl ?? undefined,
+          brandPrimary: saved.brandPrimary ?? currentWorkspace.brandPrimary,
+          brandAccent: saved.brandAccent ?? currentWorkspace.brandAccent,
+        });
+      }
+      // Keep the workspace list in sync in the background; a failed refresh
+      // never turns a successful save into an error and stays silent.
+      void useWorkspaceStore
+        .getState()
+        .fetchWorkspaces(undefined, { preserveSelection: true })
+        .catch(() => undefined);
       addToast({
         type: "success",
         title: "Identidad",

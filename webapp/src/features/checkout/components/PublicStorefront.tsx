@@ -238,7 +238,7 @@ export function PublicStorefront({ slug }: { slug: string }) {
               <img
                 src={config.store.logoUrl}
                 alt={storeName}
-                className="h-10 w-10 rounded-xl object-cover"
+                className="h-10 w-10 rounded-xl object-cover dark:bg-white/90 dark:p-0.5"
               />
             ) : (
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#b2944a] font-semibold text-[#111018]">
