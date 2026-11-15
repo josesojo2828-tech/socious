@@ -12,6 +12,8 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import {
+  BADGE,
+  BTN_GHOST,
   CARD,
   CARD_HEADER,
   CTA_BRASS,
@@ -64,11 +66,13 @@ const TERMINAL: AppointmentStatus[] = ["DONE", "CANCELED", "NO_SHOW"];
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
 const STATUS_TONE: Record<AppointmentStatus, string> = {
-  SCHEDULED: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
-  CONFIRMED: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-300",
-  DONE: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  CANCELED: "bg-rose-500/10 text-rose-700 dark:text-rose-300",
-  NO_SHOW: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  SCHEDULED:
+    "border-[#1a2a46]/20 bg-[#1a2a46]/5 text-[#1a2a46] dark:border-white/15 dark:bg-white/5 dark:text-slate-300",
+  CONFIRMED:
+    "border-[#b2944a]/40 bg-[#b2944a]/10 text-[#8e7538] dark:border-[#b2944a]/40 dark:text-[#d8bd77]",
+  DONE: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  CANCELED: "border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-300",
+  NO_SHOW: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
 };
 
 const VIEW_LABELS: Record<AgendaView, string> = {
@@ -314,16 +318,16 @@ export default function StudioAgendaPage() {
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex rounded-lg border border-slate-300 p-0.5 dark:border-slate-700">
+        <div className="inline-flex rounded-xl border border-[#1a2a46]/15 p-0.5 dark:border-white/15">
           {(Object.keys(VIEW_LABELS) as AgendaView[]).map((option) => (
             <button
               key={option}
               type="button"
               onClick={() => setView(option)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60 ${
                 view === option
-                  ? "bg-[#1a2a46] text-white dark:bg-white/15"
-                  : "text-slate-600 hover:bg-slate-500/10 dark:text-slate-300"
+                  ? "bg-[#1a2a46] text-[#f0ede4] dark:bg-white/15 dark:text-slate-100"
+                  : "text-slate-600 hover:bg-[#1a2a46]/[0.05] dark:text-slate-300 dark:hover:bg-white/5"
               }`}
             >
               {VIEW_LABELS[option]}
@@ -334,7 +338,7 @@ export default function StudioAgendaPage() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10 dark:border-slate-700"
+            className={`${BTN_GHOST} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60`}
             onClick={() => setDate((current) => shiftPeriod(current, view, -1))}
             aria-label="Anterior"
           >
@@ -342,14 +346,14 @@ export default function StudioAgendaPage() {
           </button>
           <button
             type="button"
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm hover:bg-slate-500/10 dark:border-slate-700"
+            className={`${BTN_GHOST} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60`}
             onClick={() => setDate(todayISO())}
           >
             Hoy
           </button>
           <button
             type="button"
-            className="rounded-lg border border-slate-300 p-2 hover:bg-slate-500/10 dark:border-slate-700"
+            className={`${BTN_GHOST} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60`}
             onClick={() => setDate((current) => shiftPeriod(current, view, 1))}
             aria-label="Siguiente"
           >
@@ -373,7 +377,7 @@ export default function StudioAgendaPage() {
           {view === "month" ? (
             <section className={CARD}>
               <div className={CARD_HEADER}>
-                <h2 className="text-sm font-semibold capitalize">
+                <h2 className="text-[17px] font-semibold tracking-tight capitalize text-[#111018] dark:text-slate-100">
                   {headerLabel}
                 </h2>
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-400">
@@ -433,7 +437,7 @@ export default function StudioAgendaPage() {
           {view === "week" ? (
             <section className={CARD}>
               <div className={CARD_HEADER}>
-                <h2 className="text-sm font-semibold capitalize">
+                <h2 className="text-[17px] font-semibold tracking-tight capitalize text-[#111018] dark:text-slate-100">
                   {headerLabel}
                 </h2>
               </div>
@@ -704,13 +708,15 @@ function DayBoard({
       {visible.map((station) => (
         <section key={station.id} className={CARD}>
           <div className={CARD_HEADER}>
-            <h2 className="text-sm font-semibold">{station.name}</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-[#111018] dark:text-slate-100">
+              {station.name}
+            </h2>
             <button
               type="button"
-              className="text-xs text-[#b2944a] hover:underline"
+              className={`${BTN_GHOST} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60`}
               onClick={() => onCreate(station.id, date)}
             >
-              + Agendar
+              <Plus className="h-3.5 w-3.5" /> Agendar
             </button>
           </div>
           <div className="space-y-2 p-3">
@@ -739,7 +745,9 @@ function DayBoard({
       {unassigned.length > 0 ? (
         <section className={CARD}>
           <div className={CARD_HEADER}>
-            <h2 className="text-sm font-semibold">Sin espacio asignado</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-[#111018] dark:text-slate-100">
+              Sin espacio asignado
+            </h2>
           </div>
           <div className="space-y-2 p-3">
             {unassigned.map((appointment) => (
@@ -773,7 +781,7 @@ function AppointmentCard({
 
   return (
     <div
-      className="rounded-xl border border-slate-200 p-3 text-sm dark:border-slate-700"
+      className={`${CARD} p-3 text-sm cursor-pointer transition-colors hover:bg-[#1a2a46]/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60 focus-visible:ring-offset-1 dark:hover:bg-white/5 dark:focus-visible:ring-offset-slate-900`}
       onClick={onEdit}
       role="button"
       tabIndex={0}
@@ -785,11 +793,7 @@ function AppointmentCard({
         <span className="font-mono text-xs tabular-nums text-slate-500">
           {formatRange(appointment.startAt, appointment.endAt)}
         </span>
-        <span
-          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-            STATUS_TONE[appointment.status]
-          }`}
-        >
+        <span className={`${BADGE} ${STATUS_TONE[appointment.status]}`}>
           {APPOINTMENT_STATUS_LABELS[appointment.status]}
         </span>
       </div>
@@ -808,10 +812,10 @@ function AppointmentCard({
       ) : null}
 
       {!terminal ? (
-        <div className="mt-2 flex flex-wrap gap-1">
+        <div className="mt-2 flex flex-wrap gap-1.5">
           <button
             type="button"
-            className="rounded px-2 py-0.5 text-[11px] text-emerald-700 hover:bg-emerald-500/10"
+            className="inline-flex items-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 transition-colors hover:bg-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 dark:text-emerald-300"
             onClick={(event) => {
               event.stopPropagation();
               onStatus("DONE");
@@ -821,7 +825,7 @@ function AppointmentCard({
           </button>
           <button
             type="button"
-            className="rounded px-2 py-0.5 text-[11px] text-rose-600 hover:bg-rose-500/10"
+            className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-[11px] font-medium text-rose-700 transition-colors hover:bg-rose-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/60 dark:text-rose-300"
             onClick={(event) => {
               event.stopPropagation();
               onCancel();

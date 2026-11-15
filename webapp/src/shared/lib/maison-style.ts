@@ -42,6 +42,10 @@ export const CARD =
 export const CARD_HEADER =
   "px-5 py-3.5 border-b border-[#1b1d21]/12 dark:border-white/10 flex items-baseline justify-between gap-3";
 
+/** Píldora de estado (forma + tipografía; cada estado aporta su color). */
+export const BADGE =
+  "inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]";
+
 /** Tabla Maison. */
 export const TABLE_HEAD =
   "text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 border-b border-[#1b1d21]/12 dark:border-white/10";

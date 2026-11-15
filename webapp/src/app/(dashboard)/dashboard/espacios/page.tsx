@@ -5,9 +5,12 @@ import { Armchair, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import {
+  BADGE,
   CARD,
   CTA_BRASS,
+  CTA_NAVY,
   EYEBROW,
+  GLASS,
   INPUT,
   PAGE_TITLE,
 } from "@/shared/lib/maison-style";
@@ -209,7 +212,7 @@ export default function StudioSpacesPage() {
                   <button
                     type="button"
                     aria-label={`Editar ${space.name}`}
-                    className="rounded p-1.5 text-slate-500 hover:bg-slate-500/10"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#1a2a46]/15 p-1.5 text-slate-500 transition-colors hover:bg-[#1a2a46]/[0.05] hover:text-[#1a2a46] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60 dark:border-white/15 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200"
                     onClick={() => openEdit(space)}
                   >
                     <Pencil className="h-4 w-4" />
@@ -217,7 +220,7 @@ export default function StudioSpacesPage() {
                   <button
                     type="button"
                     aria-label={`Eliminar ${space.name}`}
-                    className="rounded p-1.5 text-rose-500 hover:bg-rose-500/10"
+                    className="inline-flex items-center justify-center rounded-lg border border-rose-500/30 p-1.5 text-rose-500 transition-colors hover:bg-rose-500/10 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/60 dark:text-rose-400 dark:hover:bg-rose-500/15 dark:hover:text-rose-300"
                     onClick={() => void remove(space)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -232,10 +235,10 @@ export default function StudioSpacesPage() {
                 <button
                   type="button"
                   onClick={() => void toggleActive(space)}
-                  className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                  className={`${BADGE} transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b2944a]/60 ${
                     space.isActive
-                      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                      : "bg-slate-500/10 text-slate-500"
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                      : "border-slate-300 bg-white/60 text-slate-500 dark:border-slate-600 dark:bg-transparent dark:text-slate-400"
                   }`}
                 >
                   {space.isActive ? "Activo" : "Inactivo"}
@@ -247,9 +250,10 @@ export default function StudioSpacesPage() {
       )}
 
       {form ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className={`w-full max-w-md ${GLASS} rounded-3xl p-6`}>
+            <div className={EYEBROW}>Studio</div>
+            <h2 className="text-lg font-semibold tracking-tight text-[#111018] dark:text-slate-100">
               {form.id ? "Editar espacio" : "Nuevo espacio"}
             </h2>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -314,7 +318,7 @@ export default function StudioSpacesPage() {
             <div className="mt-6 flex justify-end gap-2">
               <button
                 type="button"
-                className="rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-500/10"
+                className={`${CTA_NAVY} px-4 py-2 text-sm`}
                 onClick={() => setForm(null)}
                 disabled={saving}
               >
@@ -322,7 +326,7 @@ export default function StudioSpacesPage() {
               </button>
               <button
                 type="button"
-                className={CTA_BRASS}
+                className={`${CTA_BRASS} px-4 py-2 text-sm`}
                 onClick={() => void save()}
                 disabled={saving}
               >
