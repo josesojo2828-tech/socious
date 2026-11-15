@@ -53,6 +53,12 @@ export class CreatePresentationDto {
   @IsNumber()
   @Min(0)
   salePriceUSD?: number;
+
+  /** Own cost; omit it (or null) to inherit the product cost. */
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  costPriceUSD?: number | null;
 }
 
 export class UpdatePresentationDto {
@@ -103,6 +109,15 @@ export class UpdatePresentationDto {
   @IsNumber()
   @Min(0)
   salePriceUSD?: number | null;
+
+  /**
+   * Own cost; null clears it so the type inherits the product cost again.
+   * `@IsOptional` accepts null as well as undefined.
+   */
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  costPriceUSD?: number | null;
 }
 
 export class DecomposeDto {

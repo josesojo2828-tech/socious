@@ -61,6 +61,7 @@ export class PresentationService {
         stock: dto.stock ?? 0,
         minStock: dto.minStock ?? 0,
         salePriceUSD: dto.salePriceUSD ?? null,
+        costPriceUSD: dto.costPriceUSD ?? null,
       },
     });
   }
@@ -103,6 +104,10 @@ export class PresentationService {
         // null clears the own price so the presentation inherits again.
         ...(dto.salePriceUSD !== undefined
           ? { salePriceUSD: dto.salePriceUSD }
+          : {}),
+        // null clears the own cost so the type inherits again.
+        ...(dto.costPriceUSD !== undefined
+          ? { costPriceUSD: dto.costPriceUSD ?? null }
           : {}),
       },
     });

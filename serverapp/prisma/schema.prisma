@@ -1442,6 +1442,8 @@ model ProductPresentation {
   measures       String?  // "10 × 10 × 20 cm"
   unit           String   @default("UND")
   salePriceUSD   Decimal? @db.Decimal(14, 2) // null = hereda el precio del producto
+  /// Costo propio del tipo; null = hereda el costo del producto.
+  costPriceUSD   Decimal? @db.Decimal(14, 2)
   stock          Decimal  @default(0.00) @db.Decimal(12, 2)
   minStock       Decimal  @default(0.00) @db.Decimal(12, 2)
   active         Boolean  @default(true)
