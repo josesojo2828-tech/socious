@@ -53,7 +53,7 @@ const NutriMapPicker = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full items-center justify-center text-slate-400">
+      <div className="flex h-[260px] items-center justify-center text-slate-400">
         <Loader2 className="h-5 w-5 animate-spin" />
       </div>
     ),
@@ -769,13 +769,13 @@ export default function IdentityPage() {
           >
             {locationOpen ? (
               <div id="identity-location" className="space-y-3">
-                <div className="h-64 overflow-hidden rounded-2xl">
+                <div className="overflow-hidden rounded-2xl">
                   <NutriMapPicker
                     key={hasLocation ? "con-ubicacion" : "sin-ubicacion"}
                     lat={form.latitude ?? undefined}
                     lng={form.longitude ?? undefined}
                     onLocationSelect={handleLocationSelect}
-                    height="100%"
+                    height="260px"
                   />
                 </div>
 
