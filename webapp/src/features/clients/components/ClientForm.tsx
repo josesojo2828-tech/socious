@@ -13,6 +13,7 @@ import {
   validateClientForm,
   type ClientForm as ClientFormValues,
 } from "@/features/clients/lib/client-form";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { CARD, CARD_HEADER, CTA_BRASS, BTN_GHOST, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
 
 const EMPTY_FORM: ClientFormValues = {
@@ -198,14 +199,12 @@ export function ClientForm({ clientId }: { clientId?: string }) {
           </label>
           <label className={LABEL_SM}>
             Límite de crédito USD
-            <input
-              type="number"
-              min={0}
-              step="1"
+            <DecimalInput
+              mode="money"
               className={`${INPUT} mt-1 font-mono tabular-nums`}
               value={form.creditLimitUSD ?? 0}
-              onChange={(event) =>
-                patchForm({ creditLimitUSD: Number(event.target.value) })
+              onValueChange={(text) =>
+                patchForm({ creditLimitUSD: Number(text) || 0 })
               }
             />
           </label>
