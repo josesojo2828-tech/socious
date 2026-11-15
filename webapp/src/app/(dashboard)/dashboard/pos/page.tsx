@@ -1164,7 +1164,7 @@ export default function PosPage() {
                 ) : (
                   <Receipt className="h-4 w-4" />
                 )}
-                {mode === "order" ? "Crear pedido" : "Registrar venta"}
+                {mode === "order" ? "Crear" : "Cobrar"}
               </button>
             </div>
           </div>

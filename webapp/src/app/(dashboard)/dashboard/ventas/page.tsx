@@ -895,7 +895,7 @@ export default function SalesPage() {
             <div className="rounded-xl border border-[#1b1d21]/12 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/40">
               <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                 <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-                  Registrar abono
+                  Abono
                 </p>
                 <p className="text-sm font-semibold text-[#111018] dark:text-slate-100">
                   Resta{" "}

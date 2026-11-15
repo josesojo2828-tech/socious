@@ -185,7 +185,7 @@ export default function PurchasesPage() {
           href="/dashboard/compras/nuevo"
           className={`px-4 py-2.5 text-sm ${CTA_BRASS}`}
         >
-          <Plus className="h-4 w-4" /> Nueva compra
+          <Plus className="h-4 w-4" /> Crear
         </Link>
       </header>
 

@@ -153,7 +153,7 @@ export default function MaterialesPage() {
           onClick={openCreate}
           className={`px-4 py-2.5 text-sm ${CTA_BRASS}`}
         >
-          <Plus className="h-4 w-4" /> Nuevo material
+          <Plus className="h-4 w-4" /> Crear
         </button>
       </header>
 
@@ -183,7 +183,7 @@ export default function MaterialesPage() {
         {pageRows.length === 0 ? (
           <p className="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
             {rows.length === 0
-              ? "Todavía no hay materiales: cargá el primero con «Nuevo material»."
+              ? "Todavía no hay materiales: cargá el primero con el botón «Crear»."
               : "Ningún material coincide con la búsqueda."}
           </p>
         ) : (
