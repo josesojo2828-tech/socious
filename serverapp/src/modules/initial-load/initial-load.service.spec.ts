@@ -51,7 +51,41 @@ const makeProducts = () => ({
   })),
 });
 
-const makeSales = () => ({ create: jest.fn().mockResolvedValue({ id: "sale-1" }) });
+const makeSales = () => ({
+  create: jest.fn(
+    async (_scope: unknown, data: Record<string, unknown>) => ({
+      id: "sale-1",
+      saleNumber: data.saleNumber,
+    }),
+  ),
+});
+
+const productRecord = (overrides: Record<string, unknown> = {}) => ({
+  id: "product-1",
+  sku: "ARROZ-1KG",
+  name: "Arroz blanco",
+  salePriceUSD: "1.50",
+  costPriceUSD: "0",
+  taxRate: "0",
+  unit: "UND",
+  ...overrides,
+});
+
+const clientRecord = (overrides: Record<string, unknown> = {}) => ({
+  id: "client-1",
+  name: "Ana Pérez",
+  phone: null,
+  email: null,
+  ...overrides,
+});
+
+const manualDto = (overrides: Record<string, unknown> = {}) => ({
+  clientName: "Ana Pérez",
+  productName: "Arroz blanco",
+  quantity: 2,
+  unitPriceUSD: 1.5,
+  ...overrides,
+});
 
 const makeService = (
   prisma = makePrisma(),
@@ -557,5 +591,238 @@ describe("InitialLoadService.commit", () => {
     expect(result.errors[0].message).toBe(
       "Fila 2: La cantidad debe ser mayor que cero.",
     );
+  });
+});
+
+describe("InitialLoadService.createManual", () => {
+  it("creates a client when no id and no name match exists", async () => {
+    const clients = makeClients();
+    const service = makeService(makePrisma(), makeSales(), clients);
+
+    const result = await service.createManual(SCOPE, manualDto() as any);
+
+    expect(clients.create).toHaveBeenCalledTimes(1);
+    expect(clients.create.mock.calls[0][1]).toMatchObject({ name: "Ana Pérez" });
+    expect(result.client).toEqual({
+      id: "client-new",
+      name: "Ana Pérez",
+      created: true,
+    });
+  });
+
+  it("reuses an existing client when the normalized name matches", async () => {
+    const prisma = makePrisma();
+    prisma.client.findMany.mockResolvedValue([clientRecord()]);
+    const clients = makeClients();
+    const service = makeService(prisma, makeSales(), clients);
+
+    const result = await service.createManual(SCOPE, manualDto({
+      clientName: "ANA PEREZ",
+    }) as any);
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(result.client).toEqual({
+      id: "client-1",
+      name: "Ana Pérez",
+      created: false,
+    });
+  });
+
+  it("reuses a product by id", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(prisma, sales, makeClients(), products);
+
+    const result = await service.createManual(SCOPE, manualDto({
+      productId: "product-1",
+    }) as any);
+
+    expect(products.create).not.toHaveBeenCalled();
+    expect(result.product).toEqual({
+      id: "product-1",
+      name: "Arroz blanco",
+      sku: "ARROZ-1KG",
+      created: false,
+    });
+    expect(sales.create.mock.calls[0][1].items[0].productId).toBe("product-1");
+  });
+
+  it("reuses a product by sku", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(prisma, sales, makeClients(), products);
+
+    await service.createManual(SCOPE, manualDto({
+      productSku: "ARROZ-1KG",
+    }) as any);
+
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create.mock.calls[0][1].items[0].productId).toBe("product-1");
+  });
+
+  it("creates a missing product with an ONB sku and zero stock", async () => {
+    const products = makeProducts();
+    const service = makeService(makePrisma(), makeSales(), makeClients(), products);
+
+    const result = await service.createManual(SCOPE, manualDto() as any);
+
+    expect(products.create).toHaveBeenCalledTimes(1);
+    expect(products.create.mock.calls[0][1]).toMatchObject({
+      name: "Arroz blanco",
+      sku: "ONB-0001",
+      stock: 0,
+      salePriceUSD: 1.5,
+    });
+    expect(result.product).toEqual({
+      id: "product-new",
+      name: "Arroz blanco",
+      sku: "ONB-0001",
+      created: true,
+    });
+  });
+
+  it("honours an explicit dueDate", async () => {
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales);
+
+    await service.createManual(SCOPE, manualDto({
+      dueDate: "2024-02-20",
+    }) as any);
+
+    const payload = sales.create.mock.calls[0][1];
+    expect(payload.dueDate).toBe("2024-02-20T12:00:00.000Z");
+    expect(payload.creditCadence).toBeUndefined();
+  });
+
+  it("computes the due date from the cadence and the issue date", async () => {
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales);
+    const expected = computeCreditDueDate(
+      "EVERY_N_DAYS",
+      { everyNDays: 30 },
+      new Date("2024-01-15T12:00:00.000Z"),
+    )!.toISOString();
+
+    await service.createManual(SCOPE, manualDto({
+      issueDate: "2024-01-15",
+      cadence: "CADA_N_DIAS",
+      everyNDays: 30,
+    }) as any);
+
+    const payload = sales.create.mock.calls[0][1];
+    expect(payload.issueDate).toBe("2024-01-15T12:00:00.000Z");
+    expect(payload.dueDate).toBe(expected);
+    expect(payload.creditCadence).toBe("EVERY_N_DAYS");
+  });
+
+  it("leaves the account open with FREE when there is no due date", async () => {
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales);
+
+    await service.createManual(SCOPE, manualDto() as any);
+
+    const payload = sales.create.mock.calls[0][1];
+    expect(payload.dueDate).toBeUndefined();
+    expect(payload.creditCadence).toBe("FREE");
+  });
+
+  it("records a payment only when paidAmount is greater than zero", async () => {
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales);
+
+    await service.createManual(SCOPE, manualDto({ productName: "Con pago", paidAmount: 1 }) as any);
+    await service.createManual(SCOPE, manualDto({ productName: "Sin pago", paidAmount: 0 }) as any);
+
+    expect(sales.create.mock.calls[0][1].payments).toEqual([
+      { amountOriginal: 1, currency: "USD", paymentMethod: "CASH_USD" },
+    ]);
+    expect(sales.create.mock.calls[1][1].payments).toBeUndefined();
+  });
+
+  it("passes skipStock: true to SaleService.create", async () => {
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales);
+
+    await service.createManual(SCOPE, manualDto() as any);
+
+    expect(sales.create).toHaveBeenCalledTimes(1);
+    expect(sales.create.mock.calls[0][2]).toEqual({ skipStock: true });
+  });
+
+  it("rejects a paidAmount greater than the line total and writes nothing", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    await expect(
+      service.createManual(SCOPE, manualDto({
+        quantity: 1,
+        unitPriceUSD: 10,
+        paidAmount: 11,
+      }) as any),
+    ).rejects.toThrow("El monto pagado no puede superar el total.");
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects a future issueDate and writes nothing", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    await expect(
+      service.createManual(SCOPE, manualDto({ issueDate: "2999-01-01" }) as any),
+    ).rejects.toThrow("La fecha no puede ser futura.");
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects an unknown cadence and writes nothing", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    await expect(
+      service.createManual(SCOPE, manualDto({ cadence: "SEMANAL" }) as any),
+    ).rejects.toThrow("La cadencia debe ser QUINCENAL, MENSUAL o CADA_N_DIAS.");
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects everyNDays outside 1..365 and writes nothing", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    await expect(
+      service.createManual(SCOPE, manualDto({
+        cadence: "CADA_N_DIAS",
+        everyNDays: 0,
+      }) as any),
+    ).rejects.toThrow("Los días deben ser un entero entre 1 y 365.");
+    await expect(
+      service.createManual(SCOPE, manualDto({
+        cadence: "CADA_N_DIAS",
+        everyNDays: 400,
+      }) as any),
+    ).rejects.toThrow("Los días deben ser un entero entre 1 y 365.");
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create).not.toHaveBeenCalled();
   });
 });

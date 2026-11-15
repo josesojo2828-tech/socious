@@ -9,15 +9,18 @@ import { computeCreditDueDate } from "../sale/util/credit-due-date";
 import {
   INITIAL_LOAD_COLUMNS,
   INITIAL_LOAD_REQUIRED,
+  type CreateManualInitialLoadDto,
   type ImportInitialLoadDto,
   type InitialLoadCommitResult,
   type InitialLoadFieldError,
   type InitialLoadPreviewRow,
   type InitialLoadRowStatus,
   type InitialLoadValidateResult,
+  type ManualInitialLoadResult,
 } from "./initial-load.dto";
 import {
   isFutureDate,
+  localTodayDateOnly,
   normalizeHeader,
   normalizeName,
   normalizeNumber,
@@ -74,16 +77,37 @@ interface ProductRecord {
 }
 
 interface ClientLookup {
+  byId: Map<string, ClientRecord>;
   byPhone: Map<string, ClientRecord[]>;
   byEmail: Map<string, ClientRecord[]>;
   byName: Map<string, ClientRecord[]>;
 }
 
 interface ProductLookup {
+  byId: Map<string, ProductRecord>;
   bySku: Map<string, ProductRecord>;
   byName: Map<string, ProductRecord[]>;
   /** Next number for the generated `ONB-####` SKU. */
   onbCounter: number;
+}
+
+/**
+ * The client fields one entry contributes, shared by a CSV row and a manual
+ * entry so both resolve and create through the exact same helper.
+ */
+interface ClientCandidate {
+  clientName: string;
+  clientPhone: string;
+  clientEmail: string;
+  line: number;
+}
+
+/** The product fields one entry contributes, shared by both paths. */
+interface ProductCandidate {
+  productName: string;
+  sku: string;
+  unitPrice: number;
+  line: number;
 }
 
 interface Lookups {
@@ -128,6 +152,32 @@ interface CreatedClient {
 interface CreatedProduct {
   product: ProductRecord;
   created: boolean;
+}
+
+/** Credit terms derived for a manual opening balance. */
+interface ManualCreditTerms {
+  dueDateIso: string | null;
+  creditCadence: CreditCadence | null;
+  everyNDays?: number;
+  monthlyDay?: number;
+}
+
+/**
+ * Both a manual entry and the CSV import require a way to identify the client
+ * and the product. The message is the contract the UI shows verbatim.
+ */
+export function assertManualEntryIdentifiers(dto: {
+  clientId?: string;
+  clientName?: string;
+  productId?: string;
+  productName?: string;
+}): void {
+  if (!hasText(dto.clientId) && !hasText(dto.clientName)) {
+    throw new BadRequestException("Indica un cliente o un nombre de cliente.");
+  }
+  if (!hasText(dto.productId) && !hasText(dto.productName)) {
+    throw new BadRequestException("Indica un producto o un nombre de producto.");
+  }
 }
 
 @Injectable()
@@ -287,6 +337,119 @@ export class InitialLoadService {
     }
 
     return { created, skipped, errors };
+  }
+
+  /**
+   * One historical opening balance captured by hand: the same client/product
+   * resolution as the CSV import, one sale created through `SaleService` with
+   * `skipStock` so the catalog inventory is never moved.
+   */
+  async createManual(
+    scope: InitialLoadScope,
+    dto: CreateManualInitialLoadDto,
+  ): Promise<ManualInitialLoadResult> {
+    assertManualEntryIdentifiers(dto);
+
+    const quantity = Number(dto.quantity);
+    if (!Number.isFinite(quantity) || quantity <= 0) {
+      throw new BadRequestException("La cantidad debe ser mayor que cero.");
+    }
+    const unitPrice = Number(dto.unitPriceUSD);
+    if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+      throw new BadRequestException("El precio unitario debe ser mayor que cero.");
+    }
+
+    const total = round2(quantity * unitPrice);
+    const paid = Number(dto.paidAmount ?? 0);
+    if (!Number.isFinite(paid) || paid < 0) {
+      throw new BadRequestException("El monto pagado no puede ser negativo.");
+    }
+    if (paid > total + 1e-6) {
+      throw new BadRequestException("El monto pagado no puede superar el total.");
+    }
+
+    const issueDate = this.resolveManualIssueDate(dto.issueDate);
+    const terms = this.resolveManualCredit(dto, issueDate);
+
+    const lookups = await this.loadLookups(scope, []);
+    const client = await this.createOrReuseManualClient(
+      scope,
+      lookups.clients,
+      dto,
+    );
+    const product = await this.createOrReuseManualProduct(
+      scope,
+      lookups.products,
+      dto,
+      unitPrice,
+    );
+
+    const soldName = trimToNull(dto.productName) ?? product.product.name;
+    const saleNumber = stableRowHash({
+      dateOnly: issueDate.dateOnly,
+      clientName: client.name,
+      productName: product.product.name,
+      quantity,
+      unitPrice,
+    });
+    const paymentAmount = round2(paid);
+    const payments =
+      paymentAmount > 0
+        ? [
+            {
+              amountOriginal: paymentAmount,
+              currency: "USD" as const,
+              paymentMethod: CASH_PAYMENT_METHOD,
+            },
+          ]
+        : undefined;
+    const notes = trimToNull(dto.notes);
+
+    const saleDto = {
+      saleNumber,
+      clientId: client.id,
+      issueDate: issueDate.iso,
+      ...(terms.dueDateIso ? { dueDate: terms.dueDateIso } : {}),
+      ...(terms.creditCadence ? { creditCadence: terms.creditCadence } : {}),
+      ...(terms.creditCadence === "EVERY_N_DAYS" ||
+      terms.creditCadence === "QUINCENAL"
+        ? { creditEveryNDays: terms.everyNDays ?? DEFAULT_EVERY_N_DAYS }
+        : {}),
+      ...(terms.creditCadence === "MONTHLY" && terms.monthlyDay !== undefined
+        ? { creditMonthlyDay: terms.monthlyDay }
+        : {}),
+      items: [
+        {
+          productId: product.product.id,
+          productName: soldName,
+          quantity,
+          unitPriceUSD: unitPrice,
+          taxRate: Number(product.product.taxRate ?? 0),
+        },
+      ],
+      ...(payments ? { payments } : {}),
+      ...(notes ? { notes } : {}),
+    } as CreateSaleDto;
+
+    const sale = (await this.saleService.create(scope, saleDto, {
+      skipStock: true,
+    })) as { id: string; saleNumber?: string };
+
+    return {
+      saleId: sale.id,
+      saleNumber: sale.saleNumber ?? saleNumber,
+      client: {
+        id: client.id,
+        name: client.name,
+        created: client.created,
+      },
+      product: {
+        id: product.product.id,
+        name: product.product.name,
+        sku: product.product.sku,
+        created: product.created,
+      },
+    };
   }
 
   // ------------------------------------------------------------------
@@ -548,6 +711,79 @@ export class InitialLoadService {
     return result.value;
   }
 
+  /** Issue date of a manual entry: today when missing, never in the future. */
+  private resolveManualIssueDate(raw?: string): ParsedDate {
+    const value = trimToNull(raw);
+    const parsed = parseFlexibleDate(value ?? localTodayDateOnly());
+    if (!parsed) {
+      throw new BadRequestException("La fecha no es válida.");
+    }
+    if (value !== null && isFutureDate(parsed.dateOnly)) {
+      throw new BadRequestException("La fecha no puede ser futura.");
+    }
+    return parsed;
+  }
+
+  /** An explicit due date wins; otherwise the cadence, or FREE when absent. */
+  private resolveManualCredit(
+    dto: CreateManualInitialLoadDto,
+    issueDate: ParsedDate,
+  ): ManualCreditTerms {
+    const dueDateRaw = trimToNull(dto.dueDate);
+    if (dueDateRaw) {
+      const due = parseFlexibleDate(dueDateRaw);
+      if (!due) {
+        throw new BadRequestException("El vencimiento no es válido.");
+      }
+      return {
+        dueDateIso: due.iso,
+        creditCadence: null,
+      };
+    }
+
+    const cadenceRaw = trimToNull(dto.cadence);
+    if (!cadenceRaw) {
+      // No limit: the account stays open and is never reported as overdue.
+      return { dueDateIso: null, creditCadence: "FREE" };
+    }
+
+    const cadence = parseCadence(cadenceRaw);
+    if (!cadence) {
+      throw new BadRequestException(
+        "La cadencia debe ser QUINCENAL, MENSUAL o CADA_N_DIAS.",
+      );
+    }
+
+    if (cadence === "MONTHLY") {
+      const monthlyDay = readMonthlyDay(dto.monthlyDay);
+      const due = computeCreditDueDate(
+        cadence,
+        { monthlyDay },
+        new Date(issueDate.iso),
+      );
+      return {
+        dueDateIso: due ? due.toISOString() : null,
+        creditCadence: cadence,
+        monthlyDay,
+      };
+    }
+
+    const everyNDays =
+      cadence === "QUINCENAL"
+        ? DEFAULT_EVERY_N_DAYS
+        : readEveryNDays(dto.everyNDays);
+    const due = computeCreditDueDate(
+      cadence,
+      { everyNDays },
+      new Date(issueDate.iso),
+    );
+    return {
+      dueDateIso: due ? due.toISOString() : null,
+      creditCadence: cadence,
+      everyNDays,
+    };
+  }
+
   // ------------------------------------------------------------------
   // Lookups
   // ------------------------------------------------------------------
@@ -599,7 +835,7 @@ export class InitialLoadService {
 
   private resolveClient(
     lookup: ClientLookup,
-    row: PreparedRow,
+    row: ClientCandidate,
     line: number,
     warnings: string[],
   ): { id: string | null; willCreate: boolean } {
@@ -639,7 +875,7 @@ export class InitialLoadService {
 
   private resolveProduct(
     lookup: ProductLookup,
-    row: PreparedRow,
+    row: ProductCandidate,
   ): { product: ProductRecord | null; willCreate: boolean } {
     if (row.sku !== "") {
       const bySku = lookup.bySku.get(row.sku);
@@ -661,7 +897,7 @@ export class InitialLoadService {
   private async createOrReuseClient(
     scope: InitialLoadScope,
     lookup: ClientLookup,
-    row: PreparedRow,
+    row: ClientCandidate,
   ): Promise<CreatedClient> {
     const resolved = this.resolveClient(lookup, row, row.line, []);
     if (!resolved.willCreate && resolved.id) {
@@ -688,7 +924,7 @@ export class InitialLoadService {
   private async createOrReuseProduct(
     scope: InitialLoadScope,
     lookup: ProductLookup,
-    row: PreparedRow,
+    row: ProductCandidate,
   ): Promise<CreatedProduct> {
     const resolved = this.resolveProduct(lookup, row);
     if (!resolved.willCreate && resolved.product) {
@@ -717,6 +953,64 @@ export class InitialLoadService {
     addProduct(lookup, record);
 
     return { product: record, created: true };
+  }
+
+  /** id > phone/email match > normalized-name match > create, like the CSV. */
+  private async createOrReuseManualClient(
+    scope: InitialLoadScope,
+    lookup: ClientLookup,
+    dto: CreateManualInitialLoadDto,
+  ): Promise<{ id: string; name: string; created: boolean }> {
+    const clientId = trimToNull(dto.clientId);
+    if (clientId) {
+      const existing = lookup.byId.get(clientId);
+      if (!existing) {
+        throw new BadRequestException("El cliente seleccionado no existe.");
+      }
+      return { id: existing.id, name: existing.name, created: false };
+    }
+
+    const candidate: ClientCandidate = {
+      clientName: trimToNull(dto.clientName) ?? "",
+      clientPhone: trimToNull(dto.clientPhone) ?? "",
+      clientEmail: trimToNull(dto.clientEmail) ?? "",
+      line: 0,
+    };
+    const resolved = await this.createOrReuseClient(scope, lookup, candidate);
+    if (resolved.created) {
+      return { id: resolved.id, name: candidate.clientName, created: true };
+    }
+
+    const existing = lookup.byId.get(resolved.id);
+    return {
+      id: resolved.id,
+      name: existing?.name ?? candidate.clientName,
+      created: false,
+    };
+  }
+
+  /** id > sku > normalized-name match > create, like the CSV. */
+  private async createOrReuseManualProduct(
+    scope: InitialLoadScope,
+    lookup: ProductLookup,
+    dto: CreateManualInitialLoadDto,
+    unitPrice: number,
+  ): Promise<CreatedProduct> {
+    const productId = trimToNull(dto.productId);
+    if (productId) {
+      const existing = lookup.byId.get(productId);
+      if (!existing) {
+        throw new BadRequestException("El producto seleccionado no existe.");
+      }
+      return { product: existing, created: false };
+    }
+
+    return this.createOrReuseProduct(scope, lookup, {
+      productName: trimToNull(dto.productName) ?? "",
+      sku: trimToNull(dto.productSku) ?? "",
+      unitPrice,
+      line: 0,
+    });
   }
 
   /** Continues the tenant's `ONB-####` sequence, never reusing a live SKU. */
@@ -770,31 +1064,35 @@ export class InitialLoadService {
     } as CreateSaleDto;
   }
 
-  private productCreatedWarning(row: PreparedRow): string {
+  private productCreatedWarning(row: { productName: string; line: number }): string {
     return `Fila ${row.line}: El producto "${row.productName}" se creó sin stock.`;
   }
 }
 
 function buildClientLookup(records: ClientRecord[]): ClientLookup {
+  const byId = new Map<string, ClientRecord>();
   const byPhone = new Map<string, ClientRecord[]>();
   const byEmail = new Map<string, ClientRecord[]>();
   const byName = new Map<string, ClientRecord[]>();
 
   for (const record of records) {
+    byId.set(record.id, record);
     addToMap(byPhone, record.phone?.trim() ?? "", record);
     addToMap(byEmail, record.email?.trim().toLowerCase() ?? "", record);
     addToMap(byName, normalizeName(record.name), record);
   }
 
-  return { byPhone, byEmail, byName };
+  return { byId, byPhone, byEmail, byName };
 }
 
 function buildProductLookup(records: ProductRecord[]): ProductLookup {
+  const byId = new Map<string, ProductRecord>();
   const bySku = new Map<string, ProductRecord>();
   const byName = new Map<string, ProductRecord[]>();
   let onbMax = 0;
 
   for (const record of records) {
+    byId.set(record.id, record);
     if (record.sku) bySku.set(record.sku, record);
     addToMap(byName, normalizeName(record.name), record);
 
@@ -802,7 +1100,7 @@ function buildProductLookup(records: ProductRecord[]): ProductLookup {
     if (match) onbMax = Math.max(onbMax, Number(match[1]));
   }
 
-  return { bySku, byName, onbCounter: onbMax + 1 };
+  return { byId, bySku, byName, onbCounter: onbMax + 1 };
 }
 
 function addToMap<T>(map: Map<string, T[]>, key: string, value: T): void {
@@ -813,12 +1111,14 @@ function addToMap<T>(map: Map<string, T[]>, key: string, value: T): void {
 }
 
 function addClient(lookup: ClientLookup, record: ClientRecord): void {
+  lookup.byId.set(record.id, record);
   addToMap(lookup.byPhone, record.phone?.trim() ?? "", record);
   addToMap(lookup.byEmail, record.email?.trim().toLowerCase() ?? "", record);
   addToMap(lookup.byName, normalizeName(record.name), record);
 }
 
 function addProduct(lookup: ProductLookup, record: ProductRecord): void {
+  lookup.byId.set(record.id, record);
   lookup.bySku.set(record.sku, record);
   addToMap(lookup.byName, normalizeName(record.name), record);
 }
@@ -843,6 +1143,36 @@ function parseEveryNDays(
     return { ok: false };
   }
   return { ok: true, value: parsed };
+}
+
+function hasText(value?: string | null): boolean {
+  return typeof value === "string" && value.trim() !== "";
+}
+
+function trimToNull(value?: string | null): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+function readEveryNDays(value?: number): number {
+  if (value === undefined || value === null) return DEFAULT_EVERY_N_DAYS;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 365) {
+    throw new BadRequestException("Los días deben ser un entero entre 1 y 365.");
+  }
+  return parsed;
+}
+
+function readMonthlyDay(value?: number): number | undefined {
+  if (value === undefined || value === null) return undefined;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 28) {
+    throw new BadRequestException(
+      "El día de cobro debe ser un entero entre 1 y 28.",
+    );
+  }
+  return parsed;
 }
 
 function round2(value: number): number {

@@ -15,8 +15,12 @@ import { SessionAuthGuard } from "../auth/guards/authenticated.guard";
 import { OrganizationScopeService } from "src/shared/services/organization-scope.service";
 import { WorkspaceContextService } from "src/shared/services/workspace-context.service";
 import type { RequestWithUser } from "src/shared/types/server.type";
-import { ImportInitialLoadDto } from "./initial-load.dto";
 import {
+  CreateManualInitialLoadDto,
+  ImportInitialLoadDto,
+} from "./initial-load.dto";
+import {
+  assertManualEntryIdentifiers,
   InitialLoadService,
   type InitialLoadScope,
 } from "./initial-load.service";
@@ -94,5 +98,16 @@ export class InitialLoadController {
   ) {
     const scope = await this.resolveScope(request);
     return this.initialLoadService.commit(scope, body);
+  }
+
+  /** Manual entry: one opening balance without a CSV and without stock moves. */
+  @Post("manual")
+  async createManual(
+    @Req() request: RequestWithUser,
+    @Body() body: CreateManualInitialLoadDto,
+  ) {
+    const scope = await this.resolveScope(request);
+    assertManualEntryIdentifiers(body);
+    return this.initialLoadService.createManual(scope, body);
   }
 }
