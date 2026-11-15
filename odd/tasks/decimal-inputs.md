@@ -75,12 +75,12 @@
 
 | ID | Specs | Ruta | Estado |
 |---|---|---|---|
-| T1 | `src/shared/lib/decimal-input.ts` + spec | inline | pendiente |
-| T2 | `src/features/units/lib/unit-decimals.ts` + spec | inline | pendiente |
-| T3 | Átomo `DecimalInput` | inline | pendiente |
-| T4 | Migrar campos de dinero (máscara de centavos) | inline | pendiente |
-| T5 | Migrar campos de cantidad (con `decimals` por unidad) | inline | pendiente |
-| T6 | Verificación + doc | inline | pendiente |
+| T1 | `src/shared/lib/decimal-input.ts` + spec | inline | ✅ `a17d80c` |
+| T2 | `src/features/units/lib/unit-decimals.ts` + spec | inline | ✅ `a17d80c` |
+| T3 | Átomo `DecimalInput` | inline | ✅ `6374c31`, ajuste `adee56c` |
+| T4 | Pantallas: caja, POS, ventas, productos, compras, configuración, clientes | inline | ✅ `2a4e13c` |
+| T5 | Catálogo: producto, materiales, servicios, presentaciones, importación CSV | inline | ✅ `90d9599` |
+| T6 | Verificación + doc | inline | ✅ typecheck 0 · 63 archivos / 618 tests |
 
 ---
 
@@ -108,3 +108,12 @@
 - Dos causas del `01`: estado string sin normalizar (caja, POS, ventas, compras, presentaciones) y estado `number` que no permite vaciar el campo (ficha de producto, límite de crédito, costo de delivery).
 - El `0.00` que se ve hoy es solo `placeholder` (Material, Service, caja).
 - `vitest` corre en `node` y solo `*.spec.ts`: no hay DOM ni Testing Library, así que la lógica va a helpers puros.
+
+### L5 — implementación (evidencia)
+
+- Inputs migrados: 29 en 15 archivos. Quedan sin tocar los enteros de configuración y los porcentajes (S8), más 2 de POS y 1 del alta de producto que son días de crédito y `taxRate`.
+- `DecimalInput` renderiza `type="text"` (sin spinner), selecciona el contenido al enfocar y formatea al salir.
+- Riesgo evitado: un `stock` legado fraccionario en una unidad `COUNT` ya no se redondea al abrir el formulario; el campo muestra el valor guardado y no reemite si el texto canónico no cambió (`adee56c`).
+- Verificación: `npm run typecheck` → 0 errores; `npm test` → 63 archivos / 618 tests en verde (baseline 61/588).
+- Limitación conocida: en pantallas que no cargan el catálogo de unidades (productos, compras, presentaciones, ventas) una unidad propia de tipo peso/volumen cae en el mapa del sistema; una abreviatura desconocida se trata como permisiva (2 decimales). Las altas de producto/material/servicio sí usan el catálogo completo.
+- Incidencia de entorno: otro proceso está commiteando en el mismo worktree; `b256377` (`fix(cobros)`) quedó en esta rama sin ser parte de este trabajo.
