@@ -32,6 +32,24 @@ export class CreatePresentationDto {
   @MaxLength(80)
   measures?: string;
 
+  /** Unidad de la medida ("g", "cm" o un texto propio). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  measureUnit?: string | null;
+
+  /** Catalog size; when present the server stores its label too. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  sizeId?: string | null;
+
+  /** Custom size label used when `sizeId` is absent. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  sizeLabel?: string | null;
+
   @IsOptional()
   @IsString()
   @MaxLength(12)
@@ -86,6 +104,24 @@ export class UpdatePresentationDto {
   @IsString()
   @MaxLength(80)
   measures?: string;
+
+  /** Unidad de la medida ("g", "cm" o un texto propio). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  measureUnit?: string | null;
+
+  /** Catalog size; when present the server stores its label too. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  sizeId?: string | null;
+
+  /** Custom size label used when `sizeId` is absent. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  sizeLabel?: string | null;
 
   @IsOptional()
   @IsString()

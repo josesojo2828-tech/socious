@@ -573,6 +573,7 @@ model Organization {
   suppliers          Supplier[]
   units              UnitOfMeasure[]
   unitOverrides      UnitOfMeasureOverride[]
+  productSizes       ProductSize[]
   offers             Offer[]
   tenantPaymentMethods TenantPaymentMethod[]
   cashRegisters      CashRegister[]
@@ -1447,8 +1448,14 @@ model ProductPresentation {
   sku            String?
   barcode        String?
   color          String?
-  measures       String?  // "10 × 10 × 20 cm"
+  measures       String?  // valor de la medida ("10×10", "500")
+  /// Unidad de la medida ("g", "cm", o un texto propio).
+  measureUnit    String?
   unit           String   @default("UND")
+  /// Talla del catálogo (null = sin talla o talla personalizada).
+  sizeId         String?
+  /// Etiqueta de la talla: la del catálogo al guardar, o el texto propio.
+  sizeLabel      String?
   salePriceUSD   Decimal? @db.Decimal(14, 2) // null = hereda el precio del producto
   /// Costo propio del tipo; null = hereda el costo del producto.
   costPriceUSD   Decimal? @db.Decimal(14, 2)
@@ -1459,11 +1466,34 @@ model ProductPresentation {
   updatedAt      DateTime @updatedAt
 
   product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size           ProductSize? @relation(fields: [sizeId], references: [id], onDelete: SetNull)
   saleItems      SaleItem[]
   images         PresentationImage[]
   stockMovements StockMovement[]
 
   @@index([productId])
+  @@index([sizeId])
+}
+
+/**
+ * Size catalog (tallas): system rows (organizationId null) are read-only and
+ * every tenant adds its own. A presentation stores the label plus an optional
+ * link, so renaming a catalog size never rewrites sold history.
+ */
+model ProductSize {
+  id             String   @id @default(uuid())
+  organizationId String?
+  label          String
+  sortOrder      Int      @default(0)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization?       @relation(fields: [organizationId], references: [id])
+  presentations  ProductPresentation[]
+
+  @@index([organizationId])
+  @@index([label])
 }
 
 // ======================================

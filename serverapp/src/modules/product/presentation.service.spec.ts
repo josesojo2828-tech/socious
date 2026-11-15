@@ -37,6 +37,9 @@ const makeService = () => {
         return state.product;
       }),
     },
+    productSize: {
+      findFirst: jest.fn(async () => null),
+    },
     productPresentation: {
       findMany: jest.fn(async () => state.presentations),
       findFirst: jest.fn(async ({ where }: any) => {
@@ -162,6 +165,35 @@ describe("PresentationService", () => {
       name: "Bolsa 100 g Roja",
     });
     expect(renamed.salePriceUSD).toBe(4);
+  });
+
+  it("stores the catalog size label and the measure unit", async () => {
+    const { service, prisma } = makeService();
+    prisma.productSize.findFirst.mockResolvedValue({ id: "size-m", label: "M" });
+    const created = await service.create("org-1", "prod-1", {
+      name: "Camisa roja",
+      sizeId: "size-m",
+      measures: "70",
+      measureUnit: "cm",
+    });
+    expect(created.sizeId).toBe("size-m");
+    expect(created.sizeLabel).toBe("M");
+    expect(created.measureUnit).toBe("cm");
+  });
+
+  it("accepts a custom size label and rejects an unknown catalog size", async () => {
+    const { service, prisma } = makeService();
+    const custom = await service.create("org-1", "prod-1", {
+      name: "Camisa verde",
+      sizeLabel: "  Talla 38 especial ",
+    });
+    expect(custom.sizeId).toBeNull();
+    expect(custom.sizeLabel).toBe("Talla 38 especial");
+
+    prisma.productSize.findFirst.mockResolvedValue(null);
+    await expect(
+      service.create("org-1", "prod-1", { name: "Camisa", sizeId: "nope" }),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it("decomposes bulk stock into the presentation", async () => {

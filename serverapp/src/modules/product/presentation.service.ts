@@ -48,6 +48,11 @@ export class PresentationService {
     dto: CreatePresentationDto,
   ) {
     await this.assertProduct(organizationId, productId);
+    const size = await this.resolveSize(
+      organizationId,
+      dto.sizeId,
+      dto.sizeLabel,
+    );
     return this.prisma.productPresentation.create({
       data: {
         productId,
@@ -57,6 +62,9 @@ export class PresentationService {
         barcode: dto.barcode?.trim() || null,
         color: dto.color?.trim() || null,
         measures: dto.measures?.trim() || null,
+        measureUnit: dto.measureUnit?.trim() || null,
+        sizeId: size?.sizeId ?? null,
+        sizeLabel: size?.sizeLabel ?? null,
         unit: dto.unit?.trim() || "UND",
         stock: dto.stock ?? 0,
         minStock: dto.minStock ?? 0,
@@ -86,6 +94,10 @@ export class PresentationService {
     dto: UpdatePresentationDto,
   ) {
     await this.ownPresentation(organizationId, id);
+    const size =
+      dto.sizeId !== undefined || dto.sizeLabel !== undefined
+        ? await this.resolveSize(organizationId, dto.sizeId, dto.sizeLabel)
+        : null;
     return this.prisma.productPresentation.update({
       where: { id },
       data: {
@@ -98,6 +110,10 @@ export class PresentationService {
         ...(dto.measures !== undefined
           ? { measures: dto.measures?.trim() || null }
           : {}),
+        ...(dto.measureUnit !== undefined
+          ? { measureUnit: dto.measureUnit?.trim() || null }
+          : {}),
+        ...(size ? size : {}),
         ...(dto.unit !== undefined ? { unit: dto.unit.trim() } : {}),
         ...(dto.minStock !== undefined ? { minStock: dto.minStock } : {}),
         ...(dto.active !== undefined ? { active: dto.active } : {}),
@@ -155,6 +171,31 @@ export class PresentationService {
       }),
     ]);
     return updated;
+  }
+
+  /**
+   * Resolves a catalog size (system or tenant) into the pair stored on the
+   * presentation; a custom label is used when no catalog id arrives.
+   */
+  private async resolveSize(
+    organizationId: string,
+    sizeId: string | null | undefined,
+    sizeLabel: string | null | undefined,
+  ): Promise<{ sizeId: string | null; sizeLabel: string | null } | null> {
+    if (sizeId) {
+      const size = await this.prisma.productSize.findFirst({
+        where: {
+          id: sizeId,
+          OR: [{ organizationId: null }, { organizationId }],
+        },
+        select: { id: true, label: true },
+      });
+      if (!size) throw new BadRequestException("La talla no existe.");
+      return { sizeId: size.id, sizeLabel: size.label };
+    }
+    const custom = sizeLabel?.trim();
+    if (custom) return { sizeId: null, sizeLabel: custom };
+    return null;
   }
 
   // ---- Imágenes por variante (S8): límite por plan ----
