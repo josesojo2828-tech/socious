@@ -90,9 +90,20 @@ describe("variantPrefillFromProduct (S7)", () => {
     expect(form.wholesalePriceUSD).toBeUndefined();
     expect(form.sku).toBe("ARROZ-1K-V");
   });
+
+  it("leaves the sku empty when the source has no SKU (S1)", () => {
+    const form = variantPrefillFromProduct(source({ sku: "" }));
+    expect(form.sku).toBe("");
+    expect(validateProductForm(form)).toBeNull();
+  });
 });
 
 describe("suggestFreeSku", () => {
+  it("returns an empty suggestion when the base is empty (S1)", () => {
+    expect(suggestFreeSku("", [])).toBe("");
+    expect(suggestFreeSku("   ", ["A-V"])).toBe("");
+  });
+
   it("returns <base>-V when it is free", () => {
     expect(suggestFreeSku("CAM-001", ["CAM-001", "CAM-002"])).toBe("CAM-001-V");
   });

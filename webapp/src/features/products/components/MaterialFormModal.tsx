@@ -97,11 +97,11 @@ export function MaterialFormModal({
     event.preventDefault();
     const trimmedSku = sku.trim();
     const trimmedName = name.trim();
-    if (!trimmedSku || !trimmedName) {
-      setError("SKU y nombre son obligatorios.");
+    if (!trimmedName) {
+      setError("El nombre es obligatorio.");
       return;
     }
-    if (!SKU_PATTERN.test(trimmedSku)) {
+    if (trimmedSku !== "" && !SKU_PATTERN.test(trimmedSku)) {
       setError(
         "El SKU solo puede contener letras, números, puntos, guiones y guiones bajos.",
       );
@@ -164,9 +164,8 @@ export function MaterialFormModal({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className={LABEL_SM}>
-          SKU *
+          SKU (opcional)
           <input
-            required
             value={sku}
             onChange={(event) => setSku(event.target.value)}
             placeholder="HOJA-A4"

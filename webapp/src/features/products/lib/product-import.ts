@@ -371,10 +371,9 @@ export function rowErrors(
   const warnings: string[] = [];
   const push = (text: string) => errors.push(`Fila ${context.line}: ${text}`);
 
+  // S3: the SKU is optional; only a non-empty value is validated.
   const sku = values.sku.trim();
-  if (sku === "") {
-    push("el SKU es obligatorio.");
-  } else {
+  if (sku !== "") {
     if (sku.length > SKU_MAX) {
       push(`el SKU no puede superar los ${SKU_MAX} caracteres.`);
     }

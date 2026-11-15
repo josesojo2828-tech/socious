@@ -153,7 +153,7 @@ export function ProductFormPanel({
 
       <div className="grid gap-3 sm:grid-cols-3">
         <label className={LABEL_SM}>
-          SKU *
+          SKU (opcional)
           <input
             className={`mt-1 font-mono ${INPUT}`}
             value={form.sku}

@@ -44,7 +44,7 @@ Cada fila se mapea a `CreateProductDto`:
 
 | Columna | Campo | Regla |
 | --- | --- | --- |
-| `sku` | `sku` | Obligatorio, `^[A-Za-z0-9._-]+$`, ≤ 60. Único **dentro del archivo** y **dentro del tenant** (el alta reutiliza `assertSkuAvailable`). |
+| `sku` | `sku` | Opcional (desde la feature de SKU opcional). Con valor: `^[A-Za-z0-9._-]+$`, ≤ 60, único **dentro del archivo** y **dentro del tenant**. Vacío: la fila se importa sin SKU y no participa de la unicidad. |
 | `nombre` | `name` | Obligatorio, ≤ 200. |
 | `tipo` | `isService` / `isRawMaterial` | Obligatorio, sin distinguir mayúsculas: `producto` → ambos `false`; `servicio` → `isService: true`; `material` → `isRawMaterial: true`. Otro valor → error de fila. |
 | `barcode` | `barcode` | Opcional, ≤ 60. |
@@ -140,3 +140,5 @@ Cada fila se mapea a `CreateProductDto`:
 - **L3** (verbatim): "dale, arma el odoo y el plan de implementacion"
 - **L4** (decisiones cerradas con el usuario): formato CSV únicamente (sin XLSX); UTF-8 con fallback a Latin-1/Windows-1252; plantilla con BOM UTF-8; transporte JSON `{ content, filename? }` con límite de 2 MB; endpoints `GET /import/template`, `POST /import/validate`, `POST /import`; columnas `sku,nombre,tipo,barcode,descripcion,costo_usd,venta_usd,stock_inicial,unidad,categoria,proveedor,publico`; `tipo` ∈ `producto | servicio | material`; categoría/proveedor por nombre (no encontrados → null + warning); `sku` obligatorio y único en archivo y tenant; commit reutiliza `ProductService.create()` por fila dentro de una transacción por lote (nunca `createMany`); límite de 500 filas; importación parcial; fuera de alcance XLSX, BOM/componentes, imágenes, jobs en segundo plano; UI con botón "Importar" y modal por `useModalStore`, parseo/validación en una librería pura.
 - **L5** (verbatim): "si actualiza, para que separe los decimales, y tambien implementa que sea que se carguen luego se pueda ahi mismo (antes de hacer la carga como tal) que ahi mismo pueda marcar que si van pal baile o no, editarlos y todo de ahi mismo."
+
+> Nota (SKU opcional): la columna `sku` sigue existiendo en la plantilla y en el encabezado requerido, pero su valor puede quedar vacío. Cambio registrado en `odd/tasks/producto-form-ajustes.md`.

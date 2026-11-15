@@ -106,8 +106,9 @@ export function toForm(product: Product): ProductForm {
 
 /** The warning message to show, or null when the form can be submitted. */
 export function validateProductForm(form: ProductForm): string | null {
-  if (!form.sku.trim() || !form.name.trim()) {
-    return "SKU y nombre son obligatorios.";
+  // S1: the SKU is optional; only the name is required.
+  if (!form.name.trim()) {
+    return "El nombre es obligatorio.";
   }
   for (const row of form.components) {
     const qty = Number(row.quantity);
