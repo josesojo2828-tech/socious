@@ -24,6 +24,10 @@ import {
   presentationPriceLabel,
 } from "../lib/presentation-price";
 import {
+  presentationMeasureLabel,
+  presentationSizeLabel,
+} from "../lib/presentation-fields";
+import {
   buildImageUploadForm,
   canUploadImage,
   publicFileUrl,
@@ -253,7 +257,8 @@ export function PresentationsCard({
                   <tr className={TABLE_HEAD}>
                     <th className="px-3 py-2 font-medium">Tipo</th>
                     <th className="px-3 py-2 font-medium">Color</th>
-                    <th className="px-3 py-2 font-medium">Medidas</th>
+                    <th className="px-3 py-2 font-medium">Talla</th>
+                    <th className="px-3 py-2 font-medium">Medida</th>
                     <th className="px-3 py-2 text-right font-medium">Stock</th>
                     <th className="px-3 py-2 text-right font-medium">Costo</th>
                     <th className="px-3 py-2 text-right font-medium">Precio</th>
@@ -297,7 +302,10 @@ export function PresentationsCard({
                         )}
                       </td>
                       <td className="px-3 py-2.5 text-slate-600 dark:text-slate-300">
-                        {row.measures || "—"}
+                        {presentationSizeLabel(row.sizeLabel)}
+                      </td>
+                      <td className="px-3 py-2.5 text-slate-600 dark:text-slate-300">
+                        {presentationMeasureLabel(row.measures, row.measureUnit)}
                       </td>
                       <td className="px-3 py-2.5 text-right font-mono tabular-nums">
                         {Number(row.stock)} {row.unit}

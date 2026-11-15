@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Boxes } from "lucide-react";
 import { Button } from "@/shared/components/atoms/Button";
 import { apiClient } from "@/shared/api/api.client";
@@ -8,13 +8,19 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { SearchableSelect } from "@/shared/components/molecules/form/SearchableSelect";
 import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "../services/products.endpoints";
+import { SizeEndpoints } from "@/features/sizes/services/sizes.endpoints";
+import type { ProductSize } from "@/features/sizes/types/product-size.type";
 import { parsePresentationSalePrice } from "../lib/presentation-price";
 import type { Product } from "../types/product.type";
 import type { ProductPresentation } from "../types/presentation.type";
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+const CUSTOM = "__custom__";
+/** Common measure units; "Personalizado…" lets the merchant type its own. */
+const MEASURE_UNITS: string[] = ["g", "kg", "L", "mL", "cm", "m", "in"];
 
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as { response?: { data?: { message?: string } } };
@@ -54,6 +60,24 @@ export function PresentationFormModal({
   );
   const [color, setColor] = useState(presentation?.color ?? "");
   const [measures, setMeasures] = useState(presentation?.measures ?? "");
+  const [sizes, setSizes] = useState<ProductSize[]>([]);
+  const [sizeId, setSizeId] = useState(presentation?.sizeId ?? "");
+  const [customSize, setCustomSize] = useState(
+    presentation?.sizeId ? "" : (presentation?.sizeLabel ?? ""),
+  );
+  const [useCustomSize, setUseCustomSize] = useState(
+    Boolean(presentation?.sizeLabel && !presentation?.sizeId),
+  );
+  const initialUnit = presentation?.measureUnit ?? "";
+  const [measureUnit, setMeasureUnit] = useState(
+    MEASURE_UNITS.includes(initialUnit) ? initialUnit : "",
+  );
+  const [customUnit, setCustomUnit] = useState(
+    initialUnit && !MEASURE_UNITS.includes(initialUnit) ? initialUnit : "",
+  );
+  const [useCustomUnit, setUseCustomUnit] = useState(
+    Boolean(initialUnit && !MEASURE_UNITS.includes(initialUnit)),
+  );
   const [stock, setStock] = useState(String(presentation?.stock ?? 0));
   const [salePrice, setSalePrice] = useState(
     presentation?.salePriceUSD != null ? String(presentation.salePriceUSD) : "",
@@ -63,6 +87,41 @@ export function PresentationFormModal({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await apiClient.get<ProductSize[]>(SizeEndpoints.list);
+        if (!cancelled) setSizes(Array.isArray(data) ? data : []);
+      } catch {
+        if (!cancelled) setSizes([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleSizeChange = (value: string) => {
+    if (value === CUSTOM) {
+      setUseCustomSize(true);
+      setSizeId("");
+      return;
+    }
+    setUseCustomSize(false);
+    setSizeId(value);
+  };
+
+  const handleUnitChange = (value: string) => {
+    if (value === CUSTOM) {
+      setUseCustomUnit(true);
+      setMeasureUnit("");
+      return;
+    }
+    setUseCustomUnit(false);
+    setMeasureUnit(value);
+  };
 
   const close = () => {
     closeModal();
@@ -89,6 +148,11 @@ export function PresentationFormModal({
       ...(unit.trim() ? { unit: unit.trim() } : {}),
       color: color.trim(),
       measures: measures.trim(),
+      measureUnit: useCustomUnit
+        ? customUnit.trim() || null
+        : measureUnit || null,
+      sizeId: useCustomSize ? null : sizeId || null,
+      sizeLabel: useCustomSize ? customSize.trim() || null : null,
       stock: Number(stock) || 0,
       ...(salePriceUSD !== null ? { salePriceUSD } : {}),
       // null clears the own cost so the type inherits the product cost again.
@@ -181,13 +245,61 @@ export function PresentationFormModal({
         </label>
 
         <label className={LABEL_SM}>
-          Medidas
+          Medida
           <input
             value={measures}
             onChange={(event) => setMeasures(event.target.value)}
-            placeholder="10×10 cm"
+            placeholder="70 o 10×10"
             className={`mt-1 ${INPUT}`}
           />
+        </label>
+
+        <label className={LABEL_SM}>
+          Unidad de medida
+          <SearchableSelect
+            aria-label="Unidad de medida"
+            className={`mt-1 ${INPUT}`}
+            value={useCustomUnit ? CUSTOM : measureUnit}
+            onChange={handleUnitChange}
+            options={[
+              ...MEASURE_UNITS.map((option) => ({ value: option, label: option })),
+              { value: CUSTOM, label: "Personalizado…" },
+            ]}
+            emptyLabel="Sin unidad"
+          />
+          {useCustomUnit ? (
+            <input
+              value={customUnit}
+              onChange={(event) => setCustomUnit(event.target.value)}
+              placeholder="Unidad personalizada"
+              maxLength={20}
+              className={`mt-1 ${INPUT}`}
+            />
+          ) : null}
+        </label>
+
+        <label className={LABEL_SM}>
+          Talla
+          <SearchableSelect
+            aria-label="Talla"
+            className={`mt-1 ${INPUT}`}
+            value={useCustomSize ? CUSTOM : sizeId}
+            onChange={handleSizeChange}
+            options={[
+              ...sizes.map((size) => ({ value: size.id, label: size.label })),
+              { value: CUSTOM, label: "Personalizado…" },
+            ]}
+            emptyLabel="Sin talla"
+          />
+          {useCustomSize ? (
+            <input
+              value={customSize}
+              onChange={(event) => setCustomSize(event.target.value)}
+              placeholder="Talla personalizada"
+              maxLength={40}
+              className={`mt-1 ${INPUT}`}
+            />
+          ) : null}
         </label>
 
         <label className={LABEL_SM}>

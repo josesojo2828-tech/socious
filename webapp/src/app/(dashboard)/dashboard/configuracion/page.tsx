@@ -49,6 +49,7 @@ import {
 } from "@/features/branches/lib/branch-form";
 import { PlanEndpoints } from "@/features/plans/services/plans.endpoints";
 import { UnitsPanel } from "@/features/units/components/UnitsPanel";
+import { SizesPanel } from "@/features/sizes/components/SizesPanel";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { CategoriesPanel } from "@/features/categories/components/CategoriesPanel";
 import {
@@ -742,6 +743,7 @@ export default function SettingsPage() {
             </SectionPanel>
           ) : null}
           <UnitsPanel />
+          <SizesPanel />
           <CategoriesPanel />
         </>
       ) : null}

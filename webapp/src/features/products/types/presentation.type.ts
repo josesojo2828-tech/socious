@@ -9,6 +9,12 @@ export interface ProductPresentation {
   barcode: string | null;
   color: string | null;
   measures: string | null;
+  /** Unidad de la medida ("g", "cm" o un texto propio). */
+  measureUnit?: string | null;
+  /** Catalog size (null = sin talla o talla personalizada). */
+  sizeId?: string | null;
+  /** Label saved with the type: catalog label or the custom text. */
+  sizeLabel?: string | null;
   unit: string;
   /** Own price; null = hereda el precio del producto. */
   salePriceUSD?: string | number | null;
