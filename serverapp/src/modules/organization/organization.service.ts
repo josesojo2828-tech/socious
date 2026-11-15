@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { Prisma } from '@prisma/client';
 import { CreateOrganizationDto, InviteMemberDto, OrganizationRoleDto } from './dto/organization.dto';
+import { UpdateOrganizationIdentityDto } from './dto/organization-identity.dto';
 import { MailService } from '../mail/mail.service';
 import NotificationRepository from '../notification/repository/notification.repository';
 import { NotificationType } from 'src/shared/types/schema.types';
@@ -19,6 +21,41 @@ const DEFAULT_NUTRITIONIST_COLORS = [
   '#DC2626', // Red
   '#0891B2', // Cyan
 ];
+
+/**
+ * The public identity of a tenant (the "Identidad" screen). WhatsApp is NOT
+ * here on purpose: it lives in `TenantSettings.storefront.whatsapp` to keep a
+ * single source of truth.
+ */
+const IDENTITY_SELECT = {
+  id: true,
+  name: true,
+  slug: true,
+  taxId: true,
+  logoUrl: true,
+  brandPrimary: true,
+  brandAccent: true,
+  email: true,
+  phone: true,
+  website: true,
+  address: true,
+  latitude: true,
+  longitude: true,
+} as const;
+
+/** Keys a partial identity update may write. `undefined` means "leave it". */
+const IDENTITY_MUTABLE_FIELDS = [
+  'name',
+  'email',
+  'phone',
+  'website',
+  'address',
+  'latitude',
+  'longitude',
+  'brandPrimary',
+  'brandAccent',
+  'logoUrl',
+] as const;
 
 @Injectable()
 export class OrganizationService {
@@ -281,6 +318,44 @@ export class OrganizationService {
     );
 
     return results;
+  }
+
+  async getIdentity(organizationId: string) {
+    const identity = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: IDENTITY_SELECT,
+    });
+
+    if (!identity) throw new NotFoundException('Organización no encontrada');
+    return identity;
+  }
+
+  /**
+   * Partial update: only the keys present in the payload are written, so a
+   * PATCH that edits, say, the phone never nulls the address or the colors.
+   */
+  async updateIdentity(
+    organizationId: string,
+    dto: UpdateOrganizationIdentityDto,
+  ) {
+    const existing = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { id: true },
+    });
+
+    if (!existing) throw new NotFoundException('Organización no encontrada');
+
+    const data: Record<string, unknown> = {};
+    for (const field of IDENTITY_MUTABLE_FIELDS) {
+      const value = (dto as Record<string, unknown>)[field];
+      if (value !== undefined) data[field] = value;
+    }
+
+    return this.prisma.organization.update({
+      where: { id: organizationId },
+      data: data as Prisma.OrganizationUpdateInput,
+      select: IDENTITY_SELECT,
+    });
   }
 
   async getOrganizationDetails(orgId: string, userId: string) {

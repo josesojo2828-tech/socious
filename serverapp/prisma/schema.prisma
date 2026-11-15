@@ -538,6 +538,14 @@ model Organization {
   slug               String?              @unique // Para la tienda pública: socius.com/shop/[slug]
   taxId              String?              // RIF / Cédula / RUT / NIT
   logoUrl            String?
+  email              String?
+  phone              String?
+  website            String?
+  address            String?
+  latitude           Float?
+  longitude          Float?
+  brandPrimary       String?              // Hex #RRGGBB
+  brandAccent        String?              // Hex #RRGGBB
   maxSeats           Int                  @default(5)
   status             String               @default("ACTIVE")
   defaultCurrency    String               @default("USD") // Moneda base del negocio (USD, VES, COP, etc.)
