@@ -140,6 +140,11 @@ export class SaleService {
         rates,
       );
 
+      // The sale is ACCRUAL: a back-dated issue must also drive the credit
+      // terms, so the due date is counted from the issue date (falling back to
+      // today for a missing/invalid one), never from "now".
+      const issueDate = data.issueDate ? new Date(data.issueDate) : new Date();
+
       let dueDate = data.dueDate ? new Date(data.dueDate) : null;
       let creditTerms: string | null = null;
       if (data.creditCadence) {
@@ -149,10 +154,17 @@ export class SaleService {
           monthlyDay: data.creditMonthlyDay ?? null,
         });
         if (!dueDate) {
-          dueDate = computeCreditDueDate(data.creditCadence, {
-            everyNDays: data.creditEveryNDays,
-            monthlyDay: data.creditMonthlyDay,
-          });
+          const from = Number.isNaN(issueDate.getTime())
+            ? new Date()
+            : issueDate;
+          dueDate = computeCreditDueDate(
+            data.creditCadence,
+            {
+              everyNDays: data.creditEveryNDays,
+              monthlyDay: data.creditMonthlyDay,
+            },
+            from,
+          );
         }
       }
 
@@ -170,7 +182,7 @@ export class SaleService {
           organizationId: scope.organizationId,
           clientId: data.clientId ?? null,
           orderId: data.orderId ?? null,
-          issueDate: data.issueDate ? new Date(data.issueDate) : new Date(),
+          issueDate,
           dueDate,
           creditTerms,
           rateBcv: rates.rateBcv,
