@@ -4,6 +4,14 @@
  * Single source of truth for the pearl/navy/brass language already used by
  * the caja, POS and sidebar screens. Reference implementations:
  * `dashboard/caja/page.tsx` and `dashboard/pos/page.tsx`.
+ *
+ * The palette is driven by the `--brand-*` custom properties declared in
+ * `globals.css` (`:root` defaults) and overridden per tenant by `TenantTheme`.
+ * Brass maps to `--brand-primary` and navy to `--brand-accent`; a tenant with
+ * no brand falls back to the defaults, so today's look is preserved. The
+ * neutral ink (`#111018`) and cream canvas (`#f0ede4`) stay literal where they
+ * are page text/background; only their `*-contrast` counterparts sit on a
+ * brand fill.
  */
 
 /** Panel de cristal (claro + oscuro en un solo string). */
@@ -12,15 +20,15 @@ export const GLASS =
 
 /** CTA principal en latón (crear / confirmar / cobrar). */
 export const CTA_BRASS =
-  "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#b2944a] hover:bg-[#bf9f54] text-[#111018] font-semibold transition-colors disabled:opacity-50 shadow-[0_10px_26px_-12px_rgba(178,148,74,0.75)]";
+  "inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-hover)] text-[var(--brand-primary-contrast)] font-semibold transition-colors disabled:opacity-50 shadow-[0_10px_26px_-12px_color-mix(in_oklab,var(--brand-primary)_75%,transparent)]";
 
 /** CTA secundario navy (cancelar / volver / acciones sobrias). */
 export const CTA_NAVY =
-  "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1a2a46] hover:bg-[#243a5e] text-[#f0ede4] font-semibold transition-colors disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand-accent)] hover:bg-[var(--brand-accent-hover)] text-[var(--brand-accent-contrast)] font-semibold transition-colors disabled:opacity-50";
 
 /** Botón fantasma (volver, acciones de fila). */
 export const BTN_GHOST =
-  "inline-flex items-center justify-center gap-2 rounded-xl border border-[#1a2a46]/15 dark:border-white/15 px-3 py-2 text-sm font-medium text-[#1a2a46]/80 hover:bg-[#1a2a46]/[0.05] dark:text-slate-300 dark:hover:bg-white/5 transition-colors";
+  "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--brand-accent)]/15 dark:border-white/15 px-3 py-2 text-sm font-medium text-[var(--brand-accent)]/80 hover:bg-[var(--brand-accent)]/[0.05] dark:text-slate-300 dark:hover:bg-white/5 transition-colors";
 
 /** Ojo de buey del encabezado de página (workspace · sección · estado). */
 export const EYEBROW =
@@ -32,7 +40,7 @@ export const PAGE_TITLE =
 
 /** Punto de latón (separadores tipo divider-dot del mockup). */
 export const BRASS_DOT =
-  "inline-block w-[3px] h-[3px] rounded-full bg-[#b2944a] mx-2.5 align-middle";
+  "inline-block w-[3px] h-[3px] rounded-full bg-[var(--brand-primary)] mx-2.5 align-middle";
 
 /** Card blanca estándar (misma sombra que el resto del sistema). */
 export const CARD =
@@ -55,6 +63,6 @@ export const TABLE_ROW =
 
 /** Inputs (select/input) en lenguaje navy. */
 export const INPUT =
-  "w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 text-sm text-[#111018] dark:text-slate-100";
+  "w-full rounded-xl border border-[var(--brand-accent)]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 text-sm text-[#111018] dark:text-slate-100";
 
 export const LABEL_SM = "block text-xs text-slate-500 dark:text-slate-400";

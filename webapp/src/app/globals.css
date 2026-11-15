@@ -85,6 +85,23 @@
   --noise: 0;
 }
 
+/* ---- MAISON BRAND TOKENS ----
+ * Runtime palette consumed by `maison-style.ts`. These defaults reproduce the
+ * Maison Lévrier look for a tenant without a brand; `TenantTheme` overrides
+ * them (inline, per subtree) when the organization defines a brand color.
+ * Brass -> primary, navy -> accent. Keep these equal to today's hexes: the
+ * brand-theme spec pins every value so default-look parity cannot drift. */
+:root {
+  --brand-primary: #b2944a;
+  --brand-primary-hover: #bf9f54;
+  --brand-primary-soft: #8e7538;
+  --brand-primary-on-dark: #d8bd77;
+  --brand-primary-contrast: #111018;
+  --brand-accent: #1a2a46;
+  --brand-accent-hover: #243a5e;
+  --brand-accent-contrast: #f0ede4;
+}
+
 button, 
 [role="button"], 
 a, 

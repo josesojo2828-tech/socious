@@ -144,6 +144,23 @@ export function deriveDarkVariant(hex: string): string {
   return rgbToHex(...hslToRgb(hue, saturation, lifted));
 }
 
+/**
+ * Moves a color's HSL lightness by `delta` (e.g. `+0.08`), keeping hue and
+ * saturation untouched, and clamps the result to `[0, 1]`.
+ *
+ * Used to derive the hover/soft variants of a tenant brand from its base
+ * color, so the whole family stays hue-consistent. Accepts `#RGB`/`#RRGGBB`
+ * and returns the input unchanged when it is not a valid hex color, matching
+ * `deriveDarkVariant`.
+ */
+export function shiftLightness(hex: string, delta: number): string {
+  const normalized = normalizeBrandHex(hex);
+  if (!normalized) return hex;
+
+  const [hue, saturation, lightness] = rgbToHsl(...hexToRgb(normalized));
+  return rgbToHex(...hslToRgb(hue, saturation, clamp(lightness + delta, 0, 1)));
+}
+
 function channelToLinear(channel: number): number {
   const ratio = channel / 255;
   return ratio <= 0.03928
