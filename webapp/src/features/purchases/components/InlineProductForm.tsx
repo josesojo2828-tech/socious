@@ -6,6 +6,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product } from "@/features/products/types/product.type";
 
@@ -124,12 +125,11 @@ export function InlineProductForm({
         </label>
         <label className={LABEL_SM}>
           Costo USD
-          <input
-            type="number"
-            min="0"
-            step="0.01"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={cost}
-            onChange={(event) => setCost(event.target.value)}
+            onValueChange={setCost}
             className={`mt-1 ${INPUT}`}
           />
         </label>

@@ -16,6 +16,8 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { CTA_BRASS, TABLE_HEAD, TABLE_ROW } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "../services/products.endpoints";
 import { presentationPriceLabel } from "../lib/presentation-price";
 import {
@@ -395,12 +397,10 @@ export function PresentationsCard({
                 hint="Mueve cantidad del producto a granel hacia una presentación."
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    type="number"
-                    min="0.01"
-                    step="any"
+                  <DecimalInput
+                    decimals={resolveUnitDecimals(product?.unit)}
                     value={decomposeQty}
-                    onChange={(event) => setDecomposeQty(event.target.value)}
+                    onValueChange={setDecomposeQty}
                     placeholder="Cantidad"
                     className="w-24 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
                   />

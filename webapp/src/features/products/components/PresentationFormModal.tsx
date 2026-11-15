@@ -7,6 +7,8 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "../services/products.endpoints";
 import { parsePresentationSalePrice } from "../lib/presentation-price";
 import type { Product } from "../types/product.type";
@@ -210,24 +212,21 @@ export function PresentationFormModal({
 
         <label className={LABEL_SM}>
           Stock inicial
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            decimals={resolveUnitDecimals(unit)}
             value={stock}
-            onChange={(event) => setStock(event.target.value)}
+            onValueChange={setStock}
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
         </label>
 
         <label className={`${LABEL_SM} sm:col-span-2`}>
           Precio de venta (USD)
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={salePrice}
-            onChange={(event) => setSalePrice(event.target.value)}
+            onValueChange={setSalePrice}
             placeholder="Vacío = hereda el precio del producto"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />

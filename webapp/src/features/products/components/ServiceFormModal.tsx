@@ -8,6 +8,8 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
@@ -250,12 +252,11 @@ export function ServiceFormModal({
         </label>
         <label className={LABEL_SM}>
           Precio de venta (moneda principal · USD)
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={salePriceUSD}
-            onChange={(event) => setSalePriceUSD(event.target.value)}
+            onValueChange={setSalePriceUSD}
             placeholder="0.00"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
@@ -272,12 +273,11 @@ export function ServiceFormModal({
         </label>
         <label className={`${LABEL_SM} sm:col-span-2`}>
           Costo (moneda principal · USD)
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={costPriceUSD}
-            onChange={(event) => setCostPriceUSD(event.target.value)}
+            onValueChange={setCostPriceUSD}
             placeholder="0.00"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
@@ -368,14 +368,17 @@ export function ServiceFormModal({
                 </label>
                 <label className={LABEL_SM}>
                   Cantidad
-                  <input
-                    type="number"
-                    min="0.01"
-                    step="any"
+                  <DecimalInput
+                    decimals={resolveUnitDecimals(
+                      materials.find(
+                        (material) => material.id === row.componentId,
+                      )?.unit,
+                      units,
+                    )}
                     className={`mt-1 ${INPUT}`}
                     value={row.quantity}
-                    onChange={(event) =>
-                      updateComponent(index, { quantity: event.target.value })
+                    onValueChange={(text) =>
+                      updateComponent(index, { quantity: text })
                     }
                   />
                 </label>

@@ -7,6 +7,8 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
@@ -207,24 +209,21 @@ export function MaterialFormModal({
         </label>
         <label className={LABEL_SM}>
           Stock inicial
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            decimals={resolveUnitDecimals(unit, units)}
             value={stock}
-            onChange={(event) => setStock(event.target.value)}
+            onValueChange={setStock}
             placeholder="0"
             className={`mt-1 ${INPUT}`}
           />
         </label>
         <label className={`${LABEL_SM} sm:col-span-2`}>
           Costo (moneda principal · USD)
-          <input
-            type="number"
-            min="0"
-            step="any"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={costPriceUSD}
-            onChange={(event) => setCostPriceUSD(event.target.value)}
+            onValueChange={setCostPriceUSD}
             placeholder="0.00"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
