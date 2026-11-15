@@ -19,7 +19,10 @@ import { CTA_BRASS, TABLE_HEAD, TABLE_ROW } from "@/shared/lib/maison-style";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "../services/products.endpoints";
-import { presentationPriceLabel } from "../lib/presentation-price";
+import {
+  presentationCostLabel,
+  presentationPriceLabel,
+} from "../lib/presentation-price";
 import {
   buildImageUploadForm,
   canUploadImage,
@@ -72,8 +75,8 @@ export function PresentationsCard({
     } catch (error) {
       addToast({
         type: "error",
-        title: "Presentaciones",
-        message: apiMessage(error, "No se pudieron cargar las presentaciones."),
+        title: "Tipos",
+        message: apiMessage(error, "No se pudieron cargar los tipos."),
       });
     } finally {
       setLoading(false);
@@ -98,7 +101,7 @@ export function PresentationsCard({
   };
 
   const remove = async (presentation: ProductPresentation) => {
-    if (!window.confirm(`¿Eliminar la presentación ${presentation.name}?`)) {
+    if (!window.confirm(`¿Eliminar el tipo ${presentation.name}?`)) {
       return;
     }
     try {
@@ -109,8 +112,8 @@ export function PresentationsCard({
     } catch (error) {
       addToast({
         type: "error",
-        title: "Presentaciones",
-        message: apiMessage(error, "No se pudo eliminar la presentación."),
+        title: "Tipos",
+        message: apiMessage(error, "No se pudo eliminar el tipo."),
       });
     }
   };
@@ -192,7 +195,7 @@ export function PresentationsCard({
       addToast({
         type: "warning",
         title: "Descomponer",
-        message: "Indicá la cantidad y la presentación destino.",
+        message: "Indicá la cantidad y el tipo destino.",
       });
       return;
     }
@@ -204,7 +207,7 @@ export function PresentationsCard({
       addToast({
         type: "success",
         title: "Descomponer",
-        message: "Stock movido del producto a la presentación.",
+        message: "Stock movido del producto al tipo.",
       });
       setDecomposeQty("");
       void fetchList();
@@ -220,8 +223,8 @@ export function PresentationsCard({
   return (
     <SectionCard
       icon={<Boxes className="h-5 w-5" />}
-      title="Presentaciones"
-      description="Formas de vender el mismo producto (color, medidas) con stock propio. Descomponé el stock a granel para armar bolsitas, cajas o colores."
+      title="Tipos"
+      description="Variantes del mismo producto (color, medida) con stock propio y costo heredado. Descomponé el stock a granel para armar bolsitas, cajas o colores."
     >
       {loading ? (
         <div className="flex justify-center py-4">
@@ -241,17 +244,18 @@ export function PresentationsCard({
 
           {rows.length === 0 ? (
             <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
-              Todavía no hay presentaciones.
+              Todavía no hay tipos.
             </p>
           ) : (
             <div className="mb-4 overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className={TABLE_HEAD}>
-                    <th className="px-3 py-2 font-medium">Presentación</th>
+                    <th className="px-3 py-2 font-medium">Tipo</th>
                     <th className="px-3 py-2 font-medium">Color</th>
                     <th className="px-3 py-2 font-medium">Medidas</th>
                     <th className="px-3 py-2 text-right font-medium">Stock</th>
+                    <th className="px-3 py-2 text-right font-medium">Costo</th>
                     <th className="px-3 py-2 text-right font-medium">Precio</th>
                     <th className="px-3 py-2 font-medium">Imágenes</th>
                     <th className="px-3 py-2 text-right font-medium">
@@ -297,6 +301,12 @@ export function PresentationsCard({
                       </td>
                       <td className="px-3 py-2.5 text-right font-mono tabular-nums">
                         {Number(row.stock)} {row.unit}
+                      </td>
+                      <td className="px-3 py-2.5 text-right font-mono tabular-nums">
+                        {presentationCostLabel(
+                          row.costPriceUSD,
+                          product?.costPriceUSD,
+                        )}
                       </td>
                       <td className="px-3 py-2.5 text-right font-mono tabular-nums">
                         {presentationPriceLabel(row.salePriceUSD)}
@@ -394,7 +404,7 @@ export function PresentationsCard({
             >
               <SectionRow
                 label="Descomponer stock"
-                hint="Mueve cantidad del producto a granel hacia una presentación."
+                hint="Mueve cantidad del producto a granel hacia un tipo."
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <DecimalInput
@@ -409,7 +419,7 @@ export function PresentationsCard({
                     onChange={(event) => setDecomposeTarget(event.target.value)}
                     className="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
                   >
-                    <option value="">Presentación…</option>
+                    <option value="">Tipo…</option>
                     {rows.map((row) => (
                       <option key={row.id} value={row.id}>
                         {row.name}

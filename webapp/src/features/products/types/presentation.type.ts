@@ -12,6 +12,8 @@ export interface ProductPresentation {
   unit: string;
   /** Own price; null = hereda el precio del producto. */
   salePriceUSD?: string | number | null;
+  /** Own cost; null = hereda el costo del producto. */
+  costPriceUSD?: string | number | null;
   stock: string | number;
   minStock: string | number;
   active: boolean;

@@ -58,6 +58,9 @@ export function PresentationFormModal({
   const [salePrice, setSalePrice] = useState(
     presentation?.salePriceUSD != null ? String(presentation.salePriceUSD) : "",
   );
+  const [costPrice, setCostPrice] = useState(
+    presentation?.costPriceUSD != null ? String(presentation.costPriceUSD) : "",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,11 +72,16 @@ export function PresentationFormModal({
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!name.trim()) {
-      setError("Poné un nombre a la presentación.");
+      setError("Poné un nombre al tipo.");
       return;
     }
 
     const salePriceUSD = parsePresentationSalePrice(salePrice);
+    const costPriceUSD = parsePresentationSalePrice(costPrice);
+    if (costPrice.trim() !== "" && costPriceUSD === null) {
+      setError("El costo debe ser un número mayor o igual a cero.");
+      return;
+    }
     const payload = {
       name: name.trim(),
       ...(sku.trim() ? { sku: sku.trim() } : {}),
@@ -83,6 +91,8 @@ export function PresentationFormModal({
       measures: measures.trim(),
       stock: Number(stock) || 0,
       ...(salePriceUSD !== null ? { salePriceUSD } : {}),
+      // null clears the own cost so the type inherits the product cost again.
+      costPriceUSD,
     };
 
     setBusy(true);
@@ -98,10 +108,10 @@ export function PresentationFormModal({
       }
       addToast({
         type: "success",
-        title: "Presentaciones",
+        title: "Tipos",
         message: presentation
-          ? "Presentación actualizada."
-          : "Presentación creada.",
+          ? "Tipo actualizado."
+          : "Tipo creado.",
       });
       onSuccess();
       close();
@@ -111,8 +121,8 @@ export function PresentationFormModal({
         apiMessage(
           submitError,
           presentation
-            ? "No se pudo actualizar la presentación."
-            : "No se pudo crear la presentación.",
+            ? "No se pudo actualizar el tipo."
+            : "No se pudo crear el tipo.",
         ),
       );
     } finally {
@@ -124,7 +134,7 @@ export function PresentationFormModal({
     <form onSubmit={submit} className="space-y-4">
       <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         <Boxes className="h-4 w-4 text-[#b2944a]" />
-        {presentation ? "Editar presentación" : "Nueva presentación"}
+        {presentation ? "Editar tipo" : "Nuevo tipo"}
       </div>
 
       {error ? (
@@ -150,7 +160,7 @@ export function PresentationFormModal({
           <div className="mt-1 flex items-center gap-2">
             <input
               type="color"
-              aria-label="Color de la presentación"
+              aria-label="Color del tipo"
               value={HEX_COLOR.test(color) ? color : "#b2944a"}
               onChange={(event) => setColor(event.target.value)}
               className="h-10 w-14 cursor-pointer rounded-lg border border-[#1a2a46]/15 bg-transparent p-1 dark:border-white/15"
@@ -218,6 +228,23 @@ export function PresentationFormModal({
             onValueChange={setStock}
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
+        </label>
+
+        <label className={`${LABEL_SM} sm:col-span-2`}>
+          Costo (USD)
+          <DecimalInput
+            mode="money"
+            allowEmpty
+            value={costPrice}
+            onValueChange={setCostPrice}
+            placeholder="Vacío = hereda el costo del producto"
+            className={`mt-1 font-mono tabular-nums ${INPUT}`}
+          />
+          {product?.costPriceUSD != null ? (
+            <span className="mt-1 block text-[11px] text-slate-400">
+              Original: ${Number(product.costPriceUSD).toFixed(2)}
+            </span>
+          ) : null}
         </label>
 
         <label className={`${LABEL_SM} sm:col-span-2`}>
