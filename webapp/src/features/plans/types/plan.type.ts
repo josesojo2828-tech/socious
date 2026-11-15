@@ -5,6 +5,8 @@ export interface Plan {
   currency?: string;
   description?: string | null;
   badge?: string | null;
+  selected?: boolean;
+  featured?: boolean;
   content?: {
     features?: string[];
     grants?: string[];

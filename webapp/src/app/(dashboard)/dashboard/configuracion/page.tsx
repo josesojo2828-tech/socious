@@ -301,6 +301,9 @@ export default function SettingsPage() {
   // STUDIO bundles materials + services: both switches ship ON and stay
   // locked, so the plan's promise is not undone by an accidental toggle.
   const isStudioPlan = settings.planId === "STUDIO";
+  // Unpublished plans (`selected === false`) stay out of the settings grid; a
+  // missing flag counts as published so an older backend cannot empty it.
+  const publishedPlans = plans.filter((plan) => plan.selected !== false);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -600,13 +603,13 @@ export default function SettingsPage() {
         title="Planes"
         description="Precios por usuario y mes; se cambian desde la plataforma, no desde acá."
       >
-        {plans.length === 0 ? (
+        {publishedPlans.length === 0 ? (
           <p className="text-sm text-slate-500 dark:text-slate-400">
             No se pudieron cargar los planes.
           </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-3">
-            {[...plans]
+            {[...publishedPlans]
               .sort((a, b) => {
                 const order = (plan: Plan) => {
                   const index = PLAN_ORDER.indexOf(

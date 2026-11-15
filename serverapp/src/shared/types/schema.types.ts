@@ -276,6 +276,10 @@ export interface SubscriptionPlan {
   description?: string;
   price: number; // Decimal in Prisma → number in TS
   currency: string;
+  selected: boolean;
+  badge?: string | null;
+  featured?: boolean;
+  colorTheme?: { bg: string; text: string; accent: string; badge: string } | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;

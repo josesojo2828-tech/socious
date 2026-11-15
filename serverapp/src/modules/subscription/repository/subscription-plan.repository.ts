@@ -45,6 +45,10 @@ export default class SubscriptionPlanRepository extends SubscriptionPlanModel {
       description: entity.description,
       price: entity.price,
       currency: entity.currency,
+      selected: entity.selected,
+      badge: entity.badge,
+      featured: entity.featured,
+      colorTheme: entity.colorTheme,
 
       content: entity.content,
       subscriptions: entity.subscriptions,
