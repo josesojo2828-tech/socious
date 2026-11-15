@@ -319,7 +319,7 @@ export default function AdminSettingsPage() {
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
-                    Guardar Configuración
+                    Guardar
                   </button>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function AdminSettingsPage() {
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
-                    Guardar Cambios CMS
+                    Guardar
                   </button>
                 </div>
               </div>

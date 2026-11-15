@@ -101,7 +101,7 @@ export function UserPaymentMethodsSection() {
             onClick={handleAddPaymentMethod}
             className="px-4 py-2 bg-primary hover:bg-primary/80 text-primary-content rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer shrink-0"
           >
-            <Plus className="w-4 h-4" /> Agregar Método
+            <Plus className="w-4 h-4" /> Agregar método
           </button>
         </div>
 

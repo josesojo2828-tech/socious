@@ -220,7 +220,7 @@ export function PermitDetailModal({ permit, groups, onClose, onSuccess }: Permit
             loading={saving}
             disabled={!hasChanges}
           >
-            Guardar Cambios
+            Guardar
           </Button>
         </div>
       </div>

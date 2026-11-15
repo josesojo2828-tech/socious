@@ -96,7 +96,7 @@ export function UniversityFormModal({ university, onClose, onSuccess }: Universi
           Cancelar
         </Button>
         <Button variant="primary" onClick={handleSubmit} loading={saving}>
-          {isEditing ? "Guardar Cambios" : "Crear Universidad"}
+          {isEditing ? "Guardar" : "Crear"}
         </Button>
       </div>
     </div>

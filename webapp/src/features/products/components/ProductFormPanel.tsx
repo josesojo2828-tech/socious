@@ -550,7 +550,7 @@ export function ProductFormPanel({
           onClick={submit}
           className={`h-11 px-5 text-sm ${CTA_BRASS}`}
         >
-          {editing ? "Guardar cambios" : "Crear producto"}
+          {editing ? "Guardar" : "Crear"}
         </button>
         <button
           type="button"

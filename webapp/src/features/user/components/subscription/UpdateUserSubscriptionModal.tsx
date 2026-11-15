@@ -240,7 +240,7 @@ export function UpdateUserSubscriptionModal({
                   Guardando...
                 </>
               ) : (
-                "Guardar Suscripción"
+                "Guardar"
               )}
             </Button>
           </div>

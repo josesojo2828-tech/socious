@@ -221,7 +221,7 @@ export default function WalletPage() {
             onClick={handleAddPaymentMethod}
             className="w-full py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-content text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
           >
-            <Plus className="w-4 h-4" /> Agregar Método
+            <Plus className="w-4 h-4" /> Agregar método
           </button>
         </div>
 
@@ -451,7 +451,7 @@ export default function WalletPage() {
               onClick={handleAddPaymentMethod}
               className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-content text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer shrink-0"
             >
-              <Plus className="w-4 h-4" /> Agregar Método
+              <Plus className="w-4 h-4" /> Agregar método
             </button>
           </div>
 

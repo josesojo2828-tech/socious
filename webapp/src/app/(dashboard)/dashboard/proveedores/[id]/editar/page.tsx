@@ -244,7 +244,7 @@ export default function EditSupplierPage() {
             {busy ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : null}
-            Guardar cambios
+            Guardar
           </button>
           <button
             type="button"

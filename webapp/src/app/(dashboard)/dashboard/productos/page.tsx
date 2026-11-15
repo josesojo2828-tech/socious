@@ -327,7 +327,7 @@ export default function ProductsPage() {
             href="/dashboard/productos/nuevo"
             className={`h-11 px-5 text-sm ${CTA_BRASS}`}
           >
-            <Plus className="h-4 w-4" /> Nuevo producto
+            <Plus className="h-4 w-4" /> Crear
           </Link>
         </div>
       </header>
@@ -520,7 +520,7 @@ export default function ProductsPage() {
                             onClick={() => void submitAdjust(product)}
                             className={`h-10 px-4 text-sm ${CTA_BRASS}`}
                           >
-                            Registrar
+                            Guardar
                           </button>
                         </div>
                       </td>

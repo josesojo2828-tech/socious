@@ -408,7 +408,7 @@ export function ServiceFormModal({
           loading={busy}
           loadingText="Guardando…"
         >
-          Guardar servicio
+          Crear
         </Button>
       </div>
     </form>
