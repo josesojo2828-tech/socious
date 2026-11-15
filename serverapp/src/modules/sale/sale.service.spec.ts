@@ -400,6 +400,114 @@ describe("SaleService", () => {
     });
   });
 
+  describe("credit due date (S3)", () => {
+    const item = [
+      {
+        productId: "prod-1",
+        productName: "Arroz 1kg",
+        quantity: 1,
+        unitPriceUSD: 2,
+      },
+    ];
+
+    it("computes a QUINCENAL due date from the sale's issueDate, not from today", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      // Local noon so the round-trip through ISO keeps the same local date.
+      const issueDate = new Date(2026, 0, 10, 12, 0, 0); // 10 ene 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: issueDate.toISOString(),
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toEqual(
+        new Date(2026, 0, 25, 12, 0, 0), // issueDate + 15 días
+      );
+    });
+
+    it("computes an EVERY_N_DAYS due date from the issueDate", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      const issueDate = new Date(2026, 0, 10, 12, 0, 0); // 10 ene 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: issueDate.toISOString(),
+          creditCadence: "EVERY_N_DAYS",
+          creditEveryNDays: 30,
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toEqual(
+        new Date(2026, 1, 9, 12, 0, 0), // issueDate + 30 días
+      );
+    });
+
+    it("keeps an explicit dueDate even when a cadence is present", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      const explicit = new Date(2026, 4, 1, 9, 0, 0); // 1 may 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: new Date(2026, 0, 10, 12, 0, 0).toISOString(),
+          dueDate: explicit.toISOString(),
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      const data = tx.sale.create.mock.calls[0][0].data;
+      expect(data.dueDate).toEqual(explicit);
+      expect(data.creditTerms).toContain('"cadence":"QUINCENAL"');
+    });
+
+    it("leaves FREE sales without a due date", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: new Date(2026, 0, 10, 12, 0, 0).toISOString(),
+          creditCadence: "FREE",
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toBeNull();
+    });
+
+    it("falls back to today when the issueDate cannot be parsed", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: "not-a-date",
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      const dueDate = tx.sale.create.mock.calls[0][0].data.dueDate as Date;
+      expect(Number.isNaN(dueDate.getTime())).toBe(false);
+      const daysAhead =
+        (dueDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000);
+      expect(daysAhead).toBeGreaterThan(14);
+      expect(daysAhead).toBeLessThan(16);
+    });
+  });
+
   describe("cash shift gate (S2)", () => {
     const item = [
       {
