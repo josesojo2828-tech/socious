@@ -12,8 +12,10 @@ import {
   Plus,
   Upload,
 } from "lucide-react";
+import { ProductImportModal } from "@/features/products/components/ProductImportModal";
 import { ReceivableImportPanel } from "@/features/initial-load/components/ReceivableImportPanel";
 import { apiClient } from "@/shared/api/api.client";
+import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
@@ -92,12 +94,13 @@ function PendingPanel({ title, description }: { title: string; description: stri
 
 /**
  * Initial data load for a business workspace: three steps from the incoming
- * feature (products, clients/receivables, summary). Only the shell and the
- * account-state detection exist here; the import and the manual forms land in
- * later tasks, so their actions stay disabled.
+ * feature (products, clients/receivables, summary). Step 1 reuses the product
+ * import modal and points the manual form to the products screen; step 2 hosts
+ * the receivable import; step 3 is still a placeholder.
  */
 export default function InitialLoadPage() {
   const { addToast } = useToastStore();
+  const { openModal, closeModal } = useModalStore();
   const { activeWorkspace, currentRole, orgId } = useWorkspaceRole();
   const workspaces = useWorkspaceStore((s) => s.workspaces);
   const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
@@ -106,6 +109,8 @@ export default function InitialLoadPage() {
   const [stats, setStats] = useState<OrganizationStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  /** Bumped after an import so the account-state banner reloads in place. */
+  const [reloadToken, setReloadToken] = useState<number>(0);
 
   const isOrganization = activeWorkspace?.type === "ORGANIZATION";
   const canOperate =
@@ -149,7 +154,19 @@ export default function InitialLoadPage() {
     return () => {
       cancelled = true;
     };
-  }, [addToast, canOperate, isOrganization, orgId]);
+  }, [addToast, canOperate, isOrganization, orgId, reloadToken]);
+
+  // Reuses the catalog's import flow; a successful commit reloads the stats so
+  // the "cuenta nueva" banner reflects the new products without a page reload.
+  const openProductImport = () => {
+    openModal(
+      <ProductImportModal
+        onClose={closeModal}
+        onSuccess={() => setReloadToken((token) => token + 1)}
+      />,
+      { size: "xl" },
+    );
+  };
 
   if (!isOrganization) {
     const organizationWorkspace = workspaces.find(
@@ -334,18 +351,11 @@ export default function InitialLoadPage() {
               </p>
               <button
                 type="button"
-                disabled
-                aria-describedby="import-notice"
+                onClick={openProductImport}
                 className={`mt-3 h-10 px-4 text-sm ${CTA_NAVY}`}
               >
                 <Upload className="h-4 w-4" /> Importar planilla
               </button>
-              <p
-                id="import-notice"
-                className="mt-1.5 text-xs text-slate-500 dark:text-slate-400"
-              >
-                Disponible en el próximo paso
-              </p>
             </div>
 
             <div className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
@@ -355,19 +365,18 @@ export default function InitialLoadPage() {
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Registra cada producto desde el formulario del catálogo.
               </p>
-              <button
-                type="button"
-                disabled
+              <Link
+                href="/dashboard/productos"
                 aria-describedby="manual-notice"
                 className={`mt-3 h-10 px-4 text-sm ${CTA_BRASS}`}
               >
                 <Plus className="h-4 w-4" /> Alta manual
-              </button>
+              </Link>
               <p
                 id="manual-notice"
                 className="mt-1.5 text-xs text-slate-500 dark:text-slate-400"
               >
-                Disponible en el próximo paso
+                El formulario de alta se completa en la pantalla de Productos.
               </p>
             </div>
           </div>
