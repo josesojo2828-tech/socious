@@ -6,6 +6,7 @@ import { Package, Plus, Trash2 } from "lucide-react";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { CTA_BRASS, CTA_NAVY, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { SearchableSelect } from "@/shared/components/molecules/form/SearchableSelect";
 import { BarcodePreview } from "./BarcodePreview";
 import { generateEan13 } from "../lib/barcode";
 import {
@@ -375,18 +376,17 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Categoría
-          <select
+          <SearchableSelect
+            aria-label="Categoría"
             className={`mt-1 ${INPUT}`}
             value={form.categoryId ?? ""}
-            onChange={(event) => patchForm({ categoryId: event.target.value })}
-          >
-            <option value="">Sin categoría</option>
-            {flatCategoryOptions.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => patchForm({ categoryId: value })}
+            options={flatCategoryOptions.map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))}
+            emptyLabel="Sin categoría"
+          />
         </label>
         <label className={LABEL_SM}>
           Proveedor
