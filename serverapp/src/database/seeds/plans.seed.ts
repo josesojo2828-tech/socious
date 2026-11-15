@@ -213,7 +213,7 @@ export const PLAN_SEEDS = [
   {
     id: "AVANZADO",
     name: "Avanzado",
-    price: 22.99,
+    price: 14.99,
     /** Published in the public pricing list. */
     selected: true,
     badge: "Más elegido" as string | null,
@@ -225,8 +225,6 @@ export const PLAN_SEEDS = [
       "Pedidos",
       "Catálogo online",
       "Cálculos en múltiple moneda",
-      "Delivery",
-      "Ruta",
     ],
     modules: [...PLAN_MODULES.AVANZADO],
     capacity: { maxBranches: 1, includedSeats: 1 },
