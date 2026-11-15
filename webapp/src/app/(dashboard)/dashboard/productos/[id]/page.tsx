@@ -333,7 +333,7 @@ export default function ProductDetailPage() {
         <section className={`rounded-2xl ${CARD}`}>
           <div className={CARD_HEADER}>
             <h3 className="font-semibold text-[17px] tracking-tight text-[#111018] dark:text-slate-100">
-              Precios (USD)
+              Precios
             </h3>
             <Tag className="h-4 w-4 text-[#b2944a]" />
           </div>

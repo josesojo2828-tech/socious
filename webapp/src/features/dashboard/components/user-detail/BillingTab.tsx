@@ -302,7 +302,7 @@ export function BillingTab({
       </SectionCard>
 
       {/* Transactions */}
-      <SectionCard title="Historial de Transacciones" icon={FileText} bodyClassName="p-0">
+      <SectionCard title="Historial de transacciones" icon={FileText} bodyClassName="p-0">
         {loading ? (
           <div className="p-6 text-center">
             <Loader2 size={20} className="animate-spin text-base-content/50 mx-auto" />

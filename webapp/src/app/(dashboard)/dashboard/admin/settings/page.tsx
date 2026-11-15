@@ -256,7 +256,7 @@ export default function AdminSettingsPage() {
                 <Sparkles className="w-7 h-7" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-base-content">Días de Prueba Gratuitos (Trial Days)</h2>
+                <h2 className="text-xl font-black text-base-content">Días de prueba</h2>
                 <p className="text-sm text-base-content/70 mt-1">
                   Define cuántos días de acceso PRO gratuito se le otorgarán automáticamente a los nuevos usuarios al registrarse.
                 </p>
