@@ -388,11 +388,11 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                   "focus-visible:outline-2 focus-visible:outline-[#b2944a] focus-visible:outline-offset-2",
                   isCollapsed && "justify-center px-0",
                 )}
-                title={isCollapsed ? "Nueva venta" : undefined}
+                title={isCollapsed ? "Vender" : undefined}
               >
                 <Plus size={15} strokeWidth={2.3} className="flex-none" />
                 {!isCollapsed && (
-                  <span className="flex-1 text-left">Nueva venta</span>
+                  <span className="flex-1 text-left">Vender</span>
                 )}
               </InternalLink>
             )}

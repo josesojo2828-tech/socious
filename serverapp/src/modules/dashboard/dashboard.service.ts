@@ -171,12 +171,12 @@ export class DashboardService {
         // 2. Ventas (agrupa todo lo referente: mostrador, pedidos y caja)
         const salesItems: SidebarItem[] = [
           {
-            title: "Punto de Venta (POS)",
+            title: "Punto de venta",
             icon: "calculator",
             link: "/dashboard/pos",
           },
           {
-            title: "Ventas y devoluciones",
+            title: "Historial",
             icon: "receipt",
             link: "/dashboard/ventas",
           },
@@ -185,7 +185,7 @@ export class DashboardService {
           ...(hasModule("ORDERS")
             ? [
                 {
-                  title: "Bandeja de pedidos",
+                  title: "Pedidos",
                   icon: "shopping-bag" as const,
                   link: "/dashboard/pedidos",
                 },
@@ -196,7 +196,7 @@ export class DashboardService {
           ...(settings.cash.shiftControl
             ? [
                 {
-                  title: "Caja y turnos",
+                  title: "Caja",
                   icon: "wallet",
                   link: "/dashboard/caja",
                 },
@@ -227,12 +227,12 @@ export class DashboardService {
             link: "/dashboard/compras",
           },
           {
-            title: "Cuentas por cobrar",
+            title: "Cobros",
             icon: "credit-card",
             link: "/dashboard/cuentas-por-cobrar",
           },
           {
-            title: "Cuentas por pagar",
+            title: "Pagos",
             icon: "credit-card-fill",
             link: "/dashboard/cuentas-por-pagar",
           },
@@ -251,12 +251,12 @@ export class DashboardService {
         // 4. Inventario & Catálogo (los proveedores viven en el CRM)
         const inventoryItems: SidebarItem[] = [
           {
-            title: "Productos y Servicios",
+            title: "Productos",
             icon: "package",
             link: "/dashboard/productos",
           },
           {
-            title: "Movimientos / Stock",
+            title: "Movimientos",
             icon: "arrows-down-up",
             link: "/dashboard/inventario",
           },
@@ -313,11 +313,11 @@ export class DashboardService {
         // `settings` was resolved above for the cash title.
         if (hasModule("ROUTES") && settings.routes.enabled) {
           sections.push({
-            title: "Rutas de entrega",
+            title: "Entregas",
             icon: "route",
             items: [
               {
-                title: "Rutas de entrega",
+                title: "Rutas",
                 icon: "route",
                 link: "/dashboard/rutas",
               },
@@ -332,7 +332,7 @@ export class DashboardService {
           icon: "settings",
           items: [
             {
-              title: "Configuración del negocio",
+              title: "Negocio",
               icon: "settings",
               link: "/dashboard/configuracion",
             },
