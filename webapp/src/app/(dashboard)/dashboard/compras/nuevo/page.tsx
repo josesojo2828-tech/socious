@@ -16,6 +16,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { Checkbox } from "@/shared/components/atoms/Checkbox";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import {
   BTN_GHOST,
   BRASS_DOT,
@@ -34,6 +35,7 @@ import { ProductEndpoints } from "@/features/products/services/products.endpoint
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
 import type { ExchangeRates } from "@/features/products/lib/price-currency";
 import type { Product } from "@/features/products/types/product.type";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import type { Purchase } from "@/features/purchases/types/purchase.type";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 import type { TenantSettings } from "@/features/settings/types/tenant-settings.type";
@@ -356,6 +358,12 @@ export default function NewPurchasePage() {
       ),
     }));
   };
+
+  /** Units of the line's catalog product decide whether decimals are allowed. */
+  const lineDecimals = (line: PurchaseForm["items"][number]) =>
+    resolveUnitDecimals(
+      products.find((candidate) => candidate.id === line.productId)?.unit,
+    );
 
   /**
    * S14 #4: the catalog fills name + cost from the product record. A second
@@ -810,27 +818,24 @@ export default function NewPurchasePage() {
                   </label>
                   <label className={LABEL_SM}>
                     Cantidad
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="any"
+                    <DecimalInput
                       value={line.quantity}
-                      onChange={(event) =>
-                        updateLine(index, { quantity: event.target.value })
+                      decimals={lineDecimals(line)}
+                      onValueChange={(text) =>
+                        updateLine(index, { quantity: text })
                       }
                       className={`mt-1 ${INPUT}`}
                     />
                   </label>
                   <label className={LABEL_SM}>
                     Costo USD
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
+                    <DecimalInput
+                      mode="money"
+                      allowEmpty
                       value={line.unitCostUSD}
                       readOnly={isCatalogLine}
-                      onChange={(event) =>
-                        updateLine(index, { unitCostUSD: event.target.value })
+                      onValueChange={(text) =>
+                        updateLine(index, { unitCostUSD: text })
                       }
                       className={`mt-1 ${INPUT} ${
                         isCatalogLine
@@ -929,16 +934,12 @@ export default function NewPurchasePage() {
               {form.paymentMode === "PARTIAL" ? (
                 <label className={LABEL_SM}>
                   Inicial ({paymentCurrencyForMethod(form.paymentMethod)})
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
+                  <DecimalInput
+                    mode="money"
+                    allowEmpty
                     value={form.initialAmount}
-                    onChange={(event) =>
-                      setForm((c) => ({
-                        ...c,
-                        initialAmount: event.target.value,
-                      }))
+                    onValueChange={(text) =>
+                      setForm((c) => ({ ...c, initialAmount: text }))
                     }
                     placeholder="Monto que pagás ahora"
                     className={`mt-1 ${INPUT}`}

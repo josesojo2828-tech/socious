@@ -216,10 +216,8 @@ describe("product-import normalizeNumber", () => {
 });
 
 describe("product-import rowErrors", () => {
-  it("requires the SKU and prefixes the line", () => {
-    expect(rowErrors(values({ sku: "   " }), { line: 4 }).errors).toEqual([
-      "Fila 4: el SKU es obligatorio.",
-    ]);
+  it("accepts a row without SKU (S3: optional)", () => {
+    expect(rowErrors(values({ sku: "   " }), { line: 4 }).errors).toEqual([]);
   });
 
   it("caps the SKU length and validates its pattern", () => {

@@ -6,6 +6,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product } from "@/features/products/types/product.type";
 
@@ -48,11 +49,11 @@ export function InlineProductForm({
     event.preventDefault();
     const trimmedSku = sku.trim();
     const trimmedName = name.trim();
-    if (!trimmedSku || !trimmedName) {
-      setError("SKU y nombre son obligatorios.");
+    if (!trimmedName) {
+      setError("El nombre es obligatorio.");
       return;
     }
-    if (!/^[A-Za-z0-9._-]+$/.test(trimmedSku)) {
+    if (trimmedSku !== "" && !/^[A-Za-z0-9._-]+$/.test(trimmedSku)) {
       setError(
         "El SKU solo puede contener letras, números, puntos, guiones y guiones bajos.",
       );
@@ -104,7 +105,7 @@ export function InlineProductForm({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className={LABEL_SM}>
-          SKU *
+          SKU (opcional)
           <input
             value={sku}
             onChange={(event) => setSku(event.target.value)}
@@ -124,12 +125,11 @@ export function InlineProductForm({
         </label>
         <label className={LABEL_SM}>
           Costo USD
-          <input
-            type="number"
-            min="0"
-            step="0.01"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             value={cost}
-            onChange={(event) => setCost(event.target.value)}
+            onValueChange={setCost}
             className={`mt-1 ${INPUT}`}
           />
         </label>

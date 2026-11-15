@@ -441,10 +441,9 @@ export class ProductImportService {
       context.fieldErrors.push({ line, field, message });
     };
 
+    // S3: the SKU is optional; only a non-empty value is validated.
     const sku = cellOf("sku").trim();
-    if (sku === "") {
-      pushError("sku", "el SKU es obligatorio.");
-    } else {
+    if (sku !== "") {
       if (sku.length > SKU_MAX) {
         pushError("sku", `el SKU no puede superar los ${SKU_MAX} caracteres.`);
       }

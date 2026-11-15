@@ -127,16 +127,20 @@ function NewProductContent() {
         const prefilled = variantPrefillFromProduct(source.data);
         // SKU libre: buscamos los SKUs parecidos y sugerimos el primero que
         // no choque (el -V simple se rechazaría con 409 si ya existe).
-        const taken = await apiClient
-          .get<{ list: { sku: string }[] }>(ProductEndpoints.list, {
-            params: { q: source.data.sku, limit: 100 },
-          })
-          .then((r) => (r.data.list ?? []).map((row) => row.sku))
-          .catch(() => [] as string[]);
+        // S1: si el origen no tiene SKU, no hay sufijo que sugerir.
+        const sourceSku = (source.data.sku ?? "").trim();
+        const taken = sourceSku
+          ? await apiClient
+              .get<{ list: { sku: string }[] }>(ProductEndpoints.list, {
+                params: { q: sourceSku, limit: 100 },
+              })
+              .then((r) => (r.data.list ?? []).map((row) => row.sku))
+              .catch(() => [] as string[])
+          : [];
         setVariantSource(source.data);
         setVariantForm({
           ...prefilled,
-          sku: suggestFreeSku(source.data.sku, taken),
+          sku: suggestFreeSku(sourceSku, taken),
         });
       } else if (fromProductId) {
         addToast({
@@ -213,9 +217,9 @@ function NewProductContent() {
         </h1>
         {variantForm ? (
           <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-            Copia de {variantSource?.sku ?? "otro producto"}: revise el SKU
-            (sufijo -V), regenere el código de barras y ajuste lo que cambie
-            antes de guardar.
+            {variantSource?.sku?.trim()
+              ? `Copia de ${variantSource.sku}: revise el SKU (sufijo -V), regenere el código de barras y ajuste lo que cambie antes de guardar.`
+              : `Copia de ${variantSource?.name ?? "otro producto"}: regenere el código de barras y ajuste lo que cambie antes de guardar.`}
           </p>
         ) : null}
       </header>

@@ -14,6 +14,7 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionRow } from "@/shared/components/molecules/SectionCard";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 import type { TenantSettings } from "@/features/settings/types/tenant-settings.type";
@@ -495,12 +496,11 @@ export default function CashPage() {
                 <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">
                   Conteo real (USD)
                 </label>
-                <input
-                  type="number"
-                  min={0}
-                  step="0.01"
+                <DecimalInput
+                  mode="money"
+                  allowEmpty
                   value={countedAmount}
-                  onChange={(event) => setCountedAmount(event.target.value)}
+                  onValueChange={setCountedAmount}
                   placeholder="0.00"
                   className="w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2.5 font-mono text-lg tabular-nums"
                 />
@@ -593,12 +593,11 @@ export default function CashPage() {
                   </label>
                   <label className="block text-xs text-slate-500 dark:text-slate-400">
                     Fondo inicial (USD)
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
+                    <DecimalInput
+                      mode="money"
+                      allowEmpty
                       value={floatAmount}
-                      onChange={(event) => setFloatAmount(event.target.value)}
+                      onValueChange={setFloatAmount}
                       className="mt-1 w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2.5 font-mono tabular-nums text-[#111018] dark:text-slate-100"
                     />
                   </label>

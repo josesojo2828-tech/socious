@@ -31,6 +31,7 @@ const makeTx = () => ({
     create: jest.fn((args: any) => Promise.resolve({ id: "p-1", ...args.data })),
     findMany: jest.fn().mockResolvedValue([]),
     aggregate: jest.fn().mockResolvedValue({ _sum: { amountUSD: 0 } }),
+    groupBy: jest.fn().mockResolvedValue([]),
   },
   product: {
     findFirst: jest.fn().mockResolvedValue(null),
@@ -400,6 +401,114 @@ describe("SaleService", () => {
     });
   });
 
+  describe("credit due date (S3)", () => {
+    const item = [
+      {
+        productId: "prod-1",
+        productName: "Arroz 1kg",
+        quantity: 1,
+        unitPriceUSD: 2,
+      },
+    ];
+
+    it("computes a QUINCENAL due date from the sale's issueDate, not from today", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      // Local noon so the round-trip through ISO keeps the same local date.
+      const issueDate = new Date(2026, 0, 10, 12, 0, 0); // 10 ene 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: issueDate.toISOString(),
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toEqual(
+        new Date(2026, 0, 25, 12, 0, 0), // issueDate + 15 días
+      );
+    });
+
+    it("computes an EVERY_N_DAYS due date from the issueDate", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      const issueDate = new Date(2026, 0, 10, 12, 0, 0); // 10 ene 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: issueDate.toISOString(),
+          creditCadence: "EVERY_N_DAYS",
+          creditEveryNDays: 30,
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toEqual(
+        new Date(2026, 1, 9, 12, 0, 0), // issueDate + 30 días
+      );
+    });
+
+    it("keeps an explicit dueDate even when a cadence is present", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+      const explicit = new Date(2026, 4, 1, 9, 0, 0); // 1 may 2026
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: new Date(2026, 0, 10, 12, 0, 0).toISOString(),
+          dueDate: explicit.toISOString(),
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      const data = tx.sale.create.mock.calls[0][0].data;
+      expect(data.dueDate).toEqual(explicit);
+      expect(data.creditTerms).toContain('"cadence":"QUINCENAL"');
+    });
+
+    it("leaves FREE sales without a due date", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: new Date(2026, 0, 10, 12, 0, 0).toISOString(),
+          creditCadence: "FREE",
+          items: item,
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.dueDate).toBeNull();
+    });
+
+    it("falls back to today when the issueDate cannot be parsed", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          issueDate: "not-a-date",
+          creditCadence: "QUINCENAL",
+          items: item,
+        },
+      );
+
+      const dueDate = tx.sale.create.mock.calls[0][0].data.dueDate as Date;
+      expect(Number.isNaN(dueDate.getTime())).toBe(false);
+      const daysAhead =
+        (dueDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000);
+      expect(daysAhead).toBeGreaterThan(14);
+      expect(daysAhead).toBeLessThan(16);
+    });
+  });
+
   describe("cash shift gate (S2)", () => {
     const item = [
       {
@@ -588,6 +697,116 @@ describe("SaleService", () => {
         saleNumber: "VTA-00009",
         daysOverdue: expect.any(Number),
       });
+    });
+
+    it("contributes only the remaining balance of a partially paid sale", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "partial",
+            saleNumber: "VTA-00010",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "100.00",
+            client: { id: "c-1", name: "Acme" },
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+      prisma.salePayment.groupBy.mockResolvedValue([
+        { saleId: "partial", _sum: { amountUSD: "30.00" } },
+      ]);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      // $100 invoiced − $30 collected = $70 still owed.
+      expect(report.aging.over60).toBe(70);
+      expect(report.openItems[0]).toMatchObject({
+        totalUSD: 100,
+        balanceUSD: 70,
+        isOpen: false,
+      });
+    });
+
+    it("books a sale without a due date as an open account, never overdue", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "no-due",
+            saleNumber: "VTA-00011",
+            issueDate: new Date("2020-01-01T00:00:00Z"),
+            dueDate: null,
+            totalUSD: "50.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      expect(report.aging.open).toBe(50);
+      expect(report.aging.current).toBe(0);
+      expect(report.aging.days1_30).toBe(0);
+      expect(report.aging.days31_60).toBe(0);
+      expect(report.aging.over60).toBe(0);
+      expect(report.openItems[0]).toMatchObject({
+        balanceUSD: 50,
+        daysOverdue: 0,
+        isOpen: true,
+      });
+    });
+
+    it("reports truncated=true only when the open count exceeds the cap", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "only-one-returned",
+            saleNumber: "VTA-00012",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "10.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1001);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      // The list query is capped at the documented constant.
+      expect(prisma.sale.findMany.mock.calls[1][0].take).toBe(1000);
+      expect(report.openItemsTotal).toBe(1001);
+      expect(report.truncated).toBe(true);
+    });
+
+    it("reports truncated=false when every open sale fits under the cap", async () => {
+      const { service, prisma } = makeService();
+
+      prisma.sale.findMany
+        .mockResolvedValueOnce([]) // accrued
+        .mockResolvedValueOnce([
+          {
+            id: "fits",
+            saleNumber: "VTA-00013",
+            issueDate: new Date("2025-01-01T00:00:00Z"),
+            dueDate: new Date("2020-01-01T00:00:00Z"),
+            totalUSD: "10.00",
+            client: null,
+          },
+        ]);
+      prisma.sale.count.mockResolvedValue(1);
+
+      const report = await service.getReport({ organizationId: ORG_A }, {});
+
+      expect(report.openItemsTotal).toBe(1);
+      expect(report.truncated).toBe(false);
     });
   });
 

@@ -92,13 +92,25 @@ export interface PurchasesReport {
     days1_30: number;
     days31_60: number;
     over60: number;
+    /** Open accounts: purchases without an agreed due date. Never overdue. */
+    open: number;
   };
   openItems: {
     id: string;
     purchaseNumber: string;
     issueDate: string;
+    dueDate?: string | null;
+    /** Purchased total (display only). */
     totalUSD: number;
+    /** What is actually still owed: totalUSD minus payments made. */
+    balanceUSD: number;
     daysOverdue: number;
+    /** True when the purchase has no due date (open account). */
+    isOpen: boolean;
     supplier: { id: string; name: string } | null;
   }[];
+  /** Every open purchase, even those beyond the listing cap. */
+  openItemsTotal: number;
+  /** True when `openItems` was capped shorter than `openItemsTotal`. */
+  truncated: boolean;
 }

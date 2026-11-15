@@ -45,7 +45,12 @@ export function monthLabel(monthKey: string): string {
 
 export function agingTotal(aging: SalesReport["aging"]): number {
   const sum = Math.round(
-    (aging.current + aging.days1_30 + aging.days31_60 + aging.over60) * 100,
+    (aging.current +
+      aging.days1_30 +
+      aging.days31_60 +
+      aging.over60 +
+      (aging.open ?? 0)) *
+      100,
   );
   return sum / 100;
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   parsePresentationSalePrice,
+  presentationCostLabel,
   presentationPriceLabel,
 } from "./presentation-price";
 
@@ -33,5 +34,26 @@ describe("presentationPriceLabel", () => {
   it("formats the own price with two decimals (API sends strings)", () => {
     expect(presentationPriceLabel("3.50")).toBe("$3.50");
     expect(presentationPriceLabel(2)).toBe("$2.00");
+  });
+});
+
+describe("presentationCostLabel", () => {
+  it("muestra el costo propio cuando existe", () => {
+    expect(presentationCostLabel("3.25", "1.50")).toBe("$3.25");
+    expect(presentationCostLabel(0, 1)).toBe("$0.00");
+  });
+
+  it("muestra el costo del producto marcado como heredado", () => {
+    expect(presentationCostLabel(null, "1.50")).toBe("$1.50 (hereda)");
+    expect(presentationCostLabel(undefined, 2)).toBe("$2.00 (hereda)");
+  });
+
+  it("cae a hereda cuando no hay ningún costo", () => {
+    expect(presentationCostLabel(null, null)).toBe("hereda");
+    expect(presentationCostLabel(undefined)).toBe("hereda");
+  });
+
+  it("ignora un valor inválido y hereda", () => {
+    expect(presentationCostLabel("nope", "1.5")).toBe("$1.50 (hereda)");
   });
 });

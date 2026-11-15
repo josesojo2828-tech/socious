@@ -49,6 +49,7 @@ import {
 } from "@/features/branches/lib/branch-form";
 import { PlanEndpoints } from "@/features/plans/services/plans.endpoints";
 import { UnitsPanel } from "@/features/units/components/UnitsPanel";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { CategoriesPanel } from "@/features/categories/components/CategoriesPanel";
 import {
   CreditSettingsPanel,
@@ -502,14 +503,12 @@ export default function SettingsPage() {
           />
         </SectionRow>
         <SectionRow label="Costo del delivery (USD)" hint="Se aplica a los pedidos de tipo delivery.">
-          <input
-            type="number"
-            min={0}
-            step="0.5"
+          <DecimalInput
+            mode="money"
             disabled={!settings.delivery.enabled}
             value={settings.delivery.feeUSD}
-            onChange={(event) =>
-              void save(() => patchDeliveryFee(Number(event.target.value)))
+            onValueChange={(text) =>
+              void save(() => patchDeliveryFee(Number(text) || 0))
             }
             className={`w-28 font-mono tabular-nums disabled:opacity-50 ${INPUT}`}
           />

@@ -7,6 +7,8 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { CTA_BRASS, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import {
   IMPORT_TEMPLATE_FILENAME,
@@ -260,16 +262,17 @@ export function ProductImportModal({
 
     if (NUMERIC_COLUMNS.has(field)) {
       const current = row.values[field as "costo_usd" | "venta_usd" | "stock_inicial"];
+      const isMoney = field === "costo_usd" || field === "venta_usd";
       return (
-        <input
-          type="number"
-          step="any"
-          min="0"
+        <DecimalInput
+          mode={isMoney ? "money" : "quantity"}
+          allowEmpty
+          decimals={isMoney ? 2 : resolveUnitDecimals(row.values.unidad)}
           aria-label={`${COLUMN_LABELS[field]} de la fila ${row.line}`}
           className={`${className} font-mono tabular-nums`}
           title={title}
           value={Number.isFinite(current) ? current : ""}
-          onChange={(event) => editCell(row.line, field, event.target.value)}
+          onValueChange={(text) => editCell(row.line, field, text)}
         />
       );
     }

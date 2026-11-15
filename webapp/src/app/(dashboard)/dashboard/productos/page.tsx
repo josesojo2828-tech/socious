@@ -35,6 +35,8 @@ import {
 } from "@/shared/lib/maison-style";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import { ProductImportModal } from "@/features/products/components/ProductImportModal";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import type {
   Product,
   ProductStatus,
@@ -492,15 +494,11 @@ export default function ProductsPage() {
                             {adjustType === "ADJUSTMENT"
                               ? "Stock final"
                               : "Cantidad"}
-                            <input
-                              type="number"
-                              min={0}
-                              step="0.01"
+                            <DecimalInput
+                              decimals={resolveUnitDecimals(product.unit)}
                               className={`mt-1 w-28 font-mono tabular-nums ${INPUT}`}
                               value={adjustQty}
-                              onChange={(event) =>
-                                setAdjustQty(event.target.value)
-                              }
+                              onValueChange={setAdjustQty}
                             />
                           </label>
                           <label className={LABEL_SM}>

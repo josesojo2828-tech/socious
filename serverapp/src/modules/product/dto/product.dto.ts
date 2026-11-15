@@ -9,6 +9,7 @@ import {
   Matches,
   MaxLength,
   Min,
+  ValidateIf,
   ValidateNested,
 } from "class-validator";
 import { Transform, Type } from "class-transformer";
@@ -32,12 +33,16 @@ export class ProductComponentInputDto {
 }
 
 export class CreateProductDto {
-  @IsString({ message: "El SKU es obligatorio." })
+  /** Optional (S1): an empty SKU is stored as ""; uniqueness skips blanks. */
+  @ValidateIf(
+    (_object, value) => value !== undefined && value !== null && value !== "",
+  )
+  @IsString({ message: "El SKU debe ser texto." })
   @Matches(SKU_PATTERN, {
     message: "El SKU solo puede contener letras, números, puntos, guiones y guiones bajos.",
   })
   @MaxLength(SKU_MAX)
-  sku: string;
+  sku?: string;
 
   @IsString({ message: "El nombre es obligatorio." })
   @MaxLength(NAME_MAX)
@@ -149,7 +154,9 @@ export class CreateProductDto {
 }
 
 export class UpdateProductDto {
-  @IsOptional()
+  @ValidateIf(
+    (_object, value) => value !== undefined && value !== null && value !== "",
+  )
   @IsString()
   @Matches(SKU_PATTERN)
   @MaxLength(SKU_MAX)

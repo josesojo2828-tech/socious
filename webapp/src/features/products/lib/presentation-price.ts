@@ -30,3 +30,28 @@ export function presentationPriceLabel(
   if (!Number.isFinite(parsed)) return "hereda";
   return `$${parsed.toFixed(2)}`;
 }
+
+/**
+ * Cost label for a type: its own cost when set, otherwise the product cost
+ * marked as inherited. A type with no own cost and no product cost falls back
+ * to `hereda`.
+ */
+export function presentationCostLabel(
+  costPriceUSD: string | number | null | undefined,
+  productCostUSD?: string | number | null,
+): string {
+  const own =
+    costPriceUSD === null || costPriceUSD === undefined
+      ? null
+      : Number(costPriceUSD);
+  if (own !== null && Number.isFinite(own)) return `$${own.toFixed(2)}`;
+
+  const inherited =
+    productCostUSD === null || productCostUSD === undefined
+      ? null
+      : Number(productCostUSD);
+  if (inherited !== null && Number.isFinite(inherited)) {
+    return `$${inherited.toFixed(2)} (hereda)`;
+  }
+  return "hereda";
+}

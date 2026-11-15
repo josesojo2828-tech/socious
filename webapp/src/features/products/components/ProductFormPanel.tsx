@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Package, Plus, Trash2 } from "lucide-react";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { CTA_BRASS, CTA_NAVY, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { SearchableSelect } from "@/shared/components/molecules/form/SearchableSelect";
 import { BarcodePreview } from "./BarcodePreview";
 import { generateEan13 } from "../lib/barcode";
 import {
@@ -26,6 +28,7 @@ import {
 } from "../lib/product-form";
 import type { Category, Product, ProductStatus } from "../types/product.type";
 import type { UnitOfMeasure } from "@/features/units/types/unit.type";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import type { Supplier } from "@/features/suppliers/types/supplier.type";
 
 /** The picker needs a real hex; the text field also accepts a color name. */
@@ -82,6 +85,9 @@ export function ProductFormPanel({
     setForm((current) => ({ ...current, ...patch }));
 
   const flatCategoryOptions = flattenCategories(categories);
+
+  /** COUNT units keep stock whole; WEIGHT/VOLUME accept decimals. */
+  const quantityDecimals = resolveUnitDecimals(form.unit, units);
 
   // BOM (S1): candidates exclude the product being edited (no self-reference).
   const componentOptions = componentProducts.filter(
@@ -148,7 +154,7 @@ export function ProductFormPanel({
 
       <div className="grid gap-3 sm:grid-cols-3">
         <label className={LABEL_SM}>
-          SKU *
+          SKU (opcional)
           <input
             className={`mt-1 font-mono ${INPUT}`}
             value={form.sku}
@@ -251,16 +257,14 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Costo ({priceCurrency})
-          <input
-            type="number"
-            min={0}
-            step="0.01"
+          <DecimalInput
+            mode="money"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
             value={convertFromUSD(form.costPriceUSD, priceCurrency, rates)}
-            onChange={(event) =>
+            onValueChange={(text) =>
               patchForm({
                 costPriceUSD: convertToUSD(
-                  Number(event.target.value),
+                  Number(text) || 0,
                   priceCurrency,
                   rates,
                 ),
@@ -273,16 +277,14 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Precio de venta ({priceCurrency})
-          <input
-            type="number"
-            min={0}
-            step="0.01"
+          <DecimalInput
+            mode="money"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
             value={convertFromUSD(form.salePriceUSD, priceCurrency, rates)}
-            onChange={(event) =>
+            onValueChange={(text) =>
               patchForm({
                 salePriceUSD: convertToUSD(
-                  Number(event.target.value),
+                  Number(text) || 0,
                   priceCurrency,
                   rates,
                 ),
@@ -295,24 +297,25 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Precio mayorista ({priceCurrency})
-          <input
-            type="number"
-            min={0}
-            step="0.01"
+          <DecimalInput
+            mode="money"
+            allowEmpty
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
             value={
               form.wholesalePriceUSD === undefined
                 ? ""
                 : convertFromUSD(form.wholesalePriceUSD, priceCurrency, rates)
             }
-            onChange={(event) =>
+            onValueChange={(text) =>
               patchForm({
                 wholesalePriceUSD:
-                  convertToUSD(
-                    Number(event.target.value),
-                    priceCurrency,
-                    rates,
-                  ) || undefined,
+                  text === ""
+                    ? undefined
+                    : convertToUSD(
+                        Number(text) || 0,
+                        priceCurrency,
+                        rates,
+                      ),
               })
             }
           />
@@ -332,29 +335,25 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Mínimo de stock
-          <input
-            type="number"
-            min={0}
-            step="1"
+          <DecimalInput
+            decimals={quantityDecimals}
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
-            value={form.minStock}
-            onChange={(event) =>
-              patchForm({ minStock: Number(event.target.value) })
+            value={form.minStock ?? 0}
+            onValueChange={(text) =>
+              patchForm({ minStock: Number(text) || 0 })
             }
           />
         </label>
         {!editing ? (
           <label className={LABEL_SM}>
             Stock inicial
-            <input
-              type="number"
-              min={0}
-              step="1"
+            <DecimalInput
+              decimals={quantityDecimals}
               disabled={form.isService}
               className={`mt-1 font-mono tabular-nums ${INPUT}`}
               value={form.stock ?? 0}
-              onChange={(event) =>
-                patchForm({ stock: Number(event.target.value) })
+              onValueChange={(text) =>
+                patchForm({ stock: Number(text) || 0 })
               }
             />
           </label>
@@ -377,18 +376,17 @@ export function ProductFormPanel({
         </label>
         <label className={LABEL_SM}>
           Categoría
-          <select
+          <SearchableSelect
+            aria-label="Categoría"
             className={`mt-1 ${INPUT}`}
             value={form.categoryId ?? ""}
-            onChange={(event) => patchForm({ categoryId: event.target.value })}
-          >
-            <option value="">Sin categoría</option>
-            {flatCategoryOptions.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => patchForm({ categoryId: value })}
+            options={flatCategoryOptions.map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))}
+            emptyLabel="Sin categoría"
+          />
         </label>
         <label className={LABEL_SM}>
           Proveedor
@@ -515,16 +513,17 @@ export function ProductFormPanel({
                   </label>
                   <label className={LABEL_SM}>
                     Cantidad
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="any"
+                    <DecimalInput
+                      decimals={resolveUnitDecimals(
+                        componentOptions.find(
+                          (candidate) => candidate.id === row.componentId,
+                        )?.unit,
+                        units,
+                      )}
                       className={`mt-1 ${INPUT}`}
                       value={row.quantity}
-                      onChange={(event) =>
-                        updateComponent(index, {
-                          quantity: event.target.value,
-                        })
+                      onValueChange={(text) =>
+                        updateComponent(index, { quantity: text })
                       }
                     />
                   </label>

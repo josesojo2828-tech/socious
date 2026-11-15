@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product } from "@/features/products/types/product.type";
@@ -1011,12 +1012,11 @@ export default function PosPage() {
                 <div className="space-y-2 rounded-xl border border-[#b2944a]/40 bg-[#b2944a]/8 p-3">
                   <label className="block text-xs text-slate-500 dark:text-slate-400">
                     Pago inicial ahora (opcional)
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
+                    <DecimalInput
+                      mode="money"
+                      allowEmpty
                       value={creditInitial}
-                      onChange={(event) => setCreditInitial(event.target.value)}
+                      onValueChange={setCreditInitial}
                       placeholder="0 = todo a crédito"
                       className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
                     />
@@ -1131,12 +1131,11 @@ export default function PosPage() {
                   <span className="ml-1 font-semibold text-[#b2944a]">
                     ({currency})
                   </span>
-                  <input
-                    type="number"
-                    min={0}
-                    step="0.01"
+                  <DecimalInput
+                    mode="money"
+                    allowEmpty
                     value={amount}
-                    onChange={(event) => setAmount(event.target.value)}
+                    onValueChange={setAmount}
                     className="mt-1 w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 font-mono text-lg tabular-nums"
                   />
                 </label>

@@ -131,6 +131,30 @@ describe("PresentationService", () => {
     expect(cleared.salePriceUSD).toBeNull();
   });
 
+  it("stores an own cost and clears it back to inherit with null", async () => {
+    const { service } = makeService();
+    const own = await service.create("org-1", "prod-1", {
+      name: "Camisa roja",
+      costPriceUSD: 4.25,
+    });
+    expect(own.costPriceUSD).toBe(4.25);
+
+    const inheriting = await service.create("org-1", "prod-1", {
+      name: "Camisa verde",
+    });
+    expect(inheriting.costPriceUSD).toBeNull();
+
+    const withCost = await service.update("org-1", "pres-1", {
+      costPriceUSD: 5,
+    });
+    expect(withCost.costPriceUSD).toBe(5);
+
+    const cleared = await service.update("org-1", "pres-1", {
+      costPriceUSD: null,
+    });
+    expect(cleared.costPriceUSD).toBeNull();
+  });
+
   it("leaves the sale price untouched when the patch omits it", async () => {
     const { service } = makeService();
     await service.update("org-1", "pres-1", { salePriceUSD: 4 });

@@ -20,7 +20,7 @@ export function variantPrefillFromProduct(product: Product): ProductForm {
   return {
     ...toForm(product),
     name: `${product.name} (variante)`,
-    sku: `${product.sku}-V`,
+    sku: product.sku.trim() ? `${product.sku.trim()}-V` : "",
     barcode: "",
     stock: 0,
     isPublic: false,
@@ -39,8 +39,11 @@ export function suggestFreeSku(
   base: string,
   taken: readonly string[],
 ): string {
+  const trimmedBase = base.trim();
+  // S1: a source product without SKU has nothing to derive a variant SKU from.
+  if (!trimmedBase) return "";
   const takenSet = new Set(taken.map((sku) => sku.trim().toUpperCase()));
-  const prefix = `${base}-V`;
+  const prefix = `${trimmedBase}-V`;
   if (!takenSet.has(prefix.toUpperCase())) return prefix;
   for (let n = 2; n <= 999; n += 1) {
     const candidate = `${prefix}${n}`;

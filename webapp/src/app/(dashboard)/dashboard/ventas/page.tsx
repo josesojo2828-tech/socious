@@ -17,6 +17,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { SectionRow } from "@/shared/components/molecules/SectionCard";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import {
   BRASS_DOT,
@@ -924,12 +925,11 @@ export default function SalesPage() {
                 </p>
               </div>
               <div className="flex flex-wrap items-end gap-2">
-                <input
-                  type="number"
-                  min={0}
-                  step="0.01"
+                <DecimalInput
+                  mode="money"
+                  allowEmpty
                   value={payAmount}
-                  onChange={(event) => setPayAmount(event.target.value)}
+                  onValueChange={setPayAmount}
                   placeholder="Monto"
                   className={`w-28 font-mono tabular-nums ${INLINE_INPUT}`}
                 />
@@ -1026,18 +1026,16 @@ export default function SalesPage() {
                             (máx. {max})
                           </span>
                         </span>
-                        <input
-                          type="number"
-                          min={0}
-                          max={max}
+                        <DecimalInput
                           value={returnQtys[item.id] ?? 0}
+                          decimals={2}
                           disabled={max <= 0}
-                          onChange={(event) =>
+                          onValueChange={(text) =>
                             setReturnQtys((current) => ({
                               ...current,
                               [item.id]: Math.max(
                                 0,
-                                Math.min(max, Number(event.target.value) || 0),
+                                Math.min(max, Number(text) || 0),
                               ),
                             }))
                           }

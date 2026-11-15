@@ -204,12 +204,14 @@ describe("product-form (S7)", () => {
       expect(validateProductForm(form())).toBeNull();
     });
 
-    it("requires a non-blank sku and name", () => {
-      expect(validateProductForm(form({ sku: "   " }))).toBe(
-        "SKU y nombre son obligatorios.",
-      );
-      expect(validateProductForm(form({ name: "" }))).toBe(
-        "SKU y nombre son obligatorios.",
+    it("accepts a blank sku (S1: optional)", () => {
+      expect(validateProductForm(form({ sku: "   " }))).toBeNull();
+      expect(validateProductForm(form({ sku: "" }))).toBeNull();
+    });
+
+    it("requires a name", () => {
+      expect(validateProductForm(form({ name: "   " }))).toBe(
+        "El nombre es obligatorio.",
       );
     });
   });

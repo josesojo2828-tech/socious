@@ -14,6 +14,7 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
+import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import {
   BRASS_DOT,
   BTN_GHOST,
@@ -575,12 +576,11 @@ export default function PurchaseDetailPage() {
           <form onSubmit={submitPayment} className="grid gap-3 sm:grid-cols-2">
             <label className={LABEL_SM}>
               Monto
-              <input
-                type="number"
-                min="0.01"
-                step="any"
+              <DecimalInput
+                mode="money"
+                allowEmpty
                 value={payAmount}
-                onChange={(event) => setPayAmount(event.target.value)}
+                onValueChange={setPayAmount}
                 className={`mt-1 ${INPUT}`}
               />
             </label>
