@@ -21,14 +21,29 @@ export function parsePresentationSalePrice(input: string): number | null {
   return parsed;
 }
 
-/** Human label for the effective price: own price or "hereda". */
+/**
+ * Human label for the effective price: own price when set, otherwise the
+ * product price marked as inherited. Falls back to `hereda` when neither is
+ * available.
+ */
 export function presentationPriceLabel(
   salePriceUSD: string | number | null | undefined,
+  productSalePriceUSD?: string | number | null,
 ): string {
-  if (salePriceUSD === null || salePriceUSD === undefined) return "hereda";
-  const parsed = Number(salePriceUSD);
-  if (!Number.isFinite(parsed)) return "hereda";
-  return `$${parsed.toFixed(2)}`;
+  const own =
+    salePriceUSD === null || salePriceUSD === undefined
+      ? null
+      : Number(salePriceUSD);
+  if (own !== null && Number.isFinite(own)) return `$${own.toFixed(2)}`;
+
+  const inherited =
+    productSalePriceUSD === null || productSalePriceUSD === undefined
+      ? null
+      : Number(productSalePriceUSD);
+  if (inherited !== null && Number.isFinite(inherited)) {
+    return `$${inherited.toFixed(2)} (hereda)`;
+  }
+  return "hereda";
 }
 
 /**

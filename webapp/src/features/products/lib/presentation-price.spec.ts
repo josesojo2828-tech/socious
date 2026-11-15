@@ -35,6 +35,15 @@ describe("presentationPriceLabel", () => {
     expect(presentationPriceLabel("3.50")).toBe("$3.50");
     expect(presentationPriceLabel(2)).toBe("$2.00");
   });
+
+  it("muestra el precio del producto marcado como heredado", () => {
+    expect(presentationPriceLabel(null, "2.50")).toBe("$2.50 (hereda)");
+    expect(presentationPriceLabel(undefined, 3)).toBe("$3.00 (hereda)");
+  });
+
+  it("prefiere el precio propio sobre el del producto", () => {
+    expect(presentationPriceLabel("4.25", "2.50")).toBe("$4.25");
+  });
 });
 
 describe("presentationCostLabel", () => {

@@ -257,6 +257,11 @@ export function PresentationFormModal({
             placeholder="Vacío = hereda el precio del producto"
             className={`mt-1 font-mono tabular-nums ${INPUT}`}
           />
+          {product?.salePriceUSD != null ? (
+            <span className="mt-1 block text-[11px] text-slate-400">
+              Original: ${Number(product.salePriceUSD).toFixed(2)}
+            </span>
+          ) : null}
         </label>
       </div>
 

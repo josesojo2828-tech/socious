@@ -309,7 +309,10 @@ export function PresentationsCard({
                         )}
                       </td>
                       <td className="px-3 py-2.5 text-right font-mono tabular-nums">
-                        {presentationPriceLabel(row.salePriceUSD)}
+                        {presentationPriceLabel(
+                          row.salePriceUSD,
+                          product?.salePriceUSD,
+                        )}
                       </td>
                       <td className="px-3 py-2.5">
                         {imageLimit !== undefined ? (
