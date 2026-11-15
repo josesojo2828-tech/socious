@@ -13,6 +13,7 @@ import {
   Upload,
 } from "lucide-react";
 import { ProductImportModal } from "@/features/products/components/ProductImportModal";
+import { ManualReceivableForm } from "@/features/initial-load/components/ManualReceivableForm";
 import { ReceivableImportPanel } from "@/features/initial-load/components/ReceivableImportPanel";
 import { apiClient } from "@/shared/api/api.client";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
@@ -106,6 +107,10 @@ export default function InitialLoadPage() {
   const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
 
   const [step, setStep] = useState<number>(1);
+  /** Step 2 either imports a CSV or opens the manual form; import by default. */
+  const [receivableView, setReceivableView] = useState<"import" | "manual">(
+    "import",
+  );
   const [stats, setStats] = useState<OrganizationStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -366,7 +371,7 @@ export default function InitialLoadPage() {
                 Registra cada producto desde el formulario del catálogo.
               </p>
               <Link
-                href="/dashboard/productos"
+                href="/dashboard/productos/nuevo"
                 aria-describedby="manual-notice"
                 className={`mt-3 h-10 px-4 text-sm ${CTA_BRASS}`}
               >
@@ -376,7 +381,8 @@ export default function InitialLoadPage() {
                 id="manual-notice"
                 className="mt-1.5 text-xs text-slate-500 dark:text-slate-400"
               >
-                El formulario de alta se completa en la pantalla de Productos.
+                El formulario de creación de producto se abre en la pantalla de
+                Productos.
               </p>
             </div>
           </div>
@@ -387,9 +393,46 @@ export default function InitialLoadPage() {
         <StepPanel
           icon={<FileSpreadsheet className="h-5 w-5" />}
           title="Clientes y cuentas por cobrar"
-          description="Carga los clientes y su deuda inicial desde un archivo CSV."
+          description="Carga los clientes y su deuda inicial desde un archivo CSV o una cuenta a la vez."
         >
-          <ReceivableImportPanel />
+          <div
+            role="group"
+            aria-label="Forma de carga de cuentas por cobrar"
+            className="mb-4 inline-flex flex-wrap gap-1 rounded-xl border border-[#1a2a46]/15 p-1 dark:border-white/15"
+          >
+            <button
+              type="button"
+              aria-pressed={receivableView === "import"}
+              onClick={() => setReceivableView("import")}
+              className={`rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b2944a] ${
+                receivableView === "import"
+                  ? "bg-[#1a2a46] font-semibold text-[#f0ede4]"
+                  : "font-medium text-slate-600 hover:bg-[#1a2a46]/[0.05] dark:text-slate-300 dark:hover:bg-white/5"
+              }`}
+            >
+              Importar planilla
+            </button>
+            <button
+              type="button"
+              aria-pressed={receivableView === "manual"}
+              onClick={() => setReceivableView("manual")}
+              className={`rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b2944a] ${
+                receivableView === "manual"
+                  ? "bg-[#1a2a46] font-semibold text-[#f0ede4]"
+                  : "font-medium text-slate-600 hover:bg-[#1a2a46]/[0.05] dark:text-slate-300 dark:hover:bg-white/5"
+              }`}
+            >
+              Alta manual
+            </button>
+          </div>
+
+          {receivableView === "import" ? (
+            <ReceivableImportPanel />
+          ) : (
+            <ManualReceivableForm
+              onCreated={() => setReloadToken((token) => token + 1)}
+            />
+          )}
         </StepPanel>
       ) : null}
 
