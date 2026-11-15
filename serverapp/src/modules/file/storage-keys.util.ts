@@ -1,8 +1,9 @@
 /**
  * Prefijos de claves de MinIO que son assets NO clínicos y pueden servirse
- * públicamente (portafolios, avatares, fotos de menú). Todo lo demás
- * (campus_* = documentos de identidad, o claves arbitrarias) es sensible:
- * solo se expone vía URL firmada (getSignedUrl) a usuarios autorizados.
+ * públicamente (portafolios, avatares, fotos de menú, imágenes de catálogo,
+ * banners de ofertas y el logo del tenant). Todo lo demás (campus_* =
+ * documentos de identidad, o claves arbitrarias) es sensible: solo se expone
+ * vía URL firmada (getSignedUrl) a usuarios autorizados.
  */
 export const PUBLIC_ASSET_PREFIXES = [
   "portfolio_",
@@ -10,6 +11,7 @@ export const PUBLIC_ASSET_PREFIXES = [
   "menu_",
   "product_", // imágenes de catálogo (producto y presentaciones, S8)
   "offer_",   // banners de ofertas (S9)
+  "identity_", // logo público del tenant (Identidad)
 ] as const;
 
 export function isPublicAssetKey(key: string): boolean {

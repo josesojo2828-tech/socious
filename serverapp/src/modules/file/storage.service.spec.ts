@@ -62,6 +62,8 @@ describe("StorageService — policy del bucket (S3)", () => {
     expect(resources).toContain("arn:aws:s3:::test-bucket/portfolio_*");
     expect(resources).toContain("arn:aws:s3:::test-bucket/profile_*");
     expect(resources).toContain("arn:aws:s3:::test-bucket/menu_*");
+    // El logo del tenant se sirve anónimamente, como los demás assets no clínicos:
+    expect(resources).toContain("arn:aws:s3:::test-bucket/identity_*");
     // Jamás el wildcard total del bucket:
     expect(resources).not.toContain("arn:aws:s3:::test-bucket/*");
   });

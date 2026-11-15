@@ -57,7 +57,8 @@ export class StorageService {
         // Policy ACOTADA POR PREFIJO: solo assets no clínicos son legibles
         // anónimamente. Nunca Principal:"*" sobre el bucket entero: eso
         // expondría documentos de identidad (campus_*) y cualquier archivo
-        // clínico a quien adivine la URL (S3, legal-compliance).
+        // clínico a quien adivine la URL (S3, legal-compliance). `identity_*`
+        // es el logo público del tenant.
         const policy = JSON.stringify({
             Version: "2012-10-17",
             Statement: [
@@ -69,6 +70,7 @@ export class StorageService {
                         `arn:aws:s3:::${this.bucket}/portfolio_*`,
                         `arn:aws:s3:::${this.bucket}/profile_*`,
                         `arn:aws:s3:::${this.bucket}/menu_*`,
+                        `arn:aws:s3:::${this.bucket}/identity_*`,
                     ],
                 },
             ],

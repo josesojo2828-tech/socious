@@ -31,7 +31,7 @@ const ALLOWED_MIME = [
   "application/pdf",
 ];
 const MAX_SIZE = 5 * 1024 * 1024;
-const UPLOAD_PREFIXES = ["product", "offer", "purchase"] as const;
+const UPLOAD_PREFIXES = ["product", "offer", "purchase", "identity"] as const;
 
 @Controller("api/file")
 export class FileController {
@@ -80,10 +80,10 @@ export class FileController {
   @SkipThrottle()
   @Get("public/:key")
   async getPublicFile(@Param("key") key: string, @Res() res: FastifyReply) {
-    // Solo assets no clínicos (portfolio_/profile_/menu_). Claves como
-    // campus_* (documentos de identidad) o arbitrarias → 404 sin consultar
-    // el storage (S3, legal-compliance). Las sensibles se sirven por
-    // getSignedUrl a usuarios autorizados.
+    // Solo assets no clínicos (portfolio_/profile_/menu_/product_/offer_/
+    // identity_). Claves como campus_* (documentos de identidad) o
+    // arbitrarias → 404 sin consultar el storage (S3, legal-compliance). Las
+    // sensibles se sirven por getSignedUrl a usuarios autorizados.
     if (!isPublicAssetKey(key)) {
       return res.status(404).send({ message: "File not found" });
     }

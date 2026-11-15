@@ -71,4 +71,58 @@ describe("FileController.getPublicFile — S3", () => {
     expect(res._status).toBe(200);
     expect(res._body).toEqual(bytes);
   });
+
+  it("sirve el logo del tenant (identity_*) sin URL firmada", async () => {
+    const bytes = Buffer.from("logo");
+    const getFileStream = jest.fn().mockResolvedValue({
+      stream: { transformToByteArray: async () => bytes },
+      contentType: "image/png",
+    });
+    const { controller } = buildController(getFileStream);
+    const res = mockReply();
+
+    await controller.getPublicFile("identity_1700000000_abc123.png", res);
+
+    expect(res._status).toBe(200);
+    expect(res._body).toEqual(bytes);
+  });
+});
+
+/**
+ * The tenant logo is uploaded through the same endpoint as catalog images.
+ * `identity` must be an allowed prefix so `logoUrl` can point at the stored
+ * key (or at the public URL built from it).
+ */
+describe("FileController.uploadImage — prefijo identity", () => {
+  const buildUploadController = () => {
+    const storage = {
+      uploadFile: jest.fn().mockResolvedValue(undefined),
+      getFileUrl: jest.fn(async (key: string) => `http://minio/bucket/${key}`),
+    } as any;
+    return { controller: new FileController(storage), storage };
+  };
+
+  it("acepta identity y genera la clave con el prefijo existente", async () => {
+    const { controller, storage } = buildUploadController();
+    const file = {
+      buffer: Buffer.from("logo"),
+      size: 4,
+      mimetype: "image/png",
+      originalname: "logo.png",
+    } as any;
+
+    const result = await controller.uploadImage(
+      {} as any,
+      file,
+      { prefix: "identity" },
+    );
+
+    expect(storage.uploadFile).toHaveBeenCalledWith(
+      file.buffer,
+      expect.stringMatching(/^identity_\d+_[a-z0-9]+\.png$/),
+      "image/png",
+    );
+    expect(result.key).toMatch(/^identity_\d+_[a-z0-9]+\.png$/);
+    expect(result.url).toBe(`http://minio/bucket/${result.key}`);
+  });
 });
