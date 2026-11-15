@@ -46,7 +46,13 @@ export function sanitizeQuantityDraft(raw: string, maxDecimals = 2): string {
   return hasDot ? `${intPart}.${decimal.slice(0, maxDecimals)}` : intPart;
 }
 
-/** Canonical text for the quantity field once editing ends. */
+/**
+ * Canonical text for the quantity field once editing ends.
+ *
+ * With `decimals = 0` (COUNT units) a legacy fractional value is preserved
+ * instead of rounded: opening a form must never rewrite stored data the
+ * merchant did not touch.
+ */
 export function quantityTextFromDraft(
   draft: string,
   decimals = 2,
@@ -55,11 +61,13 @@ export function quantityTextFromDraft(
   const clean = draft.endsWith(".") ? draft.slice(0, -1) : draft;
   if (clean === "") return allowEmpty ? "" : formatNumber(0, decimals);
   const value = Number(clean);
-  return Number.isFinite(value)
-    ? value.toFixed(decimals)
-    : allowEmpty
-      ? ""
-      : formatNumber(0, decimals);
+  if (!Number.isFinite(value)) {
+    return allowEmpty ? "" : formatNumber(0, decimals);
+  }
+  if (decimals <= 0) {
+    return Number.isInteger(value) ? String(value) : clean;
+  }
+  return value.toFixed(decimals);
 }
 
 /** Numeric value of a quantity draft; `null` when there is nothing to send. */
@@ -70,14 +78,20 @@ export function parseQuantityDraft(draft: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
-/** Display text for a quantity value coming from state or the API. */
+/**
+ * Display text for a quantity value coming from state or the API. A value that
+ * already carries decimals keeps them even on a COUNT field, so an untouched
+ * legacy row is shown (and submitted) as stored.
+ */
 export function quantityTextFromValue(
   value: string | number | null | undefined,
   decimals = 2,
 ): string {
   if (value === null || value === undefined || value === "") return "";
   const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric.toFixed(decimals) : "";
+  if (!Number.isFinite(numeric)) return "";
+  if (decimals <= 0) return String(numeric);
+  return numeric.toFixed(decimals);
 }
 
 /** Money value → cents buffer (`25.5` → `"2550"`, `0` → `"0"`). */

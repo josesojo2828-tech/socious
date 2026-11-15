@@ -106,7 +106,10 @@ export const DecimalInput = forwardRef<HTMLInputElement, DecimalInputProps>(
               : moneyText("", decimals)
             : draft
           : quantityTextFromDraft(draft, decimals, allowEmpty);
-      if (text !== draft) setDraft(text);
+      // Emit only when the canonical text differs: an untouched field must not
+      // rewrite the parent's value (e.g. a legacy fractional stock).
+      if (text === draft) return;
+      setDraft(text);
       onValueChange(text);
     };
 

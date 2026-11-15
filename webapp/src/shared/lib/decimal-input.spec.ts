@@ -61,6 +61,11 @@ describe("quantityTextFromDraft", () => {
     expect(quantityTextFromDraft("", 2, false)).toBe("0.00");
     expect(quantityTextFromDraft("", 2, true)).toBe("");
   });
+
+  it("no redondea un stock fraccionario legado en una unidad de conteo", () => {
+    expect(quantityTextFromDraft("10.5", 0, false)).toBe("10.5");
+    expect(quantityTextFromDraft("10", 0, false)).toBe("10");
+  });
 });
 
 describe("parseQuantityDraft", () => {
@@ -83,6 +88,11 @@ describe("quantityTextFromValue", () => {
     expect(quantityTextFromValue(null, 2)).toBe("");
     expect(quantityTextFromValue(undefined, 2)).toBe("");
     expect(quantityTextFromValue("", 2)).toBe("");
+  });
+
+  it("una unidad de conteo muestra el entero y conserva un legado fraccionario", () => {
+    expect(quantityTextFromValue(10, 0)).toBe("10");
+    expect(quantityTextFromValue("10.5", 0)).toBe("10.5");
   });
 });
 
