@@ -13,7 +13,7 @@ import {
   Max,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { PaymentStatus, SaleStatus } from "@prisma/client";
 
 const NOTES_MAX = 1000;
@@ -90,6 +90,20 @@ export class SalePaymentInputDto {
 }
 
 export class CreateSaleDto {
+  /**
+   * Explicit document number for historical/imported documents. When missing
+   * or empty the sale keeps the generated `VTA-####` sequence.
+   */
+  @IsOptional()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @IsString()
+  @MaxLength(60)
+  @Matches(/^[A-Za-z0-9._-]+$/, {
+    message:
+      "El número de venta solo puede contener letras, números, puntos, guiones y guiones bajos.",
+  })
+  saleNumber?: string;
+
   @IsOptional()
   @IsString()
   clientId?: string;

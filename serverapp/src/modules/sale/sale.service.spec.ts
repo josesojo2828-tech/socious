@@ -399,6 +399,59 @@ describe("SaleService", () => {
         expect.anything(),
       );
     });
+
+    it("stores an explicit saleNumber verbatim and skips the sequence", async () => {
+      const { service, sequenceService, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          saleNumber: "V-2024-001",
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 1,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data.saleNumber).toBe(
+        "V-2024-001",
+      );
+      expect(sequenceService.nextFormatted).not.toHaveBeenCalled();
+    });
+
+    it("keeps the generated VTA number when saleNumber is omitted", async () => {
+      const { service, sequenceService, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(50));
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 1,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(sequenceService.nextFormatted).toHaveBeenCalledWith(
+        "SALE",
+        ORG_A,
+        "VTA",
+        5,
+        expect.anything(),
+      );
+      expect(tx.sale.create.mock.calls[0][0].data.saleNumber).toBe("VTA-00001");
+    });
   });
 
   describe("credit due date (S3)", () => {

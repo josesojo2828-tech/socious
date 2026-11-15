@@ -176,13 +176,17 @@ export class SaleService {
         }
       }
 
-      const saleNumber = await this.sequenceService.nextFormatted(
-        "SALE",
-        scope.organizationId,
-        "VTA",
-        5,
-        tx as SequenceDb,
-      );
+      const providedSaleNumber = data.saleNumber?.trim();
+      const saleNumber =
+        providedSaleNumber && providedSaleNumber.length > 0
+          ? providedSaleNumber
+          : await this.sequenceService.nextFormatted(
+              "SALE",
+              scope.organizationId,
+              "VTA",
+              5,
+              tx as SequenceDb,
+            );
 
       const sale = await tx.sale.create({
         data: {
