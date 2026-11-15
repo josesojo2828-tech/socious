@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildFinancialSummary,
   filterOpenItemsByRange,
+  openItemBalance,
   openItemNumber,
   openItemParty,
   sumOpenItems,
@@ -98,6 +99,22 @@ describe("buildFinancialSummary", () => {
     // 10.01 − 3.00 = 7.01 — money is rounded per document, then subtracted.
     expect(buildFinancialSummary(sales, purchases).resultUSD).toBe(7.01);
   });
+
+  it("counts open accounts (no due date) in the receivable total", () => {
+    const sales = emptySales();
+    sales.aging = {
+      current: 10,
+      days1_30: 20,
+      days31_60: 30,
+      over60: 40,
+      open: 25,
+    };
+    const purchases = emptyPurchases();
+
+    // Purchases has no `open` bucket yet: it must keep summing its four.
+    expect(buildFinancialSummary(sales, purchases).receivableUSD).toBe(125);
+    expect(buildFinancialSummary(sales, purchases).payableUSD).toBe(0);
+  });
 });
 
 describe("filterOpenItemsByRange", () => {
@@ -147,6 +164,41 @@ describe("sumOpenItems / openItem helpers", () => {
         { id: "2", issueDate: "2026-11-02", totalUSD: 5, daysOverdue: 0 },
       ]),
     ).toBe(15.01);
+  });
+
+  it("prefers the net balanceUSD over the gross totalUSD", () => {
+    expect(
+      sumOpenItems([
+        {
+          id: "1",
+          issueDate: "2026-11-01",
+          totalUSD: 100,
+          balanceUSD: 70,
+          daysOverdue: 0,
+        },
+        { id: "2", issueDate: "2026-11-02", totalUSD: 5, daysOverdue: 0 },
+      ]),
+    ).toBe(75);
+  });
+
+  it("falls back to totalUSD when balanceUSD is absent (purchases path)", () => {
+    expect(
+      openItemBalance({
+        id: "1",
+        issueDate: "2026-11-01",
+        totalUSD: 42,
+        daysOverdue: 0,
+      }),
+    ).toBe(42);
+    expect(
+      openItemBalance({
+        id: "2",
+        issueDate: "2026-11-01",
+        totalUSD: 100,
+        balanceUSD: 30,
+        daysOverdue: 0,
+      }),
+    ).toBe(30);
   });
 
   it("prefers the client name for sales and the supplier for purchases", () => {

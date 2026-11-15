@@ -21,6 +21,7 @@ import {
 import {
   buildFinancialSummary,
   filterOpenItemsByRange,
+  openItemBalance,
   openItemNumber,
   openItemParty,
   sumOpenItems,
@@ -202,7 +203,7 @@ function OpenItemsPanel({
                   number={openItemNumber(item)}
                   party={openItemParty(item)}
                   issueDate={item.issueDate}
-                  amount={Number(item.totalUSD)}
+                  amount={openItemBalance(item)}
                   overdueDays={item.daysOverdue}
                 />
               ))}

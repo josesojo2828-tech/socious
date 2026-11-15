@@ -124,13 +124,25 @@ export interface SalesReport {
     days1_30: number;
     days31_60: number;
     over60: number;
+    /** Open accounts: sales without an agreed due date. Never overdue. */
+    open: number;
   };
   openItems: {
     id: string;
     saleNumber: string;
     issueDate: string;
+    dueDate?: string | null;
+    /** Invoiced total (display only). */
     totalUSD: number;
+    /** What is actually still owed: totalUSD minus collected payments. */
+    balanceUSD: number;
     daysOverdue: number;
+    /** True when the sale has no due date (open account). */
+    isOpen: boolean;
     client: { id: string; name: string } | null;
   }[];
+  /** Every open sale, even those beyond the listing cap. */
+  openItemsTotal: number;
+  /** True when `openItems` was capped shorter than `openItemsTotal`. */
+  truncated: boolean;
 }

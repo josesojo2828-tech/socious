@@ -37,6 +37,14 @@ import {
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
+/**
+ * Accounts-receivable open items are listed with a hard cap so a tenant with
+ * thousands of unpaid invoices does not ship an unbounded payload. The cap is
+ * explicit and the response reports `openItemsTotal`/`truncated`, so nothing is
+ * hidden silently: the UI can say "showing the first N of M".
+ */
+const OPEN_ITEMS_CAP = 1000;
+
 export interface SaleScope {
   organizationId: string | null;
   createdById?: string | null;
@@ -454,7 +462,13 @@ export class SaleService {
   async getReport(scope: SaleScope, query: SalesReportQueryDto) {
     const issueRange = resolveReportRange(query);
 
-    const [accrued, collected, sales, unpaid] = await Promise.all([
+    const openItemsWhere: Prisma.SaleWhereInput = {
+      ...this.scopeWhere(scope.organizationId),
+      status: SaleStatus.COMPLETED,
+      paymentStatus: { in: [PaymentStatus.UNPAID, PaymentStatus.PARTIAL] },
+    };
+
+    const [accrued, collected, sales, unpaid, openItemsTotal] = await Promise.all([
       this.prisma.sale.findMany({
         where: {
           ...this.scopeWhere(scope.organizationId),
@@ -480,11 +494,7 @@ export class SaleService {
         _count: { id: true },
       }),
       this.prisma.sale.findMany({
-        where: {
-          ...this.scopeWhere(scope.organizationId),
-          status: SaleStatus.COMPLETED,
-          paymentStatus: { in: [PaymentStatus.UNPAID, PaymentStatus.PARTIAL] },
-        },
+        where: openItemsWhere,
         select: {
           id: true,
           saleNumber: true,
@@ -494,9 +504,25 @@ export class SaleService {
           client: { select: { id: true, name: true } },
         },
         orderBy: { issueDate: "asc" },
-        take: 200,
+        take: OPEN_ITEMS_CAP,
       }),
+      this.prisma.sale.count({ where: openItemsWhere }),
     ]);
+
+    // The open item's amount is what is still owed, not what was invoiced: a
+    // partially paid sale must only contribute its remaining balance.
+    const openSaleIds = unpaid.map((sale) => sale.id);
+    const paidBySale = new Map<string, number>();
+    if (openSaleIds.length > 0) {
+      const paymentTotals = await this.prisma.salePayment.groupBy({
+        by: ["saleId"],
+        where: { saleId: { in: openSaleIds } },
+        _sum: { amountUSD: true },
+      });
+      for (const row of paymentTotals) {
+        paidBySale.set(row.saleId, Number(row._sum.amountUSD ?? 0));
+      }
+    }
 
     const monthKey = (date: Date) =>
       `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
@@ -525,24 +551,42 @@ export class SaleService {
       days1_30: 0,
       days31_60: 0,
       over60: 0,
+      open: 0,
     };
 
     const openItems = unpaid.map((sale) => {
-      const due = sale.dueDate ? new Date(sale.dueDate) : new Date(sale.issueDate);
-      const days = Math.floor((today.getTime() - due.getTime()) / 86_400_000);
-      const amount = Number(sale.totalUSD);
-      if (days <= 0) aging.current = round2(aging.current + amount);
-      else if (days <= 30) aging.days1_30 = round2(aging.days1_30 + amount);
-      else if (days <= 60) aging.days31_60 = round2(aging.days31_60 + amount);
-      else aging.over60 = round2(aging.over60 + amount);
+      const totalUSD = Number(sale.totalUSD);
+      const balanceUSD = round2(
+        Math.max(0, totalUSD - (paidBySale.get(sale.id) ?? 0)),
+      );
+
+      // No due date is an OPEN ACCOUNT: it is not overdue, it simply has no
+      // agreed term yet, so it gets its own bucket and reports 0 days overdue.
+      const isOpen = sale.dueDate == null;
+      let daysOverdue = 0;
+
+      if (isOpen) {
+        aging.open = round2(aging.open + balanceUSD);
+      } else {
+        const due = new Date(sale.dueDate as Date);
+        const days = Math.floor((today.getTime() - due.getTime()) / 86_400_000);
+        daysOverdue = Math.max(0, days);
+
+        if (days <= 0) aging.current = round2(aging.current + balanceUSD);
+        else if (days <= 30) aging.days1_30 = round2(aging.days1_30 + balanceUSD);
+        else if (days <= 60) aging.days31_60 = round2(aging.days31_60 + balanceUSD);
+        else aging.over60 = round2(aging.over60 + balanceUSD);
+      }
 
       return {
         id: sale.id,
         saleNumber: sale.saleNumber,
         issueDate: sale.issueDate,
         dueDate: sale.dueDate,
-        totalUSD: Number(sale.totalUSD),
-        daysOverdue: Math.max(0, days),
+        totalUSD,
+        balanceUSD,
+        daysOverdue,
+        isOpen,
         client: sale.client,
       };
     });
@@ -562,6 +606,8 @@ export class SaleService {
         .map(([month, value]) => ({ month, ...value })),
       aging,
       openItems,
+      openItemsTotal,
+      truncated: openItemsTotal > openItems.length,
     };
   }
 
