@@ -153,7 +153,7 @@ export function ConfirmSubscriptionModal({ plan, Reload }: ConfirmSubscriptionMo
           <Wallet size={24} />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Confirmar Suscripción</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Confirmar suscripción</h3>
           <p className="text-gray-500 dark:text-slate-400 text-xs">Revisa los detalles antes de continuar.</p>
         </div>
       </div>

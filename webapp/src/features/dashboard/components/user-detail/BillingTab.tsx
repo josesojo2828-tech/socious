@@ -176,7 +176,7 @@ export function BillingTab({
 
       {/* Current subscription */}
       <SectionCard
-        title="Suscripción Actual"
+        title="Suscripción actual"
         icon={CreditCard}
         actions={
           <button
@@ -248,7 +248,7 @@ export function BillingTab({
 
       {/* Billing / subscription history */}
       <SectionCard
-        title="Histórico de Facturación"
+        title="Histórico de facturación"
         icon={FileText}
         bodyClassName="p-0"
       >
@@ -350,7 +350,7 @@ export function BillingTab({
       </SectionCard>
 
       {/* Payment methods */}
-      <SectionCard title="Métodos de Pago" icon={CreditCard} bodyClassName="p-0">
+      <SectionCard title="Métodos de pago" icon={CreditCard} bodyClassName="p-0">
         {loading ? (
           <div className="p-6 text-center">
             <Loader2 size={20} className="animate-spin text-base-content/50 mx-auto" />

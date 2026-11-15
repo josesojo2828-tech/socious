@@ -66,7 +66,7 @@ export function NutritionalTab({ user, stats, onRefetch }: NutritionalTabProps) 
   return (
     <div className="space-y-6">
       {/* Resumen operativo */}
-      <SectionCard title="Resumen Operativo" icon={Activity}>
+      <SectionCard title="Resumen operativo" icon={Activity}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <ResourceCard
             icon={Users}

@@ -54,7 +54,7 @@ function NutritionistTeamView() {
         <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-indigo-100">
           <Users className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-900">Equipo de la Clínica</h2>
+        <h2 className="text-xl font-bold text-slate-900">Equipo de la clínica</h2>
         <p className="text-xs text-slate-500 mt-2 leading-relaxed">
           Seleccioná una clínica en el desplegable superior de workspaces para ver el equipo.
         </p>
@@ -67,7 +67,7 @@ function NutritionistTeamView() {
       <div className="bg-gradient-to-r from-indigo-600 to-indigo-600 rounded-2xl p-6 text-white">
         <div className="flex items-center gap-3 mb-2">
           <Users className="w-6 h-6" />
-          <h1 className="text-2xl font-bold">Equipo de la Clínica</h1>
+          <h1 className="text-2xl font-bold">Equipo de la clínica</h1>
         </div>
         <p className="text-indigo-100 text-sm">
           Miembros que forman parte de {targetOrgWorkspace.name}

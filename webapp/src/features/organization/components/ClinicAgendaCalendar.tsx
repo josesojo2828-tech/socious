@@ -65,7 +65,7 @@ export const ClinicAgendaCalendar: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m3 0h1m-1-4h.01M9 16h.01M9 12h.01M9 8h.01M15 16h.01M15 12h.01M15 8h.01" />
           </svg>
         </div>
-        <h3 className="text-base font-bold text-slate-900">Vista de Agenda Personal</h3>
+        <h3 className="text-base font-bold text-slate-900">Vista de agenda personal</h3>
         <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
           Cambiá al workspace de tu clínica en la barra superior para ver la agenda compartida multi-nutri con código de colores.
         </p>

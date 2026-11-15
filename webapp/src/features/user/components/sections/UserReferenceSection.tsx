@@ -19,7 +19,7 @@ export const UserReferenceSection = () => {
       {/* SECCIÓN COMPARTIR */}
       <div className="card bg-base-100 shadow p-6 flex-row items-center justify-between">
         <div>
-          <h2 className="font-bold text-xl">Invita y Gana</h2>
+          <h2 className="font-bold text-xl">Invita y gana</h2>
           <p className="text-base-content/70">Comparte tu enlace único</p>
         </div>
         <div className="join">

@@ -152,7 +152,7 @@ export function ChangePlanModal({ currentPlanId, onSuccess }: ChangePlanModalPro
         </div>
         <div>
           <h3 className="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-            Cambiar Plan de Suscripción
+            Cambiar plan
           </h3>
           <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
             Actualizá tu plan con prorrateo automático y deducción directa de tu billetera.

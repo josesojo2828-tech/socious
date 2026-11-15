@@ -39,7 +39,7 @@ export function ProfilePage() {
                                 {section === "dashboard"
                                     ? t("dashboard.user_dashboard.panel_title")
                                     : section === "data"
-                                    ? "Datos & Acreditación"
+                                    ? "Datos y acreditación"
                                     : section === "security"
                                     ? t("dashboard.user_dashboard.security_title")
                                     : section === "notifications"

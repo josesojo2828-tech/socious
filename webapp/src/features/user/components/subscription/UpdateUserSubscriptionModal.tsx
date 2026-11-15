@@ -96,7 +96,7 @@ export function UpdateUserSubscriptionModal({
         </div>
         <div>
           <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-            Gestionar Suscripción de Usuario
+            Gestionar suscripción
           </h3>
           <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
             {userName ? `Usuario: ${userName}` : "Asigna o actualiza el plan del usuario."}

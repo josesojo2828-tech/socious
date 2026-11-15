@@ -186,7 +186,7 @@ export default function WalletPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-base-300 pb-6">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-black text-base-content tracking-tight">
-            Facturación & Billetera Personal
+            Facturación y billetera
           </h1>
         </div>
       </div>
@@ -345,7 +345,7 @@ export default function WalletPage() {
           <div className="flex items-center justify-between border-b border-base-300 pb-4">
             <div className="flex items-center gap-2">
               <Receipt className="w-5 h-5 text-success" />
-              <h3 className="text-base font-black text-base-content">Resumen de Facturación Mensual</h3>
+              <h3 className="text-base font-black text-base-content">Resumen de facturación mensual</h3>
             </div>
             <span className="text-[11px] font-mono text-base-content/70 uppercase tracking-widest bg-base-300 px-2.5 py-1 rounded-lg">
               Factura Estimada
@@ -387,7 +387,7 @@ export default function WalletPage() {
           <div className="flex items-center gap-2 border-b border-base-300 pb-3">
             <TrendingUp className="w-4 h-4 text-primary" />
             <h3 className="text-sm font-bold text-base-content uppercase tracking-wide">
-              Volumen de Transacciones
+              Volumen de transacciones
             </h3>
           </div>
           <div className="h-64">
@@ -412,7 +412,7 @@ export default function WalletPage() {
           <div className="flex items-center gap-2 border-b border-base-300 pb-3">
             <PieIcon className="w-4 h-4 text-primary" />
             <h3 className="text-sm font-bold text-base-content uppercase tracking-wide">
-              Estado de los Pagos
+              Estado de los pagos
             </h3>
           </div>
           <div className="h-64 flex items-center justify-center">

@@ -26,7 +26,7 @@ export const UserDataSection = () => {
             <User className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-extrabold text-base-content">Datos Personales</h2>
+            <h2 className="text-lg font-extrabold text-base-content">Datos personales</h2>
             <p className="text-xs text-base-content/70">
               Edición de tu nombre, usuario y correo electrónico de cuenta
             </p>

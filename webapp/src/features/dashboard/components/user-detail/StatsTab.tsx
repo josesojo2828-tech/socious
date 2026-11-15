@@ -54,7 +54,7 @@ function MetricCard({
 export function StatsTab({ user, stats, activityFeed, activityLoading }: StatsTabProps) {
   return (
     <div className="space-y-6">
-      <SectionCard title="Estadísticas y Resumen" icon={BarChart3}>
+      <SectionCard title="Estadísticas y resumen" icon={BarChart3}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <MetricCard
             icon={CreditCard}
@@ -93,7 +93,7 @@ export function StatsTab({ user, stats, activityFeed, activityLoading }: StatsTa
       </SectionCard>
 
       <SectionCard
-        title="Actividad Reciente"
+        title="Actividad reciente"
         icon={Activity}
         bodyClassName="p-0"
         actions={

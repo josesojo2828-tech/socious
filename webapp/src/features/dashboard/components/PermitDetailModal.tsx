@@ -139,7 +139,7 @@ export function PermitDetailModal({ permit, groups, onClose, onSuccess }: Permit
 
       <div>
         <h3 className="text-sm font-semibold text-slate-700 mb-3">
-          Permisos — toggléalos para activar/desactivar
+          Permisos
         </h3>
         <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
           {groups.map((group) => {

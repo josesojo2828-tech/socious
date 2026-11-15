@@ -212,7 +212,7 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-3xl font-black text-base-content tracking-tight flex items-center gap-3">
             <Settings className="text-primary" size={32} />
-            Configuración de Administración & Website
+            Configuración de administración y sitio web
           </h1>
           <p className="text-base-content/70 mt-1 text-sm">
             Gestioná los parámetros del sistema (Días de Prueba) y actualizá la información corporativa del CMS.

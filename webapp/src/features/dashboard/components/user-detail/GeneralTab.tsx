@@ -108,7 +108,7 @@ export function GeneralTab({ user, wallet, subscription, stats }: GeneralTabProp
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Info */}
-        <SectionCard title="Información Personal" icon={Info}>
+        <SectionCard title="Información personal" icon={Info}>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <Field label="Nombre completo">{name}</Field>
             <Field label="Email">

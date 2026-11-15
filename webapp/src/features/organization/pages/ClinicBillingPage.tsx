@@ -314,7 +314,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Facturación &amp; Billetera de la Clínica
+              Facturación y billetera
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200">
               {subscription?.plan?.badge || 'Clínica Pro'}
@@ -477,7 +477,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div className="flex items-center gap-2">
               <Receipt className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-base font-black text-white">Resumen de Facturación Mensual</h3>
+              <h3 className="text-base font-black text-white">Resumen de facturación mensual</h3>
             </div>
             <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest bg-slate-800 px-2.5 py-1 rounded-lg">
               {latestInvoice
@@ -568,7 +568,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <TrendingUp className="w-4 h-4 text-indigo-600" />
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
-              Histórico de Pagos y Volumen
+              Histórico de pagos y volumen
             </h3>
           </div>
           <div className="h-64">
@@ -593,7 +593,7 @@ export function ClinicBillingPage({ orgId: propOrgId }: { orgId?: string } = {})
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <PieIcon className="w-4 h-4 text-indigo-600" />
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
-              Estado de los Pagos
+              Estado de los pagos
             </h3>
           </div>
           <div className="h-64 flex items-center justify-center">
