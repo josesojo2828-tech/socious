@@ -13,6 +13,7 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
 import type { Product } from "@/features/products/types/product.type";
@@ -887,9 +888,29 @@ export default function PosPage() {
                       >
                         <Minus className="h-3.5 w-3.5" />
                       </button>
-                      <span className="font-mono text-xs w-5 text-center tabular-nums text-[#111018] dark:text-slate-100">
-                        {line.quantity}
-                      </span>
+                      <DecimalInput
+                        mode="quantity"
+                        decimals={resolveUnitDecimals(line.unit)}
+                        value={line.quantity}
+                        onValueChange={(text) => {
+                          if (text.trim() === "") return;
+                          setCart((current) =>
+                            changeQuantity(
+                              current,
+                              line.productId,
+                              Number(text),
+                              line.presentationId,
+                            ),
+                          );
+                        }}
+                        aria-label={`Cantidad de ${line.productName}`}
+                        className="w-14 bg-transparent text-center font-mono text-xs tabular-nums text-[#111018] dark:text-slate-100 focus:outline-none"
+                      />
+                      {line.unit ? (
+                        <span className="font-mono text-[10px] pr-1 text-slate-500 dark:text-slate-400">
+                          {line.unit}
+                        </span>
+                      ) : null}
                       <button
                         type="button"
                         aria-label="Sumar"
