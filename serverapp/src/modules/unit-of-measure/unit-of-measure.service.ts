@@ -25,6 +25,8 @@ const SYSTEM_UNITS: SystemUnitSeed[] = [
   { name: "Onza", abbreviation: "oz", kind: UnitKind.WEIGHT },
   { name: "Litro", abbreviation: "L", kind: UnitKind.VOLUME },
   { name: "Mililitro", abbreviation: "mL", kind: UnitKind.VOLUME },
+  { name: "Metro", abbreviation: "m", kind: UnitKind.LENGTH },
+  { name: "Centímetro", abbreviation: "cm", kind: UnitKind.LENGTH },
 ];
 
 /**

@@ -103,6 +103,8 @@ describe("UnitOfMeasureService", () => {
       "oz",
       "L",
       "mL",
+      "m",
+      "cm",
     ]);
   });
 

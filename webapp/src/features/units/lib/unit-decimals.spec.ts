@@ -27,6 +27,12 @@ describe("resolveUnitDecimals", () => {
     }
   });
 
+  it("las unidades de longitud admiten decimales (venta de telas)", () => {
+    for (const abbreviation of ["m", "cm"]) {
+      expect(resolveUnitDecimals(abbreviation)).toBe(2);
+    }
+  });
+
   it("ignora mayúsculas y minúsculas en el mapa del sistema", () => {
     expect(resolveUnitDecimals("und")).toBe(0);
     expect(resolveUnitDecimals("KG")).toBe(2);
