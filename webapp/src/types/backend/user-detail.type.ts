@@ -50,9 +50,19 @@ export interface UserDetailStats {
   lastLoginIp: string | null;
 }
 
+export interface UserDetailOrganization {
+  id: string;
+  name: string;
+  slug: string | null;
+  status: string;
+  role: string;
+}
+
 export interface UserDetailResponse {
   user: UserDetailUser;
   wallet: UserDetailWallet | null;
   subscription: UserDetailSubscription | null;
   stats: UserDetailStats;
+  /** Organizaciones activas: la ficha configura al cliente desde acá. */
+  organizations?: UserDetailOrganization[];
 }

@@ -9,8 +9,14 @@ import type {
  * Reads the tenant configuration. Without an organization the backend answers
  * with the defaults, so this never fails for a personal workspace.
  */
-export async function getTenantSettings(): Promise<TenantSettings> {
-  const { data } = await apiClient.get<TenantSettings>(SettingsEndpoints.get);
+export async function getTenantSettings(
+  organizationId?: string | null,
+): Promise<TenantSettings> {
+  const { data } = await apiClient.get<TenantSettings>(SettingsEndpoints.get, {
+    ...(organizationId
+      ? { headers: { "X-Workspace-Id": organizationId } }
+      : {}),
+  });
   return data;
 }
 
@@ -21,10 +27,16 @@ export async function getTenantSettings(): Promise<TenantSettings> {
  */
 export async function updateTenantSettings(
   patch: TenantSettingsPatch,
+  organizationId?: string | null,
 ): Promise<TenantSettings> {
   const { data } = await apiClient.patch<TenantSettings>(
     SettingsEndpoints.update,
     patch,
+    {
+      ...(organizationId
+        ? { headers: { "X-Workspace-Id": organizationId } }
+        : {}),
+    },
   );
   return data;
 }

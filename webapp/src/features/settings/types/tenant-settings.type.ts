@@ -48,7 +48,8 @@ export interface TenantSettings {
     monthlyDay: number;
   };
   /** Built-ins the merchant turned off (S3). */
-  payments: { disabledCodes: string[] };
+  /** Switches plus the free-text "datos del pago" (S4). */
+  payments: { disabledCodes: string[]; instructions: string };
   /**
    * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
    * catalog on /dashboard/compras/nuevo to the selected supplier's products.

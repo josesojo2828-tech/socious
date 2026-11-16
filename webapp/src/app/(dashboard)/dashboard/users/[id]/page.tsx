@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Package,
   BarChart3,
+  Settings2,
 } from "lucide-react";
 import { Tabs } from "@/shared/components/organisms/Tabs";
 import type { TabEntry } from "@/shared/components/organisms/Tabs/Tabs.types";
@@ -22,6 +23,9 @@ import { GeneralTab } from "@/features/dashboard/components/user-detail/GeneralT
 import { ModulesTab } from "@/features/dashboard/components/user-detail/ModulesTab";
 import { BillingTab } from "@/features/dashboard/components/user-detail/BillingTab";
 import { StatsTab } from "@/features/dashboard/components/user-detail/StatsTab";
+import { ClientSettingsTab } from "@/features/dashboard/components/user-detail/ClientSettingsTab";
+import { useAuthStore } from "@/shared/store/auth/useAuthStore";
+import { isPlatformAdmin } from "@/features/settings/lib/settings-visibility";
 import {
   BRASS_DOT,
   EYEBROW,
@@ -48,6 +52,8 @@ export default function UserDetailPage() {
 
   const { userDetail, loading, error, refetch } = useUserDetail(userId);
 
+  const currentUser = useAuthStore((state) => state.user);
+  const platformAdmin = isPlatformAdmin(currentUser);
   const [activityFeed, setActivityFeed] = useState<IActivityLog[]>([]);
   const [activityLoading, setActivityLoading] = useState(false);
 
@@ -113,6 +119,18 @@ export default function UserDetailPage() {
           />
         ),
       },
+      ...(platformAdmin
+        ? [
+            {
+              label: "Configuración",
+              value: "settings",
+              icon: Settings2,
+              content: (
+                <ClientSettingsTab organizations={userDetail.organizations ?? []} />
+              ),
+            },
+          ]
+        : []),
       {
         label: "Estadísticas y resumen",
         value: "stats",
@@ -127,7 +145,7 @@ export default function UserDetailPage() {
         ),
       },
     ];
-  }, [userDetail, refetch, activityFeed, activityLoading]);
+  }, [userDetail, refetch, activityFeed, activityLoading, platformAdmin]);
 
   if (loading) {
     return (

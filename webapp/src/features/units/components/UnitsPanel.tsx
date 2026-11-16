@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, Plus, Ruler, Trash2 } from "lucide-react";
-import { apiClient } from "@/shared/api/api.client";
+import { useSettingsApi } from "@/features/settings/lib/settings-scope";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
@@ -23,6 +23,7 @@ function apiMessage(error: unknown, fallback: string): string {
  * their own units (bolsa, pieza, caja…) next to UND/kg/g/lb/oz/L/mL.
  */
 export function UnitsPanel() {
+  const api = useSettingsApi();
   const { addToast } = useToastStore();
   const [rows, setRows] = useState<UnitOfMeasure[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,7 +35,7 @@ export function UnitsPanel() {
   const fetchList = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await apiClient.get<UnitOfMeasure[]>(UnitEndpoints.list);
+      const { data } = await api.get<UnitOfMeasure[]>(UnitEndpoints.list);
       setRows(Array.isArray(data) ? data : []);
     } catch (error) {
       addToast({
@@ -63,7 +64,7 @@ export function UnitsPanel() {
     }
     setSaving(true);
     try {
-      await apiClient.post(UnitEndpoints.list, {
+      await api.post(UnitEndpoints.list, {
         name: name.trim(),
         abbreviation: abbreviation.trim(),
         kind,
@@ -85,7 +86,7 @@ export function UnitsPanel() {
 
   const toggleActive = async (unit: UnitOfMeasure) => {
     try {
-      await apiClient.patch(UnitEndpoints.detail(unit.id), {
+      await api.patch(UnitEndpoints.detail(unit.id), {
         active: !unit.active,
       });
       void fetchList();
@@ -100,7 +101,7 @@ export function UnitsPanel() {
 
   const remove = async (unit: UnitOfMeasure) => {
     try {
-      await apiClient.delete(UnitEndpoints.detail(unit.id));
+      await api.delete(UnitEndpoints.detail(unit.id));
       void fetchList();
     } catch (error) {
       addToast({
