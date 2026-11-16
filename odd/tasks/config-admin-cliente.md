@@ -59,13 +59,31 @@
 
 | ID | Specs | Ruta | Estado |
 |---|---|---|---|
-| T1 | S5 — la ficha del usuario expone sus organizaciones activas | inline | pendiente |
-| T2 | S5 — `GET /api/settings` resuelve `planModules` para la organización pedida | inline | pendiente |
-| T3 | S4 — `settings.payments.instructions` (default + normalización + DTO + espejo webapp) | inline | pendiente |
-| T4 | S1 — proveedor de alcance + pestaña `Configuración` en la ficha | inline | pendiente |
-| T5 | S2, S3 — visibilidad por rol de plataforma en `/dashboard/configuracion` | inline | pendiente |
-| T6 | S4 — textarea de datos del pago en la pestaña `Pagos` | inline | pendiente |
-| T7 | S6 — tests y documentación | inline | pendiente |
+| T1 | S5 — la ficha del usuario expone sus organizaciones activas | inline | ✅ `efe13d6` |
+| T2 | S5 — `GET /api/settings` resuelve `planModules` para la organización pedida | inline | ✅ `efe13d6` |
+| T3 | S4 — `settings.payments.instructions` (default + normalización + DTO + espejo webapp) | inline | ✅ `efe13d6` |
+| T4 | S1 — alcance por organización + pestaña `Configuración` en la ficha | inline | ✅ `df33941` |
+| T5 | S2, S3 — visibilidad por rol de plataforma en `/dashboard/configuracion` | inline | ✅ `df33941` |
+| T6 | S4 — textarea de datos del pago en la pestaña `Pagos` | inline | ✅ `df33941` |
+| T7 | S6 — tests y documentación | inline | ✅ (ver evidencia) |
+
+---
+
+## Verificación
+
+- `serverapp`: `npm run typecheck` en 0; suite completa **119 suites / 1093 tests**.
+- `webapp`: `npm run typecheck` en 0; suite completa **72 archivos / 781 tests**.
+- Specs nuevos: `user-detail.service.spec.ts` (organizaciones en la ficha), `settings.controller.spec.ts` (`planModules` de una organización ajena, grant vencido y add-on inactivo excluidos), `tenant-settings.service.spec.ts` (4 casos de `payments.instructions`), `settings-visibility.spec.ts` (rol de plataforma y secciones ocultas).
+- La pantalla de configuración se extrajo a `features/settings/components/SettingsSurface.tsx`; la ruta quedó como wrapper de 6 líneas.
+
+## Gotcha de entorno
+
+- `node_modules` está enlazado al checkout principal. Un `prisma generate` ejecutado desde otro worktree (schema viejo) pisa el cliente compartido y rompe el typecheck de todo el mundo. Se regeneró desde `main`.
+
+## Nota para el cierre
+
+- `SettingsSurface` recibe `organizationId`/`organizationName`/`organizationSlug`; el scoping viaja por `X-Workspace-Id` (`useSettingsApi`), sin tocar el workspace global.
+- Pendiente de decisión: `Agencias de envío` y `Delivery` siguen visibles para el cliente (no estaban en la lista).
 
 ---
 

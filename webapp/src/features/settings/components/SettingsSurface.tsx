@@ -148,6 +148,8 @@ export interface SettingsSurfaceProps {
   organizationId?: string | null;
   /** Nombre del cliente para el encabezado. */
   organizationName?: string | null;
+  /** Slug público del cliente (la tienda muestra su URL, no la del admin). */
+  organizationSlug?: string | null;
   /** Dentro de otra pantalla (ficha): sin el atajo a Carga inicial. */
   embedded?: boolean;
 }
@@ -155,6 +157,7 @@ export interface SettingsSurfaceProps {
 export function SettingsSurface({
   organizationId = null,
   organizationName = null,
+  organizationSlug = null,
   embedded = false,
 }: SettingsSurfaceProps = {}) {
   const { addToast } = useToastStore();
@@ -735,7 +738,7 @@ export function SettingsSurface({
       <SectionPanel
         icon={<Store className="h-5 w-5" />}
         title="Tienda pública"
-        description={`Tu tienda vive en /${activeWorkspace?.slug ?? "tu-usuario"}. Los clientes arman el pedido y coordinan el pago por WhatsApp.`}
+        description={`Tu tienda vive en /${organizationSlug ?? activeWorkspace?.slug ?? "tu-usuario"}. Los clientes arman el pedido y coordinan el pago por WhatsApp.`}
       >
         <SectionRow
           label="WhatsApp para coordinar pagos"

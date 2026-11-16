@@ -61,6 +61,7 @@ export function ClientSettingsTab({
         key={selected.id}
         organizationId={selected.id}
         organizationName={selected.name}
+        organizationSlug={selected.slug}
         embedded
       />
     </div>
