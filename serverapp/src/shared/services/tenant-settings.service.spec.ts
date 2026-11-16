@@ -184,6 +184,46 @@ describe("TenantSettingsService", () => {
     rejects("rejects a non-object body", "nope", /objeto/i);
   });
 
+  describe("payments.instructions (S4)", () => {
+    it("nace vacío y no rompe la lectura de una cuenta vieja", async () => {
+      const { service } = makeService();
+      const settings = await service.get(ORG);
+      expect(settings.payments.instructions).toBe("");
+    });
+
+    it("persiste el texto libre sin borrar los códigos desactivados", async () => {
+      const { service } = makeService();
+
+      const first = await service.update(ORG, {
+        payments: { disabledCodes: ["CASH_USD"] },
+      });
+      expect(first.payments.disabledCodes).toEqual(["CASH_USD"]);
+
+      const second = await service.update(ORG, {
+        payments: { instructions: "Pago Móvil 0414-1234567, CI 12345678" },
+      });
+      expect(second.payments.instructions).toBe(
+        "Pago Móvil 0414-1234567, CI 12345678",
+      );
+      expect(second.payments.disabledCodes).toEqual(["CASH_USD"]);
+    });
+
+    it("rechaza un instructions que no es texto", async () => {
+      const { service } = makeService();
+      await expect(
+        service.update(ORG, { payments: { instructions: 42 } } as any),
+      ).rejects.toThrow(/texto/);
+    });
+
+    it("corta el texto a 2000 caracteres", async () => {
+      const { service } = makeService();
+      const saved = await service.update(ORG, {
+        payments: { instructions: "x".repeat(2500) },
+      });
+      expect(saved.payments.instructions).toHaveLength(2000);
+    });
+  });
+
   describe("mergeTenantSettings", () => {
     it("never lets a partial patch wipe an untouched sibling", async () => {
       const { service } = makeService();

@@ -50,6 +50,18 @@ export class UserDetailService {
           take: 1,
           select: { startedAt: true, ipAddress: true },
         },
+        // Organizaciones del usuario: la ficha las necesita para abrir la
+        // configuracion del cliente sin salir de la pantalla.
+        organizationMembers: {
+          where: { status: "ACTIVE" },
+          orderBy: { assignedAt: "asc" },
+          select: {
+            role: true,
+            organization: {
+              select: { id: true, name: true, slug: true, status: true },
+            },
+          },
+        },
       },
     });
 
@@ -72,6 +84,15 @@ export class UserDetailService {
         referralCode: user.referralCode,
         referredBy: user.referredBy,
       },
+      organizations: (user.organizationMembers ?? [])
+        .filter((member) => member.organization)
+        .map((member) => ({
+          id: member.organization!.id,
+          name: member.organization!.name,
+          slug: member.organization!.slug,
+          status: member.organization!.status,
+          role: member.role,
+        })),
       wallet: user.wallet ? { balance: user.wallet.balance } : null,
       subscription: user.subscriptions?.[0]
         ? {

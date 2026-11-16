@@ -76,6 +76,54 @@ export class SettingsController {
    * delivery and routes — for a Básico tenant instead of offering switches
    * that only exist in higher plans.
    */
+
+  /**
+   * Module keys that gate the settings sections. For the caller's own workspace
+   * the session entitlements are authoritative (no extra query); for a foreign
+   * organization — only reachable by a platform role — they are derived from
+   * that organization's active grants and add-ons.
+   */
+  private async resolvePlanModules(
+    request: RequestWithUser,
+    organizationId: string | null,
+    ownModules: string[],
+  ): Promise<string[]> {
+    if (!organizationId) return ownModules;
+
+    const membership = await this.prisma.organizationMember.findFirst({
+      where: {
+        userId: (request.user as { id: string }).id,
+        organizationId,
+        status: "ACTIVE",
+      },
+      select: { id: true },
+    });
+    if (membership) return ownModules;
+
+    const now = new Date();
+    const [grants, entitlements] = await Promise.all([
+      this.prisma.moduleGrant.findMany({
+        where: { organizationId, status: "ACTIVE" },
+        select: { module: { select: { key: true } }, expiresAt: true },
+      }),
+      this.prisma.entitlement.findMany({
+        where: { organizationId, status: "ACTIVE" },
+        select: { addOn: { select: { modules: true, active: true } } },
+      }),
+    ]);
+
+    const keys = new Set<string>();
+    for (const grant of grants) {
+      if (grant.expiresAt && grant.expiresAt < now) continue;
+      keys.add(grant.module.key);
+    }
+    for (const entitlement of entitlements) {
+      if (entitlement.addOn.active === false) continue;
+      for (const key of entitlement.addOn.modules ?? []) keys.add(key);
+    }
+    return [...keys];
+  }
+
   private async withPlanModules<T extends object>(
     request: RequestWithUser,
     settings: T,
@@ -90,7 +138,15 @@ export class SettingsController {
     const entitlements = (request.user as { entitlements?: {
       modules?: { key: string }[];
     } })?.entitlements;
-    const planModules = entitlements?.modules?.map((m) => m.key) ?? [];
+    // El admin de plataforma mira la configuracion de un cliente: sus propios
+    // entitlements no dicen nada de ese plan. Cuando la organizacion pedida no
+    // es una membresia del que llama, los modulos se resuelven desde la
+    // organizacion (grants activos + add-ons contratados).
+    const planModules = await this.resolvePlanModules(
+      request,
+      organizationId,
+      entitlements?.modules?.map((m) => m.key) ?? [],
+    );
     // Manual org grants are read straight from the table: the entitlement
     // resolver only includes them when the module-framework flag is on, and
     // the Sucursales gate must work either way (feedback round 2, #1).

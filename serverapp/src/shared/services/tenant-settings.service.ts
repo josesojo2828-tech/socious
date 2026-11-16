@@ -346,14 +346,27 @@ export class TenantSettingsService {
 
     if (input.payments !== undefined) {
       const payments = input.payments as Record<string, unknown>;
-      assertKnownKeys("payments", payments, ["disabledCodes"]);
+      assertKnownKeys("payments", payments, ["disabledCodes", "instructions"]);
+      const paymentsPatch: Partial<TenantSettings["payments"]> = {};
       if (payments.disabledCodes !== undefined) {
         const list = payments.disabledCodes;
         if (!Array.isArray(list) || list.some((c) => typeof c !== "string")) {
           throw new BadRequestException("payments.disabledCodes debe ser una lista de códigos.");
         }
+        paymentsPatch.disabledCodes = [...new Set(list as string[])];
+      }
+      if (payments.instructions !== undefined) {
+        if (typeof payments.instructions !== "string") {
+          throw new BadRequestException(
+            "payments.instructions debe ser un texto.",
+          );
+        }
+        paymentsPatch.instructions = payments.instructions.slice(0, 2000);
+      }
+      if (Object.keys(paymentsPatch).length > 0) {
         result.payments = {
-          disabledCodes: [...new Set(list as string[])],
+          ...result.payments,
+          ...paymentsPatch,
         };
       }
     }
@@ -520,6 +533,7 @@ export function mergeTenantSettings(
       ...(patch.payments ?? {}),
       disabledCodes:
         patch.payments?.disabledCodes ?? base.payments.disabledCodes,
+      instructions: patch.payments?.instructions ?? base.payments.instructions,
     },
     purchases: { ...base.purchases, ...(patch.purchases ?? {}) },
     inventory: { ...base.inventory, ...(patch.inventory ?? {}) },

@@ -161,6 +161,17 @@ export class PaymentsSettingsDto {
   @IsArray({ message: "payments.disabledCodes debe ser una lista." })
   @IsString({ each: true })
   disabledCodes?: string[];
+
+  /**
+   * "Datos del pago" en texto libre (cuentas, Pago Móvil, instrucciones): el
+   * comercio lo escribe y se muestra tal cual en la pestaña Pagos.
+   */
+  @IsOptional()
+  @IsString({ message: "payments.instructions debe ser un texto." })
+  @MaxLength(2000, {
+    message: "payments.instructions no puede superar 2000 caracteres.",
+  })
+  instructions?: string;
 }
 
 export class PurchasesSettingsDto {

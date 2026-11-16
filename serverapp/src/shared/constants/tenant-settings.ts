@@ -52,8 +52,8 @@ export interface TenantSettings {
   routes: { enabled: boolean };
   /** Enabled return reasons shown as a select on the returns flow (S5). */
   returns: { reasons: string[] };
-  /** Payment-method switches (S3): built-ins the merchant turned off. */
-  payments: { disabledCodes: string[] };
+  /** Payment-method switches (S3) plus the free-text "datos del pago". */
+  payments: { disabledCodes: string[]; instructions: string };
   /**
    * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
    * catalog the /dashboard/compras/nuevo screen offers for a supplier.
@@ -146,7 +146,7 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
     everyNDays: 15,
     monthlyDay: 1,
   },
-  payments: { disabledCodes: [] },
+  payments: { disabledCodes: [], instructions: "" },
   purchases: { onlySupplierProducts: false },
   inventory: { useRawMaterials: false, useServices: false },
   storefront: { whatsapp: "" },
@@ -347,6 +347,10 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       disabledCodes: Array.isArray(payments.disabledCodes)
         ? [...new Set(payments.disabledCodes.filter((c: unknown) => typeof c === "string"))]
         : defaults.payments.disabledCodes,
+      instructions:
+        typeof payments.instructions === "string"
+          ? payments.instructions
+          : defaults.payments.instructions,
     },
     purchases: {
       onlySupplierProducts: asBool(

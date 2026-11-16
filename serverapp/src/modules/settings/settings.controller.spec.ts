@@ -52,6 +52,9 @@ const makeController = (
     moduleGrant: {
       findMany: jest.fn(async () => []),
     },
+    entitlement: {
+      findMany: jest.fn(async () => []),
+    },
     subscription: {
       findFirst: jest.fn().mockResolvedValue(null),
     },
@@ -215,6 +218,25 @@ describe("SettingsController", () => {
     expect(tenantSettings.update).toHaveBeenCalledWith(ORG_A, {
       cash: { shiftControl: false },
     });
+  });
+
+  it("resolves the plan modules of a foreign organization from its own grants", async () => {
+    const { controller, prisma } = makeController([], ORG_A, platformAdmin);
+    prisma.moduleGrant.findMany.mockResolvedValue([
+      { module: { key: "SHIPPING" }, expiresAt: null },
+      { module: { key: "ROUTES" }, expiresAt: new Date("2020-01-01") },
+    ] as any);
+    prisma.entitlement.findMany.mockResolvedValue([
+      { addOn: { modules: ["CATALOG_ONLINE"], active: true } },
+      { addOn: { modules: ["NOTIFICATIONS"], active: false } },
+    ] as any);
+
+    const settings = await controller.getSettings(
+      request(platformAdmin, { "x-workspace-id": ORG_A }),
+    );
+
+    // The admin's own entitlements are empty; the org's grants decide.
+    expect(settings.planModules).toEqual(["SHIPPING", "CATALOG_ONLINE"]);
   });
 
   it("refuses a write without an organization", async () => {
