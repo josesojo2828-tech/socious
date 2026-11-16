@@ -585,6 +585,7 @@ export class ProductService {
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { createdAt: "desc" },
+        include: { lot: { select: { code: true, widthCm: true } } },
       }),
       this.prisma.stockMovement.count({ where }),
     ]);

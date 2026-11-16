@@ -92,6 +92,8 @@ export interface StockMovement {
   newStock: string | number;
   reference?: string | null;
   notes?: string | null;
+  /** Rollo del que salió o al que entró la cantidad (S4). */
+  lot?: { code?: string | null; widthCm?: string | number | null } | null;
   createdAt: string;
 }
 
