@@ -15,6 +15,7 @@ import {
 } from "./dto/product.dto";
 
 import { EventEmitter2 } from "@nestjs/event-emitter";
+import { ensureOpeningLot, sumLots } from "../product-lot/lot-stock";
 import { emitEvent } from "src/shared/event/event-envelope";
 import type { EventName } from "src/shared/event/event-taxonomy";
 const DEFAULT_LIMIT = 10;
@@ -292,6 +293,7 @@ export class ProductService {
         isService: data.isService ?? false,
         isPublic: data.isPublic ?? false,
         isRawMaterial: data.isRawMaterial ?? false,
+        tracksLots: data.tracksLots ?? false,
         status,
         imageUrl: data.imageUrl?.trim() || null,
         categoryId: data.categoryId ?? null,
@@ -323,6 +325,15 @@ export class ProductService {
       await tx.product.update({
         where: { id: created.id },
         data: { isComposite: true },
+      });
+    }
+
+    // Rollos (S3): la existencia inicial queda respaldada por un lote de
+    // apertura, así el stock agregado y sus lotes arrancan iguales.
+    if (created.tracksLots && stock > 0) {
+      await ensureOpeningLot(tx, {
+        organizationId: scope.organizationId,
+        productId: created.id,
       });
     }
 
@@ -368,6 +379,7 @@ export class ProductService {
         ...(data.isRawMaterial !== undefined && {
           isRawMaterial: data.isRawMaterial,
         }),
+        ...(data.tracksLots !== undefined && { tracksLots: data.tracksLots }),
         ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl?.trim() || null }),
         ...(data.categoryId !== undefined && { categoryId: data.categoryId ?? null }),
         ...(data.supplierId !== undefined && { supplierId: data.supplierId ?? null }),
@@ -384,6 +396,27 @@ export class ProductService {
         if (data.components!.length > 0) {
           await this.persistComponents(tx, scope, id, data.components!);
         }
+      });
+    }
+
+    // Rollos (S3): al activarlos, la existencia actual se respalda en un lote
+    // de apertura; al desactivarlos, el stock queda en la suma de los lotes
+    // (que desde ahí dejan de moverse hasta que se vuelva a activar).
+    if (data.tracksLots !== undefined) {
+      await this.prisma.$transaction(async (tx) => {
+        if (data.tracksLots) {
+          await ensureOpeningLot(tx, {
+            organizationId: scope.organizationId,
+            productId: id,
+          });
+          return;
+        }
+        const lotCount = await tx.productLot.count({ where: { productId: id } });
+        if (lotCount === 0) return;
+        await tx.product.update({
+          where: { id },
+          data: { stock: await sumLots(tx, id, null) },
+        });
       });
     }
 

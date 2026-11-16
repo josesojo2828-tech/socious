@@ -29,6 +29,14 @@ export class SaleItemInputDto {
   presentationId?: string;
 
   /**
+   * Rollo/partida del que sale la tela (S4). Sin `lotId` el servidor consume
+   * por FIFO los lotes activos del producto.
+   */
+  @IsOptional()
+  @IsString()
+  lotId?: string;
+
+  /**
    * Denormalized on purpose: the sale keeps the name sold even when the
    * product is later renamed or deleted.
    */

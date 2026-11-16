@@ -18,6 +18,7 @@ import {
 import { round2, usdToUsdt, usdToVes } from "src/shared/utils/money";
 import { deriveProductStatus } from "../product/product.service";
 import { applyBomStock } from "src/shared/utils/bom-stock";
+import { syncAggregateStock } from "../product-lot/lot-stock";
 import type { SaleScope } from "./sale.service";
 import {
   CreateSaleReturnDto,
@@ -395,6 +396,73 @@ export class SaleReturnService {
         where: { id: item.saleItem.productId },
       });
       if (!product || product.isService) continue;
+
+      // Rollos (S4): los metros vuelven al rollo del que salieron. Si la línea
+      // no dejó un rollo identificado (consumió varios por FIFO), vuelven como
+      // lote de devolución para no perder stock.
+      if (product.tracksLots) {
+        const presentationId = item.saleItem.presentationId ?? null;
+        const original = item.saleItem.lotId
+          ? await tx.productLot.findFirst({
+              where: { id: item.saleItem.lotId },
+              select: { id: true, remainingQuantity: true },
+            })
+          : null;
+
+        if (original) {
+          const previousLot = round2(Number(original.remainingQuantity));
+          const nextLot = round2(previousLot + item.quantity);
+          await tx.productLot.update({
+            where: { id: original.id },
+            data: { remainingQuantity: nextLot },
+          });
+          await tx.stockMovement.create({
+            data: {
+              productId: product.id,
+              presentationId,
+              lotId: original.id,
+              organizationId: scope.organizationId,
+              createdById: scope.createdById ?? null,
+              type: "RETURN",
+              quantity: item.quantity,
+              previousStock: previousLot,
+              newStock: nextLot,
+              reference,
+              notes: "Devolución al rollo",
+            },
+          });
+        } else {
+          const lot = await tx.productLot.create({
+            data: {
+              organizationId: scope.organizationId,
+              productId: product.id,
+              presentationId,
+              code: `Devolución ${reference}`,
+              initialQuantity: item.quantity,
+              remainingQuantity: item.quantity,
+              notes: "Devuelto sin rollo identificado",
+            },
+          });
+          await tx.stockMovement.create({
+            data: {
+              productId: product.id,
+              presentationId,
+              lotId: lot.id,
+              organizationId: scope.organizationId,
+              createdById: scope.createdById ?? null,
+              type: "RETURN",
+              quantity: item.quantity,
+              previousStock: 0,
+              newStock: item.quantity,
+              reference,
+              notes: "Devolución en lote nuevo",
+            },
+          });
+        }
+
+        await syncAggregateStock(tx, product.id, presentationId);
+        continue;
+      }
 
       const previousStock = Number(product.stock ?? 0);
       const nextStock = round2(previousStock + item.quantity);

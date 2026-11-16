@@ -142,6 +142,11 @@ export class CreateProductDto {
   @IsBoolean()
   isRawMaterial?: boolean;
 
+  /** Control por rollos (S3): el stock pasa a ser la suma de sus lotes. */
+  @IsOptional()
+  @IsBoolean()
+  tracksLots?: boolean;
+
   /**
    * BOM (S1): raw materials consumed per sold unit. Present ⇒ isComposite.
    * Absent ⇒ untouched on update, nothing created on create.
@@ -254,6 +259,11 @@ export class UpdateProductDto {
   @IsOptional()
   @IsBoolean()
   isRawMaterial?: boolean;
+
+  /** Control por rollos (S3): activarlo exige cargar los rollos después. */
+  @IsOptional()
+  @IsBoolean()
+  tracksLots?: boolean;
 }
 
 export class ListProductsQueryDto {
