@@ -38,6 +38,8 @@ export interface Product {
   isPublic: boolean;
   /** Alta desde Materiales (S6): elegible como componente de BOM. */
   isRawMaterial?: boolean;
+  /** Control por rollos (S3): el stock es la suma de sus lotes. */
+  tracksLots?: boolean;
   status: ProductStatus;
   imageUrl?: string | null;
   categoryId?: string | null;

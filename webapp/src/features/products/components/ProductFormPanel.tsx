@@ -427,6 +427,21 @@ export function ProductFormPanel({
           />
           Visible en la tienda online
         </label>
+        <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+          <input
+            type="checkbox"
+            checked={form.tracksLots}
+            onChange={(event) =>
+              patchForm({ tracksLots: event.target.checked })
+            }
+          />
+          Controlar por rollos (telas y partidas)
+        </label>
+        {quantityDecimals > 0 ? (
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            La unidad «{form.unit}» permite cantidades decimales.
+          </span>
+        ) : null}
       </div>
 
       {showComponents ? (
