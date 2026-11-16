@@ -1,4 +1,4 @@
-export type UnitKind = "COUNT" | "WEIGHT" | "VOLUME";
+export type UnitKind = "COUNT" | "WEIGHT" | "VOLUME" | "LENGTH";
 
 export interface UnitOfMeasure {
   id: string;
@@ -14,4 +14,5 @@ export const UNIT_KIND_LABELS: Record<UnitKind, string> = {
   COUNT: "Unidad",
   WEIGHT: "Peso",
   VOLUME: "Volumen",
+  LENGTH: "Longitud",
 };

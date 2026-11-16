@@ -10,6 +10,7 @@ import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, PurchaseStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { ExchangeService } from "../exchange/exchange.service";
+import { ensureOpeningLot, syncAggregateStock } from "../product-lot/lot-stock";
 import { SequenceService, SequenceDb } from "src/shared/services/sequence.service";
 import {
   buildDocumentTotals,
@@ -248,6 +249,53 @@ export class PurchaseService {
           where: { id: item.productId, deletedAt: null },
         });
         if (!product || product.isService) continue;
+
+        const quantity = Number(item.quantity);
+
+        // Rollos (S3): la compra recibida entra como un lote más, con su costo.
+        // El stock del producto se recalcula desde la suma de los lotes.
+        if (product.tracksLots) {
+          await ensureOpeningLot(tx, {
+            organizationId: scope.organizationId,
+            productId: product.id,
+          });
+
+          const lot = await tx.productLot.create({
+            data: {
+              organizationId: scope.organizationId,
+              productId: product.id,
+              code: purchase.purchaseNumber,
+              initialQuantity: quantity,
+              remainingQuantity: quantity,
+              unitCostUSD: Number(item.unitCostUSD),
+              receivedAt: purchase.deliveryDate ?? new Date(),
+              notes: "Recibido por compra",
+            },
+          });
+
+          await tx.stockMovement.create({
+            data: {
+              productId: item.productId,
+              lotId: lot.id,
+              organizationId: scope.organizationId,
+              createdById: scope.createdById ?? null,
+              type: "PURCHASE",
+              quantity,
+              unitCostUSD: Number(item.unitCostUSD),
+              previousStock: 0,
+              newStock: quantity,
+              reference: purchase.purchaseNumber,
+              notes: "Entrada de rollo por compra",
+            },
+          });
+
+          await syncAggregateStock(tx, product.id, null);
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { costPriceUSD: Number(item.unitCostUSD) },
+          });
+          continue;
+        }
 
         const previousStock = Number(product.stock ?? 0);
         const nextStock = round2(previousStock + Number(item.quantity));

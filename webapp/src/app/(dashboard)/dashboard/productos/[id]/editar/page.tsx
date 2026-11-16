@@ -17,6 +17,7 @@ import { ProductEndpoints } from "@/features/products/services/products.endpoint
 import type { Category, Product } from "@/features/products/types/product.type";
 import { buildProductPayload, type ProductForm } from "@/features/products/lib/product-form";
 import { ProductFormPanel } from "@/features/products/components/ProductFormPanel";
+import { LotsCard } from "@/features/products/components/LotsCard";
 import { SupplierEndpoints } from "@/features/suppliers/services/suppliers.endpoints";
 import { UnitEndpoints } from "@/features/units/services/units.endpoints";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
@@ -181,6 +182,12 @@ export default function EditProductPage() {
           onSubmit={(form) => void submitForm(form)}
         />
       </section>
+
+      {product.tracksLots ? (
+        <div className="mt-6">
+          <LotsCard productId={product.id} unit={product.unit} />
+        </div>
+      ) : null}
     </div>
   );
 }

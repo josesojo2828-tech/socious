@@ -22,6 +22,13 @@ import {
   type RateSnapshot,
 } from "src/shared/utils/money";
 import { applyBomStock } from "src/shared/utils/bom-stock";
+import {
+  applyLotOutflow,
+  ensureOpeningLot,
+  planLotAllocation,
+  restoreLotQuantity,
+  type LotAllocation,
+} from "../product-lot/lot-stock";
 import { currencyForPaymentMethod } from "src/shared/constants/payment-methods";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { emitEvent } from "src/shared/event/event-envelope";
@@ -61,6 +68,10 @@ interface ResolvedItem {
   taxUSD: number;
   totalUSD: number;
   isService: boolean;
+  /** Rollo elegido por el vendedor, o null cuando se consume por FIFO. */
+  lotId: string | null;
+  /** Lotes que sirven esta línea (vacío si el producto no controla rollos). */
+  lotPlan: LotAllocation[];
 }
 
 /**
@@ -436,7 +447,12 @@ export class SaleService {
     const sale = await this.prisma.sale.findFirst({
       where: { id, ...this.scopeWhere(scope.organizationId) },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: { select: { unit: true } },
+            lot: { select: { code: true } },
+          },
+        },
         payments: { orderBy: { paidAt: "desc" } },
         client: true,
         order: true,
@@ -654,6 +670,25 @@ export class SaleService {
           `anulación ${sale.saleNumber}`,
         );
 
+        // Rollos (S4): la anulación devuelve los metros al rollo de la línea.
+        const saleProduct = await tx.product.findFirst({
+          where: { id: item.productId },
+          select: { id: true, tracksLots: true },
+        });
+        if (saleProduct?.tracksLots) {
+          await restoreLotQuantity(tx, {
+            organizationId: scope.organizationId,
+            createdById: scope.createdById ?? null,
+            productId: item.productId,
+            presentationId: item.presentationId ?? null,
+            lotId: item.lotId ?? null,
+            quantity: Number(item.quantity),
+            reference: sale.saleNumber,
+            notes: "Anulación de venta",
+          });
+          continue;
+        }
+
         if (item.presentationId) {
           const presentation = await tx.productPresentation.findFirst({
             where: { id: item.presentationId },
@@ -761,6 +796,7 @@ export class SaleService {
 
       let productName = input.productName?.trim();
       let isService = false;
+      let tracksLots = false;
       let productId: string | null = input.productId ?? null;
       let presentationId: string | null = input.presentationId ?? null;
 
@@ -773,6 +809,7 @@ export class SaleService {
             name: true,
             stock: true,
             salePriceUSD: true,
+            product: { select: { tracksLots: true } },
           },
         });
         if (!presentation) {
@@ -790,6 +827,7 @@ export class SaleService {
         }
         productId = presentation.productId;
         productName = presentation.name;
+        tracksLots = presentation.product?.tracksLots ?? false;
         // Backend authority: a presentation with its own price dictates it;
         // an inheriting one (null) trusts the client figure as before.
         if (presentation.salePriceUSD != null) {
@@ -804,7 +842,13 @@ export class SaleService {
             organizationId: scope.organizationId,
             deletedAt: null,
           },
-          select: { id: true, name: true, isService: true, salePriceUSD: true },
+          select: {
+            id: true,
+            name: true,
+            isService: true,
+            salePriceUSD: true,
+            tracksLots: true,
+          },
         });
 
         if (!product) {
@@ -814,6 +858,7 @@ export class SaleService {
         }
 
         isService = product.isService;
+        tracksLots = product.tracksLots;
         productName = product.name;
         productId = product.id;
 
@@ -832,6 +877,33 @@ export class SaleService {
         throw new BadRequestException("Cada artículo necesita un nombre.");
       }
 
+      // Rollos (S4): se planifica antes de escribir nada. El lote explícito
+      // manda; sin él, se consume por FIFO. Un producto sin lotes sigue igual.
+      let lotId: string | null = input.lotId ?? null;
+      let lotPlan: LotAllocation[] = [];
+      if (lotId && !tracksLots) {
+        throw new BadRequestException(
+          `"${productName}" no controla rollos: no se puede elegir un lote.`,
+        );
+      }
+      if (productId && tracksLots && !isService && !skipStock) {
+        await ensureOpeningLot(tx, {
+          organizationId: scope.organizationId,
+          productId,
+          presentationId,
+        });
+        lotPlan = await planLotAllocation(tx, {
+          productId,
+          presentationId,
+          quantity,
+          lotId,
+          productName: productName as string,
+        });
+        lotId = lotPlan.length === 1 ? lotPlan[0].lotId : null;
+      } else {
+        lotId = null;
+      }
+
       const gross = round2(quantity * unitPriceUSD - discountUSD);
       const taxUSD = round2((gross * taxRate) / 100);
       const totalUSD = round2(Math.max(0, gross + taxUSD));
@@ -847,6 +919,8 @@ export class SaleService {
         taxUSD,
         totalUSD,
         isService,
+        lotId,
+        lotPlan,
       });
     }
 
@@ -864,6 +938,7 @@ export class SaleService {
           saleId,
           productId: item.productId,
           presentationId: item.presentationId,
+          lotId: item.lotId,
           productName: item.productName,
           quantity: item.quantity,
           unitPriceUSD: item.unitPriceUSD,
@@ -898,6 +973,21 @@ export class SaleService {
       );
 
       if (item.isService) continue;
+
+      // Rollos (S4): el plan ya trae los lotes que sirven la línea. Se descuenta
+      // cada rollo y el agregado se resincroniza desde la suma, así catálogo y
+      // kardex no se separan nunca.
+      if (item.lotPlan.length > 0) {
+        await applyLotOutflow(tx, {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          productId: item.productId,
+          presentationId: item.presentationId,
+          plan: item.lotPlan,
+          reference,
+        });
+        continue;
+      }
 
       // Presentation sale: its own stock is the one that moves (the product
       // bulk stays untouched), and the Kardex books a row per presentation.

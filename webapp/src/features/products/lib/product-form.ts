@@ -32,6 +32,8 @@ export interface ProductForm {
   variantOfId?: string;
   /** BOM (S1): raw materials consumed per sold unit. */
   components: ProductComponentForm[];
+  /** Control por rollos (S3): metros por rollo en vez de un stock suelto. */
+  tracksLots: boolean;
 }
 
 /** One editable BOM row; quantity is a string in the form, number in the payload. */
@@ -61,6 +63,7 @@ export const EMPTY_PRODUCT_FORM: ProductForm = {
   categoryId: "",
   supplierId: "",
   components: [],
+  tracksLots: false,
 };
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
@@ -95,6 +98,7 @@ export function toForm(product: Product): ProductForm {
     status: product.status,
     categoryId: product.categoryId ?? "",
     supplierId: product.supplierId ?? "",
+    tracksLots: product.tracksLots ?? false,
     variantOfId: product.variantOfId ?? undefined,
     components: (product.components ?? []).map((row) => ({
       componentId: row.componentId,
@@ -167,6 +171,7 @@ export function buildProductPayload(
     taxRate: Number(form.taxRate) || 0,
     isService: form.isService,
     isPublic: form.isPublic,
+    tracksLots: form.tracksLots,
     status: form.status,
     imageUrl: trim(form.imageUrl) ?? null,
     categoryId: trim(form.categoryId) ?? null,

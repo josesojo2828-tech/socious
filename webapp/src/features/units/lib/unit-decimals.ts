@@ -4,9 +4,9 @@ import type { UnitKind, UnitOfMeasure } from "../types/unit.type";
  * Decimal places a quantity field must accept for a unit of measure.
  *
  * `UnitOfMeasure.kind` is the source of truth (`prisma/schema.prisma`): COUNT
- * units are whole numbers; WEIGHT and VOLUME admit decimals (the DB stores
- * `Decimal(12, 2)` for stock either way). The fallback covers the system units
- * on screens that do not load the catalog; an unknown abbreviation stays
+ * units are whole numbers; WEIGHT, VOLUME and LENGTH admit decimals (the DB
+ * stores `Decimal(12, 2)` for stock either way). The fallback covers the system
+ * units on screens that do not load the catalog; an unknown abbreviation stays
  * permissive so a legitimate fraction is never blocked.
  */
 const SYSTEM_UNIT_KIND: Record<string, UnitKind> = {
@@ -17,6 +17,8 @@ const SYSTEM_UNIT_KIND: Record<string, UnitKind> = {
   oz: "WEIGHT",
   l: "VOLUME",
   ml: "VOLUME",
+  m: "LENGTH",
+  cm: "LENGTH",
 };
 
 export function resolveUnitDecimals(

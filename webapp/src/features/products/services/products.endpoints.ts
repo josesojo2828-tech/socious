@@ -14,6 +14,10 @@ export const ProductEndpoints = {
   decompose: (productId: string) => `/api/products/${productId}/decompose`,
   /** Distinct BOM components for the Materiales screen (S6). */
   rawMaterials: "/api/products/raw-materials",
+  // Rollos y partidas (S3): stock respaldado por lote.
+  lots: "/api/product-lots",
+  lotDetail: (lotId: string) => `/api/product-lots/${lotId}`,
+  lotAdjust: (lotId: string) => `/api/product-lots/${lotId}/adjust`,
   // Imágenes del catálogo (S8): la clave se sube a /file/upload y luego se
   // persiste en la entidad; la imagen se sirve por /file/public/<key>.
   fileUpload: "/api/file/upload",

@@ -3,6 +3,7 @@ import type {
   SaleItemInput,
   SalePaymentInput,
 } from "../types/sale.type";
+import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 
 /**
  * Pure POS logic (S6): cart math and the payload the backend expects.
@@ -20,6 +21,11 @@ export interface CartLine {
   /** Percentage (2 means 2%), mirroring `Product.taxRate`. */
   taxRate: number;
   quantity: number;
+  /**
+   * Unit of measure of the product ("m", "kg", "UND"). It decides how many
+   * decimals the quantity accepts, so a fabric sells 1.5 m and a shirt 2.
+   */
+  unit?: string | null;
 }
 
 export interface ProductPicker {
@@ -27,6 +33,7 @@ export interface ProductPicker {
   name: string;
   salePriceUSD: string | number;
   taxRate: string | number;
+  unit?: string | null;
 }
 
 export interface PresentationPicker {
@@ -68,6 +75,21 @@ function sameLine(item: CartLine, line: CartLine): boolean {
   );
 }
 
+/**
+ * Rounds a quantity to the decimals its unit accepts: whole numbers for COUNT
+ * (units), two decimals for WEIGHT, VOLUME and LENGTH (kg, L, m). A fabric
+ * therefore keeps `1.5`, while a shirt stays at `2`.
+ */
+export function normalizeQuantity(
+  quantity: number,
+  unit?: string | null,
+): number {
+  if (!Number.isFinite(quantity)) return 0;
+  const decimals = resolveUnitDecimals(unit);
+  const factor = 10 ** decimals;
+  return Math.round((quantity + Number.EPSILON) * factor) / factor;
+}
+
 /** Adds a product or presentation; repeating it increments (never dups). */
 export function addToCart(
   cart: CartLine[],
@@ -75,7 +97,9 @@ export function addToCart(
   quantity = 1,
   presentation?: PresentationPicker,
 ): CartLine[] {
-  const safeQuantity = Math.max(1, Math.trunc(quantity) || 1);
+  const unit = product.unit ?? null;
+  const normalized = normalizeQuantity(quantity, unit);
+  const safeQuantity = normalized > 0 ? normalized : 1;
   const line: CartLine = {
     productId: product.id,
     presentationId: presentation?.id ?? null,
@@ -84,6 +108,7 @@ export function addToCart(
     unitPriceUSD: lineUnitPrice(product, presentation),
     taxRate: toNumber(product.taxRate),
     quantity: safeQuantity,
+    unit,
   };
 
   const existing = cart.find((item) => sameLine(item, line));
@@ -96,7 +121,11 @@ export function addToCart(
   );
 }
 
-/** Zero or a negative quantity removes the line. */
+/**
+ * Zero or a negative quantity removes the line. A positive value is rounded to
+ * what the line's unit accepts; if that rounds to zero (a fraction typed on a
+ * COUNT product) the line is left untouched instead of silently emptying it.
+ */
 export function changeQuantity(
   cart: CartLine[],
   productId: string,
@@ -110,9 +139,11 @@ export function changeQuantity(
     return cart.filter((item) => !matches(item));
   }
 
-  return cart.map((item) =>
-    matches(item) ? { ...item, quantity: Math.trunc(quantity) } : item,
-  );
+  return cart.map((item) => {
+    if (!matches(item)) return item;
+    const next = normalizeQuantity(quantity, item.unit);
+    return next > 0 ? { ...item, quantity: next } : item;
+  });
 }
 
 export function removeFromCart(

@@ -18,6 +18,7 @@ import {
 import { round2, usdToUsdt, usdToVes } from "src/shared/utils/money";
 import { deriveProductStatus } from "../product/product.service";
 import { applyBomStock } from "src/shared/utils/bom-stock";
+import { restoreLotQuantity } from "../product-lot/lot-stock";
 import type { SaleScope } from "./sale.service";
 import {
   CreateSaleReturnDto,
@@ -395,6 +396,23 @@ export class SaleReturnService {
         where: { id: item.saleItem.productId },
       });
       if (!product || product.isService) continue;
+
+      // Rollos (S4): los metros vuelven al rollo del que salieron. Si la linea
+      // no dejo un rollo identificado (consumio varios por FIFO) o el rollo ya
+      // no esta activo, vuelven a un lote de devolucion para no perder stock.
+      if (product.tracksLots) {
+        await restoreLotQuantity(tx, {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          productId: product.id,
+          presentationId: item.saleItem.presentationId ?? null,
+          lotId: item.saleItem.lotId ?? null,
+          quantity: item.quantity,
+          reference,
+          notes: "Devolucion de venta",
+        });
+        continue;
+      }
 
       const previousStock = Number(product.stock ?? 0);
       const nextStock = round2(previousStock + item.quantity);

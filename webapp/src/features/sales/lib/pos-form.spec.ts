@@ -6,6 +6,7 @@ import {
   cartTotals,
   changeQuantity,
   lineTotal,
+  normalizeQuantity,
   removeFromCart,
   roundMoney,
   suggestedAmount,
@@ -17,6 +18,7 @@ const arroz = {
   name: "Arroz 1kg",
   salePriceUSD: "2.00",
   taxRate: "16.00",
+  unit: "UND",
 };
 
 const carte = (overrides: Partial<CartLine> = {}): CartLine => ({
@@ -55,6 +57,41 @@ describe("pos-form (S6)", () => {
     it("never leaves a negative quantity", () => {
       const cart = addToCart([], arroz, -5);
       expect(cart[0].quantity).toBe(1);
+    });
+  });
+
+  describe("venta por metro (S2)", () => {
+    const tela = {
+      id: "p-tela",
+      name: "Tela lino",
+      salePriceUSD: "4.00",
+      taxRate: "16.00",
+      unit: "m",
+    };
+
+    it("guarda 1.5 metros sin redondear a entero", () => {
+      const cart = addToCart([], tela, 1.5);
+      expect(cart[0].quantity).toBe(1.5);
+      expect(cart[0].unit).toBe("m");
+      expect(lineTotal(cart[0])).toBe(6.96);
+    });
+
+    it("mantiene los metros al editar la cantidad a mano", () => {
+      const cart = addToCart([], tela);
+      expect(changeQuantity(cart, "p-tela", 2.25)[0].quantity).toBe(2.25);
+      expect(changeQuantity(cart, "p-tela", 0.5)[0].quantity).toBe(0.5);
+    });
+
+    it("una unidad de conteo sigue siendo entera", () => {
+      const cart = addToCart([], arroz);
+      expect(changeQuantity(cart, "p-1", 1.5)[0].quantity).toBe(2);
+      expect(addToCart([], arroz, 1.5)[0].quantity).toBe(2);
+    });
+
+    it("normaliza la cantidad según la unidad", () => {
+      expect(normalizeQuantity(1.456, "m")).toBe(1.46);
+      expect(normalizeQuantity(1.5, "UND")).toBe(2);
+      expect(normalizeQuantity(2.75, "kg")).toBe(2.75);
     });
   });
 

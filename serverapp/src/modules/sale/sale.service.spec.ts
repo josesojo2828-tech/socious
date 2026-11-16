@@ -41,6 +41,15 @@ const makeTx = () => ({
     findFirst: jest.fn().mockResolvedValue(null),
     update: jest.fn(),
   },
+  productLot: {
+    findMany: jest.fn().mockResolvedValue([]),
+    findFirst: jest.fn().mockResolvedValue(null),
+    count: jest.fn().mockResolvedValue(0),
+    create: jest.fn((args: any) => Promise.resolve({ id: "lot-1", ...args.data })),
+    update: jest.fn((args: any) =>
+      Promise.resolve({ id: args.where.id, ...args.data }),
+    ),
+  },
   stockMovement: {
     create: jest.fn((args: any) => Promise.resolve({ id: "m-1", ...args.data })),
   },
@@ -178,6 +187,87 @@ describe("SaleService", () => {
         reference: "VTA-00001",
       });
       expect(tx.product.update.mock.calls[0][0].data.stock).toBe(47);
+    });
+
+    it("acepta una cantidad fraccionaria aunque el producto no controle rollos", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(productOnShelf(10));
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Cable 2x14",
+              quantity: 1.5,
+              unitPriceUSD: 4,
+            },
+          ],
+        },
+      );
+
+      expect(tx.stockMovement.create.mock.calls[0][0].data).toMatchObject({
+        quantity: 1.5,
+        previousStock: 10,
+        newStock: 8.5,
+      });
+      expect(tx.saleItem.create.mock.calls[0][0].data).toMatchObject({
+        quantity: 1.5,
+        lotId: null,
+      });
+    });
+
+    it("vende 1.5 m de tela y descuenta el rollo elegido", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(
+        productOnShelf(10, { name: "Tela lino", tracksLots: true }),
+      );
+
+      let remaining = 10;
+      tx.productLot.count.mockResolvedValue(1);
+      tx.productLot.findMany.mockImplementation(async () => [
+        { id: "lot-1", remainingQuantity: String(remaining) },
+      ]);
+      tx.productLot.findFirst.mockImplementation(async () => ({
+        id: "lot-1",
+        remainingQuantity: String(remaining),
+      }));
+      tx.productLot.update.mockImplementation(async ({ where, data }: any) => {
+        remaining = Number(data.remainingQuantity);
+        return { id: where.id, ...data };
+      });
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Tela lino",
+              quantity: 1.5,
+              unitPriceUSD: 4,
+              lotId: "lot-1",
+            },
+          ],
+        },
+      );
+
+      expect(tx.saleItem.create.mock.calls[0][0].data).toMatchObject({
+        quantity: 1.5,
+        lotId: "lot-1",
+      });
+      expect(tx.productLot.update.mock.calls[0][0]).toMatchObject({
+        where: { id: "lot-1" },
+        data: { remainingQuantity: 8.5 },
+      });
+      expect(tx.stockMovement.create.mock.calls[0][0].data).toMatchObject({
+        lotId: "lot-1",
+        quantity: 1.5,
+        previousStock: 10,
+        newStock: 8.5,
+      });
+      expect(tx.product.update.mock.calls[0][0].data.stock).toBe(8.5);
     });
 
     it("books the presentation stock in the kardex with its own row", async () => {

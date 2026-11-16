@@ -27,6 +27,7 @@ const form = (overrides: Partial<ProductForm> = {}): ProductForm => ({
   status: "ACTIVE",
   stock: 40,
   components: [],
+  tracksLots: false,
   ...overrides,
 });
 
@@ -67,6 +68,13 @@ describe("product-form (S7)", () => {
       const payload = buildProductPayload(form({ stock: 99 }), "update");
       expect(payload).not.toHaveProperty("stock");
       expect(payload.minStock).toBe(5);
+    });
+
+    it("envía el control por rollos al crear y al editar", () => {
+      expect(buildProductPayload(form(), "create").tracksLots).toBe(false);
+      expect(
+        buildProductPayload(form({ tracksLots: true }), "update").tracksLots,
+      ).toBe(true);
     });
 
     it("forces zero stock for services", () => {
@@ -181,6 +189,7 @@ describe("product-form (S7)", () => {
         categoryId: "c-1",
         supplierId: "s-1",
         components: [],
+        tracksLots: false,
       });
     });
 

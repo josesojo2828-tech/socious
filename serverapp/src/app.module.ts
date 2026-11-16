@@ -62,6 +62,7 @@ import { OfferModule } from "./modules/offer/offer.module";
 import { TenantPaymentMethodModule } from "./modules/tenant-payment-method/tenant-payment-method.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
+import { ProductLotModule } from "./modules/product-lot/product-lot.module";
 import { CashModule } from "./modules/cash/cash.module";
 import { SaleModule } from "./modules/sale/sale.module";
 import { InitialLoadModule } from "./modules/initial-load/initial-load.module";
@@ -229,6 +230,7 @@ imports: [
     TenantPaymentMethodModule,
     CategoryModule,
     ProductModule,
+    ProductLotModule,
     CashModule,
     SaleModule,
     InitialLoadModule,
