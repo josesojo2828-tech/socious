@@ -5,7 +5,9 @@ import Link from "next/link";
 import {
   AlertTriangle,
   Building2,
-  Construction,
+  CheckCircle2,
+  Circle,
+  ClipboardCheck,
   Eye,
   FileSpreadsheet,
   Loader2,
@@ -15,6 +17,9 @@ import {
 import { ProductImportModal } from "@/features/products/components/ProductImportModal";
 import { ManualReceivableForm } from "@/features/initial-load/components/ManualReceivableForm";
 import { ReceivableImportPanel } from "@/features/initial-load/components/ReceivableImportPanel";
+import { sumAging } from "@/features/finanzas/lib/financial-summary";
+import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
+import type { SalesReport } from "@/features/sales/types/sale.type";
 import { apiClient } from "@/shared/api/api.client";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -78,17 +83,141 @@ function StepPanel({
   );
 }
 
-/** Shared card for the steps that later tasks will fill. */
-function PendingPanel({ title, description }: { title: string; description: string }) {
+/** One count card of the summary: label plus a number, or an em dash when unknown. */
+function SummaryCount({ label, value }: { label: string; value: number | null }) {
+  return (
+    <div className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
+      <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+        {label}
+      </p>
+      <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#111018] dark:text-slate-100">
+        {value === null ? "—" : value}
+      </p>
+    </div>
+  );
+}
+
+/** One checklist line: the item and whether it already has data. */
+function SummaryChecklistRow({
+  label,
+  ready,
+}: {
+  label: string;
+  ready: boolean;
+}) {
+  return (
+    <li className="flex items-center justify-between gap-3 py-2">
+      <span className="text-sm text-slate-600 dark:text-slate-300">{label}</span>
+      <span
+        className={`inline-flex items-center gap-1.5 text-sm font-medium ${
+          ready
+            ? "text-emerald-600 dark:text-emerald-400"
+            : "text-amber-600 dark:text-amber-400"
+        }`}
+      >
+        {ready ? (
+          <CheckCircle2 className="h-4 w-4" />
+        ) : (
+          <Circle className="h-4 w-4" />
+        )}
+        {ready ? "Listo" : "Pendiente"}
+      </span>
+    </li>
+  );
+}
+
+/**
+ * Step 3: what the merchant actually loaded. Counts come from the stats the
+ * page already holds; the open balance comes from the sales report, fetched
+ * when this step is reached. A failed report never renders a fake zero.
+ */
+function SummaryPanel({
+  stats,
+  report,
+  loading,
+  error,
+}: {
+  stats: OrganizationStats | null;
+  report: SalesReport | null;
+  loading: boolean;
+  error: string | null;
+}) {
+  const products = stats ? stats.totalProducts : null;
+  const clients = stats ? stats.totalClients : null;
+  const receivables = report ? report.openItemsTotal : null;
+  const openBalance = report ? sumAging(report.aging) : null;
+
+  // The first frame of the step runs before the fetch effect, so a report still
+  // absent without an error counts as "calculating" instead of "failed".
+  const calculating = loading || (report === null && error === null);
+
+  const checklist = [
+    { label: "Productos", ready: products !== null && products > 0 },
+    { label: "Clientes", ready: clients !== null && clients > 0 },
+    {
+      label: "Cuentas por cobrar",
+      ready: receivables !== null && receivables > 0,
+    },
+  ];
+
   return (
     <StepPanel
-      icon={<Construction className="h-5 w-5" />}
-      title={title}
-      description={description}
+      icon={<ClipboardCheck className="h-5 w-5" />}
+      title="Resumen"
+      description="Lo que quedó cargado en el negocio: productos, clientes y cuentas por cobrar."
     >
-      <p className="text-sm text-slate-500 dark:text-slate-400">
-        Paso en construcción. Se habilitará en una próxima entrega.
-      </p>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <SummaryCount label="Productos" value={products} />
+        <SummaryCount label="Clientes" value={clients} />
+        <SummaryCount label="Cuentas por cobrar" value={receivables} />
+      </div>
+
+      <div className="mt-3 rounded-xl border border-[#1a2a46]/8 px-4 py-3.5 dark:border-white/10">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+          Total por cobrar en USD
+        </p>
+        {calculating ? (
+          <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <Loader2 className="h-4 w-4 animate-spin" /> Calculando el saldo por
+            cobrar…
+          </p>
+        ) : openBalance === null ? (
+          <p className="mt-1 text-sm text-amber-700 dark:text-amber-300">
+            {error ?? "No se pudo calcular el saldo por cobrar."}
+          </p>
+        ) : (
+          <p className="mt-1 font-mono text-2xl tabular-nums font-semibold text-[#8e7538] dark:text-[#d8c084]">
+            ${openBalance.toFixed(2)}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+          Estado de la carga
+        </p>
+        <ul className="mt-1.5 divide-y divide-[#1a2a46]/8 rounded-xl border border-[#1a2a46]/12 px-4 dark:divide-white/10 dark:border-white/10">
+          {checklist.map((item) => (
+            <SummaryChecklistRow
+              key={item.label}
+              label={item.label}
+              ready={item.ready}
+            />
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Link href="/dashboard" className={`h-10 px-4 text-sm ${CTA_BRASS}`}>
+          Ir al panel
+        </Link>
+        <Link
+          href="/dashboard/cuentas-por-cobrar"
+          className={`h-10 px-4 text-sm ${CTA_NAVY}`}
+        >
+          Ver cuentas por cobrar
+        </Link>
+      </div>
     </StepPanel>
   );
 }
@@ -97,7 +226,7 @@ function PendingPanel({ title, description }: { title: string; description: stri
  * Initial data load for a business workspace: three steps from the incoming
  * feature (products, clients/receivables, summary). Step 1 reuses the product
  * import modal and points the manual form to the products screen; step 2 hosts
- * the receivable import; step 3 is still a placeholder.
+ * the receivable import; step 3 summarizes what was loaded.
  */
 export default function InitialLoadPage() {
   const { addToast } = useToastStore();
@@ -114,6 +243,10 @@ export default function InitialLoadPage() {
   const [stats, setStats] = useState<OrganizationStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  /** Sales report behind the step-3 open balance; loaded only on step 3. */
+  const [report, setReport] = useState<SalesReport | null>(null);
+  const [reportLoading, setReportLoading] = useState<boolean>(false);
+  const [reportError, setReportError] = useState<string | null>(null);
   /** Bumped after an import so the account-state banner reloads in place. */
   const [reloadToken, setReloadToken] = useState<number>(0);
 
@@ -160,6 +293,34 @@ export default function InitialLoadPage() {
       cancelled = true;
     };
   }, [addToast, canOperate, isOrganization, orgId, reloadToken]);
+
+  // The open balance is only needed on step 3, so it is fetched when the user
+  // gets there — not on mount. `reloadToken` refreshes it after an import.
+  useEffect(() => {
+    if (step !== 3 || !canOperate || !isOrganization) return;
+
+    let cancelled = false;
+    setReportLoading(true);
+    setReportError(null);
+
+    void apiClient
+      .get<SalesReport>(SaleEndpoints.report)
+      .then((response) => {
+        if (!cancelled) setReport(response.data);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setReport(null);
+        setReportError("No se pudo calcular el saldo por cobrar.");
+      })
+      .finally(() => {
+        if (!cancelled) setReportLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [canOperate, isOrganization, reloadToken, step, orgId]);
 
   // Reuses the catalog's import flow; a successful commit reloads the stats so
   // the "cuenta nueva" banner reflects the new products without a page reload.
@@ -437,9 +598,11 @@ export default function InitialLoadPage() {
       ) : null}
 
       {step === 3 ? (
-        <PendingPanel
-          title="Resumen"
-          description="El cierre de la carga inicial, con el detalle de lo incorporado."
+        <SummaryPanel
+          stats={stats}
+          report={report}
+          loading={reportLoading}
+          error={reportError}
         />
       ) : null}
     </div>
