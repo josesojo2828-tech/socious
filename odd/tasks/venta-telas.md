@@ -57,13 +57,30 @@
 
 | ID | Specs | Ruta | Estado |
 |---|---|---|---|
-| T1 | S2, S3, S4, S5 — schema: `LENGTH`, `Product.tracksLots`, `ProductLot`, `lotId` en `StockMovement`/`SaleItem` + migración aditiva | inline | pendiente |
-| T2 | S2 — unidades de sistema `m`/`cm` + `resolveUnitDecimals` con `LENGTH` | inline | pendiente |
-| T3 | S3, S4 — servicio de lotes: listar/entrar/ajustar, consumo FIFO, invariante de stock | delegado | pendiente |
-| T4 | S2 — POS: cantidad editable por unidad + unidad visible en carrito | inline | pendiente |
-| T5 | S3 — formulario de producto: unidad `m`/`cm`, toggle `tracksLots`, ancho del rollo | inline | pendiente |
-| T6 | S2, S4 — recibo/kardex con unidad y lote | inline | pendiente |
-| T7 | S6 — tests y documentación | inline | pendiente |
+| T1 | S2, S3, S4, S5 — schema: `LENGTH`, `Product.tracksLots`, `ProductLot`, `lotId` en `StockMovement`/`SaleItem` + migración aditiva | inline | ✅ `9aefbde` |
+| T2 | S2 — unidades de sistema `m`/`cm` + `resolveUnitDecimals` con `LENGTH` | inline | ✅ `9aefbde` |
+| T3 | S3, S4 — servicio de lotes: listar/entrar/ajustar, consumo FIFO, invariante de stock | inline | ✅ `a465934` |
+| T4 | S2 — POS: cantidad editable por unidad + unidad visible en carrito | inline | ✅ `208f0bf` |
+| T5 | S3 — formulario de producto: interruptor `tracksLots` + tarjeta de rollos (cargar/ajustar/eliminar) | inline | ✅ `feead2f` |
+| T6 | S2, S4 — kardex con el rollo de cada movimiento | inline | ✅ `d328351` |
+| T7 | S6 — tests y documentación | inline | ✅ (ver evidencia) |
+
+---
+
+## Verificación
+
+- `serverapp`: `npm run typecheck` en 0; suite completa **112 suites / 1070 tests** en verde.
+- `webapp`: `npm run typecheck` en 0; suite completa **71 archivos / 774 tests** en verde.
+- Specs nuevos: `product-lot/lot-stock.spec.ts` (10 casos: FIFO, lote explícito, insuficiente, apertura, presentación), `product-lot/product-lot.service.spec.ts` (6 casos: tenant, apertura, ajuste, desactivar con metros, listado), `sale.service.spec.ts` (venta de 1.5 m con y sin rollos), `pos-form.spec.ts` (cantidad por unidad), `unit-decimals.spec.ts` (`LENGTH`).
+- Migración aplicada en la base local: `20261116215154_product_lots_and_length_units` (solo `ADD VALUE`, `ADD COLUMN` con default y `CREATE TABLE`).
+
+## Limitaciones conocidas (siguiente entrega)
+
+- **La línea de venta no guarda la unidad**: el detalle muestra `1.5 × Tela lino` sin `m`. Resolverlo pide denormalizar la unidad en `SaleItem` (migración aditiva) o resolverla por join.
+- **El POS no deja elegir el rollo**: consume FIFO. El selector por línea (campo `lotId`, ya aceptado por la API) es la siguiente entrega.
+- **Presentaciones**: el backend soporta rollos por presentación, pero el formulario de presentaciones no expone la carga de rollos.
+- **Talleres de confección**: órdenes de producción, mano de obra y BOM multinivel siguen fuera de alcance; el BOM actual solo descuenta insumos al vender.
+
 
 ---
 
