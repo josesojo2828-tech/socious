@@ -44,26 +44,28 @@ El límite de crédito por monto (`Client.creditLimitUSD`) no se aplica ni se va
 
 ## Tasks
 
-- [ ] **T1** · S4/S6 · inline · Fix de vencimiento: `SaleService.create` pasa la fecha de origen a `computeCreditDueDate` (hoy deriva desde la creación) + test · commit: `_pending_`
-- [ ] **T2** · S6 · inline · Fix de aging en `GET /api/sales/report`: tres estados, mora sobre saldo neto de abonos y sin ocultar filas + tests · commit: `_pending_`
-- [ ] **T3** · S1-S7 · inline · Registrar este documento en `odd/tasks/` · commit: `_pending_`
-- [ ] **T4** · S1 · inline · Ruta `/dashboard/configuracion/init` y entrada desde Configuración · commit: `_pending_`
-- [ ] **T5** · S1/S2 · inline · Guard de workspace: exigir organización resuelta antes de escribir, para no caer en el contexto personal · commit: `_pending_`
-- [ ] **T6** · S1/S2 · inline · Detección de cuenta nueva a partir de `stats`, para mostrar la carga inicial solo en el primer uso · commit: `_pending_`
-- [ ] **T7** · S2/S5 · inline · Paso 1: import de productos reutilizando el CSV existente (validate/commit/plantilla) · commit: `_pending_`
-- [ ] **T8** · S3/S5 · inline · Backend: módulo `initial-load` con `validate`, `commit` y `template`; el commit crea la venta histórica impaga vía `SaleService.create` · commit: `_pending_`
-- [ ] **T9** · S3 · inline · Creación automática de clientes faltantes, con la unicidad por organización validada en el servicio · commit: `_pending_`
-- [ ] **T10** · S3 · inline · Creación automática de productos faltantes, con la unicidad por organización validada en el servicio · commit: `_pending_`
-- [ ] **T11** · S4 · inline · Vencimiento opcional: fecha límite, cadencia desde la fecha de venta, o abierta sin vencimiento · commit: `_pending_`
-- [ ] **T12** · S5 · inline · Idempotencia: detectar documentos ya importados en la previsualización y omitirlos · commit: `_pending_`
-- [ ] **T13** · S2 · inline · UI del paso 2: descarga de plantilla y carga del archivo · commit: `_pending_`
-- [ ] **T14** · S2 · inline · UI del paso 2: mapeo de columnas de la planilla al formato del import · commit: `_pending_`
-- [ ] **T15** · S2 · inline · Alta manual de cuentas por cobrar en el mismo paso · commit: `_pending_`
-- [ ] **T16** · S1 · inline · Resumen final: creados, omitidos y errores, con cierre del flujo · commit: `_pending_`
-- [ ] **T17** · S2 · inline · Parseo de `.xlsx` en el cliente (el endpoint de archivos no acepta planillas) · commit: `_pending_`
-- [ ] **T18** · S1-S6 · delegado (writer) · Tests: RED→GREEN por regla, PRESERVE del reporte y de los imports existentes, y flujo completo · commit: `_pending_`
-- [ ] **T19** · S1-S6 · inline · Verificación: `npm run typecheck` + suites (serverapp/webapp) y actualización de help/docs tocados · commit: `_pending_`
-- [ ] **T20** · S7 · decisión usuario · Iteración 2: cuotas por venta, fuera de esta entrega · commit: `_pending_`
+- [x] **T1** · S4/S6 · inline · Fix de vencimiento: `SaleService.create` pasa la fecha de origen a `computeCreditDueDate` (hoy deriva desde la creación) + test · commit: `9cf4a2e`
+- [x] **T2** · S6 · inline · Fix de aging en `GET /api/sales/report`: tres estados, mora sobre saldo neto de abonos y sin ocultar filas + tests · commit: `e61a402`
+- [x] **T3** · S1-S7 · inline · Registrar este documento en `odd/tasks/` · commit: `948d45f`
+- [x] **T4** · S1 · inline · Ruta `/dashboard/configuracion/init` y entrada desde Configuración · commit: `3378c9a`
+- [x] **T5** · S1/S2 · inline · Guard de workspace: exigir organización resuelta antes de escribir, para no caer en el contexto personal · commit: `3378c9a`
+- [x] **T6** · S1/S2 · inline · Detección de cuenta nueva a partir de `stats`, para mostrar la carga inicial solo en el primer uso · commit: `3378c9a`
+- [x] **T7** · S2/S5 · inline · Paso 1: import de productos reutilizando el CSV existente (validate/commit/plantilla) · commit: `2a84461`
+- [x] **T8** · S3/S5 · inline · Backend: módulo `initial-load` con `validate`, `commit` y `template`; el commit crea la venta histórica impaga vía `SaleService.create` · commit: `fe95e2f`
+- [x] **T9** · S3 · inline · Creación automática de clientes faltantes, con la unicidad por organización validada en el servicio · commit: `fe95e2f`
+- [x] **T10** · S3 · inline · Creación automática de productos faltantes, con la unicidad por organización validada en el servicio · commit: `fe95e2f`
+- [x] **T11** · S4 · inline · Vencimiento opcional: fecha límite, cadencia desde la fecha de venta, o abierta sin vencimiento · commit: `fe95e2f`
+- [x] **T12** · S5 · inline · Idempotencia: detectar documentos ya importados en la previsualización y omitirlos · commit: `fe95e2f`
+- [x] **T13** · S2 · inline · UI del paso 2: descarga de plantilla y carga del archivo · commit: `936d5ab`
+- [x] **T14** · S2 · inline · UI del paso 2: mapeo de columnas de la planilla al formato del import · commit: `936d5ab`
+- [x] **T15** · S2 · inline · Alta manual de cuentas por cobrar en el mismo paso · commit: `8f577b2` + `1b3b814`
+- [x] **T16** · S1 · inline · Resumen final: creados, omitidos y errores, con cierre del flujo · commit: `6ddbc51`
+- [x] **T17** · S2 · inline · Parseo de `.xlsx` en el cliente (el endpoint de archivos no acepta planillas) · commit: `0627387`
+- [x] **T18** · S1-S6 · delegado (writer) · Tests: RED→GREEN por regla, PRESERVE del reporte y de los imports existentes, y flujo completo · commit: `049d70f`
+- [x] **T19** · S1-S6 · inline · Verificación: `npm run typecheck` + suites (serverapp/webapp) y actualización de help/docs tocados · commit: `4baecd0`
+- [x] **T21** · S6 · inline · Aging de cuentas por pagar: replica los tres estados y el saldo neto de abonos en `purchase.service.getReport` · commit: `d8b73af`
+- [x] **T22** · S3 · inline · `CreateSaleDto.saleNumber` opcional, para que el import asigne el número del documento histórico en la misma transacción · commit: `8f7168d`
+- [ ] **T20** · S7 · decisión usuario · Iteración 2: cuotas por venta, fuera de esta entrega · commit: `_pendiente (iteración 2)_`
 
 ## Log
 
@@ -72,3 +74,4 @@ El límite de crédito por monto (`Client.creditLimitUSD`) no se aplica ni se va
 - **L3** (verbatim): "o sea, si la fecha es opcional es como si fuera libre, sabes? sin limite, o que se le pueda colocar limite?"
 - **L4** (verbatim): "si o sea, si se le puede colocar limite debe ser o por cuotas o una fecha limite, monta la lista de tareas aca en opencode para ver como vas a proceder"
 - **L5**: Documento registrado en `feat/carga-inicial`. Se fijan como primeros fixes el vencimiento derivado desde la creación y el aging del reporte, porque ambos condicionan el resultado del import. Sin commits todavía.
+- **L6**: Cierre de la entrega. Todas las tareas se implementaron y se integraron a `main` mediante fast-forward, y el resultado se publicó en `origin/main`. Verificación final sobre el árbol ya integrado: en `webapp`, `npm run typecheck` sin errores y 70 archivos / 752 tests; en `serverapp`, `npm run typecheck` sin errores y 293 tests en los módulos `initial-load`, `sale`, `purchase` y `product`. Decisiones cerradas: una sola fecha de vencimiento opcional, sin tabla de cuotas en esta entrega; las cuentas sin vencimiento se tratan como abiertas y nunca como vencidas; la idempotencia se resuelve por el número de `venta` o por la clave `ONB-`; los productos se crean sin stock; el precio unitario siempre se declara de forma explícita. Deuda conocida que queda fuera de la entrega: `SaleInstallment` (cuotas), la ausencia de un selector de espacio de trabajo en la UI, `getClinicStats` devolviendo ceros cuando falla, y la falta de aplicación de `creditLimitUSD`. También se registran como tareas T21 y T22 el espejo del aging en cuentas por pagar y el `saleNumber` opcional, que no tenían fila propia.
