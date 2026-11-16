@@ -21,6 +21,12 @@ import {
   type InitialLoadValidateResult,
 } from "../services/initial-load.service";
 import {
+  XLSX_MIME,
+  isXlsxFile,
+  parseXlsxToRows,
+  xlsxToCsvText,
+} from "../lib/xlsx";
+import {
   STATUS_LABELS,
   canConfirm,
   countByStatus,
@@ -39,6 +45,11 @@ import {
  */
 
 const COLUMNS = expectedColumns();
+
+/** Accepts CSV and XLSX; the spreadsheet is converted to CSV in the browser. */
+const ACCEPTED_FILES = `.csv,text/csv,.xlsx,${XLSX_MIME}`;
+
+type FileFormat = "csv" | "xlsx";
 
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as {
@@ -112,6 +123,7 @@ export function ReceivableImportPanel() {
   const { addToast } = useToastStore();
 
   const [fileName, setFileName] = useState<string>("");
+  const [fileFormat, setFileFormat] = useState<FileFormat | null>(null);
   const [fileSize, setFileSize] = useState<number>(0);
   const [content, setContent] = useState<string>("");
   const [reading, setReading] = useState<boolean>(false);
@@ -138,7 +150,11 @@ export function ReceivableImportPanel() {
     : [];
 
   const loadFile = async (file: File) => {
+    const isSpreadsheet = isXlsxFile(file);
+    const format: FileFormat = isSpreadsheet ? "xlsx" : "csv";
+
     setFileName(file.name);
+    setFileFormat(format);
     setFileSize(file.size);
     setError(null);
     setResult(null);
@@ -146,11 +162,25 @@ export function ReceivableImportPanel() {
     setOnlyErrors(false);
     setReading(true);
     try {
-      const { text } = decodeCsvBytes(await file.arrayBuffer());
-      setContent(text);
-    } catch {
+      if (isSpreadsheet) {
+        // The browser converts the sheet to the same CSV text the backend
+        // already understands, so the validate/commit contract stays intact.
+        const parsed = await parseXlsxToRows(await file.arrayBuffer());
+        setContent(xlsxToCsvText(parsed));
+      } else {
+        const { text } = decodeCsvBytes(await file.arrayBuffer());
+        setContent(text);
+      }
+    } catch (readError) {
+      const message =
+        readError instanceof Error
+          ? readError.message
+          : isSpreadsheet
+            ? "No se pudo leer el archivo .xlsx."
+            : "No se pudo leer el archivo. Intente con otro archivo CSV.";
       setContent("");
-      setError("No se pudo leer el archivo. Intenta con otro archivo CSV.");
+      setError(message);
+      addToast({ type: "error", title: "Carga inicial", message });
     } finally {
       setReading(false);
     }
@@ -196,7 +226,7 @@ export function ReceivableImportPanel() {
 
   const validate = async () => {
     if (content === "") {
-      setError("Selecciona un archivo CSV para validar.");
+      setError("Seleccione un archivo CSV o XLSX para validar.");
       return;
     }
     setValidating(true);
@@ -261,8 +291,8 @@ export function ReceivableImportPanel() {
         <section className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
           <p className={LABEL_SM}>1. Plantilla</p>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Descarga el CSV y completa una fila por documento. Guarda el archivo
-            en UTF-8.
+            Descarga el CSV y completa una fila por documento. También puede
+            subir el archivo en formato XLSX. Guarde el archivo en UTF-8.
           </p>
           <button
             type="button"
@@ -309,7 +339,7 @@ export function ReceivableImportPanel() {
         >
           <p className={LABEL_SM}>2. Archivo</p>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Arrastra el CSV aquí o selecciónalo desde tu equipo.
+            Arrastra el CSV o XLSX aquí o selecciónalo desde tu equipo.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <label
@@ -317,8 +347,8 @@ export function ReceivableImportPanel() {
             >
               <input
                 type="file"
-                accept=".csv,text/csv"
-                aria-label="Archivo CSV de cuentas por cobrar"
+                accept={ACCEPTED_FILES}
+                aria-label="Archivo CSV o XLSX de cuentas por cobrar"
                 className="sr-only"
                 disabled={reading || validating}
                 onChange={onFileChange}
@@ -344,7 +374,13 @@ export function ReceivableImportPanel() {
           </div>
           {fileName ? (
             <p className="mt-2 truncate text-xs text-slate-500 dark:text-slate-400">
-              {fileName} · {formatFileSize(fileSize)}
+              {fileName}
+              {fileFormat ? (
+                <span className="ml-1.5 rounded border border-[#1a2a46]/15 px-1 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] dark:border-white/15">
+                  {fileFormat}
+                </span>
+              ) : null}
+              <span className="ml-1.5">· {formatFileSize(fileSize)}</span>
             </p>
           ) : null}
         </section>
@@ -358,7 +394,8 @@ export function ReceivableImportPanel() {
 
       {!validating && !result && !error ? (
         <p className="rounded-xl border border-dashed border-[#1a2a46]/15 px-3 py-8 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
-          Descarga la plantilla o arrastra un CSV para ver la vista previa.
+          Descarga la plantilla o arrastra un CSV o XLSX para ver la vista
+          previa.
         </p>
       ) : null}
 
