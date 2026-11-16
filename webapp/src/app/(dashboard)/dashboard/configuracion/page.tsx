@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode, useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Loader2,
   Save,
@@ -15,6 +16,7 @@ import {
   Boxes,
   Briefcase,
   Store,
+  Upload,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -337,6 +339,28 @@ export default function SettingsPage() {
           )}
         </span>
       </header>
+
+      <Link
+        href="/dashboard/configuracion/init"
+        className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-4 transition-colors hover:border-[#b2944a]/40 ${CARD}`}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#b2944a]/15 text-[#b2944a]">
+            <Upload className="h-4 w-4" />
+          </span>
+          <div className="min-w-0">
+            <p className="font-semibold text-[#111018] dark:text-slate-100">
+              Carga inicial
+            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Productos, clientes y cuentas por cobrar en tres pasos.
+            </p>
+          </div>
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8e7538] dark:text-[#d8c084]">
+          Abrir
+        </span>
+      </Link>
 
       <nav className="flex flex-wrap gap-1 border-b border-[#1a2a46]/12 dark:border-white/10">
         {(

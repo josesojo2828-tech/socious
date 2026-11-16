@@ -64,6 +64,7 @@ import { CategoryModule } from "./modules/category/category.module";
 import { ProductModule } from "./modules/product/product.module";
 import { CashModule } from "./modules/cash/cash.module";
 import { SaleModule } from "./modules/sale/sale.module";
+import { InitialLoadModule } from "./modules/initial-load/initial-load.module";
 import { TutorialModule } from "./modules/tutorial/tutorial.module";
 import { PurchaseModule } from "./modules/purchase/purchase.module";
 import { OrderModule } from "./modules/order/order.module";
@@ -230,6 +231,7 @@ imports: [
     ProductModule,
     CashModule,
     SaleModule,
+    InitialLoadModule,
     TutorialModule,
     PurchaseModule,
     OrderModule,

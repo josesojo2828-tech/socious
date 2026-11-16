@@ -89,7 +89,12 @@ function sumMonths(buckets: FinancialMonthBucket[] | undefined): number {
   );
 }
 
-function sumAging(aging: FinancialAging): number {
+/**
+ * Sums the aging buckets to the open balance. The optional `open` bucket
+ * (accounts without a due date) counts when the report sends it, so a sales
+ * total is never short by the accounts that have no due date yet.
+ */
+export function sumAging(aging: FinancialAging): number {
   if (!aging) return 0;
   return round2(
     Number(aging.current || 0) +

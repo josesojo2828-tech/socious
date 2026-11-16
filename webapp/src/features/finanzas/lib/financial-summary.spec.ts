@@ -5,6 +5,7 @@ import {
   openItemBalance,
   openItemNumber,
   openItemParty,
+  sumAging,
   sumOpenItems,
   type FinancialReportSlice,
 } from "./financial-summary";
@@ -114,6 +115,38 @@ describe("buildFinancialSummary", () => {
     // Purchases has no `open` bucket yet: it must keep summing its four.
     expect(buildFinancialSummary(sales, purchases).receivableUSD).toBe(125);
     expect(buildFinancialSummary(sales, purchases).payableUSD).toBe(0);
+  });
+});
+
+describe("sumAging", () => {
+  it("adds the five buckets, including open accounts without a due date", () => {
+    expect(
+      sumAging({
+        current: 10,
+        days1_30: 20,
+        days31_60: 30,
+        over60: 40,
+        open: 25,
+      }),
+    ).toBe(125);
+  });
+
+  it("treats a missing open bucket as zero", () => {
+    expect(
+      sumAging({ current: 10, days1_30: 20, days31_60: 30, over60: 40 }),
+    ).toBe(100);
+  });
+
+  it("rounds the total to cents", () => {
+    expect(
+      sumAging({
+        current: 10.005,
+        days1_30: 0,
+        days31_60: 0,
+        over60: 0,
+        open: 0,
+      }),
+    ).toBe(10.01);
   });
 });
 
