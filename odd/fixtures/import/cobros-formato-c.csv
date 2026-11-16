@@ -1,0 +1,6 @@
+﻿VENTA;Fecha;Cliente_Nombre;Cliente_Telefono;Cliente_Email;Producto;SKU;Cantidad;Precio_Unitario;Vencimiento;Cadencia;Días;Monto_Pagado;Notas;Descripción;Sucursal;Código_Interno
+V-001;2024-01-15;Ana Pérez;584241000001;ana.perez@example.com;Cemento gris 42.5 kg;CEM-425;10;6.50;2024-02-15;;;65.00;Retira en tienda;Cemento de uso general;Sucursal Centro;INT-001
+;2024-01-20;Juan Gómez;584241000002;;Cabilla 3/8 x 12 m;CAB-38;5;12.00;;CADA_N_DIAS;30;0;Cliente mayorista;Cabilla corrugada;Sucursal Norte;INT-002
+V-003;2024-01-22;María Rojas;584241000003;maria.rojas@example.com;Pintura blanca 1 galón;PIN-BL-1G;2;18.75;2024-02-22;;;37.50;;Pintura acrílica;Sucursal Centro;INT-003
+;2024-01-25;Carlos Díaz;584241000004;;Cemento gris 42.5 kg;CEM-425;20;6.50;;;;0;Obra Los Pinos;Cemento de uso general;Sucursal Sur;INT-004
+V-005;2024-01-28;Sofía Méndez;584241000005;sofia.mendez@example.com;Cabilla 3/8 x 12 m;CAB-38;8;12.00;2024-02-28;;;96.00;Entregado;Cabilla corrugada;Sucursal Norte;INT-005
