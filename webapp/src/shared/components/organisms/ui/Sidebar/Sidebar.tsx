@@ -19,7 +19,6 @@ import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
 import { clsx } from "clsx";
 import { useTranslation } from "@/context/i18n.context";
 import { InternalLink } from "@/shared/components/atoms/InternalLink";
-import Image from "next/image";
 import { slugify } from "@/shared/lib/utils";
 import type { SidebarProps } from "./Sidebar.types";
 
@@ -363,15 +362,26 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
                 <img
                   src={workspaceLogo}
                   alt={activeWorkspace?.name || "Logo del negocio"}
-                  className="w-7 h-7 flex-none rounded-full object-cover shadow-[0_0_0_2px_rgba(178,148,74,0.45)] dark:bg-white/90 dark:p-0.5"
+                  className="w-7 h-7 flex-none rounded-full object-cover shadow-[0_0_0_2px_rgba(178,148,74,0.45)]"
                 />
               ) : (
-                <Image
-                  src="/icon.png"
-                  alt="Socius ERP"
-                  width={28}
-                  height={28}
-                  className="w-7 h-7 flex-none rounded-full shadow-[0_0_0_2px_rgba(178,148,74,0.45)] object-cover dark:bg-white/90 dark:p-0.5"
+                // Brand glyph, not a chip: no plate, no ring. The mask paints
+                // the asset with `currentColor` (`bg-current`), so it follows
+                // the sidebar's light/dark text color with no JS.
+                <span
+                  role="img"
+                  aria-label="Socius ERP"
+                  className="w-7 h-7 flex-none bg-current"
+                  style={{
+                    maskImage: "url(/bombillo.svg)",
+                    maskSize: "contain",
+                    maskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    WebkitMaskImage: "url(/bombillo.svg)",
+                    WebkitMaskSize: "contain",
+                    WebkitMaskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                  }}
                 />
               )}
               {!isCollapsed && (
