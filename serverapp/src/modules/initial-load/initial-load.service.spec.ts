@@ -332,6 +332,81 @@ describe("InitialLoadService.validate", () => {
     );
   });
 
+  it("reuses a mapped product instead of creating it", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const service = makeService(prisma);
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+      mapping: [{ productName: "Nuevo producto", productId: "product-1" }],
+    });
+
+    expect(result.rows[0].willCreateProduct).toBe(false);
+    expect(result.rows[0].warnings).toEqual([]);
+    expect(result.productsReused).toEqual(["Nuevo producto"]);
+    expect(result.productsToCreate).toEqual([]);
+  });
+
+  it("resolves two rows that share a product name with one mapping entry", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const service = makeService(prisma);
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([
+        validRow({ venta: "V-1", producto: "Nuevo producto" }),
+        validRow({ venta: "V-2", producto: "Nuevo producto" }),
+      ]),
+      mapping: [{ productName: "Nuevo producto", productId: "product-1" }],
+    });
+
+    expect(result.rows[0].willCreateProduct).toBe(false);
+    expect(result.rows[1].willCreateProduct).toBe(false);
+    expect(result.productsReused).toEqual(["Nuevo producto"]);
+    expect(result.productsToCreate).toEqual([]);
+  });
+
+  it("returns 400 when the mapping points to an unknown product", async () => {
+    const service = makeService();
+
+    await expect(
+      service.validate(SCOPE, {
+        content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+        mapping: [{ productName: "Nuevo producto", productId: "missing" }],
+      }),
+    ).rejects.toThrow("El producto seleccionado no existe.");
+  });
+
+  it("returns 400 when the mapping points to a product of another organization", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const service = makeService(prisma);
+
+    await expect(
+      service.validate(SCOPE, {
+        content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+        mapping: [{ productName: "Nuevo producto", productId: "product-other-org" }],
+      }),
+    ).rejects.toThrow("El producto seleccionado no existe.");
+  });
+
+  it("behaves exactly as today when the mapping is empty", async () => {
+    const service = makeService();
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+      mapping: [],
+    });
+
+    expect(result.rows[0].willCreateProduct).toBe(true);
+    expect(result.rows[0].warnings).toContain(
+      'Fila 2: El producto "Nuevo producto" se creó sin stock.',
+    );
+    expect(result.productsToCreate).toEqual(["Nuevo producto"]);
+    expect(result.productsReused).toEqual([]);
+  });
+
   it("flags a sale number that already exists as already-imported", async () => {
     const prisma = makePrisma();
     prisma.sale.findMany.mockResolvedValue([{ saleNumber: "V-9" }]);
@@ -460,6 +535,45 @@ describe("InitialLoadService.commit", () => {
       quantity: 2,
       unitPriceUSD: 1.5,
     });
+  });
+
+  it("sends the mapped product id to the sale and creates no product", async () => {
+    const prisma = makePrisma();
+    prisma.product.findMany.mockResolvedValue([productRecord()]);
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(prisma, sales, makeClients(), products);
+
+    const result = await service.commit(SCOPE, {
+      content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+      mapping: [{ productName: "Nuevo producto", productId: "product-1" }],
+    });
+
+    expect(products.create).not.toHaveBeenCalled();
+    expect(result.created.products).toBe(0);
+    expect(sales.create).toHaveBeenCalledTimes(1);
+    expect(sales.create.mock.calls[0][1].items[0]).toMatchObject({
+      productId: "product-1",
+      productName: "Nuevo producto",
+    });
+  });
+
+  it("rejects a mapping to an unknown product before writing anything", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    await expect(
+      service.commit(SCOPE, {
+        content: buildCsv([validRow({ producto: "Nuevo producto" })]),
+        mapping: [{ productName: "Nuevo producto", productId: "missing" }],
+      }),
+    ).rejects.toThrow("El producto seleccionado no existe.");
+
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(sales.create).not.toHaveBeenCalled();
   });
 
   it("creates a missing product with a generated ONB SKU, zero stock and a warning", async () => {

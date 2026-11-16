@@ -3,11 +3,14 @@ import {
   STATUS_LABELS,
   canConfirm,
   countByStatus,
+  countReused,
   expectedColumns,
   formatRowErrors,
   groupClientsToCreate,
   groupProductsToCreate,
+  mappingFromDecisions,
   statusTone,
+  unionProductNames,
 } from "./initial-load";
 import type {
   InitialLoadPreviewRow,
@@ -46,6 +49,8 @@ function result(
     totalRows: rows.length,
     errors: [],
     rows,
+    productsToCreate: [],
+    productsReused: [],
     ...overrides,
   };
 }
@@ -172,6 +177,75 @@ describe("initial-load groupProductsToCreate", () => {
         row({ productName: "   ", willCreateProduct: true }),
       ]),
     ).toEqual([]);
+  });
+
+  it("excludes product names already mapped to an existing product", () => {
+    expect(
+      groupProductsToCreate(
+        [
+          row({ line: 1, productName: "Harina", willCreateProduct: true }),
+          row({ line: 2, productName: "Azúcar", willCreateProduct: true }),
+        ],
+        { Harina: { productId: "product-1" } },
+      ),
+    ).toEqual(["Azúcar"]);
+  });
+});
+
+describe("initial-load mappingFromDecisions", () => {
+  it("builds one mapping entry per decided product name", () => {
+    expect(
+      mappingFromDecisions({
+        Harina: { productId: "product-1" },
+        Azúcar: { productId: "product-2" },
+      }),
+    ).toEqual([
+      { productName: "Harina", productId: "product-1" },
+      { productName: "Azúcar", productId: "product-2" },
+    ]);
+  });
+
+  it("skips names without a chosen product", () => {
+    expect(
+      mappingFromDecisions({
+        Harina: { productId: "" },
+        Azúcar: { productId: "product-2" },
+      }),
+    ).toEqual([{ productName: "Azúcar", productId: "product-2" }]);
+  });
+
+  it("returns an empty mapping when nothing was decided", () => {
+    expect(mappingFromDecisions({})).toEqual([]);
+  });
+});
+
+describe("initial-load unionProductNames", () => {
+  it("merges groups without duplicates, preserving the first order", () => {
+    expect(
+      unionProductNames(["Harina", "Azúcar"], ["Azúcar", "Sal"], []),
+    ).toEqual(["Harina", "Azúcar", "Sal"]);
+  });
+
+  it("skips blank names", () => {
+    expect(unionProductNames(["Harina", "  "], ["   ", "Sal"])).toEqual([
+      "Harina",
+      "Sal",
+    ]);
+  });
+});
+
+describe("initial-load countReused", () => {
+  it("counts only the names that reuse an existing product", () => {
+    expect(
+      countReused(["Harina", "Azúcar", "Sal"], {
+        Harina: { productId: "product-1" },
+        Sal: { productId: "" },
+      }),
+    ).toBe(1);
+  });
+
+  it("is zero when nothing was decided", () => {
+    expect(countReused(["Harina"], {})).toBe(0);
   });
 });
 

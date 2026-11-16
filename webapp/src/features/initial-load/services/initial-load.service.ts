@@ -67,12 +67,23 @@ export interface InitialLoadPreviewRow {
   warnings: string[];
 }
 
+/** One preview product resolved to an existing catalog product. */
+export interface InitialLoadProductMapping {
+  /** The exact `productName` the preview returned. */
+  productName: string;
+  productId: string;
+}
+
 /** `POST /api/initial-load/validate` response. */
 export interface InitialLoadValidateResult {
   ok: boolean;
   totalRows: number;
   errors: InitialLoadFieldError[];
   rows: InitialLoadPreviewRow[];
+  /** Distinct product names the commit will still create, in file order. */
+  productsToCreate: string[];
+  /** Distinct product names resolved through the merchant's mapping. */
+  productsReused: string[];
 }
 
 /** `POST /api/initial-load/commit` response. */
@@ -86,6 +97,8 @@ export interface InitialLoadCommitResult {
 export interface InitialLoadPayload {
   content: string;
   filename?: string;
+  /** Products the merchant wants to reuse instead of creating them. */
+  mapping?: InitialLoadProductMapping[];
 }
 
 export const InitialLoadEndpoints = {

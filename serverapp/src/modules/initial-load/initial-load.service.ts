@@ -211,6 +211,12 @@ export class InitialLoadService {
       .filter((row) => row.errors.length === 0)
       .map((row) => row.key);
     const lookups = await this.loadLookups(scope, keys);
+    const mapping = buildProductMapping(dto.mapping);
+
+    const productsToCreate: string[] = [];
+    const productsReused: string[] = [];
+    const createdSeen = new Set<string>();
+    const reusedSeen = new Set<string>();
 
     const seen = new Set<string>();
     const preview: InitialLoadPreviewRow[] = rows.map((row) => {
@@ -238,12 +244,32 @@ export class InitialLoadService {
           warnings,
         ).willCreate;
 
-        willCreateProduct = this.resolveProduct(
+        const wouldCreate = this.resolveProduct(
           lookups.products,
           row,
         ).willCreate;
-        if (willCreateProduct) {
-          warnings.push(this.productCreatedWarning(row));
+        if (wouldCreate) {
+          const mapped = this.resolveMappedProduct(
+            lookups.products,
+            mapping,
+            row.productName,
+          );
+          if (mapped) {
+            willCreateProduct = false;
+            const name = row.productName.trim();
+            if (name !== "" && !reusedSeen.has(name)) {
+              reusedSeen.add(name);
+              productsReused.push(name);
+            }
+          } else {
+            willCreateProduct = true;
+            warnings.push(this.productCreatedWarning(row));
+            const name = row.productName.trim();
+            if (name !== "" && !createdSeen.has(name)) {
+              createdSeen.add(name);
+              productsToCreate.push(name);
+            }
+          }
         }
       }
 
@@ -270,6 +296,8 @@ export class InitialLoadService {
       totalRows: rows.length,
       errors,
       rows: preview,
+      productsToCreate,
+      productsReused,
     };
   }
 
@@ -287,6 +315,10 @@ export class InitialLoadService {
       .filter((row) => row.errors.length === 0)
       .map((row) => row.key);
     const lookups = await this.loadLookups(scope, keys);
+    const mapping = buildProductMapping(dto.mapping);
+    // Reject an unusable mapping before the first write so a bad entry never
+    // leaves a half-imported file behind.
+    this.assertMappingTargets(lookups.products, mapping, rows);
 
     const created = { sales: 0, clients: 0, products: 0 };
     let skipped = 0;
@@ -320,6 +352,7 @@ export class InitialLoadService {
           scope,
           lookups.products,
           row,
+          mapping,
         );
         if (product.created) created.products += 1;
 
@@ -910,6 +943,39 @@ export class InitialLoadService {
     return { product: null, willCreate: true };
   }
 
+  /**
+   * The catalog product the merchant mapped to this CSV name, or `null` when
+   * the name is not mapped. A missing id (deleted or from another organization,
+   * since the lookup is scoped to the organization) aborts the whole request.
+   */
+  private resolveMappedProduct(
+    lookup: ProductLookup,
+    mapping: Map<string, string>,
+    productName: string,
+  ): ProductRecord | null {
+    const productId = mapping.get(normalizeName(productName));
+    if (!productId) return null;
+    const existing = lookup.byId.get(productId);
+    if (!existing) {
+      throw new BadRequestException("El producto seleccionado no existe.");
+    }
+    return existing;
+  }
+
+  /** Fails fast when a mapping that a row needs points to an unknown product. */
+  private assertMappingTargets(
+    lookup: ProductLookup,
+    mapping: Map<string, string>,
+    rows: PreparedRow[],
+  ): void {
+    if (mapping.size === 0) return;
+    for (const row of rows) {
+      if (row.errors.length > 0) continue;
+      if (!this.resolveProduct(lookup, row).willCreate) continue;
+      this.resolveMappedProduct(lookup, mapping, row.productName);
+    }
+  }
+
   // ------------------------------------------------------------------
   // Writes
   // ------------------------------------------------------------------
@@ -945,10 +1011,18 @@ export class InitialLoadService {
     scope: InitialLoadScope,
     lookup: ProductLookup,
     row: ProductCandidate,
+    mapping: Map<string, string> = new Map(),
   ): Promise<CreatedProduct> {
     const resolved = this.resolveProduct(lookup, row);
     if (!resolved.willCreate && resolved.product) {
       return { product: resolved.product, created: false };
+    }
+
+    // A mapped product wins over creating one, so the commit never writes a
+    // product the merchant decided to reuse.
+    const mapped = this.resolveMappedProduct(lookup, mapping, row.productName);
+    if (mapped) {
+      return { product: mapped, created: false };
     }
 
     const sku = row.sku !== "" ? row.sku : this.nextOnbSku(lookup);
@@ -1103,6 +1177,28 @@ function buildClientLookup(records: ClientRecord[]): ClientLookup {
   }
 
   return { byId, byPhone, byEmail, byName };
+}
+
+/**
+ * Normalizes the merchant's mapping once per request so any casing, accent or
+ * whitespace variant of the preview name matches its row. The first entry wins.
+ */
+function buildProductMapping(
+  entries?: Array<{ productName: string; productId: string }>,
+): Map<string, string> {
+  const mapping = new Map<string, string>();
+  if (!entries) return mapping;
+
+  for (const entry of entries) {
+    const name = typeof entry?.productName === "string" ? entry.productName.trim() : "";
+    const productId =
+      typeof entry?.productId === "string" ? entry.productId.trim() : "";
+    if (name === "" || productId === "") continue;
+    const key = normalizeName(name);
+    if (!mapping.has(key)) mapping.set(key, productId);
+  }
+
+  return mapping;
 }
 
 function buildProductLookup(records: ProductRecord[]): ProductLookup {

@@ -1,23 +1,34 @@
 "use client";
 
-import { useState, type ChangeEvent, type DragEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
+} from "react";
 import {
   AlertTriangle,
   Download,
   FileSpreadsheet,
   Loader2,
+  Search,
   Upload,
 } from "lucide-react";
+import { apiClient } from "@/shared/api/api.client";
 import { Button } from "@/shared/components/atoms/Button";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
-import { CTA_BRASS, LABEL_SM } from "@/shared/lib/maison-style";
+import { CTA_BRASS, INPUT, LABEL_SM } from "@/shared/lib/maison-style";
 import { decodeCsvBytes } from "@/features/products/lib/product-import";
+import { ProductEndpoints } from "@/features/products/services/products.endpoints";
+import type { Product } from "@/features/products/types/product.type";
 import {
   commitInitialLoad,
   downloadInitialLoadTemplate,
   validateInitialLoad,
   type InitialLoadCommitResult,
   type InitialLoadPreviewRow,
+  type InitialLoadProductMapping,
   type InitialLoadValidateResult,
 } from "../services/initial-load.service";
 import {
@@ -30,11 +41,13 @@ import {
   STATUS_LABELS,
   canConfirm,
   countByStatus,
+  countReused,
   expectedColumns,
   formatRowErrors,
   groupClientsToCreate,
-  groupProductsToCreate,
+  mappingFromDecisions,
   statusTone,
+  unionProductNames,
 } from "../lib/initial-load";
 
 /**
@@ -50,6 +63,31 @@ const COLUMNS = expectedColumns();
 const ACCEPTED_FILES = `.csv,text/csv,.xlsx,${XLSX_MIME}`;
 
 type FileFormat = "csv" | "xlsx";
+
+/** A product the merchant chose to reuse for one preview product name. */
+interface ProductDecision {
+  productId: string;
+  productName: string;
+  productSku: string;
+}
+
+type DecisionMap = Record<string, ProductDecision>;
+
+const MAX_PRODUCT_RESULTS = 8;
+const PRODUCT_SEARCH_DEBOUNCE_MS = 300;
+const DECISION_REVALIDATE_DEBOUNCE_MS = 400;
+
+interface ProductPage {
+  list: Product[];
+  total: number;
+}
+
+async function searchCatalogProducts(term: string): Promise<Product[]> {
+  const { data } = await apiClient.get<ProductPage>(ProductEndpoints.list, {
+    params: { q: term, page: 1, limit: MAX_PRODUCT_RESULTS },
+  });
+  return data.list ?? [];
+}
 
 function apiMessage(error: unknown, fallback: string): string {
   const maybe = error as {
@@ -119,6 +157,124 @@ function RowNotes({ row }: { row: InitialLoadPreviewRow }) {
   );
 }
 
+/**
+ * Debounced catalog search for one preview product. It asks the products list
+ * endpoint (max eight results) and reports the chosen product to the panel.
+ */
+function ProductPicker({
+  onSelect,
+  onCancel,
+}: {
+  onSelect: (product: Product) => void;
+  onCancel: () => void;
+}) {
+  const [query, setQuery] = useState<string>("");
+  const [results, setResults] = useState<Product[]>([]);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
+
+  useEffect(() => {
+    const term = query.trim();
+    if (term === "") {
+      setResults([]);
+      setSearching(false);
+      setFailed(false);
+      return;
+    }
+
+    let cancelled = false;
+    setSearching(true);
+    setFailed(false);
+
+    const timer = setTimeout(() => {
+      void searchCatalogProducts(term)
+        .then((rows) => {
+          if (!cancelled) setResults(rows);
+        })
+        .catch(() => {
+          if (cancelled) return;
+          setResults([]);
+          setFailed(true);
+        })
+        .finally(() => {
+          if (!cancelled) setSearching(false);
+        });
+    }, PRODUCT_SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  return (
+    <div className="mt-2 space-y-2">
+      <label className={LABEL_SM}>
+        Buscar producto existente
+        <span className="relative mt-1 block">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            className={`pl-9 pr-3 py-2 ${INPUT}`}
+            value={query}
+            placeholder="Nombre o SKU"
+            autoFocus
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </span>
+      </label>
+
+      {searching ? (
+        <p className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" /> Buscando…
+        </p>
+      ) : null}
+
+      {failed ? (
+        <p className="text-xs text-red-600 dark:text-red-400">
+          No se pudo buscar productos.
+        </p>
+      ) : null}
+
+      {results.length > 0 ? (
+        <ul className="max-h-56 divide-y divide-[#1a2a46]/8 overflow-auto rounded-xl border border-[#1a2a46]/12 dark:divide-white/5 dark:border-white/10">
+          {results.map((product) => (
+            <li key={product.id}>
+              <button
+                type="button"
+                onClick={() => onSelect(product)}
+                className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-[#1a2a46]/[0.04] dark:hover:bg-white/5"
+              >
+                <span className="min-w-0">
+                  <span className="block truncate font-medium text-[#111018] dark:text-slate-100">
+                    {product.name}
+                  </span>
+                  <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
+                    {product.sku}
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {!searching && !failed && query.trim() !== "" && results.length === 0 ? (
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          Sin resultados.
+        </p>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={onCancel}
+        className="text-xs font-semibold text-[#8a7339] underline-offset-2 hover:underline dark:text-[#d4b877]"
+      >
+        Cancelar
+      </button>
+    </div>
+  );
+}
+
 export function ReceivableImportPanel() {
   const { addToast } = useToastStore();
 
@@ -136,9 +292,20 @@ export function ReceivableImportPanel() {
   const [commitResult, setCommitResult] =
     useState<InitialLoadCommitResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [revalidating, setRevalidating] = useState<boolean>(false);
+  const [decisions, setDecisions] = useState<DecisionMap>({});
+  const [trackedProducts, setTrackedProducts] = useState<string[]>([]);
+  const [openingFor, setOpeningFor] = useState<string | null>(null);
+
+  const revalidateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestSeq = useRef<number>(0);
+
+  const mapping = mappingFromDecisions(decisions);
+  const reusedCount = countReused(trackedProducts, decisions);
+  const createCount = trackedProducts.length - reusedCount;
+  const createdProducts = trackedProducts.filter((name) => !decisions[name]);
 
   const counts = result ? countByStatus(result.rows) : null;
-  const productsToCreate = result ? groupProductsToCreate(result.rows) : [];
   const clientsToCreate = result ? groupClientsToCreate(result.rows) : [];
   const ready = canConfirm(result);
   const visibleRows = result
@@ -149,10 +316,95 @@ export function ReceivableImportPanel() {
       : result.rows
     : [];
 
+  useEffect(
+    () => () => {
+      if (revalidateTimer.current) clearTimeout(revalidateTimer.current);
+    },
+    [],
+  );
+
+  /**
+   * Re-runs the dry-run with the given mapping. `auto` keeps the preview on
+   * screen (used after a decision change); `manual` is the button path.
+   */
+  const runValidate = async (
+    nextMapping: InitialLoadProductMapping[],
+    mode: "manual" | "auto",
+  ) => {
+    if (content === "") {
+      setError("Seleccione un archivo CSV o XLSX para validar.");
+      return;
+    }
+
+    const seq = ++requestSeq.current;
+    if (mode === "auto") setRevalidating(true);
+    else setValidating(true);
+    setError(null);
+    if (mode === "manual") setCommitResult(null);
+
+    try {
+      const data = await validateInitialLoad({
+        content,
+        filename: fileName || undefined,
+        ...(nextMapping.length > 0 ? { mapping: nextMapping } : {}),
+      });
+      if (seq !== requestSeq.current) return;
+      setResult(data);
+      setTrackedProducts((current) =>
+        unionProductNames(
+          current,
+          data.productsToCreate,
+          data.productsReused,
+        ),
+      );
+      if (mode === "manual") setOnlyErrors(false);
+    } catch (validateError) {
+      if (seq !== requestSeq.current) return;
+      // Keep the file and its content so the user can retry after fixing it.
+      setError(apiMessage(validateError, "No se pudo validar el archivo."));
+    } finally {
+      if (seq === requestSeq.current) {
+        if (mode === "auto") setRevalidating(false);
+        else setValidating(false);
+      }
+    }
+  };
+
+  /** Debounced so a burst of decisions produces one dry-run, not one per key. */
+  const scheduleRevalidate = (nextDecisions: DecisionMap) => {
+    if (revalidateTimer.current) clearTimeout(revalidateTimer.current);
+    revalidateTimer.current = setTimeout(() => {
+      void runValidate(mappingFromDecisions(nextDecisions), "auto");
+    }, DECISION_REVALIDATE_DEBOUNCE_MS);
+  };
+
+  const chooseProduct = (productName: string, product: Product) => {
+    const next: DecisionMap = {
+      ...decisions,
+      [productName]: {
+        productId: product.id,
+        productName: product.name,
+        productSku: product.sku,
+      },
+    };
+    setDecisions(next);
+    setOpeningFor(null);
+    scheduleRevalidate(next);
+  };
+
+  const revertToCreate = (productName: string) => {
+    const next: DecisionMap = { ...decisions };
+    delete next[productName];
+    setDecisions(next);
+    setOpeningFor(null);
+    scheduleRevalidate(next);
+  };
+
   const loadFile = async (file: File) => {
     const isSpreadsheet = isXlsxFile(file);
     const format: FileFormat = isSpreadsheet ? "xlsx" : "csv";
 
+    if (revalidateTimer.current) clearTimeout(revalidateTimer.current);
     setFileName(file.name);
     setFileFormat(format);
     setFileSize(file.size);
@@ -160,6 +412,10 @@ export function ReceivableImportPanel() {
     setResult(null);
     setCommitResult(null);
     setOnlyErrors(false);
+    setRevalidating(false);
+    setDecisions({});
+    setTrackedProducts([]);
+    setOpeningFor(null);
     setReading(true);
     try {
       if (isSpreadsheet) {
@@ -225,36 +481,20 @@ export function ReceivableImportPanel() {
   };
 
   const validate = async () => {
-    if (content === "") {
-      setError("Seleccione un archivo CSV o XLSX para validar.");
-      return;
-    }
-    setValidating(true);
-    setError(null);
-    setCommitResult(null);
-    try {
-      const data = await validateInitialLoad({
-        content,
-        filename: fileName || undefined,
-      });
-      setResult(data);
-      setOnlyErrors(false);
-    } catch (validateError) {
-      // Keep the file and its content so the user can retry after fixing it.
-      setError(apiMessage(validateError, "No se pudo validar el archivo."));
-    } finally {
-      setValidating(false);
-    }
+    if (revalidateTimer.current) clearTimeout(revalidateTimer.current);
+    await runValidate(mappingFromDecisions(decisions), "manual");
   };
 
   const commit = async () => {
     if (!canConfirm(result)) return;
+    if (revalidateTimer.current) clearTimeout(revalidateTimer.current);
     setCommitting(true);
     setError(null);
     try {
       const data = await commitInitialLoad({
         content,
         filename: fileName || undefined,
+        ...(mapping.length > 0 ? { mapping } : {}),
       });
       setCommitResult(data);
       addToast({
@@ -363,7 +603,7 @@ export function ReceivableImportPanel() {
             <button
               type="button"
               onClick={() => void validate()}
-              disabled={reading || validating || content === ""}
+              disabled={reading || validating || revalidating || content === ""}
               className={`h-10 px-4 text-sm ${CTA_BRASS}`}
             >
               {validating ? (
@@ -401,6 +641,13 @@ export function ReceivableImportPanel() {
 
       {!validating && result ? (
         <section className="space-y-3">
+          {revalidating ? (
+            <p className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" /> Actualizando la
+              vista previa con los productos elegidos…
+            </p>
+          ) : null}
+
           {counts ? (
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-[#1a2a46]/12 px-3 py-2 text-xs dark:border-white/10">
               <span className="font-medium text-[#111018] dark:text-slate-100">
@@ -492,21 +739,89 @@ export function ReceivableImportPanel() {
             </div>
           )}
 
-          {productsToCreate.length > 0 || clientsToCreate.length > 0 ? (
+          {trackedProducts.length > 0 || clientsToCreate.length > 0 ? (
             <section className="rounded-xl border border-[#1a2a46]/12 bg-[#f7f5f0]/60 p-3 text-sm dark:border-white/10 dark:bg-slate-950/30">
               <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
                 <AlertTriangle className="h-4 w-4 text-[#b2944a]" /> Registros
                 nuevos
               </p>
               <p className="mt-2 text-[#111018] dark:text-slate-100">
-                Se crearán {productsToCreate.length} productos sin stock.
+                Se crearán {createCount} productos sin stock.
+                {reusedCount > 0
+                  ? ` Se reutilizarán ${reusedCount} productos existentes.`
+                  : ""}
               </p>
-              {productsToCreate.length > 0 ? (
+              {createdProducts.length > 0 ? (
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  {productsToCreate.join(", ")}
+                  {createdProducts.join(", ")}
                 </p>
               ) : null}
-              <p className="mt-2 text-[#111018] dark:text-slate-100">
+
+              {trackedProducts.length > 0 ? (
+                <ul className="mt-2 space-y-2">
+                  {trackedProducts.map((name) => {
+                    const decision = decisions[name];
+                    const opening = openingFor === name;
+                    return (
+                      <li
+                        key={name}
+                        className="rounded-lg border border-[#1a2a46]/12 px-2.5 py-2 dark:border-white/10"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="min-w-0 truncate text-sm text-[#111018] dark:text-slate-100">
+                            {name}
+                          </span>
+                          {decision ? (
+                            <span className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[#b2944a]/50 px-3 py-1 text-xs text-[#111018] dark:text-slate-100">
+                              <span className="font-medium">
+                                {decision.productName}
+                              </span>
+                              <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                                {decision.productSku}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setOpeningFor(name)}
+                                className="font-semibold text-[#8a7339] underline-offset-2 hover:underline dark:text-[#d4b877]"
+                              >
+                                Cambiar
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => revertToCreate(name)}
+                                className="font-semibold text-[#8a7339] underline-offset-2 hover:underline dark:text-[#d4b877]"
+                              >
+                                Volver a crear
+                              </button>
+                            </span>
+                          ) : opening ? null : (
+                            <span className="inline-flex items-center gap-2 text-xs">
+                              <span className="font-semibold text-[#8a7339] dark:text-[#d4b877]">
+                                Crear nuevo
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setOpeningFor(name)}
+                                className="font-semibold text-[#8a7339] underline-offset-2 hover:underline dark:text-[#d4b877]"
+                              >
+                                Usar existente
+                              </button>
+                            </span>
+                          )}
+                        </div>
+                        {opening ? (
+                          <ProductPicker
+                            onSelect={(product) => chooseProduct(name, product)}
+                            onCancel={() => setOpeningFor(null)}
+                          />
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : null}
+
+              <p className="mt-3 text-[#111018] dark:text-slate-100">
                 Se crearán {clientsToCreate.length} clientes.
               </p>
               {clientsToCreate.length > 0 ? (
@@ -515,8 +830,8 @@ export function ReceivableImportPanel() {
                 </p>
               ) : null}
               <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                Esta carga no permite asignar stock ni editar la asignación de
-                productos.
+                Puedes reutilizar un producto existente antes de importar. La
+                carga no asigna stock ni modifica precios del catálogo.
               </p>
             </section>
           ) : null}
@@ -536,7 +851,7 @@ export function ReceivableImportPanel() {
           <Button
             variant="primary"
             onClick={() => void commit()}
-            disabled={!ready || validating}
+            disabled={!ready || validating || revalidating}
             loading={committing}
             loadingText="Importando…"
           >

@@ -1,4 +1,6 @@
 import {
+  ArrayMaxSize,
+  IsArray,
   IsEmail,
   IsIn,
   IsInt,
@@ -10,6 +12,7 @@ import {
   Max,
   MaxLength,
   Min,
+  ValidateNested,
 } from "class-validator";
 import { Transform, Type } from "class-transformer";
 
@@ -46,6 +49,27 @@ export const INITIAL_LOAD_REQUIRED = [
   "precio_unitario",
 ] as const;
 
+/** One preview product resolved to an existing catalog product. */
+export class InitialLoadProductMappingDto {
+  /** The exact `productName` the preview returned; the server normalizes it. */
+  @Transform(({ value }) =>
+    typeof value === "string" ? value.trim() : value,
+  )
+  @IsString({ message: "El nombre del producto es obligatorio." })
+  @IsNotEmpty({ message: "El nombre del producto es obligatorio." })
+  @MaxLength(200, {
+    message: "El nombre del producto no puede superar los 200 caracteres.",
+  })
+  productName: string;
+
+  @Transform(({ value }) =>
+    typeof value === "string" ? value.trim() : value,
+  )
+  @IsString({ message: "El producto seleccionado es obligatorio." })
+  @IsNotEmpty({ message: "El producto seleccionado es obligatorio." })
+  productId: string;
+}
+
 /** `POST /api/initial-load/validate` and `/commit` body. */
 export class ImportInitialLoadDto {
   @IsString({ message: "No se recibió contenido para importar." })
@@ -56,6 +80,16 @@ export class ImportInitialLoadDto {
   @IsString()
   @MaxLength(255)
   filename?: string;
+
+  /** Products the merchant wants to reuse instead of creating them. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(500, {
+    message: "El mapeo de productos no puede superar las 500 entradas.",
+  })
+  @ValidateNested({ each: true })
+  @Type(() => InitialLoadProductMappingDto)
+  mapping?: InitialLoadProductMappingDto[];
 }
 
 /**
@@ -224,6 +258,10 @@ export interface InitialLoadValidateResult {
   totalRows: number;
   errors: InitialLoadFieldError[];
   rows: InitialLoadPreviewRow[];
+  /** Distinct product names the commit will still create, in file order. */
+  productsToCreate: string[];
+  /** Distinct product names resolved through the merchant's mapping. */
+  productsReused: string[];
 }
 
 /** `POST /api/initial-load/commit` response. */

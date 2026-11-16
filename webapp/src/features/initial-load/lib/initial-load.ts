@@ -3,6 +3,7 @@ import {
   INITIAL_LOAD_REQUIRED,
   type InitialLoadColumn,
   type InitialLoadPreviewRow,
+  type InitialLoadProductMapping,
   type InitialLoadRowStatus,
   type InitialLoadValidateResult,
 } from "../services/initial-load.service";
@@ -88,11 +89,67 @@ function distinctNames(
   return names;
 }
 
-/** Distinct products the commit will create (no stock), in file order. */
+/** A decision to reuse an existing product, keyed by the preview product name. */
+export interface ProductDecisionRef {
+  productId: string;
+}
+
+function isDecided(
+  decisions: Readonly<Record<string, ProductDecisionRef | undefined>>,
+  productName: string,
+): boolean {
+  return Boolean(decisions[productName]?.productId);
+}
+
+/**
+ * Distinct products the commit will create (no stock), in file order. Names the
+ * merchant already mapped to an existing product are excluded.
+ */
 export function groupProductsToCreate(
   rows: InitialLoadPreviewRow[],
+  decisions: Readonly<Record<string, ProductDecisionRef | undefined>> = {},
 ): string[] {
-  return distinctNames(rows, "willCreateProduct", "productName");
+  return distinctNames(rows, "willCreateProduct", "productName").filter(
+    (name) => !isDecided(decisions, name),
+  );
+}
+
+/** Unions product names without duplicates, preserving the first-seen order. */
+export function unionProductNames(...groups: string[][]): string[] {
+  const seen = new Set<string>();
+  const names: string[] = [];
+
+  for (const group of groups) {
+    for (const name of group) {
+      if (name.trim() === "" || seen.has(name)) continue;
+      seen.add(name);
+      names.push(name);
+    }
+  }
+
+  return names;
+}
+
+/** How many of the given product names will reuse an existing product. */
+export function countReused(
+  names: string[],
+  decisions: Readonly<Record<string, ProductDecisionRef | undefined>>,
+): number {
+  return names.filter((name) => isDecided(decisions, name)).length;
+}
+
+/** Turns the panel decisions into the payload's `mapping`, skipping blanks. */
+export function mappingFromDecisions(
+  decisions: Readonly<Record<string, ProductDecisionRef | undefined>>,
+): InitialLoadProductMapping[] {
+  const mapping: InitialLoadProductMapping[] = [];
+
+  for (const [productName, decision] of Object.entries(decisions)) {
+    if (!decision?.productId || productName.trim() === "") continue;
+    mapping.push({ productName, productId: decision.productId });
+  }
+
+  return mapping;
 }
 
 /** Distinct clients the commit will create, in file order. */
