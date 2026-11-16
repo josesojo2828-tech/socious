@@ -50,6 +50,10 @@ const CASH_PAYMENT_METHOD = "CASH_USD";
 const DEFAULT_EVERY_N_DAYS = 15;
 const ONB_PREFIX = "ONB-";
 
+/** Mirrors the `saleNumber` rule in `CreateSaleDto` so the dry-run catches it. */
+const SALE_NUMBER_MAX_LENGTH = 60;
+const SALE_NUMBER_ALPHABET = /^[A-Za-z0-9._-]+$/;
+
 /** Neutral, readable fallback when a create failure carries no message. */
 const GENERIC_CREATE_ERROR = "no se pudo crear la venta.";
 
@@ -522,6 +526,22 @@ export class InitialLoadService {
     };
 
     const venta = cellOf("venta").trim();
+    if (venta !== "") {
+      // The trimmed `venta` becomes the sale's `saleNumber`, so it must obey
+      // the exact rule `CreateSaleDto` applies. An empty value stays valid:
+      // the derived `ONB-` key is used instead.
+      if (venta.length > SALE_NUMBER_MAX_LENGTH) {
+        pushError(
+          "venta",
+          "El número de venta no puede superar los 60 caracteres.",
+        );
+      } else if (!SALE_NUMBER_ALPHABET.test(venta)) {
+        pushError(
+          "venta",
+          "El número de venta solo puede contener letras, números, puntos, guiones y guiones bajos.",
+        );
+      }
+    }
     const clientName = cellOf("cliente_nombre").trim();
     const clientPhone = cellOf("cliente_telefono").trim();
     const clientEmail = cellOf("cliente_email").trim();

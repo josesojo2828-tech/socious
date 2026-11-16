@@ -372,6 +372,45 @@ describe("InitialLoadService.validate", () => {
     expect(prisma.client.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.product.findMany).toHaveBeenCalledTimes(1);
   });
+
+  it("rejects a venta outside the sale-number alphabet", async () => {
+    const service = makeService();
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([validRow({ venta: "V 100" })]),
+    });
+
+    expect(result.rows[0].status).toBe("error");
+    expect(result.rows[0].errors).toContain(
+      "Fila 2: El número de venta solo puede contener letras, números, puntos, guiones y guiones bajos.",
+    );
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects a venta longer than 60 characters", async () => {
+    const service = makeService();
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([validRow({ venta: "V".repeat(61) })]),
+    });
+
+    expect(result.rows[0].status).toBe("error");
+    expect(result.rows[0].errors).toContain(
+      "Fila 2: El número de venta no puede superar los 60 caracteres.",
+    );
+  });
+
+  it("accepts a venta with letters, numbers, dots, hyphens and underscores", async () => {
+    const service = makeService();
+
+    const result = await service.validate(SCOPE, {
+      content: buildCsv([validRow({ venta: "V_2024.01-001" })]),
+    });
+
+    expect(result.errors).toEqual([]);
+    expect(result.rows[0].status).toBe("ok");
+    expect(result.rows[0].saleNumber).toBe("V_2024.01-001");
+  });
 });
 
 describe("InitialLoadService.commit", () => {
@@ -590,6 +629,26 @@ describe("InitialLoadService.commit", () => {
     expect(sales.create).not.toHaveBeenCalled();
     expect(result.errors[0].message).toBe(
       "Fila 2: La cantidad debe ser mayor que cero.",
+    );
+  });
+
+  it("skips a row whose venta is invalid and writes nothing for it", async () => {
+    const clients = makeClients();
+    const products = makeProducts();
+    const sales = makeSales();
+    const service = makeService(makePrisma(), sales, clients, products);
+
+    const result = await service.commit(SCOPE, {
+      content: buildCsv([validRow({ venta: "V/100" })]),
+    });
+
+    expect(result.created).toEqual({ sales: 0, clients: 0, products: 0 });
+    expect(result.skipped).toBe(1);
+    expect(sales.create).not.toHaveBeenCalled();
+    expect(clients.create).not.toHaveBeenCalled();
+    expect(products.create).not.toHaveBeenCalled();
+    expect(result.errors[0].message).toBe(
+      "Fila 2: El número de venta solo puede contener letras, números, puntos, guiones y guiones bajos.",
     );
   });
 });
