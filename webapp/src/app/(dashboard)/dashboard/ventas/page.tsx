@@ -796,7 +796,7 @@ export default function SalesPage() {
                 return (
                   <SectionRow
                     key={item.id}
-                    label={`${item.quantity} × ${item.productName}`}
+                    label={`${item.quantity}${item.product?.unit ? ` ${item.product.unit}` : ""} × ${item.productName}${item.lot?.code ? ` (${item.lot.code})` : ""}`}
                     hint={
                       returnedQty > 0
                         ? `$${Number(item.unitPriceUSD).toFixed(2)} · devuelto ${returnedQty} ($${returnedUSD.toFixed(2)})`

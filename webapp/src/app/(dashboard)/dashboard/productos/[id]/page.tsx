@@ -458,6 +458,7 @@ export default function ProductDetailPage() {
                     <span className="ml-2 font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
                       {Number(movement.quantity) > 0 ? "+" : ""}
                       {Number(movement.quantity)}
+                      {product?.unit ? ` ${product.unit}` : ""}
                     </span>
                     {movement.lot?.code ? (
                       <span className="ml-2 font-mono text-[10px] text-[#b2944a]">

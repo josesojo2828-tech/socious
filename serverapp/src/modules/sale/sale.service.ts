@@ -26,6 +26,7 @@ import {
   applyLotOutflow,
   ensureOpeningLot,
   planLotAllocation,
+  restoreLotQuantity,
   type LotAllocation,
 } from "../product-lot/lot-stock";
 import { currencyForPaymentMethod } from "src/shared/constants/payment-methods";
@@ -446,7 +447,12 @@ export class SaleService {
     const sale = await this.prisma.sale.findFirst({
       where: { id, ...this.scopeWhere(scope.organizationId) },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: { select: { unit: true } },
+            lot: { select: { code: true } },
+          },
+        },
         payments: { orderBy: { paidAt: "desc" } },
         client: true,
         order: true,
@@ -663,6 +669,25 @@ export class SaleService {
           "RETURN",
           `anulación ${sale.saleNumber}`,
         );
+
+        // Rollos (S4): la anulación devuelve los metros al rollo de la línea.
+        const saleProduct = await tx.product.findFirst({
+          where: { id: item.productId },
+          select: { id: true, tracksLots: true },
+        });
+        if (saleProduct?.tracksLots) {
+          await restoreLotQuantity(tx, {
+            organizationId: scope.organizationId,
+            createdById: scope.createdById ?? null,
+            productId: item.productId,
+            presentationId: item.presentationId ?? null,
+            lotId: item.lotId ?? null,
+            quantity: Number(item.quantity),
+            reference: sale.saleNumber,
+            notes: "Anulación de venta",
+          });
+          continue;
+        }
 
         if (item.presentationId) {
           const presentation = await tx.productPresentation.findFirst({

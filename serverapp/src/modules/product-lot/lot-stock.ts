@@ -200,14 +200,18 @@ export async function applyLotOutflow(
     plan: LotAllocation[];
     reference: string;
     notes?: string | null;
+    type?: "SALE" | "ADJUSTMENT";
   },
-): Promise<void> {
+): Promise<string | null> {
+  let firstLotId: string | null = null;
+
   for (const allocation of params.plan) {
     const lot = await db.productLot.findFirst({
       where: { id: allocation.lotId },
       select: { remainingQuantity: true },
     });
     if (!lot) continue;
+    firstLotId = firstLotId ?? allocation.lotId;
 
     const previous = roundLot(Number(lot.remainingQuantity));
     const next = roundLot(previous - allocation.quantity);
@@ -224,7 +228,7 @@ export async function applyLotOutflow(
         lotId: allocation.lotId,
         organizationId: params.organizationId,
         createdById: params.createdById ?? null,
-        type: "SALE",
+        type: params.type ?? "SALE",
         quantity: allocation.quantity,
         previousStock: previous,
         newStock: next,
@@ -235,4 +239,142 @@ export async function applyLotOutflow(
   }
 
   await syncAggregateStock(db, params.productId, params.presentationId);
+  return firstLotId;
+}
+
+/**
+ * Puts meters back. Only an ACTIVE lot can receive them: a return to a roll
+ * that was already removed lands in a "Devolución" lot, so the meters never
+ * disappear from the aggregate.
+ */
+export async function restoreLotQuantity(
+  db: Db,
+  params: {
+    organizationId: string | null;
+    createdById?: string | null;
+    productId: string;
+    presentationId?: string | null;
+    lotId?: string | null;
+    quantity: number;
+    reference: string;
+    notes?: string | null;
+    type?: "RETURN" | "ADJUSTMENT";
+  },
+): Promise<string> {
+  const quantity = roundLot(params.quantity);
+  const target = params.lotId
+    ? await db.productLot.findFirst({
+        where: { id: params.lotId, ...ACTIVE_LOT },
+        select: { id: true, remainingQuantity: true },
+      })
+    : await db.productLot.findFirst({
+        where: { ...lotScope(params.productId, params.presentationId), ...ACTIVE_LOT },
+        orderBy: [{ receivedAt: "desc" }, { createdAt: "desc" }],
+        select: { id: true, remainingQuantity: true },
+      });
+
+  const movementType = params.type ?? "RETURN";
+
+  if (target) {
+    const previous = roundLot(Number(target.remainingQuantity));
+    const next = roundLot(previous + quantity);
+    await db.productLot.update({
+      where: { id: target.id },
+      data: { remainingQuantity: next },
+    });
+    await db.stockMovement.create({
+      data: {
+        productId: params.productId,
+        presentationId: params.presentationId ?? null,
+        lotId: target.id,
+        organizationId: params.organizationId,
+        createdById: params.createdById ?? null,
+        type: movementType,
+        quantity,
+        previousStock: previous,
+        newStock: next,
+        reference: params.reference,
+        notes: params.notes ?? null,
+      },
+    });
+    await syncAggregateStock(db, params.productId, params.presentationId);
+    return target.id;
+  }
+
+  const lot = await db.productLot.create({
+    data: {
+      organizationId: params.organizationId,
+      productId: params.productId,
+      presentationId: params.presentationId ?? null,
+      code: `Devolución ${params.reference}`,
+      initialQuantity: quantity,
+      remainingQuantity: quantity,
+      notes: params.notes ?? "Devuelto sin rollo identificado",
+    },
+  });
+  await db.stockMovement.create({
+    data: {
+      productId: params.productId,
+      presentationId: params.presentationId ?? null,
+      lotId: lot.id,
+      organizationId: params.organizationId,
+      createdById: params.createdById ?? null,
+      type: movementType,
+      quantity,
+      previousStock: 0,
+      newStock: quantity,
+      reference: params.reference,
+      notes: params.notes ?? "Devolución en lote nuevo",
+    },
+  });
+  await syncAggregateStock(db, params.productId, params.presentationId);
+  return lot.id;
+}
+
+/**
+ * Manual kardex adjustment on a lot-controlled product: an increase lands in
+ * the newest roll (or a new "Ajuste" lot), a decrease consumes FIFO. Both end
+ * by resyncing the aggregate, so a manual count never desyncs the stock.
+ */
+export async function adjustLots(
+  db: Db,
+  params: {
+    organizationId: string | null;
+    createdById?: string | null;
+    productId: string;
+    delta: number;
+    reference: string;
+    notes?: string | null;
+    productName?: string;
+  },
+): Promise<string | null> {
+  const delta = roundLot(params.delta);
+  if (delta === 0) return null;
+
+  if (delta > 0) {
+    return restoreLotQuantity(db, {
+      organizationId: params.organizationId,
+      createdById: params.createdById,
+      productId: params.productId,
+      quantity: delta,
+      reference: params.reference,
+      notes: params.notes,
+      type: "ADJUSTMENT",
+    });
+  }
+
+  const plan = await planLotAllocation(db, {
+    productId: params.productId,
+    quantity: roundLot(-delta),
+    productName: params.productName,
+  });
+  return applyLotOutflow(db, {
+    organizationId: params.organizationId,
+    createdById: params.createdById,
+    productId: params.productId,
+    plan,
+    reference: params.reference,
+    notes: params.notes,
+    type: "ADJUSTMENT",
+  });
 }

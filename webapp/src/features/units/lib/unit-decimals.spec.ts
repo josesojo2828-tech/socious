@@ -45,6 +45,16 @@ describe("resolveUnitDecimals", () => {
     expect(resolveUnitDecimals("GAL", [unit("GAL", "VOLUME")])).toBe(2);
   });
 
+  it("una unidad de conteo propia queda entera cuando el catálogo está cargado", () => {
+    expect(resolveUnitDecimals("par", [unit("par", "COUNT")])).toBe(0);
+  });
+
+  it("sin catálogo una abreviatura desconocida es permisiva", () => {
+    // El POS consulta solo la abreviatura: una unidad propia de conteo se
+    // comporta como decimal hasta que la pantalla cargue el catálogo.
+    expect(resolveUnitDecimals("par")).toBe(2);
+  });
+
   it("el catálogo tiene prioridad sobre el mapa del sistema", () => {
     expect(resolveUnitDecimals("UND", [unit("UND", "WEIGHT")])).toBe(2);
   });

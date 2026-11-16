@@ -15,7 +15,8 @@ import {
 } from "./dto/product.dto";
 
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ensureOpeningLot, sumLots } from "../product-lot/lot-stock";
+import { adjustLots, ensureOpeningLot, sumLots } from "../product-lot/lot-stock";
+import { round2 } from "src/shared/utils/money";
 import { emitEvent } from "src/shared/event/event-envelope";
 import type { EventName } from "src/shared/event/event-taxonomy";
 const DEFAULT_LIMIT = 10;
@@ -520,6 +521,47 @@ export class ProductService {
         throw new BadRequestException(
           `Stock insuficiente: hay ${previousStock} y el movimiento requiere ${data.quantity}.`,
         );
+      }
+
+      // Rollos (S3): un ajuste manual mueve los lotes (entra al rollo más
+      // nuevo o sale por FIFO) y el agregado se resincroniza desde la suma.
+      if (product.tracksLots) {
+        await ensureOpeningLot(tx, {
+          organizationId: scope.organizationId,
+          productId: product.id,
+        });
+        const lotId = await adjustLots(tx, {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          productId: product.id,
+          delta: round2(nextStock - previousStock),
+          reference: data.reference?.trim() || "AJUSTE",
+          notes: data.notes?.trim() || null,
+          productName: product.name,
+        });
+
+        const updated = await tx.product.findFirst({
+          where: { id: product.id },
+        });
+        const movement = lotId
+          ? await tx.stockMovement.findFirst({
+              where: { productId: product.id, lotId },
+              orderBy: { createdAt: "desc" },
+            })
+          : null;
+
+        this.emitBusinessEvent(
+          "erp.product.stock_adjusted",
+          scope.createdById,
+          scope.organizationId,
+          {
+            productId: product.id,
+            type: data.type,
+            quantity: round2(Math.abs(nextStock - previousStock)),
+          },
+        );
+
+        return { product: updated, movement };
       }
 
       const movement = await tx.stockMovement.create({

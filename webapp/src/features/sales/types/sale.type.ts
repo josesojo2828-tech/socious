@@ -12,6 +12,10 @@ export interface SaleItem {
   discountUSD: string | number;
   taxRate: string | number;
   totalUSD: string | number;
+  /** Unidad del producto en el detalle ("m" para telas). */
+  product?: { unit?: string | null } | null;
+  /** Rollo del que salió la línea, cuando salió de uno solo. */
+  lot?: { code?: string | null } | null;
 }
 
 export interface SalePayment {

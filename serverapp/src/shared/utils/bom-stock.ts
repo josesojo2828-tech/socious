@@ -2,6 +2,12 @@ import { BadRequestException } from "@nestjs/common";
 import type { Prisma } from "@prisma/client";
 import { round2 } from "./money";
 import { deriveProductStatus } from "src/modules/product/product.service";
+import {
+  applyLotOutflow,
+  ensureOpeningLot,
+  planLotAllocation,
+  restoreLotQuantity,
+} from "src/modules/product-lot/lot-stock";
 
 /**
  * Bill-of-materials stock movements (S3): selling a composite consumes its
@@ -27,6 +33,7 @@ interface BomComponentRow {
     stock: unknown;
     isService: boolean;
     status: string;
+    tracksLots: boolean;
   };
 }
 
@@ -49,6 +56,7 @@ export async function applyBomStock(
           stock: true,
           isService: true,
           status: true,
+          tracksLots: true,
         },
       },
     },
@@ -68,6 +76,30 @@ export async function applyBomStock(
           `Stock insuficiente de "${row.component.name}": necesitás ${needed} y hay ${available}.`,
         );
       }
+
+      // Insumo con rollos (S3): el consumo sale de sus lotes por FIFO y el
+      // agregado se resincroniza, igual que una venta directa.
+      if (row.component.tracksLots) {
+        await ensureOpeningLot(tx, {
+          organizationId: scope.organizationId,
+          productId: row.componentId,
+        });
+        const plan = await planLotAllocation(tx, {
+          productId: row.componentId,
+          quantity: needed,
+          productName: row.component.name,
+        });
+        await applyLotOutflow(tx, {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          productId: row.componentId,
+          plan,
+          reference,
+          notes: `Consumo por ${parentLabel}`,
+        });
+        continue;
+      }
+
       const nextStock = round2(available - needed);
       await tx.stockMovement.create({
         data: {
@@ -94,6 +126,19 @@ export async function applyBomStock(
         },
       });
     } else {
+      // Insumo con rollos (S3): lo devuelto vuelve a su lote activo.
+      if (row.component.tracksLots) {
+        await restoreLotQuantity(tx, {
+          organizationId: scope.organizationId,
+          createdById: scope.createdById ?? null,
+          productId: row.componentId,
+          quantity: needed,
+          reference,
+          notes: `Devolución por ${parentLabel}`,
+        });
+        continue;
+      }
+
       const nextStock = round2(available + needed);
       await tx.stockMovement.create({
         data: {
