@@ -14,14 +14,12 @@ import {
   Plus,
   Upload,
 } from "lucide-react";
-import { ProductImportModal } from "@/features/products/components/ProductImportModal";
 import { ManualReceivableForm } from "@/features/initial-load/components/ManualReceivableForm";
 import { ReceivableImportPanel } from "@/features/initial-load/components/ReceivableImportPanel";
 import { sumAging } from "@/features/finanzas/lib/financial-summary";
 import { SaleEndpoints } from "@/features/sales/services/sales.endpoints";
 import type { SalesReport } from "@/features/sales/types/sale.type";
 import { apiClient } from "@/shared/api/api.client";
-import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
@@ -224,13 +222,12 @@ function SummaryPanel({
 
 /**
  * Initial data load for a business workspace: three steps from the incoming
- * feature (products, clients/receivables, summary). Step 1 reuses the product
- * import modal and points the manual form to the products screen; step 2 hosts
+ * feature (products, clients/receivables, summary). Step 1 links to the product
+ * import page and points the manual form to the products screen; step 2 hosts
  * the receivable import; step 3 summarizes what was loaded.
  */
 export default function InitialLoadPage() {
   const { addToast } = useToastStore();
-  const { openModal, closeModal } = useModalStore();
   const { activeWorkspace, currentRole, orgId } = useWorkspaceRole();
   const workspaces = useWorkspaceStore((s) => s.workspaces);
   const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
@@ -321,18 +318,6 @@ export default function InitialLoadPage() {
       cancelled = true;
     };
   }, [canOperate, isOrganization, reloadToken, step, orgId]);
-
-  // Reuses the catalog's import flow; a successful commit reloads the stats so
-  // the "cuenta nueva" banner reflects the new products without a page reload.
-  const openProductImport = () => {
-    openModal(
-      <ProductImportModal
-        onClose={closeModal}
-        onSuccess={() => setReloadToken((token) => token + 1)}
-      />,
-      { size: "xl" },
-    );
-  };
 
   if (!isOrganization) {
     const organizationWorkspace = workspaces.find(
@@ -515,13 +500,12 @@ export default function InitialLoadPage() {
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Carga masiva desde un archivo compatible.
               </p>
-              <button
-                type="button"
-                onClick={openProductImport}
+              <Link
+                href="/dashboard/productos/importar"
                 className={`mt-3 h-10 px-4 text-sm ${CTA_NAVY}`}
               >
                 <Upload className="h-4 w-4" /> Importar planilla
-              </button>
+              </Link>
             </div>
 
             <div className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
