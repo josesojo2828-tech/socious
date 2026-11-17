@@ -602,7 +602,7 @@ export class OrderService {
         quantity: Number(item.quantity),
         unitPriceUSD: Number(item.priceUSD),
       })),
-    });
+    }, { skipWholesale: true });
 
     this.emitBusinessEvent(
       "erp.order.converted",

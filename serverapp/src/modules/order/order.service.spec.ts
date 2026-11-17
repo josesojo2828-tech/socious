@@ -543,6 +543,8 @@ describe("OrderService", () => {
             },
           ],
         }),
+        // S4: el pedido ya tiene precio cerrado; el mayorista no lo reescribe.
+        { skipWholesale: true },
       );
     });
 

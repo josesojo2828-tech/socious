@@ -1,5 +1,6 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
+import { ForbiddenException } from "@nestjs/common";
 import { OrganizationController } from "./organization.controller";
 import { UpdateWholesalerDto } from "./dto/organization.dto";
 import { AdminGuard } from "src/shared/guards/admin.guard";
@@ -42,6 +43,26 @@ describe("OrganizationController — flag mayorista", () => {
 
     expect(service.setWholesaler).toHaveBeenCalledWith("org-1", true);
     expect(result).toMatchObject({ isWholesaler: true });
+  });
+});
+
+describe("AdminGuard en la ruta mayorista (S1)", () => {
+  const ctx = (permit?: string) =>
+    ({
+      switchToHttp: () => ({
+        getRequest: () => ({ user: permit ? { permits: { name: permit } } : {} }),
+      }),
+    }) as any;
+
+  it("deniega al cliente y permite a la plataforma", () => {
+    for (const permit of ["USER", "CLINIC_ADMIN", "OWNER", "SELLER"]) {
+      expect(() => new AdminGuard().canActivate(ctx(permit))).toThrow(
+        ForbiddenException,
+      );
+    }
+    expect(new AdminGuard().canActivate(ctx("ADMIN"))).toBe(true);
+    expect(new AdminGuard().canActivate(ctx("SUPERADMIN"))).toBe(true);
+    expect(() => new AdminGuard().canActivate(ctx())).toThrow();
   });
 });
 

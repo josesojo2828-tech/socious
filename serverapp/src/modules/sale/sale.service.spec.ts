@@ -313,6 +313,98 @@ describe("SaleService", () => {
       });
     });
 
+    it("no repricea la importación histórica aunque el cliente sea mayorista", async () => {
+      const { service, tx } = makeService();
+      tx.organization.findFirst.mockResolvedValue({ isWholesaler: true });
+      tx.product.findFirst.mockResolvedValue(
+        productOnShelf(100, {
+          name: "Arroz 1kg",
+          wholesalePriceUSD: "3.00",
+          wholesaleMinQuantity: "12.00",
+        }),
+      );
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 12,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+        { skipStock: true },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data).toMatchObject({
+        subtotalUSD: 24,
+      });
+    });
+
+    it("no repricea una venta que llega con el precio cerrado (pedido online)", async () => {
+      const { service, tx } = makeService();
+      tx.organization.findFirst.mockResolvedValue({ isWholesaler: true });
+      tx.product.findFirst.mockResolvedValue(
+        productOnShelf(100, {
+          name: "Arroz 1kg",
+          wholesalePriceUSD: "3.00",
+          wholesaleMinQuantity: "12.00",
+        }),
+      );
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 12,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+        { skipWholesale: true },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data).toMatchObject({
+        subtotalUSD: 24,
+      });
+    });
+
+    it("un precio de mayoreo en cero no deja la venta en cero", async () => {
+      const { service, tx } = makeService();
+      tx.organization.findFirst.mockResolvedValue({ isWholesaler: true });
+      tx.product.findFirst.mockResolvedValue(
+        productOnShelf(100, {
+          name: "Arroz 1kg",
+          wholesalePriceUSD: "0.00",
+          wholesaleMinQuantity: "12.00",
+        }),
+      );
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          items: [
+            {
+              productId: "prod-1",
+              productName: "Arroz 1kg",
+              quantity: 12,
+              unitPriceUSD: 2,
+            },
+          ],
+        },
+      );
+
+      expect(tx.sale.create.mock.calls[0][0].data).toMatchObject({
+        subtotalUSD: 24,
+      });
+    });
+
     it("vende 1.5 m de tela y descuenta el rollo elegido", async () => {
       const { service, tx } = makeService();
       tx.product.findFirst.mockResolvedValue(
