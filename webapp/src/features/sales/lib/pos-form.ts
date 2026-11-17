@@ -26,6 +26,11 @@ export interface CartLine {
    * decimals the quantity accepts, so a fabric sells 1.5 m and a shirt 2.
    */
   unit?: string | null;
+  /** Precio al detal de la línea, sin mayoreo (S3). */
+  retailPriceUSD: number;
+  /** Precio de mayoreo y su mínimo: solo existen si el cliente es mayorista. */
+  wholesalePriceUSD?: number | null;
+  wholesaleMinQuantity?: number | null;
 }
 
 export interface ProductPicker {
@@ -34,6 +39,9 @@ export interface ProductPicker {
   salePriceUSD: string | number;
   taxRate: string | number;
   unit?: string | null;
+  /** Datos de mayoreo del producto (S2); el servidor es la autoridad. */
+  wholesalePriceUSD?: string | number | null;
+  wholesaleMinQuantity?: string | number | null;
 }
 
 export interface PresentationPicker {
@@ -55,6 +63,22 @@ const toNumber = (value: string | number | null | undefined): number => {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 };
+
+/**
+ * Precio de la línea (S3): con datos de mayoreo y la cantidad en el mínimo,
+ * gana el precio mayorista. Las presentaciones no tienen mayoreo.
+ */
+export function resolveUnitPrice(
+  line: Pick<
+    CartLine,
+    "quantity" | "retailPriceUSD" | "wholesalePriceUSD" | "wholesaleMinQuantity"
+  >,
+): number {
+  const min = Number(line.wholesaleMinQuantity ?? 0);
+  const wholesale = Number(line.wholesalePriceUSD ?? 0);
+  if (wholesale > 0 && min > 0 && line.quantity >= min) return wholesale;
+  return line.retailPriceUSD;
+}
 
 /** The presentation price wins over the product price when it exists. */
 function lineUnitPrice(
@@ -96,29 +120,46 @@ export function addToCart(
   product: ProductPicker,
   quantity = 1,
   presentation?: PresentationPicker,
+  /** Cliente mayorista (S3): habilita el precio por cantidad. */
+  wholesaler = false,
 ): CartLine[] {
   const unit = product.unit ?? null;
   const normalized = normalizeQuantity(quantity, unit);
   const safeQuantity = normalized > 0 ? normalized : 1;
+  const retailPriceUSD = lineUnitPrice(product, presentation);
+  // El mayoreo es del producto: una presentación con precio propio manda.
+  const wholesalePriceUSD =
+    wholesaler && !presentation && product.wholesalePriceUSD != null
+      ? toNumber(product.wholesalePriceUSD)
+      : null;
+  const wholesaleMinQuantity =
+    wholesaler && !presentation && product.wholesaleMinQuantity != null
+      ? toNumber(product.wholesaleMinQuantity)
+      : null;
+
   const line: CartLine = {
     productId: product.id,
     presentationId: presentation?.id ?? null,
     presentationName: presentation?.name ?? null,
     productName: presentation ? presentation.name : product.name,
-    unitPriceUSD: lineUnitPrice(product, presentation),
+    unitPriceUSD: retailPriceUSD,
+    retailPriceUSD,
+    wholesalePriceUSD,
+    wholesaleMinQuantity,
     taxRate: toNumber(product.taxRate),
     quantity: safeQuantity,
     unit,
   };
+  line.unitPriceUSD = resolveUnitPrice(line);
 
   const existing = cart.find((item) => sameLine(item, line));
   if (!existing) return [...cart, line];
 
-  return cart.map((item) =>
-    sameLine(item, line)
-      ? { ...item, quantity: item.quantity + safeQuantity }
-      : item,
-  );
+  return cart.map((item) => {
+    if (!sameLine(item, line)) return item;
+    const merged = { ...item, quantity: item.quantity + safeQuantity };
+    return { ...merged, unitPriceUSD: resolveUnitPrice(merged) };
+  });
 }
 
 /**
@@ -142,7 +183,9 @@ export function changeQuantity(
   return cart.map((item) => {
     if (!matches(item)) return item;
     const next = normalizeQuantity(quantity, item.unit);
-    return next > 0 ? { ...item, quantity: next } : item;
+    if (next <= 0) return item;
+    const merged = { ...item, quantity: next };
+    return { ...merged, unitPriceUSD: resolveUnitPrice(merged) };
   });
 }
 

@@ -24,6 +24,7 @@ import {
   flattenCategories,
   toForm,
   validateProductForm,
+  wholesaleTotalLabel,
   type ProductForm,
 } from "../lib/product-form";
 import type { Category, Product, ProductStatus } from "../types/product.type";
@@ -52,6 +53,8 @@ interface ProductFormPanelProps {
   onSubmit: (form: ProductForm) => void;
   /** S2: tenant `inventory.useRawMaterials` — gates the BOM section. */
   showComponents?: boolean;
+  /** Cliente mayorista (S2): muestra mínimo y costo de mayoreo. */
+  wholesaler?: boolean;
   /** Materials for the BOM picker (`GET /raw-materials`, loaded by the route). */
   componentProducts?: Product[];
 }
@@ -72,6 +75,7 @@ export function ProductFormPanel({
   onCancel,
   onSubmit,
   showComponents = false,
+  wholesaler = false,
   componentProducts = [],
 }: ProductFormPanelProps) {
   const { addToast } = useToastStore();
@@ -295,31 +299,58 @@ export function ProductFormPanel({
             {priceEquivalents(form.salePriceUSD, rates)}
           </span>
         </label>
-        <label className={LABEL_SM}>
-          Precio mayorista ({priceCurrency})
-          <DecimalInput
-            mode="money"
-            allowEmpty
-            className={`mt-1 font-mono tabular-nums ${INPUT}`}
-            value={
-              form.wholesalePriceUSD === undefined
-                ? ""
-                : convertFromUSD(form.wholesalePriceUSD, priceCurrency, rates)
-            }
-            onValueChange={(text) =>
-              patchForm({
-                wholesalePriceUSD:
-                  text === ""
-                    ? undefined
-                    : convertToUSD(
-                        Number(text) || 0,
+        {wholesaler ? (
+          <>
+            <label className={LABEL_SM}>
+              Mínimo mayoreo (cantidad)
+              <DecimalInput
+                mode="quantity"
+                decimals={2}
+                allowEmpty
+                className={`mt-1 font-mono tabular-nums ${INPUT}`}
+                value={
+                  form.wholesaleMinQuantity === undefined
+                    ? ""
+                    : form.wholesaleMinQuantity
+                }
+                onValueChange={(text) =>
+                  patchForm({
+                    wholesaleMinQuantity:
+                      text === "" ? undefined : Number(text) || undefined,
+                  })
+                }
+              />
+            </label>
+            <label className={LABEL_SM}>
+              Costo por unidad de mayoreo ({priceCurrency})
+              <DecimalInput
+                mode="money"
+                allowEmpty
+                className={`mt-1 font-mono tabular-nums ${INPUT}`}
+                value={
+                  form.wholesalePriceUSD === undefined
+                    ? ""
+                    : convertFromUSD(
+                        form.wholesalePriceUSD,
                         priceCurrency,
                         rates,
-                      ),
-              })
-            }
-          />
-        </label>
+                      )
+                }
+                onValueChange={(text) =>
+                  patchForm({
+                    wholesalePriceUSD:
+                      text === ""
+                        ? undefined
+                        : convertToUSD(Number(text) || 0, priceCurrency, rates),
+                  })
+                }
+              />
+              <span className="mt-1 block text-xs text-slate-400">
+                {wholesaleTotalLabel(form)}
+              </span>
+            </label>
+          </>
+        ) : null}
         <label className={LABEL_SM}>
           Impuesto (%)
           <input

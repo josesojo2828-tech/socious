@@ -159,6 +159,8 @@ export default function PosPage() {
   const [creditMonthlyDay, setCreditMonthlyDay] = useState<number>(1);
   const [pickProduct, setPickProduct] = useState<Product | null>(null);
   const [settings, setSettings] = useState<TenantSettings | null>(null);
+  /** Cliente mayorista (S3): el precio por cantidad se aplica solo. */
+  const wholesaler = Boolean(settings?.wholesaler);
   const [pickPresentations, setPickPresentations] = useState<
     {
       id: string;
@@ -350,7 +352,9 @@ export default function PosPage() {
       } catch {
         // No presentations endpoint answer: sell bulk.
       }
-      setCart((current) => addToCart(current, product));
+      setCart((current) =>
+        addToCart(current, product, 1, undefined, wholesaler),
+      );
     })();
   };
 
@@ -361,7 +365,7 @@ export default function PosPage() {
   }) => {
     if (pickProduct) {
       setCart((current) =>
-        addToCart(current, pickProduct, 1, presentation),
+        addToCart(current, pickProduct, 1, presentation, wholesaler),
       );
     }
     setPickProduct(null);
@@ -560,7 +564,9 @@ export default function PosPage() {
           <button
             type="button"
             onClick={() => {
-              setCart((current) => addToCart(current, pickProduct));
+              setCart((current) =>
+                addToCart(current, pickProduct, 1, undefined, wholesaler),
+              );
               setPickProduct(null);
               setPickPresentations([]);
             }}

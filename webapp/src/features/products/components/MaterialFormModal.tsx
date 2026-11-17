@@ -30,6 +30,8 @@ export const MAIN_CURRENCY_HINT =
   "La moneda principal por defecto es el dólar (USD); la tasa de referencia es el dólar del Banco Central (BCV).";
 
 export interface MaterialFormModalProps {
+  /** Cliente mayorista (S2): muestra mínimo y costo de mayoreo del insumo. */
+  wholesaler?: boolean;
   onClose: () => void;
   /** Called after a successful create so the list can reload. */
   onSuccess: () => void;
@@ -41,6 +43,7 @@ function apiMessage(error: unknown, fallback: string): string {
 }
 
 export function MaterialFormModal({
+  wholesaler = false,
   onClose,
   onSuccess,
 }: MaterialFormModalProps) {
@@ -54,6 +57,8 @@ export function MaterialFormModal({
   const [unit, setUnit] = useState("UND");
   const [costPriceUSD, setCostPriceUSD] = useState("");
   const [stock, setStock] = useState("");
+  const [wholesaleMinQuantity, setWholesaleMinQuantity] = useState("");
+  const [wholesaleCost, setWholesaleCost] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,6 +136,12 @@ export function MaterialFormModal({
         stock: stockNumber || 0,
         unit: unit.trim() || "UND",
         isRawMaterial: true,
+        ...(wholesaler && wholesaleMinQuantity !== ""
+          ? { wholesaleMinQuantity: Number(wholesaleMinQuantity) || undefined }
+          : {}),
+        ...(wholesaler && wholesaleCost !== ""
+          ? { wholesalePriceUSD: Number(wholesaleCost) || 0 }
+          : {}),
       });
       addToast({
         type: "success",
@@ -206,6 +217,39 @@ export function MaterialFormModal({
             )}
           </select>
         </label>
+        {wholesaler ? (
+          <>
+            <label className={LABEL_SM}>
+              Mínimo mayoreo (cantidad)
+              <DecimalInput
+                mode="quantity"
+                decimals={2}
+                allowEmpty
+                value={wholesaleMinQuantity}
+                onValueChange={setWholesaleMinQuantity}
+                className={`mt-1 font-mono tabular-nums ${INPUT}`}
+              />
+            </label>
+            <label className={LABEL_SM}>
+              Costo por unidad de mayoreo (USD)
+              <DecimalInput
+                mode="money"
+                allowEmpty
+                value={wholesaleCost}
+                onValueChange={setWholesaleCost}
+                className={`mt-1 font-mono tabular-nums ${INPUT}`}
+              />
+              <span className="mt-1 block text-xs text-slate-400">
+                {wholesaleMinQuantity && wholesaleCost
+                  ? `= $${(
+                      (Number(wholesaleMinQuantity) || 0) *
+                      (Number(wholesaleCost) || 0)
+                    ).toFixed(2)} por ${wholesaleMinQuantity} unidades`
+                  : "Completá el mínimo y el costo por unidad."}
+              </span>
+            </label>
+          </>
+        ) : null}
         <label className={LABEL_SM}>
           Stock inicial
           <DecimalInput

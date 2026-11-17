@@ -40,6 +40,7 @@ export default function MaterialesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   /** `null` while the tenant settings load; `false` = feature not enabled. */
   const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [wholesaler, setWholesaler] = useState(false);
   const [query, setQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const pageSize = 25;
@@ -48,7 +49,10 @@ export default function MaterialesPage() {
     let alive = true;
     void getTenantSettings()
       .then((settings) => {
-        if (alive) setEnabled(Boolean(settings.inventory?.useRawMaterials));
+        if (alive) {
+          setEnabled(Boolean(settings.inventory?.useRawMaterials));
+          setWholesaler(Boolean(settings.wholesaler));
+        }
       })
       .catch(() => {
         if (alive) setEnabled(false);
@@ -83,6 +87,7 @@ export default function MaterialesPage() {
   const openCreate = () => {
     openModal(
       <MaterialFormModal
+        wholesaler={wholesaler}
         onClose={closeModal}
         onSuccess={() => {
           closeModal();

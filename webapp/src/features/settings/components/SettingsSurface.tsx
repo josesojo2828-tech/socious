@@ -17,6 +17,7 @@ import {
   Briefcase,
   Store,
   Upload,
+  BadgeDollarSign,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -58,6 +59,7 @@ import {
   canSeeSettingsSection,
   isPlatformAdmin,
 } from "../lib/settings-visibility";
+import { organizationsService } from "@/features/organizations/service/organizations.service";
 import { UnitsPanel } from "@/features/units/components/UnitsPanel";
 import { SizesPanel } from "@/features/sizes/components/SizesPanel";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
@@ -183,6 +185,9 @@ export function SettingsSurface({
   >("general");
   const [whatsappInput, setWhatsappInput] = useState<string>("");
   const [paymentsInstructions, setPaymentsInstructions] = useState<string>("");
+  /** Flag mayorista (S1): solo el admin lo escribe, va por su propio endpoint. */
+  const [isWholesaler, setIsWholesaler] = useState<boolean>(false);
+  const [wholesalerBusy, setWholesalerBusy] = useState<boolean>(false);
   const [branchName, setBranchName] = useState<string>("");
   const [branchAddress, setBranchAddress] = useState<string>("");
 
@@ -193,6 +198,7 @@ export function SettingsSurface({
   useEffect(() => {
     if (settings) {
       setPaymentsInstructions(settings.payments?.instructions ?? "");
+      setIsWholesaler(Boolean(settings.wholesaler));
     }
   }, [settings]);
 
@@ -348,6 +354,36 @@ export function SettingsSurface({
   // missing flag counts as published so an older backend cannot empty it.
   const publishedPlans = plans.filter((plan) => plan.selected !== false);
 
+  const targetOrganizationId = organizationId ?? activeWorkspace?.id ?? null;
+
+  const toggleWholesaler = async (next: boolean): Promise<void> => {
+    if (!targetOrganizationId) return;
+    setWholesalerBusy(true);
+    const previous = isWholesaler;
+    setIsWholesaler(next);
+    try {
+      await organizationsService.setWholesaler(targetOrganizationId, next);
+      addToast({
+        type: "success",
+        title: "Mayorista",
+        message: next
+          ? "El cliente ahora carga precios de mayoreo."
+          : "El cliente deja de usar precios de mayoreo.",
+      });
+    } catch (error) {
+      setIsWholesaler(previous);
+      addToast({
+        type: "error",
+        title: "Mayorista",
+        message:
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message ?? "No se pudo cambiar el flag mayorista.",
+      });
+    } finally {
+      setWholesalerBusy(false);
+    }
+  };
+
   return (
     <SettingsScopeProvider organizationId={organizationId}>
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -440,6 +476,29 @@ export function SettingsSurface({
 
       {tab === "general" ? (
         <>
+      {platformAdmin && targetOrganizationId ? (
+        <SectionPanel
+          icon={<BadgeDollarSign className="h-5 w-5" />}
+          title="Mayorista"
+          description="El cliente carga mínimo y costo por unidad de mayoreo en sus productos y materiales. La venta aplica ese precio sola cuando la cantidad llega al mínimo."
+        >
+          <SectionRow
+            label="Vender a precio de mayoreo"
+            hint={
+              isWholesaler
+                ? "Activo: los formularios muestran mayoreo y las ventas lo aplican por cantidad."
+                : "Inactivo: los campos de mayoreo no se muestran y las ventas usan el precio de venta."
+            }
+          >
+            <Toggle
+              checked={isWholesaler}
+              disabled={wholesalerBusy}
+              onChange={(event) => void toggleWholesaler(event.target.checked)}
+            />
+          </SectionRow>
+        </SectionPanel>
+      ) : null}
+
       {canSeeSettingsSection("cash", platformAdmin) ? (
       <SectionPanel
         icon={<Wallet className="h-5 w-5" />}

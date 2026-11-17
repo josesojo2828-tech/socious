@@ -30,6 +30,8 @@ export interface Product {
   costPriceUSD: string | number;
   salePriceUSD: string | number;
   wholesalePriceUSD?: string | number | null;
+  /** Cantidad mínima que activa el precio de mayoreo (S2). */
+  wholesaleMinQuantity?: string | number | null;
   stock: string | number;
   minStock: string | number;
   unit: string;

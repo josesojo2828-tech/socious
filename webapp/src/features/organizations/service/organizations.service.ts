@@ -16,6 +16,21 @@ import type { AdminOrganization } from "../types/organization-admin.type";
  * and answers each org with its ACTIVE plan and ACTIVE module grants.
  */
 export const organizationsService = {
+  /**
+   * Enciende o apaga el flag mayorista de un cliente (S1). El backend exige
+   * AdminGuard: el dueño del cliente no puede llamar esto.
+   */
+  async setWholesaler(
+    organizationId: string,
+    isWholesaler: boolean,
+  ): Promise<{ id: string; name: string; isWholesaler: boolean }> {
+    const { data } = await apiClient.patch(
+      OrganizationsEndpoints.wholesaler(organizationId),
+      { isWholesaler },
+    );
+    return data;
+  },
+
   /** Every non-deleted organization with plan + active grants. */
   async listAll(): Promise<AdminOrganization[]> {
     const { data } = await apiClient.get<AdminOrganization[]>(
