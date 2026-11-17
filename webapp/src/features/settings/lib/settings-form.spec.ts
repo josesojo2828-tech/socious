@@ -45,7 +45,7 @@ const base: TenantSettings = {
     orderReceived: true,
     saleCreated: false,
   },
-  payments: { disabledCodes: [] },
+  payments: { disabledCodes: [], instructions: "" },
   purchases: { onlySupplierProducts: false },
   inventory: { useRawMaterials: false, useServices: false },
   storefront: { whatsapp: "" },

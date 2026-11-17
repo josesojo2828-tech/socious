@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Banknote, Bell, CalendarClock, CreditCard, Loader2, Plus, Trash2 } from "lucide-react";
-import { apiClient } from "@/shared/api/api.client";
+import {
+  useSettingsApi,
+  useSettingsScope,
+} from "@/features/settings/lib/settings-scope";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
@@ -22,6 +25,8 @@ function apiMessage(error: unknown, fallback: string): string {
 
 /** Payment methods tab (S1): built-ins are read-only, customs are a CRUD. */
 export function PaymentMethodsPanel() {
+  const api = useSettingsApi();
+  const settingsOrganizationId = useSettingsScope();
   const { addToast } = useToastStore();
   const [rows, setRows] = useState<TenantPaymentMethod[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,13 +43,13 @@ export function PaymentMethodsPanel() {
     setLoading(true);
     try {
       const [customs, builtinOptions, currentSettings] = await Promise.all([
-        apiClient.get<TenantPaymentMethod[]>(TenantPaymentMethodEndpoints.list),
-        apiClient
+        api.get<TenantPaymentMethod[]>(TenantPaymentMethodEndpoints.list),
+        api
           .get<{ code: string; label: string; currency: string }[]>(
             "/api/payment-methods/options",
           )
           .catch(() => ({ data: [] as { code: string; label: string; currency: string }[] })),
-        getTenantSettings().catch(() => null),
+        getTenantSettings(settingsOrganizationId).catch(() => null),
       ]);
       setBuiltins(builtinOptions.data ?? []);
       setDisabledCodes(currentSettings?.payments?.disabledCodes ?? []);
@@ -76,7 +81,7 @@ export function PaymentMethodsPanel() {
     }
     setSaving(true);
     try {
-      await apiClient.post(TenantPaymentMethodEndpoints.list, {
+      await api.post(TenantPaymentMethodEndpoints.list, {
         name: name.trim(),
         code: code.trim().toUpperCase(),
         currency,
@@ -97,7 +102,7 @@ export function PaymentMethodsPanel() {
 
   const toggle = async (method: TenantPaymentMethod) => {
     try {
-      await apiClient.patch(TenantPaymentMethodEndpoints.detail(method.id), {
+      await api.patch(TenantPaymentMethodEndpoints.detail(method.id), {
         active: !method.active,
       });
       void fetchList();
@@ -128,7 +133,7 @@ export function PaymentMethodsPanel() {
 
   const remove = async (method: TenantPaymentMethod) => {
     try {
-      await apiClient.delete(TenantPaymentMethodEndpoints.detail(method.id));
+      await api.delete(TenantPaymentMethodEndpoints.detail(method.id));
       void fetchList();
     } catch (error) {
       addToast({

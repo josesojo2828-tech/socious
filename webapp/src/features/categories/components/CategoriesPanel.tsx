@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { FolderOpen, Loader2, Plus, Trash2 } from "lucide-react";
-import { apiClient } from "@/shared/api/api.client";
+import { useSettingsApi } from "@/features/settings/lib/settings-scope";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
@@ -31,6 +31,7 @@ function flatten(nodes: CategoryNode[]): CategoryNode[] {
  * forms but keep their products.
  */
 export function CategoriesPanel() {
+  const api = useSettingsApi();
   const { addToast } = useToastStore();
   const [rows, setRows] = useState<CategoryNode[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +41,7 @@ export function CategoriesPanel() {
   const fetchList = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await apiClient.get<CategoryNode[]>(
+      const { data } = await api.get<CategoryNode[]>(
         `${CategoryEndpoints.mine}?includeInactive=1`,
       );
       setRows(flatten(Array.isArray(data) ? data : []));
@@ -64,7 +65,7 @@ export function CategoriesPanel() {
     if (!name.trim()) return;
     setSaving(true);
     try {
-      await apiClient.post(CategoryEndpoints.list, { name: name.trim() });
+      await api.post(CategoryEndpoints.list, { name: name.trim() });
       setName("");
       void fetchList();
     } catch (error) {
@@ -80,7 +81,7 @@ export function CategoriesPanel() {
 
   const toggleActive = async (category: CategoryNode) => {
     try {
-      await apiClient.patch(CategoryEndpoints.detail(category.id), {
+      await api.patch(CategoryEndpoints.detail(category.id), {
         isActive: !category.isActive,
       });
       void fetchList();
@@ -95,7 +96,7 @@ export function CategoriesPanel() {
 
   const remove = async (category: CategoryNode) => {
     try {
-      await apiClient.delete(CategoryEndpoints.detail(category.id));
+      await api.delete(CategoryEndpoints.detail(category.id));
       void fetchList();
     } catch (error) {
       addToast({

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, Plus, Shirt, Trash2 } from "lucide-react";
-import { apiClient } from "@/shared/api/api.client";
+import { useSettingsApi } from "@/features/settings/lib/settings-scope";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
@@ -20,6 +20,7 @@ function apiMessage(error: unknown, fallback: string): string {
  * changing the types already saved with that label.
  */
 export function SizesPanel() {
+  const api = useSettingsApi();
   const { addToast } = useToastStore();
   const [rows, setRows] = useState<ProductSize[]>([]);
   const [label, setLabel] = useState("");
@@ -29,7 +30,7 @@ export function SizesPanel() {
   const fetchList = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await apiClient.get<ProductSize[]>(SizeEndpoints.list);
+      const { data } = await api.get<ProductSize[]>(SizeEndpoints.list);
       setRows(Array.isArray(data) ? data : []);
     } catch (error) {
       addToast({
@@ -58,7 +59,7 @@ export function SizesPanel() {
     }
     setSaving(true);
     try {
-      await apiClient.post(SizeEndpoints.list, { label: label.trim() });
+      await api.post(SizeEndpoints.list, { label: label.trim() });
       setLabel("");
       void fetchList();
     } catch (error) {
@@ -74,7 +75,7 @@ export function SizesPanel() {
 
   const toggleActive = async (size: ProductSize) => {
     try {
-      await apiClient.patch(SizeEndpoints.detail(size.id), {
+      await api.patch(SizeEndpoints.detail(size.id), {
         active: !size.active,
       });
       void fetchList();
@@ -89,7 +90,7 @@ export function SizesPanel() {
 
   const remove = async (size: ProductSize) => {
     try {
-      await apiClient.delete(SizeEndpoints.detail(size.id));
+      await api.delete(SizeEndpoints.detail(size.id));
       void fetchList();
     } catch (error) {
       addToast({
