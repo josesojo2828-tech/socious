@@ -68,9 +68,19 @@
 
 ## Verificacion
 
-- `serverapp`: `npm run typecheck` en 0; suite completa **120 suites / 1102 tests**.
+- `serverapp`: `npm run typecheck` en 0; suite completa **120 suites / 1107 tests**.
 - `webapp`: `npm run typecheck` en 0; suite completa **72 archivos / 792 tests**.
 - Specs nuevos: `organization-wholesaler.controller.spec.ts` (la ruta exige `AdminGuard` y delega; DTO rechaza no-booleanos), `settings.controller.spec.ts` (flag mayorista del cliente), `product.service.spec.ts` (persiste minimo y precio), `sale.service.spec.ts` (aplica en el minimo, no debajo, ignora con el flag apagado), `pos-form.spec.ts` (recalcula al cambiar cantidad, presentacion manda, flag apagado ignora), `product-form.spec.ts` (total y payload).
+
+## Verificacion independiente
+
+`gentle-ai-verify` sobre `main..HEAD` encontro tres formas de cobrar mal, todas corregidas en `2e7fed5` y rechequeadas como **resueltas**:
+
+- **B1** la importacion historica y el saldo inicial (`skipStock`) se repreciaban a mayorista, cambiando ingresos y deuda de documentos viejos.
+- **B2** la conversion de pedido online a venta repreciaba: el pedido ya tenia precio aceptado. Ahora `create` acepta `skipWholesale` y el pedido lo usa.
+- **B3** un producto con `wholesalePriceUSD = 0` se vendia a cero; el servidor lo ignora y cae al precio de venta.
+
+El camino positivo quedo intacto: cantidad en el minimo → mayorista; debajo → detal; presentacion con precio propio manda; flag apagado ignora.
 
 ## Gotchas de esta entrega
 
