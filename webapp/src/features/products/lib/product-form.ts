@@ -18,6 +18,8 @@ export interface ProductForm {
   costPriceUSD: number;
   salePriceUSD: number;
   wholesalePriceUSD?: number;
+  /** Cantidad mínima de mayoreo (S2). */
+  wholesaleMinQuantity?: number;
   stock?: number;
   minStock?: number;
   unit?: string;
@@ -89,6 +91,11 @@ export function toForm(product: Product): ProductForm {
       product.wholesalePriceUSD === undefined
         ? undefined
         : Number(product.wholesalePriceUSD),
+    wholesaleMinQuantity:
+      product.wholesaleMinQuantity === null ||
+      product.wholesaleMinQuantity === undefined
+        ? undefined
+        : Number(product.wholesaleMinQuantity),
     minStock: Number(product.minStock),
     stock: Number(product.stock),
     unit: product.unit,
@@ -166,6 +173,11 @@ export function buildProductPayload(
       form.wholesalePriceUSD === undefined || form.wholesalePriceUSD === null
         ? null
         : Number(form.wholesalePriceUSD),
+    wholesaleMinQuantity:
+      form.wholesaleMinQuantity === undefined ||
+      form.wholesaleMinQuantity === null
+        ? null
+        : Number(form.wholesaleMinQuantity),
     minStock: Number(form.minStock) || 0,
     unit: trim(form.unit) ?? "UND",
     taxRate: Number(form.taxRate) || 0,
@@ -190,6 +202,29 @@ export function buildProductPayload(
   }));
 
   return payload;
+}
+
+/**
+ * Total de mayoreo para la cantidad mínima (S2): `mínimo × costo unitario`.
+ * `null` cuando falta alguno de los dos datos.
+ */
+export function wholesaleTotalUSD(
+  form: Pick<ProductForm, "wholesaleMinQuantity" | "wholesalePriceUSD">,
+): number | null {
+  const min = Number(form.wholesaleMinQuantity ?? 0);
+  const price = Number(form.wholesalePriceUSD ?? 0);
+  if (!Number.isFinite(min) || !Number.isFinite(price)) return null;
+  if (min <= 0 || price <= 0) return null;
+  return Math.round((min * price + Number.EPSILON) * 100) / 100;
+}
+
+/** Texto que se muestra al lado del costo de mayoreo. */
+export function wholesaleTotalLabel(
+  form: Pick<ProductForm, "wholesaleMinQuantity" | "wholesalePriceUSD">,
+): string {
+  const total = wholesaleTotalUSD(form);
+  if (total === null) return "Completá el mínimo y el costo por unidad.";
+  return `= $${total.toFixed(2)} por ${form.wholesaleMinQuantity} unidades`;
 }
 
 /** Below (or at) the minimum, and only tracked products count. */

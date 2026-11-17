@@ -16,8 +16,9 @@ import { SessionAuthGuard } from 'src/modules/auth/guards/authenticated.guard';
 import type { RequestWithUser } from 'src/shared/types/server.type';
 import { OrganizationService } from './organization.service';
 import { OrgAdminGuard } from './guards/org-admin.guard';
+import { AdminGuard } from 'src/shared/guards/admin.guard';
 import { FieldPolicy } from "src/modules/permit/field-policy/field-policy.decorator";
-import { CreateOrganizationDto, InviteMemberDto, UpdateMemberColorDto, UpdateMemberRoleDto, PurchaseSeatsDto, UpdateSeatsDto, CreateWorkspaceSubscriptionDto } from './dto/organization.dto';
+import { CreateOrganizationDto, InviteMemberDto, UpdateMemberColorDto, UpdateMemberRoleDto, PurchaseSeatsDto, UpdateSeatsDto, CreateWorkspaceSubscriptionDto, UpdateWholesalerDto } from './dto/organization.dto';
 
 @Controller('api/organizations')
 @UseGuards(SessionAuthGuard)
@@ -51,6 +52,19 @@ export class OrganizationController {
       );
     }
     return this.organizationService.listAllForAdmin();
+  }
+
+  /**
+   * Marca al cliente como mayorista (S1). SOLO plataforma: el dueño del
+   * cliente no puede encenderse el flag, por eso AdminGuard y no OrgAdminGuard.
+   */
+  @Patch(':id/wholesaler')
+  @UseGuards(AdminGuard)
+  async setWholesaler(
+    @Param('id') id: string,
+    @Body() body: UpdateWholesalerDto,
+  ) {
+    return this.organizationService.setWholesaler(id, body.isWholesaler);
   }
 
   @Get('my-workspaces')

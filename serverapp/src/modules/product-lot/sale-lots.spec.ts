@@ -21,6 +21,7 @@ function make(lots: any[], stock: number) {
       update: async ({ where, data }: any) => { const r = state.lots.find((l: any) => l.id === where.id)!; Object.assign(r, data); return r; },
     },
     productPresentation: { findFirst: async () => null, update: async () => ({}) },
+    organization: { findFirst: async () => null },
     stockMovement: { create: async ({ data }: any) => { state.movements.push(data); return data; } },
     sale: { create: async ({ data }: any) => ({ id: "s-1", ...data }), findFirst: async () => null, findUnique: async () => ({ id: "s-1", saleNumber: "VTA-1", items: state.items, payments: [], client: null }), update: async (a: any) => ({ id: "s-1", ...a.data }) },
     saleItem: { create: async ({ data }: any) => { state.items.push(data); return { id: `i-${state.items.length}`, ...data }; } },

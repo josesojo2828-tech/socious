@@ -127,9 +127,14 @@ export class SaleService {
   async create(
     scope: SaleScope,
     data: CreateSaleDto,
-    options: { skipStock?: boolean } = {},
+    options: { skipStock?: boolean; skipWholesale?: boolean } = {},
   ) {
     const skipStock = options.skipStock === true;
+    /**
+     * Documentos con precio ya cerrado (pedido online, importacion): el
+     * mayorista no reescribe lo que el cliente ya aceptó pagar.
+     */
+    const skipWholesale = options.skipWholesale === true || skipStock;
     if (!data.items?.length) {
       throw new BadRequestException("La venta necesita al menos un artículo.");
     }
@@ -146,7 +151,13 @@ export class SaleService {
     );
 
     return this.prisma.$transaction(async (tx) => {
-      const items = await this.resolveItems(scope, data.items, tx, skipStock);
+      const items = await this.resolveItems(
+        scope,
+        data.items,
+        tx,
+        skipStock,
+        skipWholesale,
+      );
 
       const subtotalUSD = round2(
         items.reduce((sum, item) => sum + item.quantity * item.unitPriceUSD, 0),
@@ -785,8 +796,19 @@ export class SaleService {
     inputs: SaleItemInputDto[],
     tx: Prisma.TransactionClient,
     skipStock = false,
+    skipWholesale = false,
   ): Promise<ResolvedItem[]> {
     const resolved: ResolvedItem[] = [];
+
+    // Mayorista (S3): el flag del cliente se lee una vez por venta. Con el
+    // flag apagado, los datos de mayoreo del producto se ignoran.
+    const organization = scope.organizationId
+      ? await tx.organization.findFirst({
+          where: { id: scope.organizationId },
+          select: { isWholesaler: true },
+        })
+      : null;
+    const wholesaler = organization?.isWholesaler === true && !skipWholesale;
 
     for (const input of inputs) {
       const quantity = Number(input.quantity);
@@ -848,6 +870,8 @@ export class SaleService {
             isService: true,
             salePriceUSD: true,
             tracksLots: true,
+            wholesalePriceUSD: true,
+            wholesaleMinQuantity: true,
           },
         });
 
@@ -861,6 +885,21 @@ export class SaleService {
         tracksLots = product.tracksLots;
         productName = product.name;
         productId = product.id;
+
+        // Precio de mayoreo resuelto por el servidor (S3): el cliente no lo
+        // manda, se deduce de la cantidad. Debajo del mínimo no cambia nada.
+        const wholesaleMin = Number(product.wholesaleMinQuantity ?? 0);
+        const wholesalePrice = Number(product.wholesalePriceUSD ?? 0);
+        if (
+          !isService &&
+          wholesaler &&
+          // Un precio en cero no es una oferta: se ignora (S3).
+          wholesalePrice > 0 &&
+          wholesaleMin > 0 &&
+          quantity >= wholesaleMin
+        ) {
+          unitPriceUSD = wholesalePrice;
+        }
 
         if (!isService && !skipStock) {
           const stock = await tx.product.findFirst({

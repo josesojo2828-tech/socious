@@ -82,6 +82,13 @@ export class CreateProductDto {
   @Min(0)
   wholesalePriceUSD?: number;
 
+  /** Cantidad mínima que activa el precio de mayoreo (S2). */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: "El mínimo de mayoreo debe ser numérico." })
+  @Min(0.0001, { message: "El mínimo de mayoreo debe ser mayor que cero." })
+  wholesaleMinQuantity?: number;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -205,6 +212,13 @@ export class UpdateProductDto {
   @IsNumber()
   @Min(0)
   wholesalePriceUSD?: number;
+
+  /** Cantidad mínima que activa el precio de mayoreo (S2). */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: "El mínimo de mayoreo debe ser numérico." })
+  @Min(0.0001, { message: "El mínimo de mayoreo debe ser mayor que cero." })
+  wholesaleMinQuantity?: number;
 
   @IsOptional()
   @Type(() => Number)

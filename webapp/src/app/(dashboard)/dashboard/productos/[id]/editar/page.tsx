@@ -51,6 +51,7 @@ export default function EditProductPage() {
   const [showComponents, setShowComponents] = useState<boolean>(false);
   const [componentProducts, setComponentProducts] = useState<Product[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
+  const [wholesaler, setWholesaler] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
 
@@ -91,6 +92,7 @@ export default function EditProductPage() {
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
       setShowComponents(Boolean(tenantSettings?.inventory?.useRawMaterials));
+      setWholesaler(Boolean(tenantSettings?.wholesaler));
       setComponentProducts(rawMaterials.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
@@ -176,6 +178,7 @@ export default function EditProductPage() {
           suppliers={suppliers}
           rates={rates}
           showComponents={showComponents}
+          wholesaler={wholesaler}
           componentProducts={componentProducts}
           busy={busy}
           onCancel={() => router.push(`/dashboard/productos/${product.id}`)}

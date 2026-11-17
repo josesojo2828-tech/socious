@@ -211,6 +211,27 @@ export class OrganizationService {
     }));
   }
 
+  /**
+   * S1: el flag mayorista lo escribe solo la plataforma (AdminGuard en el
+   * controller). Vive en una columna y no en `settings` porque ese JSON lo
+   * puede escribir el propio cliente.
+   */
+  async setWholesaler(organizationId: string, isWholesaler: boolean) {
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: organizationId, deletedAt: null },
+      select: { id: true },
+    });
+    if (!organization) {
+      throw new NotFoundException("Organización no encontrada.");
+    }
+
+    return this.prisma.organization.update({
+      where: { id: organization.id },
+      data: { isWholesaler },
+      select: { id: true, name: true, isWholesaler: true },
+    });
+  }
+
   async getUserOrganizations(userId: string) {
     const memberships = await this.prisma.organizationMember.findMany({
       where: { userId, status: 'ACTIVE' },

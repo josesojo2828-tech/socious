@@ -72,6 +72,7 @@ function NewProductContent() {
   const [showComponents, setShowComponents] = useState<boolean>(false);
   const [componentProducts, setComponentProducts] = useState<Product[]>([]);
   const [rates, setRates] = useState<ExchangeRates | null>(null);
+  const [wholesaler, setWholesaler] = useState(false);
   const [variantForm, setVariantForm] = useState<ProductForm | null>(null);
   const [variantSource, setVariantSource] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -116,6 +117,7 @@ function NewProductContent() {
       setSuppliers(supplierPage.data.list);
       setUnits(Array.isArray(unitList.data) ? unitList.data : []);
       setShowComponents(Boolean(tenantSettings?.inventory?.useRawMaterials));
+      setWholesaler(Boolean(tenantSettings?.wholesaler));
       setComponentProducts(rawMaterials.data.list ?? []);
       if (ratesData.data?.rateBcv) {
         setRates({
@@ -232,6 +234,7 @@ function NewProductContent() {
           suppliers={suppliers}
           rates={rates}
           showComponents={showComponents}
+          wholesaler={wholesaler}
           componentProducts={componentProducts}
           busy={busy}
           onCancel={() => router.push("/dashboard/productos")}

@@ -287,6 +287,7 @@ export class ProductService {
         costPriceUSD: data.costPriceUSD ?? 0,
         salePriceUSD: data.salePriceUSD ?? 0,
         wholesalePriceUSD: data.wholesalePriceUSD ?? null,
+        wholesaleMinQuantity: data.wholesaleMinQuantity ?? null,
         stock,
         minStock: data.minStock ?? 0,
         unit: data.unit?.trim() || "UND",
@@ -371,6 +372,9 @@ export class ProductService {
         ...(data.salePriceUSD !== undefined && { salePriceUSD: data.salePriceUSD }),
         ...(data.wholesalePriceUSD !== undefined && {
           wholesalePriceUSD: data.wholesalePriceUSD ?? null,
+        }),
+        ...(data.wholesaleMinQuantity !== undefined && {
+          wholesaleMinQuantity: data.wholesaleMinQuantity ?? null,
         }),
         ...(data.minStock !== undefined && { minStock: data.minStock }),
         ...(data.unit !== undefined && { unit: data.unit?.trim() || "UND" }),

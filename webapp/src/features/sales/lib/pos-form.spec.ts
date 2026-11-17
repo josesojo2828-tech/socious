@@ -7,6 +7,7 @@ import {
   changeQuantity,
   lineTotal,
   normalizeQuantity,
+  resolveUnitPrice,
   removeFromCart,
   roundMoney,
   suggestedAmount,
@@ -25,6 +26,7 @@ const carte = (overrides: Partial<CartLine> = {}): CartLine => ({
   productId: "p-1",
   productName: "Arroz 1kg",
   unitPriceUSD: 2,
+  retailPriceUSD: 2,
   taxRate: 16,
   quantity: 1,
   ...overrides,
@@ -199,6 +201,71 @@ describe("pos-form (S6)", () => {
       expect(roundMoney(0.1 + 0.2)).toBe(0.3);
       expect(roundMoney(Number.NaN)).toBe(0);
     });
+  });
+});
+
+describe("precio de mayoreo (S3)", () => {
+  const mayorista = {
+    id: "p-may",
+    name: "Arroz 1kg",
+    salePriceUSD: "2.00",
+    taxRate: "0",
+    unit: "UND",
+    wholesalePriceUSD: "5.00",
+    wholesaleMinQuantity: "12.00",
+  };
+
+  it("cobra a mayorista cuando la cantidad llega al mínimo", () => {
+    const [line] = addToCart([], mayorista, 12, undefined, true);
+    expect(line.unitPriceUSD).toBe(5);
+    expect(lineTotal(line)).toBe(60);
+  });
+
+  it("debajo del mínimo cobra al detal", () => {
+    const [line] = addToCart([], mayorista, 11, undefined, true);
+    expect(line.unitPriceUSD).toBe(2);
+  });
+
+  it("recalcula al subir la cantidad", () => {
+    const cart = addToCart([], mayorista, 1, undefined, true);
+    const updated = changeQuantity(cart, "p-may", 12);
+    expect(updated[0].unitPriceUSD).toBe(5);
+    const back = changeQuantity(updated, "p-may", 3);
+    expect(back[0].unitPriceUSD).toBe(2);
+  });
+
+  it("sin el flag del cliente el mayoreo se ignora", () => {
+    const [line] = addToCart([], mayorista, 12, undefined, false);
+    expect(line.unitPriceUSD).toBe(2);
+    expect(line.wholesalePriceUSD).toBeNull();
+  });
+
+  it("la presentación con precio propio manda sobre el mayoreo", () => {
+    const [line] = addToCart([], mayorista, 12, {
+      id: "pres-1",
+      name: "Bulto 12",
+      salePriceUSD: "18.00",
+    }, true);
+    expect(line.unitPriceUSD).toBe(18);
+  });
+
+  it("resolveUnitPrice es puro y no toca el precio al detal", () => {
+    expect(
+      resolveUnitPrice({
+        quantity: 12,
+        retailPriceUSD: 2,
+        wholesalePriceUSD: 5,
+        wholesaleMinQuantity: 12,
+      }),
+    ).toBe(5);
+    expect(
+      resolveUnitPrice({
+        quantity: 12,
+        retailPriceUSD: 2,
+        wholesalePriceUSD: null,
+        wholesaleMinQuantity: null,
+      }),
+    ).toBe(2);
   });
 });
 

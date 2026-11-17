@@ -8,6 +8,8 @@ import {
   stockAfter,
   toForm,
   validateProductForm,
+  wholesaleTotalUSD,
+  wholesaleTotalLabel,
   type ProductForm,
 } from "./product-form";
 import type { Product } from "../types/product.type";
@@ -157,6 +159,50 @@ describe("product-form (S7)", () => {
       expect(
         buildStockPayload({ type: "IN", quantity: 5, newStock: 99 }),
       ).toEqual({ type: "IN", quantity: 5 });
+    });
+  });
+
+  describe("total de mayoreo (S2)", () => {
+    it("multiplica el mínimo por el costo unitario", () => {
+      expect(
+        wholesaleTotalUSD({ wholesaleMinQuantity: 12, wholesalePriceUSD: 5 }),
+      ).toBe(60);
+      expect(
+        wholesaleTotalUSD({ wholesaleMinQuantity: 2.5, wholesalePriceUSD: 4 }),
+      ).toBe(10);
+    });
+
+    it("devuelve null si falta alguno de los dos datos", () => {
+      expect(wholesaleTotalUSD({})).toBeNull();
+      expect(wholesaleTotalUSD({ wholesaleMinQuantity: 12 })).toBeNull();
+      expect(wholesaleTotalUSD({ wholesalePriceUSD: 5 })).toBeNull();
+      expect(
+        wholesaleTotalUSD({ wholesaleMinQuantity: 0, wholesalePriceUSD: 5 }),
+      ).toBeNull();
+    });
+
+    it("el texto muestra el total y la cantidad", () => {
+      expect(
+        wholesaleTotalLabel({ wholesaleMinQuantity: 12, wholesalePriceUSD: 5 }),
+      ).toBe("= $60.00 por 12 unidades");
+      expect(wholesaleTotalLabel({})).toContain("Completá");
+    });
+  });
+
+  describe("payload de mayoreo (S2)", () => {
+    it("envía mínimo y costo cuando están cargados", () => {
+      const payload = buildProductPayload(
+        form({ wholesaleMinQuantity: 12, wholesalePriceUSD: 5 }),
+        "create",
+      );
+      expect(payload.wholesaleMinQuantity).toBe(12);
+      expect(payload.wholesalePriceUSD).toBe(5);
+    });
+
+    it("los borra con null cuando se vacían", () => {
+      const payload = buildProductPayload(form(), "update");
+      expect(payload.wholesaleMinQuantity).toBeNull();
+      expect(payload.wholesalePriceUSD).toBeNull();
     });
   });
 

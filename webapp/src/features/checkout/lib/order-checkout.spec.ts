@@ -29,6 +29,7 @@ const cart: CartLine[] = [
     productId: "p-1",
     productName: "Arroz 1kg",
     unitPriceUSD: 2,
+    retailPriceUSD: 2,
     taxRate: 0,
     quantity: 3,
   },

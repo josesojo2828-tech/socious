@@ -133,6 +133,8 @@ export class SettingsController {
       planModules: string[];
       manualGrants: string[];
       planId: string | null;
+      /** Cliente mayorista (S1): habilita los campos de mayoreo. */
+      wholesaler: boolean;
     }
   > {
     const entitlements = (request.user as { entitlements?: {
@@ -164,8 +166,15 @@ export class SettingsController {
         })
       : null;
     const imageLimits = await this.tenantSettings.imageLimits(organizationId);
+    const organization = organizationId
+      ? await this.prisma.organization.findFirst({
+          where: { id: organizationId },
+          select: { isWholesaler: true },
+        })
+      : null;
     return {
       ...settings,
+      wholesaler: organization?.isWholesaler ?? false,
       planModules,
       manualGrants: [...new Set(grants.map((g) => g.module.key))],
       planId: activeSubscription?.planId ?? null,

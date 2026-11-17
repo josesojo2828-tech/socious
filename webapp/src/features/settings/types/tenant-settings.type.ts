@@ -69,6 +69,8 @@ export interface TenantSettings {
    * sections those modules own instead of offering switches that only exist
    * in higher plans.
    */
+  /** Cliente mayorista (S1): habilita los campos de mayoreo. */
+  wholesaler?: boolean;
   planModules?: string[];
   /** Id of the active subscription plan (e.g. `STUDIO`). */
   planId?: string | null;
