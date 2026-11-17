@@ -33,6 +33,7 @@ const makeController = (
 
   const prisma = {
     organization: {
+      findFirst: jest.fn().mockResolvedValue(null),
       findUnique: jest.fn().mockResolvedValue({
         id: "org-1",
         status: "ACTIVE",
@@ -237,6 +238,19 @@ describe("SettingsController", () => {
 
     // The admin's own entitlements are empty; the org's grants decide.
     expect(settings.planModules).toEqual(["SHIPPING", "CATALOG_ONLINE"]);
+  });
+
+  it("expone el flag mayorista del cliente configurado", async () => {
+    const { controller, prisma } = makeController([], ORG_A, platformAdmin);
+    prisma.organization.findFirst = jest
+      .fn()
+      .mockResolvedValue({ isWholesaler: true });
+
+    const settings = await controller.getSettings(
+      request(platformAdmin, { "x-workspace-id": ORG_A }),
+    );
+
+    expect(settings.wholesaler).toBe(true);
   });
 
   it("refuses a write without an organization", async () => {

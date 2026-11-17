@@ -138,6 +138,26 @@ describe("ProductService", () => {
       });
     });
 
+    it("persiste el mínimo y el precio de mayoreo", async () => {
+      const { service, tx, prisma } = makeService();
+      prisma.product.findFirst.mockResolvedValue(null);
+
+      await service.create(
+        { organizationId: ORG_A },
+        {
+          sku: "TELA-1",
+          name: "Tela lino",
+          wholesalePriceUSD: 5,
+          wholesaleMinQuantity: 12,
+        },
+      );
+
+      expect(tx.product.create.mock.calls[0][0].data).toMatchObject({
+        wholesalePriceUSD: 5,
+        wholesaleMinQuantity: 12,
+      });
+    });
+
     it("runs on an injected transaction without opening a new one", async () => {
       const { service, tx, prisma } = makeService();
       tx.product.findFirst.mockResolvedValue(null);

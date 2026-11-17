@@ -788,6 +788,16 @@ export class SaleService {
   ): Promise<ResolvedItem[]> {
     const resolved: ResolvedItem[] = [];
 
+    // Mayorista (S3): el flag del cliente se lee una vez por venta. Con el
+    // flag apagado, los datos de mayoreo del producto se ignoran.
+    const organization = scope.organizationId
+      ? await tx.organization.findFirst({
+          where: { id: scope.organizationId },
+          select: { isWholesaler: true },
+        })
+      : null;
+    const wholesaler = organization?.isWholesaler === true;
+
     for (const input of inputs) {
       const quantity = Number(input.quantity);
       let unitPriceUSD = Number(input.unitPriceUSD);
@@ -848,6 +858,8 @@ export class SaleService {
             isService: true,
             salePriceUSD: true,
             tracksLots: true,
+            wholesalePriceUSD: true,
+            wholesaleMinQuantity: true,
           },
         });
 
@@ -861,6 +873,19 @@ export class SaleService {
         tracksLots = product.tracksLots;
         productName = product.name;
         productId = product.id;
+
+        // Precio de mayoreo resuelto por el servidor (S3): el cliente no lo
+        // manda, se deduce de la cantidad. Debajo del mínimo no cambia nada.
+        const wholesaleMin = Number(product.wholesaleMinQuantity ?? 0);
+        if (
+          !isService &&
+          wholesaler &&
+          product.wholesalePriceUSD != null &&
+          wholesaleMin > 0 &&
+          quantity >= wholesaleMin
+        ) {
+          unitPriceUSD = Number(product.wholesalePriceUSD);
+        }
 
         if (!isService && !skipStock) {
           const stock = await tx.product.findFirst({

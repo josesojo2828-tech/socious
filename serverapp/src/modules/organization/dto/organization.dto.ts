@@ -67,6 +67,15 @@ export class InviteMemberDto {
   colorHex?: string;
 }
 
+/**
+ * Flag mayorista (S1): lo enciende la plataforma desde la ficha del cliente.
+ * Nunca se acepta dentro de `PATCH /api/settings`, que el cliente sí escribe.
+ */
+export class UpdateWholesalerDto {
+  @IsBoolean({ message: "isWholesaler debe ser verdadero o falso." })
+  isWholesaler: boolean;
+}
+
 export class UpdateMemberColorDto {
   @IsString()
   colorHex: string;
