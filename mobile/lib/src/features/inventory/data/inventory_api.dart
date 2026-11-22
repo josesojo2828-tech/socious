@@ -27,6 +27,28 @@ class InventoryApi {
     return ProductPage.fromJson(data);
   }
 
+  Future<ProductSummary> create(Map<String, dynamic> body) async {
+    final data = await _client.post<Map<String, dynamic>>(
+      '/api/products',
+      body: body,
+    );
+    final payload = data['data'];
+    return ProductSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
+  }
+
+  Future<ProductSummary> update(String id, Map<String, dynamic> body) async {
+    final data = await _client.patch<Map<String, dynamic>>(
+      '/api/products/$id',
+      body: body,
+    );
+    final payload = data['data'];
+    return ProductSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
+  }
+
   Future<ProductSummary> byId(String id) async {
     final data = await _client.get<Map<String, dynamic>>('/api/products/$id');
     final payload = data['data'];

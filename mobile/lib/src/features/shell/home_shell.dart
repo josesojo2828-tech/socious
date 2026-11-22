@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../auth/auth_controller.dart';
 import '../dashboard/dashboard_page.dart';
 import '../inventory/inventory_page.dart';
-import 'coming_soon_page.dart';
+import '../pos/pos_page.dart';
+import '../purchases/purchases_page.dart';
 import 'more_page.dart';
 
 /// The authenticated shell: one route with a bottom bar. Nested routes arrive
@@ -34,30 +35,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final pages = <Widget>[
       const DashboardPage(),
       const InventoryPage(),
-      const ComingSoonPage(
-        title: 'Punto de venta',
-        icon: Icons.point_of_sale_outlined,
-        description:
-            'Carrito, totales con las tasas del día y registro de la venta con '
-            'los medios de cobro del negocio.',
-        bullets: [
-          'Agregar productos por búsqueda o escaneo',
-          'Totales en USD, Bs y USDT',
-          'Cobros mixtos y venta a crédito',
-          'Comprobante de la venta',
-        ],
-      ),
-      const ComingSoonPage(
-        title: 'Compras',
-        icon: Icons.shopping_cart_outlined,
-        description:
-            'Órdenes de compra y recepción de mercancía desde el teléfono.',
-        bullets: [
-          'Listado y detalle de compras',
-          'Recepción de mercancía y entrada a inventario',
-          'Proveedores y sus datos',
-        ],
-      ),
+      const PosPage(),
+      const PurchasesPage(),
       const MorePage(),
     ];
 

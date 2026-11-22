@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../auth/auth_controller.dart';
-import 'data/rates_api.dart';
+import '../../core/exchange/rates.dart';
 
 /// Landing tab: who is using the app, in which workspace, and today's rates.
 ///

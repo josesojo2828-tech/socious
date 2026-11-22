@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'data/inventory_api.dart';
+import 'product_form_page.dart';
 
 class ProductDetailPage extends ConsumerWidget {
   const ProductDetailPage({super.key, required this.productId});
@@ -20,8 +21,27 @@ class ProductDetailPage extends ConsumerWidget {
     final product = ref.watch(productProvider(productId));
     final theme = Theme.of(context);
 
+    final current = product.valueOrNull;
+
     return Scaffold(
-      appBar: AppBar(title: Text(product.valueOrNull?.name ?? 'Producto')),
+      appBar: AppBar(title: Text(current?.name ?? 'Producto')),
+      floatingActionButton: current == null
+          ? null
+          : FloatingActionButton(
+              tooltip: 'Editar producto',
+              onPressed: () async {
+                final saved = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (_) => ProductFormPage(initial: current),
+                  ),
+                );
+                if (saved == true) {
+                  ref.invalidate(productProvider(productId));
+                  ref.invalidate(productsProvider);
+                }
+              },
+              child: const Icon(Icons.edit_outlined),
+            ),
       body: product.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(

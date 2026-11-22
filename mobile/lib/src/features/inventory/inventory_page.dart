@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'categories_page.dart';
 import 'data/inventory_api.dart';
 import 'data/product_models.dart';
 import 'product_detail_page.dart';
+import 'product_form_page.dart';
 import 'scan_page.dart';
 
 /// Product list with keyboard and barcode search.
@@ -46,6 +48,19 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
     });
   }
 
+  Future<void> _create() async {
+    final created = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => const ProductFormPage()),
+    );
+    if (created == true) ref.invalidate(productsProvider(_query));
+  }
+
+  Future<void> _openCategories() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(builder: (_) => const CategoriesPage()),
+    );
+  }
+
   Future<void> _scan() async {
     final code = await Navigator.of(context).push<String>(
       MaterialPageRoute(builder: (_) => const ScanPage()),
@@ -65,7 +80,27 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _create,
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Nuevo producto'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: _openCategories,
+                icon: const Icon(Icons.category_outlined, size: 18),
+                label: const Text('Categorías'),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: Row(
             children: [
               Expanded(

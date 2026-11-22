@@ -10,6 +10,7 @@ class ProductSummary {
     required this.unit,
     required this.salePriceUSD,
     required this.stock,
+    required this.taxRate,
     required this.minStock,
     required this.status,
     this.barcode,
@@ -25,6 +26,7 @@ class ProductSummary {
   final String unit;
   final double salePriceUSD;
   final double stock;
+  final double taxRate;
   final double minStock;
   final String status;
   final String? barcode;
@@ -50,6 +52,7 @@ class ProductSummary {
       unit: '${json['unit'] ?? 'UND'}',
       salePriceUSD: _toDouble(json['salePriceUSD']),
       stock: _toDouble(json['stock']),
+      taxRate: _toDouble(json['taxRate']),
       minStock: _toDouble(json['minStock']),
       status: '${json['status'] ?? 'ACTIVE'}',
       barcode: json['barcode'] as String?,

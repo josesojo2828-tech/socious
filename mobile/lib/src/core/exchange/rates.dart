@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/api/api_client.dart';
-import '../../../core/api/api_providers.dart';
-import '../../../core/api/api_exception.dart';
+import '../api/api_client.dart';
+import '../api/api_providers.dart';
+import '../api/api_exception.dart';
 
 class RatesSnapshot {
   const RatesSnapshot({

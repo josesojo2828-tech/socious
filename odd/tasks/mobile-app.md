@@ -20,14 +20,14 @@ Branch: `feat/mobile-app` · Delivery: `work-unit-commits` (~400 líneas por uni
 
 - T1 ✅ → S1, S2, S3 · inline · proyecto Flutter `mobile/` + core (config por `--dart-define`, `flutter_secure_storage`, Dio con refresh single-flight, tema) + router con guard.
 - T2 ✅ → S2, S3 · inline · login (validación pura testeada), splash que valida la sesión guardada, selector de workspace en `Más`.
-- T3 ✅ → S1, S10 · parcial · shell con 5 tabs; los tabs por rol (`/api/dashboard/tabs`) quedan pendientes.
+- T3 🟡 → S1, S10 · shell con 5 tabs; los tabs por rol (`/api/dashboard/tabs`) quedan pendientes.
 - T4 ✅ → S7 · inline · dashboard con saludo, workspace activo y tasas reales (`/api/exchange/rates/latest`).
-- T5 🟡 → S5 · parcial · listado, búsqueda por nombre/SKU/código, escáner de cámara y ficha de producto. Falta crear/editar producto y categorías.
-- T6 → S4 · inline · clientes.
-- T7 → S4 · inline · proveedores.
-- T8 → S8 · inline · compras (lista, detalle, recepción).
-- T9 → S9 · inline · punto de venta.
-- T10 → S6 · inline · configuración.
+- T5 ✅ → S5 · listado, búsqueda por nombre/SKU/código, escáner de cámara, ficha, alta y edición de producto (con categoría e IVA) y alta de categorías.
+- T6 ✅ → S4 · clientes: listado con saldo, búsqueda y alta.
+- T7 ✅ → S4 · proveedores: listado, búsqueda y alta.
+- T8 ✅ → S8 · compras: listado, detalle y recepción con actualización de stock.
+- T9 ✅ → S9 · POS: carrito, tasas del día, un cobro con el método del negocio (USD/Bs/USDT) y registro en `POST /api/sales`.
+- T10 ✅ → S6 · configuración: turnos de caja, monedas visibles, materia prima y servicios.
 - T11 🟡 → verificación · `flutter analyze` sin issues y `flutter test` 17/17. Se repite al cerrar cada tarea.
 
 ## Log
@@ -44,3 +44,7 @@ Branch: `feat/mobile-app` · Delivery: `work-unit-commits` (~400 líneas por uni
 - **L4** — `"monta eso y vamos a darle!"` → se montó la base: proyecto `mobile/` (Flutter 3.41.6), core HTTP con refresh, login, shell, dashboard y la primera rebanada de inventario (lista + búsqueda + escáner + ficha). Evidencia: `flutter analyze` sin issues, `flutter test` 17/17.
 - Decisión: el escáner alimenta el mismo `q` del backend (que ya busca `barcode`), así no hace falta un endpoint nuevo.
 - Decisión: el shell usa una `NavigationBar` con estado en vez de rutas anidadas; se migra cuando haya deep links.
+
+- **L5** — `"sigue broo, monta todoo entra en modo loop no pares hasta que acabes"` → se completaron T5-T10: categorías, alta/edición de producto, clientes, proveedores, POS, compras con recepción y configuración. `flutter analyze` sin issues, `flutter test` 21/21.
+- **L6** — `"asegurate de que todo este en main, y crea un archivo no se, constant para yo colocar ahi el dns o lo que sea, ip puerto algo."` → `api_host.dart` es el único archivo a editar (host, port, useHttps); `--dart-define=API_BASE_URL` sigue mandando en builds. Todo commiteado en `main`.
+- Pendiente: tabs por rol (T3b) y edición de clientes/proveedores (hoy sólo alta).
