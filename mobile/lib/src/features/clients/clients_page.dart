@@ -40,6 +40,22 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
     });
   }
 
+  Future<void> _edit(ClientSummary client) async {
+    try {
+      final full = await ref.read(clientsApiProvider).byId(client.id);
+      if (!mounted) return;
+      final saved = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(builder: (_) => ClientFormPage(initial: full)),
+      );
+      if (saved == true) ref.invalidate(clientsProvider);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$error')),
+      );
+    }
+  }
+
   Future<void> _create() async {
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (_) => const ClientFormPage()),
@@ -98,6 +114,7 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                       final client = page.items[index];
                       return Card(
                         child: ListTile(
+                          onTap: () => _edit(client),
                           leading: CircleAvatar(
                             child: Text(_initial(client.name)),
                           ),

@@ -22,6 +22,22 @@ class _SuppliersPageState extends ConsumerState<SuppliersPage> {
     super.dispose();
   }
 
+  Future<void> _edit(SupplierSummary supplier) async {
+    try {
+      final full = await ref.read(suppliersApiProvider).byId(supplier.id);
+      if (!mounted) return;
+      final saved = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(builder: (_) => SupplierFormPage(initial: full)),
+      );
+      if (saved == true) ref.invalidate(suppliersProvider);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$error')),
+      );
+    }
+  }
+
   Future<void> _create() async {
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (_) => const SupplierFormPage()),
@@ -77,6 +93,7 @@ class _SuppliersPageState extends ConsumerState<SuppliersPage> {
                     final supplier = page.items[index];
                     return Card(
                       child: ListTile(
+                        onTap: () => _edit(supplier),
                         leading: const CircleAvatar(
                           child: Icon(Icons.local_shipping_outlined, size: 20),
                         ),

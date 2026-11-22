@@ -5,7 +5,10 @@ import '../../core/api/api_exception.dart';
 import 'data/clients_api.dart';
 
 class ClientFormPage extends ConsumerStatefulWidget {
-  const ClientFormPage({super.key});
+  const ClientFormPage({super.key, this.initial});
+
+  /// `null` creates; a client edits it.
+  final ClientSummary? initial;
 
   @override
   ConsumerState<ClientFormPage> createState() => _ClientFormPageState();
@@ -13,13 +16,32 @@ class ClientFormPage extends ConsumerStatefulWidget {
 
 class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   final _form = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _taxId = TextEditingController();
-  final _phone = TextEditingController();
-  final _email = TextEditingController();
-  final _address = TextEditingController();
-  final _city = TextEditingController();
-  final _creditLimit = TextEditingController();
+  late final TextEditingController _name;
+  late final TextEditingController _taxId;
+  late final TextEditingController _phone;
+  late final TextEditingController _email;
+  late final TextEditingController _address;
+  late final TextEditingController _city;
+  late final TextEditingController _creditLimit;
+
+  bool get _isEdit => widget.initial != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initial;
+    _name = TextEditingController(text: initial?.name ?? '');
+    _taxId = TextEditingController(text: initial?.taxId ?? '');
+    _phone = TextEditingController(text: initial?.phone ?? '');
+    _email = TextEditingController(text: initial?.email ?? '');
+    _address = TextEditingController(text: initial?.address ?? '');
+    _city = TextEditingController(text: initial?.city ?? '');
+    _creditLimit = TextEditingController(
+      text: initial?.creditLimitUSD == null
+          ? ''
+          : initial!.creditLimitUSD!.toStringAsFixed(2),
+    );
+  }
   bool _saving = false;
   String? _error;
 
@@ -48,18 +70,23 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
     });
 
     final limit = _creditLimit.text.trim();
+    final draft = ClientDraft(
+      name: _name.text,
+      taxId: _taxId.text,
+      phone: _phone.text,
+      email: _email.text,
+      address: _address.text,
+      city: _city.text,
+      creditLimitUSD: limit.isEmpty ? null : double.tryParse(limit),
+    );
+
     try {
-      await ref.read(clientsApiProvider).create(
-            ClientDraft(
-              name: _name.text,
-              taxId: _taxId.text,
-              phone: _phone.text,
-              email: _email.text,
-              address: _address.text,
-              city: _city.text,
-              creditLimitUSD: limit.isEmpty ? null : double.tryParse(limit),
-            ),
-          );
+      final api = ref.read(clientsApiProvider);
+      if (_isEdit) {
+        await api.update(widget.initial!.id, draft);
+      } else {
+        await api.create(draft);
+      }
       if (mounted) Navigator.of(context).pop(true);
     } on ApiException catch (error) {
       setState(() {
@@ -77,7 +104,9 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuevo cliente')),
+      appBar: AppBar(
+        title: Text(_isEdit ? 'Editar cliente' : 'Nuevo cliente'),
+      ),
       body: Form(
         key: _form,
         child: ListView(
@@ -146,7 +175,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       width: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Guardar cliente'),
+                  : Text(_isEdit ? 'Guardar cambios' : 'Guardar cliente'),
             ),
           ],
         ),

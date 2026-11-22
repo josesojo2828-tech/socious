@@ -89,6 +89,25 @@ class SuppliersApi {
     return Paged.parse(data, SupplierSummary.fromJson);
   }
 
+  Future<SupplierSummary> byId(String id) async {
+    final data = await _client.get<Map<String, dynamic>>('/api/suppliers/$id');
+    final payload = data['data'];
+    return SupplierSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
+  }
+
+  Future<SupplierSummary> update(String id, SupplierDraft draft) async {
+    final data = await _client.patch<Map<String, dynamic>>(
+      '/api/suppliers/$id',
+      body: draft.toJson(),
+    );
+    final payload = data['data'];
+    return SupplierSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
+  }
+
   Future<SupplierSummary> create(SupplierDraft draft) async {
     final data = await _client.post<Map<String, dynamic>>(
       '/api/suppliers',

@@ -5,7 +5,10 @@ import '../../core/api/api_exception.dart';
 import 'data/suppliers_api.dart';
 
 class SupplierFormPage extends ConsumerStatefulWidget {
-  const SupplierFormPage({super.key});
+  const SupplierFormPage({super.key, this.initial});
+
+  /// `null` crea; un proveedor se edita.
+  final SupplierSummary? initial;
 
   @override
   ConsumerState<SupplierFormPage> createState() => _SupplierFormPageState();
@@ -13,15 +16,30 @@ class SupplierFormPage extends ConsumerStatefulWidget {
 
 class _SupplierFormPageState extends ConsumerState<SupplierFormPage> {
   final _form = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _taxId = TextEditingController();
-  final _contactName = TextEditingController();
-  final _phone = TextEditingController();
-  final _email = TextEditingController();
-  final _address = TextEditingController();
-  final _notes = TextEditingController();
+  late final TextEditingController _name;
+  late final TextEditingController _taxId;
+  late final TextEditingController _contactName;
+  late final TextEditingController _phone;
+  late final TextEditingController _email;
+  late final TextEditingController _address;
+  late final TextEditingController _notes;
   bool _saving = false;
   String? _error;
+
+  bool get _isEdit => widget.initial != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initial;
+    _name = TextEditingController(text: initial?.name ?? '');
+    _taxId = TextEditingController(text: initial?.taxId ?? '');
+    _contactName = TextEditingController(text: initial?.contactName ?? '');
+    _phone = TextEditingController(text: initial?.phone ?? '');
+    _email = TextEditingController(text: initial?.email ?? '');
+    _address = TextEditingController();
+    _notes = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -47,18 +65,23 @@ class _SupplierFormPageState extends ConsumerState<SupplierFormPage> {
       _error = null;
     });
 
+    final draft = SupplierDraft(
+      name: _name.text,
+      taxId: _taxId.text,
+      contactName: _contactName.text,
+      phone: _phone.text,
+      email: _email.text,
+      address: _address.text,
+      notes: _notes.text,
+    );
+
     try {
-      await ref.read(suppliersApiProvider).create(
-            SupplierDraft(
-              name: _name.text,
-              taxId: _taxId.text,
-              contactName: _contactName.text,
-              phone: _phone.text,
-              email: _email.text,
-              address: _address.text,
-              notes: _notes.text,
-            ),
-          );
+      final api = ref.read(suppliersApiProvider);
+      if (_isEdit) {
+        await api.update(widget.initial!.id, draft);
+      } else {
+        await api.create(draft);
+      }
       if (mounted) Navigator.of(context).pop(true);
     } on ApiException catch (error) {
       setState(() {
@@ -76,7 +99,9 @@ class _SupplierFormPageState extends ConsumerState<SupplierFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuevo proveedor')),
+      appBar: AppBar(
+        title: Text(_isEdit ? 'Editar proveedor' : 'Nuevo proveedor'),
+      ),
       body: Form(
         key: _form,
         child: ListView(
@@ -141,7 +166,7 @@ class _SupplierFormPageState extends ConsumerState<SupplierFormPage> {
                       width: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Guardar proveedor'),
+                  : Text(_isEdit ? 'Guardar cambios' : 'Guardar proveedor'),
             ),
           ],
         ),

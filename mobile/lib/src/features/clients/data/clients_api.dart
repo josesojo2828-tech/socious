@@ -12,6 +12,9 @@ class ClientSummary {
     this.phone,
     this.email,
     this.city,
+    this.address,
+    this.notes,
+    this.creditLimitUSD,
     this.balanceUSD = 0,
     this.isActive = true,
   });
@@ -22,6 +25,9 @@ class ClientSummary {
   final String? phone;
   final String? email;
   final String? city;
+  final String? address;
+  final String? notes;
+  final double? creditLimitUSD;
   final double balanceUSD;
   final bool isActive;
 
@@ -32,6 +38,11 @@ class ClientSummary {
         phone: json['phone'] as String?,
         email: json['email'] as String?,
         city: json['city'] as String?,
+        address: json['address'] as String?,
+        notes: json['notes'] as String?,
+        creditLimitUSD: json['creditLimitUSD'] == null
+            ? null
+            : toDouble(json['creditLimitUSD']),
         balanceUSD: toDouble(json['currentBalanceUSD']),
         isActive: json['isActive'] != false,
       );
@@ -89,6 +100,25 @@ class ClientsApi {
       },
     );
     return Paged.parse(data, ClientSummary.fromJson);
+  }
+
+  Future<ClientSummary> byId(String id) async {
+    final data = await _client.get<Map<String, dynamic>>('/api/clients/$id');
+    final payload = data['data'];
+    return ClientSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
+  }
+
+  Future<ClientSummary> update(String id, ClientDraft draft) async {
+    final data = await _client.patch<Map<String, dynamic>>(
+      '/api/clients/$id',
+      body: draft.toJson(),
+    );
+    final payload = data['data'];
+    return ClientSummary.fromJson(
+      payload is Map<String, dynamic> ? payload : data,
+    );
   }
 
   Future<ClientSummary> create(ClientDraft draft) async {
