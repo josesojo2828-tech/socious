@@ -7,9 +7,11 @@ import 'package:intl/intl.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/exchange/rates.dart';
 import '../../shared/widgets/states.dart';
+import '../clients/client_form_page.dart';
 import '../clients/data/clients_api.dart';
 import '../inventory/data/inventory_api.dart';
 import '../inventory/data/product_models.dart';
+import '../inventory/product_form_page.dart';
 import 'data/pos_api.dart';
 
 class _CartLine {
@@ -129,6 +131,26 @@ class _PosPageState extends ConsumerState<PosPage> {
   static double _round(double value) =>
       (value * 100).roundToDouble() / 100;
 
+  /// Create a product without leaving the sale; it lands straight in the cart.
+  Future<void> _newProduct() async {
+    final created = await Navigator.of(context).push<ProductSummary>(
+      MaterialPageRoute(builder: (_) => const ProductFormPage()),
+    );
+    if (created == null) return;
+    ref.invalidate(productsProvider);
+    _add(created);
+  }
+
+  /// Create the customer and select it for this sale.
+  Future<void> _newClient() async {
+    final created = await Navigator.of(context).push<ClientSummary>(
+      MaterialPageRoute(builder: (_) => const ClientFormPage()),
+    );
+    if (created == null) return;
+    ref.invalidate(clientsProvider);
+    setState(() => _clientId = created.id);
+  }
+
   Future<void> _submit(PaymentOption method) async {
     if (_cart.isEmpty) {
       _toast('Agregá al menos un producto.');
@@ -216,9 +238,14 @@ class _PosPageState extends ConsumerState<PosPage> {
             controller: _search,
             onChanged: _onChanged,
             textInputAction: TextInputAction.search,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Buscar producto para vender',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                tooltip: 'Crear producto',
+                onPressed: _newProduct,
+                icon: const Icon(Icons.add_box_outlined),
+              ),
             ),
           ),
         ),
@@ -331,6 +358,7 @@ class _PosPageState extends ConsumerState<PosPage> {
                             ),
                             error: (error, _) => Text('$error'),
                             data: (list) => DropdownButtonFormField<String>(
+                              key: ValueKey(method?.code),
                               initialValue: method?.code,
                               isDense: true,
                               decoration:
@@ -364,27 +392,41 @@ class _PosPageState extends ConsumerState<PosPage> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    clients.when(
-                      loading: () => const SizedBox.shrink(),
-                      error: (_, _) => const SizedBox.shrink(),
-                      data: (page) => DropdownButtonFormField<String?>(
-                        initialValue: _clientId,
-                        isDense: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Cliente (opcional)'),
-                        items: [
-                          const DropdownMenuItem<String?>(
-                            value: null,
-                            child: Text('Sin cliente'),
-                          ),
-                          for (final client in page.items)
-                            DropdownMenuItem<String?>(
-                              value: client.id,
-                              child: Text(client.name),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: clients.when(
+                            loading: () => const SizedBox.shrink(),
+                            error: (_, _) => const SizedBox.shrink(),
+                            data: (page) => DropdownButtonFormField<String?>(
+                              key: ValueKey(_clientId),
+                              initialValue: _clientId,
+                              isDense: true,
+                              decoration: const InputDecoration(
+                                labelText: 'Cliente (opcional)',
+                              ),
+                              items: [
+                                const DropdownMenuItem<String?>(
+                                  value: null,
+                                  child: Text('Sin cliente'),
+                                ),
+                                for (final client in page.items)
+                                  DropdownMenuItem<String?>(
+                                    value: client.id,
+                                    child: Text(client.name),
+                                  ),
+                              ],
+                              onChanged: (value) =>
+                                  setState(() => _clientId = value),
                             ),
-                        ],
-                        onChanged: (value) => setState(() => _clientId = value),
-                      ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Crear cliente',
+                          onPressed: _newClient,
+                          icon: const Icon(Icons.person_add_alt_1),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     FilledButton.icon(

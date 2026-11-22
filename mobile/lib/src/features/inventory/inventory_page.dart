@@ -49,10 +49,10 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
   }
 
   Future<void> _create() async {
-    final created = await Navigator.of(context).push<bool>(
+    final created = await Navigator.of(context).push<ProductSummary>(
       MaterialPageRoute(builder: (_) => const ProductFormPage()),
     );
-    if (created == true) ref.invalidate(productsProvider(_query));
+    if (created != null) ref.invalidate(productsProvider);
   }
 
   Future<void> _openCategories() async {

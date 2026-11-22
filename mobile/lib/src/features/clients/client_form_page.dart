@@ -82,12 +82,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
 
     try {
       final api = ref.read(clientsApiProvider);
-      if (_isEdit) {
-        await api.update(widget.initial!.id, draft);
-      } else {
-        await api.create(draft);
-      }
-      if (mounted) Navigator.of(context).pop(true);
+      final saved = _isEdit
+          ? await api.update(widget.initial!.id, draft)
+          : await api.create(draft);
+      if (mounted) Navigator.of(context).pop(saved);
     } on ApiException catch (error) {
       setState(() {
         _saving = false;

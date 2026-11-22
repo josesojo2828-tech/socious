@@ -115,12 +115,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
     try {
       final api = ref.read(inventoryApiProvider);
-      if (_isEdit) {
-        await api.update(widget.initial!.id, body);
-      } else {
-        await api.create(body);
-      }
-      if (mounted) Navigator.of(context).pop(true);
+      final saved = _isEdit
+          ? await api.update(widget.initial!.id, body)
+          : await api.create(body);
+      if (mounted) Navigator.of(context).pop(saved);
     } on ApiException catch (error) {
       setState(() {
         _saving = false;

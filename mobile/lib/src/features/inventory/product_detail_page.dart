@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'data/inventory_api.dart';
+import 'data/product_models.dart';
 import 'product_form_page.dart';
 
 class ProductDetailPage extends ConsumerWidget {
@@ -30,12 +31,13 @@ class ProductDetailPage extends ConsumerWidget {
           : FloatingActionButton(
               tooltip: 'Editar producto',
               onPressed: () async {
-                final saved = await Navigator.of(context).push<bool>(
+                final saved =
+                    await Navigator.of(context).push<ProductSummary>(
                   MaterialPageRoute(
                     builder: (_) => ProductFormPage(initial: current),
                   ),
                 );
-                if (saved == true) {
+                if (saved != null) {
                   ref.invalidate(productProvider(productId));
                   ref.invalidate(productsProvider);
                 }
