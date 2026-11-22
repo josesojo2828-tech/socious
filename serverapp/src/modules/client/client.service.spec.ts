@@ -179,5 +179,38 @@ describe("ClientService", () => {
       expect(balance.currentBalanceUSD).toBe(0);
       expect(balance.availableCreditUSD).toBe(40);
     });
+
+    it("does not charge the client for the part Cashea finances", async () => {
+      const { service, prisma } = makeService();
+      prisma.client.findFirst.mockResolvedValue({
+        id: "c-1",
+        taxId: null,
+        creditLimitUSD: "100.00",
+      });
+      // Two aggregate calls, in order: cashea-financed sum, then the total.
+      prisma.sale.aggregate
+        .mockResolvedValueOnce({ _sum: { casheaFinancedUSD: "60.00" } })
+        .mockResolvedValueOnce({ _sum: { totalUSD: "100.00" } });
+      prisma.salePayment.aggregate.mockResolvedValue({
+        _sum: { amountUSD: "40.00" },
+      });
+
+      const balance = await service.getBalance({ organizationId: ORG_A }, "c-1");
+
+      expect(balance.casheaFinancedUSD).toBe(60);
+      expect(balance.currentBalanceUSD).toBe(0);
+      expect(balance.availableCreditUSD).toBe(100);
+    });
+
+    it("counts only client payments, never a CASHEA settlement", async () => {
+      const { service, prisma } = makeService();
+      prisma.client.findFirst.mockResolvedValue({ id: "c-1", taxId: null });
+
+      await service.getBalance({ organizationId: ORG_A }, "c-1");
+
+      expect(
+        prisma.salePayment.aggregate.mock.calls[0][0].where.paymentMethod,
+      ).toEqual({ not: "CASHEA" });
+    });
   });
 });

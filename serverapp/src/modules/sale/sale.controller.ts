@@ -148,6 +148,15 @@ export class SaleController {
     return this.saleReturnService.create(scope, id, body);
   }
 
+  @Get(":id/cashea")
+  async getCasheaPlan(
+    @Req() request: RequestWithUser,
+    @Param("id") id: string,
+  ) {
+    const scope = await this.resolveScope(request);
+    return this.saleService.getCasheaPlan(scope, id);
+  }
+
   @Get(":id")
   async getOne(@Req() request: RequestWithUser, @Param("id") id: string) {
     const scope = await this.resolveScope(request);

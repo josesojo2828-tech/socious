@@ -1658,6 +1658,14 @@ model Sale {
   dueDate        DateTime?         // Fecha límite si fue a crédito
   creditTerms    String?           // JSON: cadencia elegida (QUINCENAL/MONTHLY/EVERY_N_DAYS/FREE)
 
+  // Cashea (BNPL): la inicial la cobra el comercio y el saldo financiado es una
+  // cuenta por cobrar a Cashea, NO deuda del cliente. Las cuotas caen cada 14 días.
+  casheaInitialUSD      Decimal?  @db.Decimal(14, 2)
+  casheaFinancedUSD     Decimal?  @db.Decimal(14, 2)
+  casheaInstallmentCount Int?
+  casheaInstallmentUSD  Decimal?  @db.Decimal(14, 2)
+  casheaFirstDueDate    DateTime?
+
   // Snapshot de tasas al momento de emitir la venta
   rateBcv        Decimal           @default(1.00) @db.Decimal(14, 4)
   rateUsdt       Decimal           @default(1.00) @db.Decimal(14, 4)
@@ -1692,6 +1700,7 @@ model Sale {
   @@index([clientId])
   @@index([saleNumber])
   @@index([issueDate])
+  @@index([casheaFirstDueDate])
 }
 
 model SaleItem {

@@ -6,6 +6,7 @@ import {
 import { PrismaService } from "nestjs-prisma";
 import type { Prisma } from "@prisma/client";
 import { round2 } from "src/shared/utils/money";
+import { CASHEA_PAYMENT_METHOD } from "src/shared/constants/payment-methods";
 import {
   CreateClientDto,
   ListClientsQueryDto,
@@ -162,9 +163,24 @@ export class ClientService {
   async getBalance(scope: ClientScope, id: string) {
     const client = await this.getOne(scope, id);
 
+    // What the CLIENT paid: a CASHEA settlement is Cashea paying the merchant,
+    // never the client, so it must not reduce the client's debt.
     const paidAgg = await this.prisma.salePayment.aggregate({
       _sum: { amountUSD: true },
-      where: { sale: { clientId: id, organizationId: scope.organizationId } },
+      where: {
+        paymentMethod: { not: CASHEA_PAYMENT_METHOD },
+        sale: { clientId: id, organizationId: scope.organizationId },
+      },
+    });
+
+    // On a Cashea sale the financed part is owed by Cashea, not by the client.
+    const casheaAgg = await this.prisma.sale.aggregate({
+      _sum: { casheaFinancedUSD: true },
+      where: {
+        clientId: id,
+        organizationId: scope.organizationId,
+        deletedAt: null,
+      },
     });
 
     const dueAgg = await this.prisma.sale.aggregate({
@@ -177,14 +193,18 @@ export class ClientService {
     });
 
     const totalUSD = Number(dueAgg._sum.totalUSD ?? 0);
+    const financedUSD = Number(casheaAgg._sum.casheaFinancedUSD ?? 0);
     const paidUSD = Number(paidAgg._sum.amountUSD ?? 0);
-    const currentBalanceUSD = round2(Math.max(0, totalUSD - paidUSD));
+    const currentBalanceUSD = round2(
+      Math.max(0, totalUSD - financedUSD - paidUSD),
+    );
     const creditLimitUSD = Number(client.creditLimitUSD ?? 0);
 
     return {
       clientId: id,
       totalUSD,
       paidUSD,
+      casheaFinancedUSD: round2(financedUSD),
       currentBalanceUSD,
       creditLimitUSD,
       availableCreditUSD: Math.max(0, creditLimitUSD - currentBalanceUSD),

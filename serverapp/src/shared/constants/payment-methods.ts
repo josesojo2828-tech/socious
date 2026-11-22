@@ -31,8 +31,19 @@ export const BUSINESS_PAYMENT_METHODS: readonly BusinessPaymentMethodOption[] =
     { code: "ZELLE", label: "Zelle", currency: "USD" },
     { code: "USDT_BINANCE", label: "USDT (Binance)", currency: "USDT" },
     { code: "CARD", label: "Punto de venta / Tarjeta", currency: "VES" },
+    {
+      code: "CASHEA",
+      label: "Cashea (liquidación)",
+      currency: "USD",
+    },
     { code: "OTHER", label: "Otro", currency: "USD" },
   ] as const;
+
+/**
+ * Cashea settlements land as their own method so they never count as a client
+ * payment: on a Cashea sale the financed part is owed by Cashea, not the client.
+ */
+export const CASHEA_PAYMENT_METHOD = "CASHEA";
 
 export const BUSINESS_PAYMENT_METHOD_CODES: readonly string[] =
   BUSINESS_PAYMENT_METHODS.map((method) => method.code);

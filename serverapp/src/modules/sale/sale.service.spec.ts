@@ -1441,4 +1441,341 @@ describe("SaleService", () => {
       expect(tx.product.update).not.toHaveBeenCalled();
     });
   });
+
+  describe("cashea plan", () => {
+    const bigItem = [
+      {
+        productId: "prod-1",
+        productName: "Arroz 1kg",
+        quantity: 1,
+        unitPriceUSD: 100,
+      },
+    ];
+    const plan = {
+      initialUSD: 40,
+      installmentCount: 3,
+      installmentUSD: 20,
+      firstDueDate: new Date(2026, 0, 20, 12, 0, 0).toISOString(),
+    };
+
+    const priceyProduct = () => productOnShelf(50, { salePriceUSD: "100.00" });
+
+    it("freezes the plan and finances what the initial does not cover", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        { items: bigItem, cashea: plan },
+      );
+
+      const data = tx.sale.create.mock.calls[0][0].data;
+      expect(data.casheaInitialUSD).toBe(40);
+      expect(data.casheaFinancedUSD).toBe(60);
+      expect(data.casheaInstallmentCount).toBe(3);
+      expect(data.casheaInstallmentUSD).toBe(20);
+      expect(data.casheaFirstDueDate).toEqual(new Date(2026, 0, 20, 12, 0, 0));
+    });
+
+    it("never turns the financed part into client debt when the initial was paid", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          items: bigItem,
+          clientId: "c-1",
+          cashea: plan,
+          payments: [
+            { amountOriginal: 40, currency: "USD", paymentMethod: "CASH_USD" },
+          ],
+        },
+      );
+
+      expect(tx.client.update).not.toHaveBeenCalled();
+    });
+
+    it("charges the client only for the part of the initial not collected", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          items: bigItem,
+          clientId: "c-1",
+          cashea: plan,
+          payments: [
+            { amountOriginal: 10, currency: "USD", paymentMethod: "CASH_USD" },
+          ],
+        },
+      );
+
+      expect(tx.client.update.mock.calls[0][0].data).toEqual({
+        currentBalanceUSD: { increment: 30 },
+      });
+    });
+
+    it("rejects a plan whose initial plus installments do not match the total", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A, createdById: "u-1" },
+          {
+            items: bigItem,
+            cashea: { ...plan, installmentUSD: 10 },
+          },
+        ),
+      ).rejects.toThrow(
+        "Las cuotas de Cashea no cuadran: inicial + cuotas debe dar el total de la venta.",
+      );
+    });
+
+    it("keeps a CASHEA settlement out of the client balance", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        totalUSD: "100.00",
+        status: "COMPLETED",
+        clientId: "c-1",
+        casheaInitialUSD: "40.00",
+        casheaFinancedUSD: "60.00",
+      });
+      tx.salePayment.findMany.mockResolvedValue([
+        { amountUSD: "40.00", paymentMethod: "CASH_USD" },
+      ]);
+
+      await service.addPayment({ organizationId: ORG_A }, "s-1", {
+        amountOriginal: 20,
+        currency: "USD",
+        paymentMethod: "CASHEA",
+      });
+
+      expect(tx.client.update).not.toHaveBeenCalled();
+    });
+
+    it("caps a client abono at the initial it still owes", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        totalUSD: "100.00",
+        status: "COMPLETED",
+        clientId: "c-1",
+        casheaInitialUSD: "40.00",
+        casheaFinancedUSD: "60.00",
+      });
+      // The initial was already collected in full.
+      tx.salePayment.findMany.mockResolvedValue([
+        { amountUSD: "40.00", paymentMethod: "CASH_USD" },
+      ]);
+
+      await service.addPayment({ organizationId: ORG_A }, "s-1", {
+        amountOriginal: 20,
+        currency: "USD",
+        paymentMethod: "CASH_USD",
+      });
+
+      expect(tx.client.update).not.toHaveBeenCalled();
+    });
+
+    it("derives the 14-day schedule and what Cashea already settled", async () => {
+      const { service, prisma } = makeService();
+      prisma.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        totalUSD: "100.00",
+        casheaInitialUSD: "40.00",
+        casheaFinancedUSD: "60.00",
+        casheaInstallmentCount: 3,
+        casheaInstallmentUSD: "20.00",
+        casheaFirstDueDate: new Date(2026, 0, 20, 12, 0, 0),
+        payments: [{ amountUSD: "20.00" }],
+      });
+
+      const result = await service.getCasheaPlan(
+        { organizationId: ORG_A },
+        "s-1",
+      );
+
+      expect(result.cadenceDays).toBe(14);
+      expect(result.schedule).toHaveLength(3);
+      expect(result.schedule[1].dueDate).toEqual(
+        new Date(2026, 1, 3, 12, 0, 0),
+      );
+      expect(result.receivedUSD).toBe(20);
+      expect(result.pendingUSD).toBe(40);
+    });
+
+    it("keeps a Cashea sale out of the client receivables report", async () => {
+      const { service, prisma } = makeService();
+      prisma.sale.findMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([]);
+      prisma.salePayment.findMany.mockResolvedValue([]);
+      prisma.sale.aggregate.mockResolvedValue({
+        _sum: { totalUSD: 0, totalVES: 0, totalUSDT: 0 },
+        _count: { id: 0 },
+      });
+      prisma.sale.count.mockResolvedValue(0);
+
+      await service.getReport({ organizationId: ORG_A }, {});
+
+      const openItemsCall = prisma.sale.findMany.mock.calls[1][0];
+      expect(openItemsCall.where.casheaFinancedUSD).toBeNull();
+    });
+
+    it("keeps a CASHEA abono out of the client balance on a non-Cashea sale", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        totalUSD: "100.00",
+        status: "COMPLETED",
+        clientId: "c-1",
+        casheaFinancedUSD: null,
+      });
+      tx.salePayment.findMany.mockResolvedValue([]);
+
+      await service.addPayment({ organizationId: ORG_A }, "s-1", {
+        amountOriginal: 30,
+        currency: "USD",
+        paymentMethod: "CASHEA",
+      });
+
+      expect(tx.client.update).not.toHaveBeenCalled();
+    });
+
+    it("does not let a CASHEA payment at creation reduce the client debt", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await service.create(
+        { organizationId: ORG_A, createdById: "u-1" },
+        {
+          items: bigItem,
+          clientId: "c-1",
+          payments: [
+            { amountOriginal: 30, currency: "USD", paymentMethod: "CASHEA" },
+          ],
+        },
+      );
+
+      expect(tx.client.update.mock.calls[0][0].data).toEqual({
+        currentBalanceUSD: { increment: 100 },
+      });
+    });
+
+    it("does not turn the financed part into client debt when a Cashea sale is cancelled", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        clientId: "c-1",
+        totalUSD: "100.00",
+        casheaInitialUSD: "40.00",
+        casheaFinancedUSD: "60.00",
+        items: [],
+      });
+      tx.salePayment.aggregate.mockResolvedValue({
+        _sum: { amountUSD: "40.00" },
+      });
+
+      await service.cancel({ organizationId: ORG_A }, "s-1");
+
+      expect(tx.client.update).not.toHaveBeenCalled();
+    });
+
+    it("rejects a Cashea first due date that cannot be parsed", async () => {
+      const { service, tx } = makeService();
+      tx.product.findFirst.mockResolvedValue(priceyProduct());
+
+      await expect(
+        service.create(
+          { organizationId: ORG_A, createdById: "u-1" },
+          {
+            items: bigItem,
+            cashea: { ...plan, firstDueDate: "not-a-date" },
+          },
+        ),
+      ).rejects.toThrow("La fecha de la primera cuota de Cashea no es válida.");
+    });
+
+    it("still reduces a non-Cashea client debt with a CASH abono", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        totalUSD: "100.00",
+        status: "COMPLETED",
+        clientId: "c-1",
+        casheaFinancedUSD: null,
+      });
+      tx.salePayment.findMany.mockResolvedValue([]);
+
+      await service.addPayment({ organizationId: ORG_A }, "s-1", {
+        amountOriginal: 30,
+        currency: "USD",
+        paymentMethod: "CASH_USD",
+      });
+
+      expect(tx.client.update.mock.calls[0][0].data).toEqual({
+        currentBalanceUSD: { increment: -30 },
+      });
+    });
+
+    it("cancelling a Cashea sale only restores the unpaid initial", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        clientId: "c-1",
+        totalUSD: "100.00",
+        casheaInitialUSD: "40.00",
+        casheaFinancedUSD: "60.00",
+        items: [],
+      });
+      tx.salePayment.aggregate.mockResolvedValue({
+        _sum: { amountUSD: "10.00" },
+      });
+
+      await service.cancel({ organizationId: ORG_A }, "s-1");
+
+      expect(tx.salePayment.aggregate.mock.calls[0][0].where).toMatchObject({
+        paymentMethod: { not: "CASHEA" },
+      });
+      expect(tx.client.update.mock.calls[0][0].data).toEqual({
+        currentBalanceUSD: { increment: 30 },
+      });
+    });
+
+    it("cancelling a normal sale restores what the client still owed", async () => {
+      const { service, tx } = makeService();
+      tx.sale.findFirst.mockResolvedValue({
+        id: "s-1",
+        saleNumber: "VTA-00001",
+        status: "COMPLETED",
+        clientId: "c-1",
+        totalUSD: "100.00",
+        casheaInitialUSD: null,
+        casheaFinancedUSD: null,
+        items: [],
+      });
+      tx.salePayment.aggregate.mockResolvedValue({
+        _sum: { amountUSD: "40.00" },
+      });
+
+      await service.cancel({ organizationId: ORG_A }, "s-1");
+
+      expect(tx.client.update.mock.calls[0][0].data).toEqual({
+        currentBalanceUSD: { increment: 60 },
+      });
+    });
+  });
 });

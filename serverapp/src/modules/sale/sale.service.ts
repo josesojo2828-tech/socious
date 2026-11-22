@@ -3,8 +3,17 @@ import {  BadRequestException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { BUSINESS_PAYMENT_METHOD_CODES } from "src/shared/constants/payment-methods";
+import {
+  BUSINESS_PAYMENT_METHOD_CODES,
+  CASHEA_PAYMENT_METHOD,
+} from "src/shared/constants/payment-methods";
 import { computeCreditDueDate } from "./util/credit-due-date";
+import {
+  CASHEA_CADENCE_DAYS,
+  buildCasheaSchedule,
+  casheaFinancedUSD,
+  validateCasheaPlan,
+} from "./util/cashea-plan";
 import { resolveReportRange } from "src/shared/utils/report-range";
 import { PrismaService } from "nestjs-prisma";
 import { PaymentStatus, ProductStatus, SaleStatus } from "@prisma/client";
@@ -198,8 +207,39 @@ export class SaleService {
         }
       }
 
-      const providedSaleNumber = data.saleNumber?.trim();
-      const saleNumber =
+      // Cashea (BNPL): the plan is frozen on the document. The financed part is
+      // a receivable against Cashea, so it never becomes the client's debt.
+      let casheaPlan: {
+        casheaInitialUSD: number;
+        casheaFinancedUSD: number;
+        casheaInstallmentCount: number;
+        casheaInstallmentUSD: number;
+        casheaFirstDueDate: Date;
+      } | null = null;
+      if (data.cashea) {
+        const invalid = validateCasheaPlan(totals.totalUSD, data.cashea);
+        if (invalid) throw new BadRequestException(invalid);
+
+        const firstDueDate = new Date(data.cashea.firstDueDate);
+        if (Number.isNaN(firstDueDate.getTime())) {
+          throw new BadRequestException(
+            "La fecha de la primera cuota de Cashea no es válida.",
+          );
+        }
+
+        casheaPlan = {
+          casheaInitialUSD: round2(data.cashea.initialUSD),
+          casheaFinancedUSD: casheaFinancedUSD(
+            totals.totalUSD,
+            data.cashea.initialUSD,
+          ),
+          casheaInstallmentCount: data.cashea.installmentCount,
+          casheaInstallmentUSD: round2(data.cashea.installmentUSD),
+          casheaFirstDueDate: firstDueDate,
+        };
+      }
+
+      const providedSaleNumber = data.saleNumber?.trim();      const saleNumber =
         providedSaleNumber && providedSaleNumber.length > 0
           ? providedSaleNumber
           : await this.sequenceService.nextFormatted(
@@ -219,6 +259,7 @@ export class SaleService {
           issueDate,
           dueDate,
           creditTerms,
+          ...(casheaPlan ?? {}),
           rateBcv: rates.rateBcv,
           rateUsdt: rates.rateUsdt,
           subtotalUSD: totals.subtotalUSD,
@@ -251,6 +292,14 @@ export class SaleService {
       const paidUSD = round2(
         payments.reduce((sum, payment) => sum + Number(payment.amountUSD), 0),
       );
+      // Only what the client paid counts against the client's own debt.
+      const clientPaidUSD = round2(
+        payments
+          .filter(
+            (payment) => payment.paymentMethod !== CASHEA_PAYMENT_METHOD,
+          )
+          .reduce((sum, payment) => sum + Number(payment.amountUSD), 0),
+      );
       const paymentStatus = derivePaymentStatus(totals.totalUSD, paidUSD);
 
       await tx.sale.update({
@@ -266,7 +315,14 @@ export class SaleService {
       }
 
       if (data.clientId) {
-        await this.addToClientBalance(tx, data.clientId, remainingBalance(totals.totalUSD, paidUSD));
+        // Only what the client personally owes becomes client debt: on a Cashea
+        // sale that is the part of the initial the counter did not collect.
+        const owedByClient = Math.max(
+          0,
+          remainingBalance(totals.totalUSD, clientPaidUSD) -
+            (casheaPlan?.casheaFinancedUSD ?? 0),
+        );
+        await this.addToClientBalance(tx, data.clientId, round2(owedByClient));
       }
 
       const created = await tx.sale.findUnique({
@@ -320,7 +376,7 @@ export class SaleService {
       // historical overpayments (client "credit") are not a supported flow.
       const existing = await tx.salePayment.findMany({
         where: { saleId: sale.id },
-        select: { amountUSD: true },
+        select: { amountUSD: true, paymentMethod: true },
       });
       const paidBefore = round2(
         existing.reduce((sum, row) => sum + Number(row.amountUSD), 0),
@@ -362,11 +418,12 @@ export class SaleService {
       });
 
       if (sale.clientId) {
-        // The outstanding balance shrinks by what this payment collected.
+        // The outstanding balance shrinks by what this payment collected — but
+        // on a Cashea sale only the client's share counts (see the helper).
         await this.addToClientBalance(
           tx,
           sale.clientId,
-          -Number(payment.amountUSD),
+          this.clientDeltaForCollection(sale, existing, payment),
         );
       }
 
@@ -486,6 +543,66 @@ export class SaleService {
   }
 
   /**
+   * Cashea calendar for one sale: the frozen plan, the derived 14-day schedule
+   * and how much Cashea has already settled.
+   */
+  async getCasheaPlan(scope: SaleScope, saleId: string) {
+    const sale = await this.prisma.sale.findFirst({
+      where: { id: saleId, ...this.scopeWhere(scope.organizationId) },
+      select: {
+        id: true,
+        saleNumber: true,
+        totalUSD: true,
+        casheaInitialUSD: true,
+        casheaFinancedUSD: true,
+        casheaInstallmentCount: true,
+        casheaInstallmentUSD: true,
+        casheaFirstDueDate: true,
+        payments: {
+          where: { paymentMethod: CASHEA_PAYMENT_METHOD },
+          select: { amountUSD: true, paidAt: true },
+          orderBy: { paidAt: "asc" },
+        },
+      },
+    });
+
+    if (!sale) throw new NotFoundException("Venta no encontrada.");
+    if (
+      sale.casheaFinancedUSD == null ||
+      sale.casheaFirstDueDate == null ||
+      sale.casheaInstallmentCount == null ||
+      sale.casheaInstallmentUSD == null
+    ) {
+      throw new NotFoundException("La venta no está registrada como Cashea.");
+    }
+
+    const financedUSD = Number(sale.casheaFinancedUSD);
+    const receivedUSD = round2(
+      sale.payments.reduce((sum, row) => sum + Number(row.amountUSD), 0),
+    );
+
+    return {
+      isCashea: true,
+      saleId: sale.id,
+      saleNumber: sale.saleNumber,
+      totalUSD: Number(sale.totalUSD),
+      initialUSD: Number(sale.casheaInitialUSD ?? 0),
+      financedUSD,
+      installmentCount: sale.casheaInstallmentCount,
+      installmentUSD: Number(sale.casheaInstallmentUSD),
+      firstDueDate: sale.casheaFirstDueDate,
+      cadenceDays: CASHEA_CADENCE_DAYS,
+      receivedUSD,
+      pendingUSD: round2(Math.max(0, financedUSD - receivedUSD)),
+      schedule: buildCasheaSchedule(
+        sale.casheaFirstDueDate,
+        sale.casheaInstallmentCount,
+        Number(sale.casheaInstallmentUSD),
+      ),
+    };
+  }
+
+  /**
    * Accrual report: what was invoiced per month vs what was collected per
    * month, plus the accounts-receivable aging. This is the "ventas de enero
    * cobradas en mayo" view.
@@ -497,6 +614,9 @@ export class SaleService {
       ...this.scopeWhere(scope.organizationId),
       status: SaleStatus.COMPLETED,
       paymentStatus: { in: [PaymentStatus.UNPAID, PaymentStatus.PARTIAL] },
+      // Cashea sales are NOT client receivables: the financed part is owed by
+      // Cashea, so they never age as an overdue client account.
+      casheaFinancedUSD: null,
     };
 
     const [accrued, collected, sales, unpaid, openItemsTotal] = await Promise.all([
@@ -547,7 +667,11 @@ export class SaleService {
     if (openSaleIds.length > 0) {
       const paymentTotals = await this.prisma.salePayment.groupBy({
         by: ["saleId"],
-        where: { saleId: { in: openSaleIds } },
+        where: {
+          saleId: { in: openSaleIds },
+          // Only what the client paid reduces a client's open balance.
+          paymentMethod: { not: CASHEA_PAYMENT_METHOD },
+        },
         _sum: { amountUSD: true },
       });
       for (const row of paymentTotals) {
@@ -663,9 +787,12 @@ export class SaleService {
 
       const paidAgg = await tx.salePayment.aggregate({
         _sum: { amountUSD: true },
-        where: { saleId: sale.id },
+        where: {
+          saleId: sale.id,
+          paymentMethod: { not: CASHEA_PAYMENT_METHOD },
+        },
       });
-      const paidUSD = Number(paidAgg._sum.amountUSD ?? 0);
+      const clientPaidUSD = Number(paidAgg._sum.amountUSD ?? 0);
 
       for (const item of sale.items) {
         if (!item.productId) continue;
@@ -762,11 +889,18 @@ export class SaleService {
       }
 
       if (sale.clientId) {
-        // The outstanding balance goes back up by what was still owed.
+        // The outstanding balance goes back up by what the CLIENT still owed:
+        // on a Cashea sale the financed part was never the client's debt.
         await this.addToClientBalance(
           tx,
           sale.clientId,
-          remainingBalance(Number(sale.totalUSD), paidUSD),
+          round2(
+            Math.max(
+              0,
+              remainingBalance(Number(sale.totalUSD), clientPaidUSD) -
+                Number(sale.casheaFinancedUSD ?? 0),
+            ),
+          ),
         );
       }
 
@@ -1169,6 +1303,46 @@ export class SaleService {
     }
 
     return created;
+  }
+
+  /**
+   * How much a collection shrinks the client's balance.
+   *
+   * On a regular sale every abono reduces what the client owes. On a Cashea
+   * sale the client only owes the part of the initial the counter did not
+   * collect: the financed part is Cashea's obligation, so a CASHEA settlement
+   * never touches the client and a client abono is capped at its own share.
+   */
+  private clientDeltaForCollection(
+    sale: {
+      casheaFinancedUSD?: Prisma.Decimal | number | null;
+      casheaInitialUSD?: Prisma.Decimal | number | null;
+    },
+    paidBefore: Array<{
+      amountUSD: Prisma.Decimal | number;
+      paymentMethod?: string | null;
+    }>,
+    payment: {
+      amountUSD: Prisma.Decimal | number;
+      paymentMethod?: string | null;
+    },
+  ): number {
+    // A CASHEA settlement is Cashea paying the merchant, never the client, so
+    // it never moves the client balance — on a Cashea sale or on any other.
+    if (payment.paymentMethod === CASHEA_PAYMENT_METHOD) return 0;
+
+    const collected = Number(payment.amountUSD);
+    if (sale.casheaFinancedUSD == null) return -collected;
+
+    const clientPaidBefore = paidBefore
+      .filter((row) => row.paymentMethod !== CASHEA_PAYMENT_METHOD)
+      .reduce((sum, row) => sum + Number(row.amountUSD), 0);
+    const clientOwedBefore = Math.max(
+      0,
+      Number(sale.casheaInitialUSD ?? 0) - clientPaidBefore,
+    );
+
+    return -Math.min(collected, round2(clientOwedBefore));
   }
 
   private async addToClientBalance(

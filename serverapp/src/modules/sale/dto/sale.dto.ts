@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsEnum,
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -97,6 +98,29 @@ export class SalePaymentInputDto {
   notes?: string;
 }
 
+export class CasheaPlanInputDto {
+  /** What the customer paid at the counter, in the merchant's own means. */
+  @Type(() => Number)
+  @IsNumber({}, { message: "El pago inicial de Cashea debe ser numérico." })
+  @Min(0, { message: "El pago inicial de Cashea no puede ser negativo." })
+  initialUSD: number;
+
+  @Type(() => Number)
+  @IsInt({ message: "La cantidad de cuotas de Cashea debe ser entera." })
+  @Min(1, { message: "Cashea necesita al menos una cuota." })
+  @Max(36, { message: "Cashea no admite más de 36 cuotas." })
+  installmentCount: number;
+
+  @Type(() => Number)
+  @IsNumber({}, { message: "El monto de la cuota de Cashea debe ser numérico." })
+  @Min(0.01, { message: "El monto de la cuota de Cashea debe ser mayor que cero." })
+  installmentUSD: number;
+
+  /** First installment date; the rest fall every 14 days. */
+  @IsDateString({}, { message: "La fecha de la primera cuota de Cashea no es válida." })
+  firstDueDate: string;
+}
+
 export class CreateSaleDto {
   /**
    * Explicit document number for historical/imported documents. When missing
@@ -185,6 +209,16 @@ export class CreateSaleDto {
   @ValidateNested({ each: true })
   @Type(() => SalePaymentInputDto)
   payments?: SalePaymentInputDto[];
+
+  /**
+   * Cashea (BNPL): the initial is collected at the counter and the rest is
+   * financed by Cashea in equal installments every 14 days. A Cashea sale is
+   * never the client's debt, so it does not touch the client balance.
+   */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CasheaPlanInputDto)
+  cashea?: CasheaPlanInputDto;
 }
 
 export class AddSalePaymentDto extends SalePaymentInputDto {}
