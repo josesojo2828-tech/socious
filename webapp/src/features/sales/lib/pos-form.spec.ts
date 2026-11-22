@@ -297,6 +297,28 @@ describe("presentations and credit (sales overhaul)", () => {
     expect(payload.payments).toHaveLength(1);
   });
 
+  it("sends the Cashea plan instead of credit terms when the sale is Cashea", () => {
+    const cart = addToCart([], product, 1);
+    const payload = buildPosPayload({
+      cart,
+      cashea: {
+        initialUSD: 1,
+        installmentCount: 2,
+        installmentUSD: 0.5,
+        firstDueDate: "2026-01-20T04:00:00.000Z",
+      },
+      payment: { amountOriginal: 1, currency: "USD", paymentMethod: "CASH_USD" },
+    });
+
+    expect(payload.cashea).toEqual({
+      initialUSD: 1,
+      installmentCount: 2,
+      installmentUSD: 0.5,
+      firstDueDate: "2026-01-20T04:00:00.000Z",
+    });
+    expect(payload).not.toHaveProperty("creditCadence");
+  });
+
   it("prices the line with the presentation's own price when it has one", () => {
     const cart = addToCart([], product, 1, {
       id: "pres-1",

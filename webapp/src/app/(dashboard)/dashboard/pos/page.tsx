@@ -13,6 +13,7 @@ import {
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { CasheaLogo } from "@/shared/components/atoms/CasheaLogo";
 import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { ProductEndpoints } from "@/features/products/services/products.endpoints";
@@ -23,6 +24,12 @@ import { ClientEndpoints } from "@/features/clients/services/clients.endpoints";
 import type { Client } from "@/features/clients/types/client.type";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
 import { creditSchedule } from "@/features/sales/lib/credit-schedule";
+import {
+  buildCasheaPlan,
+  casheaPreview,
+  defaultCasheaFirstDueDate,
+  validateCashea,
+} from "@/features/sales/lib/cashea";
 import { publicFileUrl } from "@/features/products/lib/product-images";
 import { CREDIT_CADENCE_LABELS, type TenantSettings } from "@/features/settings/types/tenant-settings.type";
 import { ExchangeEndpoints } from "@/features/exchange/services/exchange.endpoints";
@@ -155,6 +162,12 @@ export default function PosPage() {
   const [creditCadence, setCreditCadence] =
     useState<TenantSettings["credit"]["cadence"]>("QUINCENAL");
   const [creditInitial, setCreditInitial] = useState<string>("");
+  /** Cashea (BNPL): initial at the counter + equal installments every 14 days. */
+  const [isCashea, setIsCashea] = useState<boolean>(false);
+  const [casheaCount, setCasheaCount] = useState<number>(4);
+  const [casheaFirstDueDate, setCasheaFirstDueDate] = useState<string>(() =>
+    defaultCasheaFirstDueDate(),
+  );
   const [creditDays, setCreditDays] = useState<number>(15);
   const [creditMonthlyDay, setCreditMonthlyDay] = useState<number>(1);
   const [pickProduct, setPickProduct] = useState<Product | null>(null);
@@ -304,6 +317,25 @@ export default function PosPage() {
     ],
   );
 
+  // Cashea calendar: initial at the counter, equal installments every 14 days.
+  const casheaEntries = useMemo(
+    () =>
+      isCashea
+        ? casheaPreview(totals.totalUSD, {
+            initialUSD: Number(creditInitial) || 0,
+            installmentCount: casheaCount,
+            firstDueDate: casheaFirstDueDate,
+          })
+        : [],
+    [
+      isCashea,
+      totals.totalUSD,
+      creditInitial,
+      casheaCount,
+      casheaFirstDueDate,
+    ],
+  );
+
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return products;
@@ -395,7 +427,7 @@ export default function PosPage() {
     if (mode === "credit") {
       // El pago inicial es SOLO el campo del panel de crédito; `amount`
       // (monto cobrado) está autocompletado con el TOTAL y no aplica acá.
-      const initial = Number(creditInitial);
+      const initial = Number(creditInitial) || 0;
       if (!Number.isFinite(initial) || initial < 0) {
         addToast({
           type: "warning",
@@ -404,21 +436,56 @@ export default function PosPage() {
         });
         return;
       }
-      const creditPayment = creditInitialPayment(
-        creditInitial,
-        currency,
-        method ? method.code : null,
-      );
-      payloadInput = {
-        ...payloadInput,
-        credit: {
-          cadence: creditCadence,
-          everyNDays: creditDays,
-          monthlyDay: creditMonthlyDay,
-        },
-        // Inicial en cero → la venta queda entera a crédito (sin pago).
-        ...(creditPayment ? { payment: creditPayment } : {}),
-      };
+
+      if (isCashea) {
+        const invalid = validateCashea(totals.totalUSD, {
+          initialUSD: initial,
+          installmentCount: casheaCount,
+        });
+        if (invalid) {
+          addToast({ type: "warning", title: "Cashea", message: invalid });
+          return;
+        }
+        if (!casheaFirstDueDate) {
+          addToast({
+            type: "warning",
+            title: "Cashea",
+            message: "Elegí la fecha de la primera cuota.",
+          });
+          return;
+        }
+
+        const casheaPayment = creditInitialPayment(
+          creditInitial,
+          currency,
+          method ? method.code : null,
+        );
+        payloadInput = {
+          ...payloadInput,
+          cashea: buildCasheaPlan(totals.totalUSD, {
+            initialUSD: initial,
+            installmentCount: casheaCount,
+            firstDueDate: casheaFirstDueDate,
+          }),
+          ...(casheaPayment ? { payment: casheaPayment } : {}),
+        };
+      } else {
+        const creditPayment = creditInitialPayment(
+          creditInitial,
+          currency,
+          method ? method.code : null,
+        );
+        payloadInput = {
+          ...payloadInput,
+          credit: {
+            cadence: creditCadence,
+            everyNDays: creditDays,
+            monthlyDay: creditMonthlyDay,
+          },
+          // Inicial en cero → la venta queda entera a crédito (sin pago).
+          ...(creditPayment ? { payment: creditPayment } : {}),
+        };
+      }
     } else if (mode === "order") {
       const client = clients.find((item) => item.id === clientId);
       if (!client) {
@@ -515,7 +582,9 @@ export default function PosPage() {
         title: "Venta registrada",
         message:
           mode === "credit"
-            ? `${data.saleNumber} a crédito (${CREDIT_CADENCE_LABELS[creditCadence]}).`
+            ? isCashea
+              ? `${data.saleNumber} con Cashea (${casheaCount} cuotas cada 14 días).`
+              : `${data.saleNumber} a crédito (${CREDIT_CADENCE_LABELS[creditCadence]}).`
             : `${data.saleNumber} por ${currency} ${paymentAmount.toFixed(2)}.`,
       });
       setCart([]);
@@ -1048,96 +1117,176 @@ export default function PosPage() {
                       className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
                     />
                   </label>
-                  <label className="block text-xs text-slate-500 dark:text-slate-400">
-                    Forma de cobro
-                    <select
-                      value={creditCadence}
-                      onChange={(event) =>
-                        setCreditCadence(
-                          event.target.value as TenantSettings["credit"]["cadence"],
-                        )
-                      }
-                      className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 text-sm"
-                    >
-                      {(
-                        Object.keys(CREDIT_CADENCE_LABELS) as Array<
-                          keyof typeof CREDIT_CADENCE_LABELS
-                        >
-                      ).map((key) => (
-                        <option key={key} value={key}>
-                          {CREDIT_CADENCE_LABELS[key]}
-                        </option>
-                      ))}
-                    </select>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-[#8e7538] dark:text-[#d8bd7a]">
+                    <input
+                      type="checkbox"
+                      checked={isCashea}
+                      onChange={(event) => setIsCashea(event.target.checked)}
+                      className="h-4 w-4 accent-[#b2944a]"
+                    />
+                    <CasheaLogo size="sm" />
+                    Venta con Cashea
                   </label>
-                  {creditCadence === "QUINCENAL" ||
-                  creditCadence === "EVERY_N_DAYS" ? (
-                    <label className="block text-xs text-slate-500 dark:text-slate-400">
-                      Días entre cobros
-                      <input
-                        type="number"
-                        min={1}
-                        max={365}
-                        value={creditDays}
-                        onChange={(event) =>
-                          setCreditDays(Number(event.target.value) || 15)
-                        }
-                        className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
-                      />
-                    </label>
-                  ) : null}
-                  {creditCadence === "MONTHLY" ? (
-                    <label className="block text-xs text-slate-500 dark:text-slate-400">
-                      Día del mes de cobro
-                      <input
-                        type="number"
-                        min={1}
-                        max={28}
-                        value={creditMonthlyDay}
-                        onChange={(event) =>
-                          setCreditMonthlyDay(Number(event.target.value) || 1)
-                        }
-                        className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
-                      />
-                    </label>
-                  ) : null}
-                  {schedule.length > 0 ? (
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e7538]">
-                        Cómo caen los pagos
+                  {isCashea ? (
+                    <>
+                      <label className="block text-xs text-slate-500 dark:text-slate-400">
+                        Cuotas (cada 14 días)
+                        <input
+                          type="number"
+                          min={1}
+                          max={36}
+                          value={casheaCount}
+                          onChange={(event) =>
+                            setCasheaCount(
+                              Math.min(
+                                Math.max(Number(event.target.value) || 1, 1),
+                                36,
+                              ),
+                            )
+                          }
+                          className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
+                        />
+                      </label>
+                      <label className="block text-xs text-slate-500 dark:text-slate-400">
+                        Primera cuota
+                        <input
+                          type="date"
+                          value={casheaFirstDueDate}
+                          onChange={(event) =>
+                            setCasheaFirstDueDate(event.target.value)
+                          }
+                          className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 text-sm"
+                        />
+                      </label>
+                      {casheaEntries.length > 0 ? (
+                        <div>
+                          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e7538]">
+                            <CasheaLogo size="sm" />
+                            Cuotas que paga Cashea
+                          </p>
+                          <ul className="mt-1.5 space-y-1">
+                            {casheaEntries.map((entry) => (
+                              <li
+                                key={entry.number}
+                                className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300"
+                              >
+                                <span className="font-mono">
+                                  {entry.number}.{" "}
+                                  {entry.date.toLocaleDateString("es-VE", {
+                                    day: "2-digit",
+                                    month: "short",
+                                  })}
+                                </span>
+                                <span className="font-mono font-semibold tabular-nums">
+                                  ${entry.amountUSD.toFixed(2)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Lo financiado no se carga al saldo del cliente: lo paga
+                        Cashea.
                       </p>
-                      <ul className="mt-1.5 space-y-1">
-                        {schedule.map((entry) => (
-                          <li
-                            key={entry.date.toISOString()}
-                            className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300"
-                          >
-                            <span className="font-mono">
-                              {entry.date.toLocaleDateString("es-VE", {
-                                day: "2-digit",
-                                month: "short",
-                              })}
-                            </span>
-                            <span className="font-mono font-semibold tabular-nums">
-                              saldo ${entry.balanceUSD.toFixed(2)}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    </>
                   ) : (
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {creditCadence === "FREE"
-                        ? "Sin fechas fijas: se cobra por abonos."
-                        : "El inicial cubre el total: nada pendiente."}
-                    </p>
+                    <>
+                      <label className="block text-xs text-slate-500 dark:text-slate-400">
+                        Forma de cobro
+                        <select
+                          value={creditCadence}
+                          onChange={(event) =>
+                            setCreditCadence(
+                              event.target.value as TenantSettings["credit"]["cadence"],
+                            )
+                          }
+                          className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 text-sm"
+                        >
+                          {(
+                            Object.keys(CREDIT_CADENCE_LABELS) as Array<
+                              keyof typeof CREDIT_CADENCE_LABELS
+                            >
+                          ).map((key) => (
+                            <option key={key} value={key}>
+                              {CREDIT_CADENCE_LABELS[key]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      {creditCadence === "QUINCENAL" ||
+                      creditCadence === "EVERY_N_DAYS" ? (
+                        <label className="block text-xs text-slate-500 dark:text-slate-400">
+                          Días entre cobros
+                          <input
+                            type="number"
+                            min={1}
+                            max={365}
+                            value={creditDays}
+                            onChange={(event) =>
+                              setCreditDays(Number(event.target.value) || 15)
+                            }
+                            className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
+                          />
+                        </label>
+                      ) : null}
+                      {creditCadence === "MONTHLY" ? (
+                        <label className="block text-xs text-slate-500 dark:text-slate-400">
+                          Día del mes de cobro
+                          <input
+                            type="number"
+                            min={1}
+                            max={28}
+                            value={creditMonthlyDay}
+                            onChange={(event) =>
+                              setCreditMonthlyDay(Number(event.target.value) || 1)
+                            }
+                            className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm tabular-nums"
+                          />
+                        </label>
+                      ) : null}
+                      {schedule.length > 0 ? (
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e7538]">
+                            Cómo caen los pagos
+                          </p>
+                          <ul className="mt-1.5 space-y-1">
+                            {schedule.map((entry) => (
+                              <li
+                                key={entry.date.toISOString()}
+                                className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300"
+                              >
+                                <span className="font-mono">
+                                  {entry.date.toLocaleDateString("es-VE", {
+                                    day: "2-digit",
+                                    month: "short",
+                                  })}
+                                </span>
+                                <span className="font-mono font-semibold tabular-nums">
+                                  saldo ${entry.balanceUSD.toFixed(2)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          {creditCadence === "FREE"
+                            ? "Sin fechas fijas: se cobra por abonos."
+                            : "El inicial cubre el total: nada pendiente."}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               ) : null}
 
               {mode !== "order" ? (
                 <label className="block text-xs text-slate-500 dark:text-slate-400">
-                  Medio de cobro
+                  <span className="flex items-center gap-1.5">
+                    Medio de cobro
+                    {methodCode === "CASHEA" ? <CasheaLogo size="sm" /> : null}
+                  </span>
                   <select
                     value={methodCode}
                     onChange={(event) => handleMethodChange(event.target.value)}

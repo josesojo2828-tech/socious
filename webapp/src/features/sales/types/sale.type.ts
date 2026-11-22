@@ -38,6 +38,13 @@ export interface Sale {
   clientId?: string | null;
   issueDate: string;
   dueDate?: string | null;
+  /** Cashea (BNPL): initial collected at the counter. */
+  casheaInitialUSD?: string | number | null;
+  /** Part financed by Cashea: a receivable against Cashea, not client debt. */
+  casheaFinancedUSD?: string | number | null;
+  casheaInstallmentCount?: number | null;
+  casheaInstallmentUSD?: string | number | null;
+  casheaFirstDueDate?: string | null;
   rateBcv: string | number;
   rateUsdt: string | number;
   subtotalUSD: string | number;
@@ -86,6 +93,19 @@ export interface CreateSalePayload {
   creditCadence?: "QUINCENAL" | "MONTHLY" | "EVERY_N_DAYS" | "FREE";
   creditEveryNDays?: number;
   creditMonthlyDay?: number;
+  /**
+   * Cashea (BNPL): initial paid at the counter plus equal installments every
+   * 14 days. The financed part is never charged to the client.
+   */
+  cashea?: CasheaPlanInput;
+}
+
+export interface CasheaPlanInput {
+  initialUSD: number;
+  installmentCount: number;
+  installmentUSD: number;
+  /** Full ISO timestamp of the first installment. */
+  firstDueDate: string;
 }
 
 /** A return attached to a sale (list + detail expose them since S10). */

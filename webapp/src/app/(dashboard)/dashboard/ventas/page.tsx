@@ -18,6 +18,7 @@ import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { useModalStore } from "@/shared/store/ui/useModalStore";
 import { SectionRow } from "@/shared/components/molecules/SectionCard";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { CasheaLogo } from "@/shared/components/atoms/CasheaLogo";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import {
   BRASS_DOT,
@@ -836,6 +837,51 @@ export default function SalesPage() {
               </div>
             </div>
 
+            {selected.casheaFinancedUSD != null ? (
+              <div className="mb-4 rounded-xl border border-[#b2944a]/40 bg-[#b2944a]/8 p-3">
+                <p className="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#8e7538]">
+                  <CasheaLogo size="sm" />
+                  Cashea · lo financia Cashea, no el cliente
+                </p>
+                <div className="mt-1 grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <span className="block text-slate-500 dark:text-slate-400">
+                      Inicial
+                    </span>
+                    <span className="font-mono font-semibold tabular-nums">
+                      ${Number(selected.casheaInitialUSD ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-500 dark:text-slate-400">
+                      Financiado
+                    </span>
+                    <span className="font-mono font-semibold tabular-nums">
+                      ${Number(selected.casheaFinancedUSD).toFixed(2)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="block text-slate-500 dark:text-slate-400">
+                      Cuotas
+                    </span>
+                    <span className="font-mono font-semibold tabular-nums">
+                      {selected.casheaInstallmentCount ?? 0} × $
+                      {Number(selected.casheaInstallmentUSD ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                {selected.casheaFirstDueDate ? (
+                  <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    Primera cuota{" "}
+                    {new Date(selected.casheaFirstDueDate).toLocaleDateString(
+                      "es-VE",
+                    )}{" "}
+                    · después cada 14 días.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
             {(selected.payments ?? []).length > 0 ? (
               <div className="mb-4">
                 <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 mb-1">
@@ -852,7 +898,14 @@ export default function SalesPage() {
                   return (
                     <SectionRow
                       key={payment.id}
-                      label={`${payment.paymentMethod} · ${payment.currency}`}
+                      label={
+                        <span className="flex items-center gap-1.5">
+                          {payment.paymentMethod === "CASHEA" ? (
+                            <CasheaLogo size="sm" />
+                          ) : null}
+                          {payment.paymentMethod} · {payment.currency}
+                        </span>
+                      }
                       hint={[
                         new Date(payment.paidAt).toLocaleDateString("es-VE"),
                         currencies.showUSD

@@ -3,6 +3,7 @@ import type {
   SaleItemInput,
   SalePaymentInput,
 } from "../types/sale.type";
+import type { CasheaPlanPayload } from "./cashea";
 import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
 
 /**
@@ -288,6 +289,8 @@ export interface PosPayloadInput {
     paymentMethod: string;
     paidAt?: string;
   };
+  /** Cashea (BNPL): initial at the counter plus financed installments. */
+  cashea?: CasheaPlanPayload;
 }
 
 /** Translates the cart into the exact body POST /api/sales accepts. */
@@ -324,6 +327,7 @@ export function buildPosPayload(input: PosPayloadInput): CreateSalePayload {
         }
       : {}),
     ...(payment ? { payments: [payment] } : {}),
+    ...(input.cashea ? { cashea: input.cashea } : {}),
     ...(input.clientId ? { clientId: input.clientId } : {}),
     ...(input.cashShiftId ? { cashShiftId: input.cashShiftId } : {}),
     ...(input.notes?.trim() ? { notes: input.notes.trim() } : {}),
