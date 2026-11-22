@@ -15,6 +15,7 @@ import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionRow } from "@/shared/components/molecules/SectionCard";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
+import { CasheaLogo } from "@/shared/components/atoms/CasheaLogo";
 import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
 import { getTenantSettings } from "@/features/settings/services/settings.service";
 import type { TenantSettings } from "@/features/settings/types/tenant-settings.type";
@@ -350,7 +351,12 @@ export default function CashPage() {
                     {movement.reason}
                   </td>
                   <td className="py-2.5 pr-3 font-mono text-xs text-slate-500 dark:text-slate-400">
-                    {movement.paymentMethod}
+                    <span className="flex items-center gap-1.5">
+                      {movement.paymentMethod === "CASHEA" ? (
+                        <CasheaLogo size="sm" />
+                      ) : null}
+                      {movement.paymentMethod}
+                    </span>
                   </td>
                   <td
                     className={`py-2.5 text-right font-mono text-sm tabular-nums font-medium ${
@@ -764,7 +770,14 @@ export default function CashPage() {
                     {daily.collectedByMethod.map((method) => (
                       <SectionRow
                         key={method.paymentMethod}
-                        label={method.paymentMethod}
+                        label={
+                          <span className="flex items-center gap-1.5">
+                            {method.paymentMethod === "CASHEA" ? (
+                              <CasheaLogo size="sm" />
+                            ) : null}
+                            {method.paymentMethod}
+                          </span>
+                        }
                         hint={`${method.count} cobro(s)`}
                       >
                         <span className="font-mono text-sm tabular-nums">

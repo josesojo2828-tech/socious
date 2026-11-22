@@ -8,6 +8,7 @@ import {
 } from "@/features/settings/lib/settings-scope";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
 import { SectionCard, SectionRow } from "@/shared/components/molecules/SectionCard";
+import { CasheaLogo } from "@/shared/components/atoms/CasheaLogo";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { TenantPaymentMethodEndpoints } from "@/features/tenant-payment-methods/services/tenant-payment-methods.endpoints";
 import {
@@ -157,7 +158,8 @@ export function PaymentMethodsPanel() {
             className="flex items-center justify-between gap-3 py-2"
           >
             <div>
-              <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+              <p className="flex items-center gap-2 text-sm font-medium text-slate-800 dark:text-slate-100">
+                {method.code === "CASHEA" ? <CasheaLogo size="sm" /> : null}
                 {method.label}{" "}
                 <span className="font-mono text-xs text-slate-400">
                   {method.code}

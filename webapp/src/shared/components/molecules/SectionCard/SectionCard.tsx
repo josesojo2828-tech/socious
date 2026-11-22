@@ -37,7 +37,8 @@ export function SectionRow({
   hint,
   children,
 }: {
-  label: string;
+  /** A string, or a node when the label carries a brand mark. */
+  label: ReactNode;
   hint?: string;
   children: ReactNode;
 }) {
