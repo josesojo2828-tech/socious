@@ -17,14 +17,14 @@ async function main() {
       password: passwordHash,
       firstName: "Carlos",
       lastName: "Carnicero",
-      permitId: "ADMIN",
+      permitId: "USER",
     },
     create: {
       email: userEmail,
       password: passwordHash,
       firstName: "Carlos",
       lastName: "Carnicero",
-      permitId: "ADMIN",
+      permitId: "USER",
     },
   });
   console.log("✔ Usuario creado/actualizado:", user.email);
