@@ -472,7 +472,7 @@ async function main() {
         incomingWeightKg: 20.00,
         unitCostUSD: 3.50,
         totalCostUSD: 70.00,
-        totalYieldKg: 19.40,
+        yieldWeightKg: 19.40,
         wasteWeightKg: 0.60,
         wastePercentage: 3.00,
         notes: "Fraccionamiento de 2 hormas de queso paisa en cuñas y rebanado, merma por corteza",
