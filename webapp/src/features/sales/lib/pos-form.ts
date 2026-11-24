@@ -4,7 +4,7 @@ import type {
   SalePaymentInput,
 } from "../types/sale.type";
 import type { CasheaPlanPayload } from "./cashea";
-import { resolveUnitDecimals } from "@/features/units/lib/unit-decimals";
+import { resolveUnitDecimals, isMeatOrWeight } from "@/features/units/lib/unit-decimals";
 
 /**
  * Pure POS logic (S6): cart math and the payload the backend expects.
@@ -103,14 +103,16 @@ function sameLine(item: CartLine, line: CartLine): boolean {
 /**
  * Rounds a quantity to the decimals its unit accepts: whole numbers for COUNT
  * (units), two decimals for WEIGHT, VOLUME and LENGTH (kg, L, m). A fabric
- * therefore keeps `1.5`, while a shirt stays at `2`.
+ * or meat cut therefore keeps `1.5` or `0.75`, while a shirt stays at `2`.
  */
 export function normalizeQuantity(
   quantity: number,
   unit?: string | null,
+  productName?: string | null,
 ): number {
   if (!Number.isFinite(quantity)) return 0;
-  const decimals = resolveUnitDecimals(unit);
+  const isWeight = isMeatOrWeight(unit, productName);
+  const decimals = isWeight ? 2 : resolveUnitDecimals(unit);
   const factor = 10 ** decimals;
   return Math.round((quantity + Number.EPSILON) * factor) / factor;
 }
@@ -125,7 +127,7 @@ export function addToCart(
   wholesaler = false,
 ): CartLine[] {
   const unit = product.unit ?? null;
-  const normalized = normalizeQuantity(quantity, unit);
+  const normalized = normalizeQuantity(quantity, unit, product.name);
   const safeQuantity = normalized > 0 ? normalized : 1;
   const retailPriceUSD = lineUnitPrice(product, presentation);
   // El mayoreo es del producto: una presentación con precio propio manda.
@@ -183,7 +185,7 @@ export function changeQuantity(
 
   return cart.map((item) => {
     if (!matches(item)) return item;
-    const next = normalizeQuantity(quantity, item.unit);
+    const next = normalizeQuantity(quantity, item.unit, item.productName);
     if (next <= 0) return item;
     const merged = { ...item, quantity: next };
     return { ...merged, unitPriceUSD: resolveUnitPrice(merged) };

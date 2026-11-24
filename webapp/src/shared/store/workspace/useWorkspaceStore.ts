@@ -24,6 +24,7 @@ export interface WorkspaceItem {
   subscriptionEndDate?: string;
   /** Plan the workspace is on (my-workspaces), for the header badge. */
   planName?: string | null;
+  isMeatProcessing?: boolean;
   // PATIENT_NUTRITIONIST specific fields
   nutritionistId?: string;
   nutritionistName?: string;

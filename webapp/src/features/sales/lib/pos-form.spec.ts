@@ -97,6 +97,43 @@ describe("pos-form (S6)", () => {
     });
   });
 
+  describe("productos cárnicos y por peso (despiece / carnicería)", () => {
+    const chuleta = {
+      id: "p-chuleta",
+      name: "Chuleta de cerdo",
+      salePriceUSD: "5.80",
+      taxRate: "0.00",
+      unit: "kg",
+    };
+
+    it("respeta decimales al agregar carne por peso", () => {
+      const cart = addToCart([], chuleta, 0.75);
+      expect(cart[0].quantity).toBe(0.75);
+      expect(cart[0].unit).toBe("kg");
+      expect(lineTotal(cart[0])).toBe(4.35);
+    });
+
+    it("mantiene decimales al editar la cantidad manualmente (ej. 1.25 kg, 0.5 kg)", () => {
+      const cart = addToCart([], chuleta, 1);
+      expect(changeQuantity(cart, "p-chuleta", 1.25)[0].quantity).toBe(1.25);
+      expect(changeQuantity(cart, "p-chuleta", 0.5)[0].quantity).toBe(0.5);
+      expect(changeQuantity(cart, "p-chuleta", 0.85)[0].quantity).toBe(0.85);
+    });
+
+    it("respeta decimales si el nombre es carne aunque la unidad haya sido creada como UND", () => {
+      const carneUnd = {
+        id: "p-carne-und",
+        name: "Carne molida especial",
+        salePriceUSD: "6.00",
+        taxRate: "0.00",
+        unit: "UND",
+      };
+      const cart = addToCart([], carneUnd, 1);
+      expect(changeQuantity(cart, "p-carne-und", 0.75)[0].quantity).toBe(0.75);
+      expect(normalizeQuantity(1.5, "UND", "Carne molida especial")).toBe(1.5);
+    });
+  });
+
   describe("totals", () => {
     it("adds tax on top of the subtotal", () => {
       const cart = [carte({ quantity: 10, taxRate: 16 })];
