@@ -1,15 +1,20 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useState } from "react";
 import {
+  ArrowRight,
+  Calculator,
   Calendar,
   CheckCircle2,
   Clock,
   Coins,
   CreditCard,
+  DollarSign,
   HelpCircle,
   Percent,
   Sparkles,
+  TrendingUp,
+  Wallet,
   Zap,
 } from "lucide-react";
 import { CasheaLogo } from "@/shared/components/atoms/CasheaLogo";
@@ -81,15 +86,70 @@ export function CasheaSettingsPanel({
   );
   const [saving, setSaving] = useState<boolean>(false);
 
-  // Simulador dinámico con venta base de $100
-  const simTotal = 100;
-  const simDownPercent = downPaymentPercent || 40;
-  const simInitial = Math.round(simTotal * (simDownPercent / 100));
-  const simFinanced = simTotal - simInitial;
-  const simCount = installments || 3;
-  const simInstallmentAmount = Math.round((simFinanced / simCount) * 100) / 100;
+  // Estados interactivos para el Simulador
+  const [simTotalStr, setSimTotalStr] = useState<string>("100.00");
+  const [simDownPercentStr, setSimDownPercentStr] = useState<string>(
+    String(downPaymentPercent || 40),
+  );
+  const [simInitialAmountStr, setSimInitialAmountStr] =
+    useState<string>("40.00");
+  const [simCuotas, setSimCuotas] = useState<number>(installments || 3);
+
+  const simTotal = Math.max(0, Number(simTotalStr) || 0);
+  const simDownPercent = Math.max(
+    0,
+    Math.min(100, Number(simDownPercentStr) || 0),
+  );
+  const simInitial = Math.max(0, Number(simInitialAmountStr) || 0);
+  const simFinanced = Math.max(0, simTotal - simInitial);
+  const simCount = simCuotas || 3;
+  const simInstallmentAmount =
+    simCount > 0 ? Math.round((simFinanced / simCount) * 100) / 100 : 0;
   const baseCommNum = Math.max(0, Number(baseCommission) || 0);
   const expressCommNum = Math.max(0, Number(expressCommission) || 0);
+
+  const baseCommissionDeduction = (simFinanced * baseCommNum) / 100;
+  const expressCommissionDeduction =
+    allianceType === "EXPRESS" ? (simFinanced * expressCommNum) / 100 : 0;
+  const totalCommissionDeduction =
+    baseCommissionDeduction + expressCommissionDeduction;
+  const casheaNetPayout = Math.max(0, simFinanced - totalCommissionDeduction);
+  const totalMerchantReceives = simInitial + casheaNetPayout;
+
+  const handleSimTotalChange = (valStr: string) => {
+    setSimTotalStr(valStr);
+    const num = Math.max(0, Number(valStr) || 0);
+    const init = Math.round(((num * simDownPercent) / 100) * 100) / 100;
+    setSimInitialAmountStr(init > 0 ? init.toFixed(2) : "0.00");
+  };
+
+  const handleSimPercentChange = (pctStr: string) => {
+    setSimDownPercentStr(pctStr);
+    const pct = Math.max(0, Math.min(100, Number(pctStr) || 0));
+    const init = Math.round(((simTotal * pct) / 100) * 100) / 100;
+    setSimInitialAmountStr(init > 0 ? init.toFixed(2) : "0.00");
+  };
+
+  const handleSimInitialAmountChange = (amountStr: string) => {
+    setSimInitialAmountStr(amountStr);
+    const amount = Math.max(0, Number(amountStr) || 0);
+    if (simTotal > 0) {
+      const pct = Math.round((amount / simTotal) * 1000) / 10;
+      setSimDownPercentStr(pct > 0 ? String(pct) : "0");
+    }
+  };
+
+  const applyPercentPreset = (pct: number) => {
+    setSimDownPercentStr(String(pct));
+    const init = Math.round(((simTotal * pct) / 100) * 100) / 100;
+    setSimInitialAmountStr(init > 0 ? init.toFixed(2) : "0.00");
+  };
+
+  const applyTotalPreset = (total: number) => {
+    setSimTotalStr(total.toFixed(2));
+    const init = Math.round(((total * simDownPercent) / 100) * 100) / 100;
+    setSimInitialAmountStr(init > 0 ? init.toFixed(2) : "0.00");
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -100,8 +160,8 @@ export function CasheaSettingsPanel({
           allianceType,
           baseCommissionPercent: baseCommNum,
           expressCommissionPercent: expressCommNum,
-          defaultDownPaymentPercent: simDownPercent,
-          defaultInstallments: simCount,
+          defaultDownPaymentPercent: downPaymentPercent,
+          defaultInstallments: installments,
           settlementDayOfWeek: settlementDay,
         },
       };
@@ -344,94 +404,291 @@ export function CasheaSettingsPanel({
             </div>
 
             {/* Simulador y Proyección de Flujo de Caja */}
-            <div className="rounded-xl border border-amber-200/60 bg-amber-50/50 p-4 dark:border-amber-900/40 dark:bg-amber-950/20">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-200">
-                  <Coins className="h-4 w-4 text-[#b2944a]" />
-                  Simulación de Cobro y Flujo de Fondos (Ejemplo Venta de ${simTotal}.00)
-                </span>
-                <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                  {allianceType === "EXPRESS" ? "Plan Express" : "Plan Base"}
+            <div className="rounded-xl border border-amber-200/80 bg-gradient-to-b from-amber-50/60 to-white p-4 shadow-xs sm:p-5 dark:border-amber-900/40 dark:from-amber-950/20 dark:to-slate-900">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/50 pb-3 dark:border-amber-900/30">
+                <div className="flex items-center gap-2">
+                  <div className="rounded-lg bg-amber-100 p-1.5 text-[#b2944a] dark:bg-amber-900/50">
+                    <Calculator className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                      Simulador Financiero de Venta Cashea
+                    </h4>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                      Ajusta el monto de venta y la inicial (% o monto $) para calcular en vivo el flujo exacto de fondos.
+                    </p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-900/80 dark:text-amber-200">
+                  {allianceType === "EXPRESS" ? "⚡ Modalidad Express" : "⏱️ Modalidad Base"}
                 </span>
               </div>
 
-              <div className="mt-3 space-y-2 text-xs">
-                <div className="flex justify-between border-b border-amber-200/40 pb-1.5 dark:border-amber-900/30">
-                  <span className="text-slate-600 dark:text-slate-400">
-                    Inicial recibida hoy en caja ({simDownPercent}%):
-                  </span>
-                  <span className="font-mono font-bold text-slate-800 dark:text-slate-100">
-                    ${simInitial.toFixed(2)} (directo al comercio)
-                  </span>
+              {/* Controles Interactivos del Simulador */}
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {/* 1. Monto total de la venta */}
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    Monto total de venta ($)
+                  </label>
+                  <div className="relative mt-1">
+                    <span className="absolute left-2.5 top-2 text-xs text-slate-400">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      min={1}
+                      step="any"
+                      value={simTotalStr}
+                      onChange={(e) => handleSimTotalChange(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white py-1.5 pl-6 pr-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#b2944a] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                      placeholder="100.00"
+                    />
+                  </div>
+                  <div className="mt-1.5 flex gap-1">
+                    {[50, 100, 200, 500].map((val) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => applyTotalPreset(val)}
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
+                          simTotal === val
+                            ? "bg-[#b2944a] text-white"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                        }`}
+                      >
+                        ${val}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="flex justify-between border-b border-amber-200/40 pb-1.5 dark:border-amber-900/30">
-                  <span className="text-slate-600 dark:text-slate-400">
-                    Saldo financiado por Cashea ({simCount} cuotas):
-                  </span>
-                  <span className="font-mono font-semibold text-slate-700 dark:text-slate-200">
+                {/* 2. Porcentaje de inicial */}
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    Inicial (%)
+                  </label>
+                  <div className="relative mt-1">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step="any"
+                      value={simDownPercentStr}
+                      onChange={(e) => handleSimPercentChange(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white py-1.5 pl-3 pr-7 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#b2944a] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                      placeholder="40"
+                    />
+                    <span className="absolute right-2.5 top-2 text-xs text-slate-400">
+                      %
+                    </span>
+                  </div>
+                  <div className="mt-1.5 flex gap-1">
+                    {[40, 50, 60].map((pct) => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => applyPercentPreset(pct)}
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
+                          Math.round(simDownPercent) === pct
+                            ? "bg-[#b2944a] text-white"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                        }`}
+                      >
+                        {pct}%
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. Monto de inicial ($) */}
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    Monto inicial ($)
+                  </label>
+                  <div className="relative mt-1">
+                    <span className="absolute left-2.5 top-2 text-xs text-slate-400">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={simTotal || undefined}
+                      step="any"
+                      value={simInitialAmountStr}
+                      onChange={(e) =>
+                        handleSimInitialAmountChange(e.target.value)
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white py-1.5 pl-6 pr-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#b2944a] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                      placeholder="40.00"
+                    />
+                  </div>
+                  <p className="mt-1.5 text-[10px] text-slate-400">
+                    Cobrado directo en caja. Cero comisiones.
+                  </p>
+                </div>
+              </div>
+
+              {/* Selector de Cuotas de Simulación */}
+              <div className="mt-3.5 flex items-center justify-between border-t border-amber-200/40 pt-2.5 text-xs dark:border-amber-900/30">
+                <span className="text-slate-600 dark:text-slate-300">
+                  Cuotas de la simulación:
+                </span>
+                <div className="flex gap-1.5">
+                  {[3, 6, 9, 12].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setSimCuotas(n)}
+                      className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                        simCuotas === n
+                          ? "bg-amber-600 text-white dark:bg-amber-500"
+                          : "bg-amber-100/70 text-amber-900 hover:bg-amber-200/70 dark:bg-amber-900/40 dark:text-amber-200"
+                      }`}
+                    >
+                      {n} cuotas
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Resumen de Flujo en Cajas visuales */}
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="rounded-lg border border-emerald-200/70 bg-emerald-50/60 p-2.5 dark:border-emerald-900/40 dark:bg-emerald-950/20">
+                  <p className="text-[10px] font-medium text-emerald-800 dark:text-emerald-300">
+                    Inicial en Caja (Hoy)
+                  </p>
+                  <p className="mt-0.5 font-mono text-base font-bold text-emerald-700 dark:text-emerald-300">
+                    ${simInitial.toFixed(2)}
+                  </p>
+                  <p className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">
+                    {simDownPercent.toFixed(1)}% directo
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-slate-200 bg-white p-2.5 dark:border-slate-800 dark:bg-slate-900">
+                  <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                    Financiado Cashea
+                  </p>
+                  <p className="mt-0.5 font-mono text-base font-bold text-slate-800 dark:text-slate-100">
                     ${simFinanced.toFixed(2)}
-                  </span>
+                  </p>
+                  <p className="text-[10px] text-slate-400">
+                    {simCount} cuotas de ${simInstallmentAmount.toFixed(2)}
+                  </p>
                 </div>
 
+                <div className="rounded-lg border border-rose-200/70 bg-rose-50/60 p-2.5 dark:border-rose-900/40 dark:bg-rose-950/20">
+                  <p className="text-[10px] font-medium text-rose-800 dark:text-rose-300">
+                    Comisión Cashea (
+                    {allianceType === "EXPRESS"
+                      ? (baseCommNum + expressCommNum).toFixed(1)
+                      : baseCommNum.toFixed(1)}
+                    %)
+                  </p>
+                  <p className="mt-0.5 font-mono text-base font-bold text-rose-600 dark:text-rose-400">
+                    -${totalCommissionDeduction.toFixed(2)}
+                  </p>
+                  <p className="text-[10px] text-rose-500/80 dark:text-rose-400/80">
+                    {simTotal > 0
+                      ? (
+                          (totalCommissionDeduction / simTotal) *
+                          100
+                        ).toFixed(1)
+                      : 0}
+                    % efect. s/ venta
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-[#b2944a]/40 bg-[#b2944a]/10 p-2.5 dark:bg-[#b2944a]/20">
+                  <p className="text-[10px] font-medium text-amber-900 dark:text-amber-200">
+                    Neto Total Negocio
+                  </p>
+                  <p className="mt-0.5 font-mono text-base font-bold text-amber-900 dark:text-amber-100">
+                    ${totalMerchantReceives.toFixed(2)}
+                  </p>
+                  <p className="text-[10px] text-amber-700 dark:text-amber-300">
+                    {simTotal > 0
+                      ? ((totalMerchantReceives / simTotal) * 100).toFixed(1)
+                      : 0}
+                    % recaudado neto
+                  </p>
+                </div>
+              </div>
+
+              {/* Detalle del Cronograma / Depósito */}
+              <div className="mt-4 rounded-lg bg-amber-100/40 p-3 text-xs dark:bg-amber-950/30">
                 {allianceType === "BASE" ? (
-                  <div className="space-y-1.5 pt-1">
-                    <p className="font-semibold text-slate-700 dark:text-slate-300">
-                      Cómo va cayendo el dinero quincenalmente:
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold text-slate-800 dark:text-slate-200">
+                        Calendario de pagos quincenales (Modalidad Base):
+                      </p>
+                      <span className="text-[10px] text-slate-500">
+                        Comisión {baseCommNum}% por cuota
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      {Array.from({ length: simCount }).map((_, i) => {
+                        const netCuota =
+                          simInstallmentAmount * (1 - baseCommNum / 100);
+                        return (
+                          <div
+                            key={i}
+                            className="flex justify-between rounded bg-white/70 px-2.5 py-1 font-mono text-[11px] text-slate-700 shadow-xs dark:bg-slate-900/60 dark:text-slate-300"
+                          >
+                            <span>
+                              Día +{(i + 1) * 14} (Cuota {i + 1} de {simCount}):
+                            </span>
+                            <span>
+                              ${simInstallmentAmount.toFixed(2)} -{" "}
+                              {baseCommNum}% ={" "}
+                              <strong className="text-emerald-700 dark:text-emerald-400">
+                                ${netCuota.toFixed(2)}
+                              </strong>
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                      ℹ️ Cashea transfiere al comercio cada cuota a medida que el
+                      cliente paga cada 14 días.
                     </p>
-                    {Array.from({ length: simCount }).map((_, i) => {
-                      const netCuota =
-                        simInstallmentAmount * (1 - baseCommNum / 100);
-                      return (
-                        <div
-                          key={i}
-                          className="flex justify-between pl-3 font-mono text-[11px] text-slate-600 dark:text-slate-400"
-                        >
-                          <span>
-                            Día +{(i + 1) * 14} (Cuota {i + 1}):
-                          </span>
-                          <span>
-                            ${simInstallmentAmount.toFixed(2)} - {baseCommNum}% ={" "}
-                            <strong className="text-slate-900 dark:text-white">
-                              ${netCuota.toFixed(2)}
-                            </strong>
-                          </span>
-                        </div>
-                      );
-                    })}
                   </div>
                 ) : (
-                  <div className="space-y-1.5 pt-1">
+                  <div className="space-y-2">
                     <p className="font-semibold text-emerald-800 dark:text-emerald-300">
-                      Liquidación semanal anticipada (Próximo corte):
+                      Liquidación semanal anticipada (Modalidad Express):
                     </p>
-                    <div className="flex justify-between pl-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
-                      <span>Total financiado adelantado:</span>
-                      <span>${simFinanced.toFixed(2)}</span>
+                    <div className="space-y-1">
+                      <div className="flex justify-between rounded bg-white/70 px-2.5 py-1 font-mono text-[11px] text-slate-700 shadow-xs dark:bg-slate-900/60 dark:text-slate-300">
+                        <span>
+                          Total cuotas financiadas (adelantadas 100%):
+                        </span>
+                        <span>${simFinanced.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between rounded bg-white/70 px-2.5 py-1 font-mono text-[11px] text-slate-700 shadow-xs dark:bg-slate-900/60 dark:text-slate-300">
+                        <span>
+                          Deducción (Base {baseCommNum}% + Pronto Pago{" "}
+                          {expressCommNum}%):
+                        </span>
+                        <span className="text-rose-600 dark:text-rose-400">
+                          -${totalCommissionDeduction.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between rounded bg-emerald-100/80 px-2.5 py-1.5 font-mono text-xs font-bold text-emerald-900 shadow-xs dark:bg-emerald-900/40 dark:text-emerald-200">
+                        <span>Depósito bancario directo en tu cuenta:</span>
+                        <span>+${casheaNetPayout.toFixed(2)}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between pl-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
-                      <span>
-                        Deducción (Base {baseCommNum}% + Express {expressCommNum}
-                        %):
-                      </span>
-                      <span className="text-rose-600 dark:text-rose-400">
-                        -$
-                        {(
-                          (simFinanced * (baseCommNum + expressCommNum)) /
-                          100
-                        ).toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between border-t border-amber-300/40 pl-3 pt-1 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
-                      <span>Neto liquidado en cuenta:</span>
-                      <span className="text-emerald-700 dark:text-emerald-400">
-                        +$
-                        {(
-                          simFinanced *
-                          (1 - (baseCommNum + expressCommNum) / 100)
-                        ).toFixed(2)}
-                      </span>
-                    </div>
+                    <p className="text-[10px] text-emerald-700 dark:text-emerald-300">
+                      ⚡ Recibes el 100% del financiamiento en un solo pago
+                      semanal el próximo día de corte (
+                      {DAYS_OF_WEEK.find((d) => d.value === settlementDay)
+                        ?.label || "Martes"}
+                      ).
+                    </p>
                   </div>
                 )}
               </div>
