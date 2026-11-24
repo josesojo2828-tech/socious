@@ -170,10 +170,10 @@ async function main() {
 
   // 7. Categorías
   const categoriesDef = [
-    { name: "Embutidos y Jamones", description: "Jamones cocidos, curados, salchichas y tocinetas" },
-    { name: "Quesos y Lácteos", description: "Quesos blancos criollos, madurados y fundidos" },
-    { name: "Delicateses y Panadería", description: "Aceitunas, encurtidos, panes y galletas" },
-    { name: "Combos y Tablas Gourmet", description: "Combos preparados, tablas mixtas y pasapalos" },
+    { name: "Embutidos y Jamones", slug: "embutidos-y-jamones", description: "Jamones cocidos, curados, salchichas y tocinetas" },
+    { name: "Quesos y Lácteos", slug: "quesos-y-lacteos", description: "Quesos blancos criollos, madurados y fundidos" },
+    { name: "Delicateses y Panadería", slug: "delicateses-y-panaderia", description: "Aceitunas, encurtidos, panes y galletas" },
+    { name: "Combos y Tablas Gourmet", slug: "combos-y-tablas-gourmet", description: "Combos preparados, tablas mixtas y pasapalos" },
   ];
 
   const catMap = {};
@@ -186,7 +186,10 @@ async function main() {
         data: {
           organizationId: org.id,
           name: c.name,
+          slug: `${c.slug}-${org.id.slice(0, 6)}`,
           description: c.description,
+          isSystem: false,
+          isActive: true,
         },
       });
     }
