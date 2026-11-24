@@ -22,6 +22,7 @@ import {
   BTN_GHOST,
   CARD,
   CARD_HEADER,
+  CTA_BRASS,
   EYEBROW,
   PAGE_TITLE,
 } from "@/shared/lib/maison-style";
@@ -501,7 +502,26 @@ export default function ProductDetailPage() {
           product={product}
           imageLimit={imageLimits?.variant}
         />
-      ) : null}
+      ) : (
+        <section className={`rounded-2xl p-5 ${CARD} border-dashed border-[#1a2a46]/20 dark:border-white/15`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <Layers className="h-4 w-4 text-[#b2944a]" /> Presentaciones y Variantes de Producto
+              </h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                Las variantes de productos (tallas, colores, medidas con stock y precio propio) requieren el plan Avanzado o Negocio.
+              </p>
+            </div>
+            <Link
+              href="/dashboard/planes"
+              className={`text-xs px-3.5 py-2 font-medium shrink-0 text-center ${CTA_BRASS}`}
+            >
+              Mejorar plan
+            </Link>
+          </div>
+        </section>
+      )}
 
     </div>
   );
