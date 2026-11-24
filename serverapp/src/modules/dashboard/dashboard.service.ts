@@ -345,38 +345,33 @@ export class DashboardService {
           });
         }
 
-        // 5c. Configuración del negocio (S4 del port): los checks viven en
+        // 5c. Configuración del negocio y organización: los checks viven en
         // /dashboard/configuracion y se leen con GET /api/settings.
+        const configItems = [
+          {
+            title: "Negocio",
+            icon: "settings",
+            link: "/dashboard/configuracion",
+          },
+        ];
+
+        if (
+          permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||
+          hasModule("INSTITUTIONAL_FOOD") ||
+          permits.includes("ORGANIZATION_ACCESS") ||
+          permits.includes(this.permitRepository.PERMIT_DASHBOARD)
+        ) {
+          configItems.push({
+            title: "Organización",
+            icon: "building",
+            link: "/dashboard/configuracion?tab=organization",
+          });
+        }
+
         sections.push({
           title: "Configuración",
           icon: "settings",
-          items: [
-            {
-              title: "Negocio",
-              icon: "settings",
-              link: "/dashboard/configuracion",
-            },
-          ],
-        });
-      }
-
-      // 6. Mi Clínica (si aplica)
-      if (
-        permits.includes("INSTITUTIONAL_FOOD_ACCESS") ||
-        hasModule("INSTITUTIONAL_FOOD") ||
-        permits.includes("ORGANIZATION_ACCESS") ||
-        permits.includes(this.permitRepository.PERMIT_DASHBOARD)
-      ) {
-        sections.push({
-          title: "Organización",
-          icon: "building",
-          items: [
-            {
-              title: "Organización",
-              icon: "building",
-              link: "/dashboard/organization",
-            },
-          ],
+          items: configItems,
         });
       }
     }

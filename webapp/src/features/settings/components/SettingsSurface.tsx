@@ -72,6 +72,7 @@ import {
   ReturnReasonsPanel,
 } from "@/features/settings/components/SalesSettingsPanels";
 import { CasheaSettingsPanel } from "./CasheaSettingsPanel";
+import { OrganizationDashboardView } from "@/features/organization/components/OrganizationDashboardView";
 import { PLAN_ORDER, type Plan } from "@/features/plans/types/plan.type";
 import {
   applySettingsPatch,
@@ -178,6 +179,7 @@ export function SettingsSurface({
   const [plans, setPlans] = useState<Plan[]>([]);
   const [tab, setTab] = useState<
     | "general"
+    | "organization"
     | "store"
     | "inventory"
     | "payments"
@@ -186,6 +188,29 @@ export function SettingsSurface({
     | "returns"
     | "notifications"
   >("general");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab");
+      if (
+        tabParam &&
+        [
+          "general",
+          "organization",
+          "store",
+          "inventory",
+          "payments",
+          "cashea",
+          "credit",
+          "returns",
+          "notifications",
+        ].includes(tabParam)
+      ) {
+        setTab(tabParam as any);
+      }
+    }
+  }, []);
   const [whatsappInput, setWhatsappInput] = useState<string>("");
   const [paymentsInstructions, setPaymentsInstructions] = useState<string>("");
   /** Flag mayorista (S1): solo el admin lo escribe, va por su propio endpoint. */
@@ -479,6 +504,7 @@ export function SettingsSurface({
         {(
           [
             ["general", "General"],
+            ["organization", "Organización y Equipo"],
             ...(canManageStore && canSeeSettingsSection("store", platformAdmin)
               ? ([["store", "Tienda"]] as const)
               : []),
@@ -849,6 +875,12 @@ export function SettingsSurface({
       </SectionPanel>
       ) : null}
         </>
+      ) : null}
+
+      {tab === "organization" ? (
+        <div className="space-y-6">
+          <OrganizationDashboardView />
+        </div>
       ) : null}
 
       {tab === "store" && canManageStore && canSeeSettingsSection("store", platformAdmin) && settings ? (

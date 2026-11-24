@@ -315,7 +315,8 @@ export const Sidebar = ({ sidebar: customSidebar }: SidebarProps = {}) => {
         // The personal workspace has no administration screen of its own.
         // Also hide if the organization cannot have a team (maxSeats <= 1).
         if (
-          link.includes("/dashboard/organization") &&
+          (link.includes("/dashboard/organization") ||
+            link.includes("tab=organization")) &&
           (activeWorkspace?.type === "PERSONAL" ||
             (activeWorkspace?.maxSeats != null && activeWorkspace.maxSeats <= 1))
         ) {
