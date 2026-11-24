@@ -222,6 +222,36 @@ describe("TenantSettingsService", () => {
       });
       expect(saved.payments.instructions).toHaveLength(2000);
     });
+
+    it("persiste los datos específicos por método de pago (details)", async () => {
+      const { service } = makeService();
+      const saved = await service.update(ORG, {
+        payments: {
+          details: {
+            PAGO_MOVIL: "Banesco · 0414-1234567 · V-12345678",
+            USDT_BINANCE: "Binance Pay ID: 12345678",
+          },
+        },
+      });
+      expect(saved.payments.details?.PAGO_MOVIL).toBe(
+        "Banesco · 0414-1234567 · V-12345678",
+      );
+      expect(saved.payments.details?.USDT_BINANCE).toBe(
+        "Binance Pay ID: 12345678",
+      );
+    });
+
+    it("rechaza un details que no es objeto o contiene valores no-texto", async () => {
+      const { service } = makeService();
+      await expect(
+        service.update(ORG, { payments: { details: "invalid" } } as any),
+      ).rejects.toThrow(/objeto/);
+      await expect(
+        service.update(ORG, {
+          payments: { details: { PAGO_MOVIL: 123 } },
+        } as any),
+      ).rejects.toThrow(/texto/);
+    });
   });
 
   describe("cashea alliance settings", () => {

@@ -50,8 +50,12 @@ export interface TenantSettings {
   /** Cashea (BNPL) alliance configuration: Base vs Express and payout rules. */
   cashea?: CasheaSettings;
   /** Built-ins the merchant turned off (S3). */
-  /** Switches plus the free-text "datos del pago" (S4). */
-  payments: { disabledCodes: string[]; instructions: string };
+  /** Switches plus the free-text and per-method "datos del pago" (S4). */
+  payments: {
+    disabledCodes: string[];
+    instructions: string;
+    details?: Record<string, string>;
+  };
   /**
    * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
    * catalog on /dashboard/compras/nuevo to the selected supplier's products.

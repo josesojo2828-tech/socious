@@ -440,7 +440,11 @@ export class TenantSettingsService {
 
     if (input.payments !== undefined) {
       const payments = input.payments as Record<string, unknown>;
-      assertKnownKeys("payments", payments, ["disabledCodes", "instructions"]);
+      assertKnownKeys("payments", payments, [
+        "disabledCodes",
+        "instructions",
+        "details",
+      ]);
       const paymentsPatch: Partial<TenantSettings["payments"]> = {};
       if (payments.disabledCodes !== undefined) {
         const list = payments.disabledCodes;
@@ -456,6 +460,29 @@ export class TenantSettingsService {
           );
         }
         paymentsPatch.instructions = payments.instructions.slice(0, 2000);
+      }
+      if (payments.details !== undefined) {
+        if (
+          payments.details === null ||
+          typeof payments.details !== "object" ||
+          Array.isArray(payments.details)
+        ) {
+          throw new BadRequestException(
+            "payments.details debe ser un objeto con datos por método de pago.",
+          );
+        }
+        const cleanDetails: Record<string, string> = {};
+        for (const [key, val] of Object.entries(
+          payments.details as Record<string, unknown>,
+        )) {
+          if (typeof val !== "string") {
+            throw new BadRequestException(
+              `El detalle para el método de pago "${key}" debe ser un texto.`,
+            );
+          }
+          cleanDetails[key] = val.slice(0, 1000);
+        }
+        paymentsPatch.details = cleanDetails;
       }
       if (Object.keys(paymentsPatch).length > 0) {
         result.payments = {
@@ -629,6 +656,10 @@ export function mergeTenantSettings(
       disabledCodes:
         patch.payments?.disabledCodes ?? base.payments.disabledCodes,
       instructions: patch.payments?.instructions ?? base.payments.instructions,
+      details: {
+        ...(base.payments.details ?? {}),
+        ...(patch.payments?.details ?? {}),
+      },
     },
     purchases: { ...base.purchases, ...(patch.purchases ?? {}) },
     inventory: { ...base.inventory, ...(patch.inventory ?? {}) },

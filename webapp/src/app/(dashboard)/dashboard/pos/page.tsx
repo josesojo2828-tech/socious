@@ -57,6 +57,7 @@ interface PaymentOption {
   code: string;
   label: string;
   currency: "USD" | "VES" | "USDT";
+  details?: string;
 }
 
 interface RateSnapshot {
@@ -382,6 +383,14 @@ export default function PosPage() {
       totals.totalUSD - (Number(casheaInitialAmount) || 0),
     );
   }, [totals.totalUSD, casheaInitialAmount]);
+
+  const currentMethodDetail = useMemo(() => {
+    return (
+      methods.find((m) => m.code === methodCode)?.details ||
+      settings?.payments?.details?.[methodCode] ||
+      ""
+    );
+  }, [methods, methodCode, settings?.payments?.details]);
 
   const activeCasheaCount =
     casheaCount || casheaConfig.defaultInstallments || 3;
@@ -1501,6 +1510,22 @@ export default function PosPage() {
                     ))}
                   </select>
                 </label>
+              ) : null}
+
+              {mode !== "order" &&
+              currentMethodDetail &&
+              methodCode !== "CASHEA" ? (
+                <div className="rounded-xl border border-indigo-200/80 bg-indigo-50/70 p-3 text-xs dark:border-indigo-900/50 dark:bg-indigo-950/30">
+                  <p className="font-semibold text-[11px] uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+                    Datos para el cobro (
+                    {methods.find((m) => m.code === methodCode)?.label ||
+                      methodCode}
+                    ):
+                  </p>
+                  <p className="mt-1 whitespace-pre-line font-mono text-xs text-slate-800 dark:text-slate-200">
+                    {currentMethodDetail}
+                  </p>
+                </div>
               ) : null}
 
               {mode === "now" && methodCode === "CASHEA" ? (

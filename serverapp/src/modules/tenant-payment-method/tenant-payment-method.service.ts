@@ -40,12 +40,22 @@ export class TenantPaymentMethodService {
       this.tenantSettings.get(organizationId),
     ]);
     const disabled = new Set(settings.payments.disabledCodes);
+    const details = settings.payments.details ?? {};
     return [
-      ...BUSINESS_PAYMENT_METHODS.filter((method) => !disabled.has(method.code)),
+      ...BUSINESS_PAYMENT_METHODS.filter((method) => {
+        if (method.code === "CASHEA") {
+          return Boolean(settings.cashea?.enabled) && !disabled.has(method.code);
+        }
+        return !disabled.has(method.code);
+      }).map((method) => ({
+        ...method,
+        details: details[method.code] || "",
+      })),
       ...customs.map((row) => ({
         code: row.code,
         label: row.name,
         currency: row.currency,
+        details: details[row.code] || "",
       })),
     ];
   }

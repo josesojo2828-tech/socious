@@ -11,6 +11,7 @@ import {
   CreditCard,
   DollarSign,
   HelpCircle,
+  Lock,
   Percent,
   Sparkles,
   TrendingUp,
@@ -22,6 +23,9 @@ import { SectionCard } from "@/shared/components/molecules/SectionCard";
 import { Toggle } from "@/shared/components/atoms/Toggle";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
+import { useAuthStore } from "@/shared/store/auth/useAuthStore";
+import { useWorkspaceStore } from "@/shared/store/workspace/useWorkspaceStore";
+import { isAdmin } from "@/shared/authz";
 import { updateTenantSettings } from "@/features/settings/services/settings.service";
 import type {
   CasheaAllianceType,
@@ -55,6 +59,16 @@ export function CasheaSettingsPanel({
   onSaved,
 }: CasheaSettingsPanelProps) {
   const { addToast } = useToastStore();
+  const user = useAuthStore((s) => s.user);
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+
+  const canToggleCashea =
+    isAdmin(user) ||
+    activeWorkspace?.role === "OWNER" ||
+    activeWorkspace?.role === "ADMIN" ||
+    activeWorkspace?.role === "SUPERADMIN" ||
+    activeWorkspace?.role === "CLINIC_ADMIN";
+
   const baseCashea: CasheaSettings = settings.cashea ?? {
     enabled: true,
     allianceType: "BASE",
@@ -191,19 +205,40 @@ export function CasheaSettingsPanel({
         title="Configuración de Cashea (Aliados Comerciales)"
         description="Gestiona cómo tu comercio cobra con Cashea, tu modalidad de liquidación (Base vs Express) y la proyección de flujo de caja."
       >
-        {/* Toggle General */}
+        {/* Toggle General - Solo Administrador */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-              Aceptar pagos con Cashea en el POS
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                Aceptar pagos con Cashea en el POS
+              </p>
+              {!canToggleCashea ? (
+                <span className="inline-flex items-center gap-1 rounded bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+                  <Lock className="h-3 w-3" /> Solo Administrador
+                </span>
+              ) : null}
+            </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Muestra el botón y métodos de Cashea al momento de cobrar en caja.
+              {canToggleCashea
+                ? "Muestra el botón y métodos de Cashea al momento de cobrar en caja."
+                : "Solo los administradores o propietarios pueden activar o desactivar Cashea."}
             </p>
           </div>
           <Toggle
             checked={enabled}
-            onChange={(e) => setEnabled(e.target.checked)}
+            disabled={!canToggleCashea}
+            onChange={(e) => {
+              if (!canToggleCashea) {
+                addToast({
+                  type: "warning",
+                  title: "Acción restringida",
+                  message:
+                    "Solo un administrador puede activar o desactivar Cashea.",
+                });
+                return;
+              }
+              setEnabled(e.target.checked);
+            }}
           />
         </div>
 

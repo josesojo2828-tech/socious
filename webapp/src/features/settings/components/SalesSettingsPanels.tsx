@@ -24,6 +24,26 @@ function apiMessage(error: unknown, fallback: string): string {
   return maybe?.response?.data?.message || fallback;
 }
 
+function getMethodPlaceholder(code: string): string {
+  switch (code) {
+    case "PAGO_MOVIL":
+      return "Ej: Banco Banesco (0102) · Tel: 0414-1234567 · CI: V-12345678";
+    case "USDT_BINANCE":
+      return "Ej: Binance Pay ID: 12345678 · Correo: pagos@binance.com · Red: TRC20 / BSC";
+    case "ZELLE":
+      return "Ej: Correo: zelle@empresa.com · Titular: Mi Empresa LLC";
+    case "TRANSFER":
+      return "Ej: Banesco · Cuenta: 01020123456789012345 · RIF: J-12345678-0";
+    case "CARD":
+      return "Ej: Terminal Punto de Venta #1 (Débito / Crédito nacional)";
+    case "CASH_USD":
+    case "CASH_VES":
+      return "Instrucciones de caja (ej: verificar billetes en luz UV, no rayados)";
+    default:
+      return "Datos e instrucciones de cobro (cédula, cuenta, teléfono, Binance Pay ID, etc.)";
+  }
+}
+
 /** Payment methods tab (S1): built-ins are read-only, customs are a CRUD. */
 export function PaymentMethodsPanel() {
   const api = useSettingsApi();
@@ -39,6 +59,7 @@ export function PaymentMethodsPanel() {
     { code: string; label: string; currency: string }[]
   >([]);
   const [disabledCodes, setDisabledCodes] = useState<string[]>([]);
+  const [methodDetails, setMethodDetails] = useState<Record<string, string>>({});
 
   const fetchList = useCallback(async () => {
     setLoading(true);
@@ -52,8 +73,11 @@ export function PaymentMethodsPanel() {
           .catch(() => ({ data: [] as { code: string; label: string; currency: string }[] })),
         getTenantSettings(settingsOrganizationId).catch(() => null),
       ]);
-      setBuiltins(builtinOptions.data ?? []);
+      const allBuiltins = builtinOptions.data ?? [];
+      // Cashea se gestiona exclusivamente desde su pestaña dedicada (Cashea BNPL)
+      setBuiltins(allBuiltins.filter((m) => m.code !== "CASHEA"));
       setDisabledCodes(currentSettings?.payments?.disabledCodes ?? []);
+      setMethodDetails(currentSettings?.payments?.details ?? {});
       setRows(Array.isArray(customs.data) ? customs.data : []);
     } catch (error) {
       addToast({
@@ -69,6 +93,26 @@ export function PaymentMethodsPanel() {
   useEffect(() => {
     void fetchList();
   }, [fetchList]);
+
+  const handleDetailChange = (methodCode: string, text: string) => {
+    setMethodDetails((prev) => ({ ...prev, [methodCode]: text }));
+  };
+
+  const handleDetailSave = async (methodCode: string, text: string) => {
+    try {
+      await updateTenantSettings({
+        payments: {
+          details: { ...methodDetails, [methodCode]: text },
+        },
+      });
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Métodos de pago",
+        message: apiMessage(error, "No se pudieron guardar los datos del método."),
+      });
+    }
+  };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -151,39 +195,60 @@ export function PaymentMethodsPanel() {
       title="Métodos de pago"
       description="Los base (efectivo, pago móvil, Zelle, USDT…) siempre están. Creá los tuyos: Pago Móvil Mercantil, Zelle de Ana, etc."
     >
-      <ul className="mb-4 divide-y divide-slate-100 dark:divide-slate-800">
+      <ul className="mb-6 space-y-3">
         {builtins.map((method) => (
           <li
             key={method.code}
-            className="flex items-center justify-between gap-3 py-2"
+            className="rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 dark:border-slate-800 dark:bg-slate-900/40"
           >
-            <div>
-              <p className="flex items-center gap-2 text-sm font-medium text-slate-800 dark:text-slate-100">
-                {method.code === "CASHEA" ? <CasheaLogo size="sm" /> : null}
-                {method.label}{" "}
-                <span className="font-mono text-xs text-slate-400">
-                  {method.code}
-                </span>
-              </p>
-              <p className="text-xs text-slate-400">{method.currency}</p>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  {method.label}{" "}
+                  <span className="font-mono text-xs text-slate-400">
+                    {method.code}
+                  </span>
+                </p>
+                <p className="text-xs text-slate-400">
+                  Moneda: {method.currency}
+                </p>
+              </div>
+              <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <input
+                  type="checkbox"
+                  className="accent-indigo-600"
+                  checked={!disabledCodes.includes(method.code)}
+                  onChange={(event) =>
+                    void toggleBuiltin(method.code, event.target.checked)
+                  }
+                />
+                Activo en POS
+              </label>
             </div>
-            <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-500">
-              <input
-                type="checkbox"
-                className="accent-indigo-600"
-                checked={!disabledCodes.includes(method.code)}
-                onChange={(event) =>
-                  void toggleBuiltin(method.code, event.target.checked)
+
+            <div className="mt-2.5">
+              <label className="block text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                Datos de cobro para el cajero (Cédula, teléfono, banco, Binance Pay ID, etc.):
+              </label>
+              <textarea
+                rows={2}
+                value={methodDetails[method.code] || ""}
+                placeholder={getMethodPlaceholder(method.code)}
+                onChange={(e) =>
+                  handleDetailChange(method.code, e.target.value)
                 }
+                onBlur={(e) =>
+                  void handleDetailSave(method.code, e.target.value)
+                }
+                className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder-slate-500"
               />
-              Activo
-            </label>
+            </div>
           </li>
         ))}
       </ul>
 
       <p className="mb-2 text-xs font-semibold uppercase text-slate-400">
-        Tus métodos
+        Tus métodos personalizados
       </p>
       <form onSubmit={submit} className="mb-4 flex flex-wrap items-end gap-3">
         <label className="block text-sm">
@@ -234,34 +299,54 @@ export function PaymentMethodsPanel() {
           Todavía no creaste métodos propios; los base ya funcionan en el POS.
         </p>
       ) : (
-        <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+        <ul className="space-y-3">
           {rows.map((method) => (
             <li
               key={method.id}
-              className="flex items-center justify-between gap-3 py-2"
+              className="rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 dark:border-slate-800 dark:bg-slate-900/40"
             >
-              <div>
-                <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
-                  {method.name}{" "}
-                  <span className="font-mono text-xs text-slate-400">
-                    {method.code}
-                  </span>
-                </p>
-                <p className="text-xs text-slate-400">{method.currency}</p>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    {method.name}{" "}
+                    <span className="font-mono text-xs text-slate-400">
+                      {method.code}
+                    </span>
+                  </p>
+                  <p className="text-xs text-slate-400">Moneda: {method.currency}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Toggle
+                    checked={method.active}
+                    onChange={() => void toggle(method)}
+                  />
+                  <button
+                    type="button"
+                    aria-label={`Eliminar ${method.name}`}
+                    onClick={() => void remove(method)}
+                    className="rounded-lg p-1 text-slate-400 hover:text-red-500"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Toggle
-                  checked={method.active}
-                  onChange={() => void toggle(method)}
+
+              <div className="mt-2.5">
+                <label className="block text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                  Datos de cobro para el cajero (Cédula, teléfono, cuenta, Binance Pay ID, etc.):
+                </label>
+                <textarea
+                  rows={2}
+                  value={methodDetails[method.code] || ""}
+                  placeholder={getMethodPlaceholder(method.code)}
+                  onChange={(e) =>
+                    handleDetailChange(method.code, e.target.value)
+                  }
+                  onBlur={(e) =>
+                    void handleDetailSave(method.code, e.target.value)
+                  }
+                  className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder-slate-500"
                 />
-                <button
-                  type="button"
-                  aria-label={`Eliminar ${method.name}`}
-                  onClick={() => void remove(method)}
-                  className="rounded-lg p-1 text-slate-400 hover:text-red-500"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
               </div>
             </li>
           ))}

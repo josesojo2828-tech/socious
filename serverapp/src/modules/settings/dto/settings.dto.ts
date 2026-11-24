@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsIn,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   Matches,
@@ -172,6 +173,14 @@ export class PaymentsSettingsDto {
     message: "payments.instructions no puede superar 2000 caracteres.",
   })
   instructions?: string;
+
+  /**
+   * Datos específicos por método de pago (ej. Cédula y teléfono para Pago Móvil,
+   * Binance Pay ID / correo para Binance, correo y titular para Zelle, etc.).
+   */
+  @IsOptional()
+  @IsObject({ message: "payments.details debe ser un objeto." })
+  details?: Record<string, string>;
 }
 
 export class PurchasesSettingsDto {

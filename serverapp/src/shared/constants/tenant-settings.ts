@@ -52,8 +52,12 @@ export interface TenantSettings {
   routes: { enabled: boolean };
   /** Enabled return reasons shown as a select on the returns flow (S5). */
   returns: { reasons: string[] };
-  /** Payment-method switches (S3) plus the free-text "datos del pago". */
-  payments: { disabledCodes: string[]; instructions: string };
+  /** Payment-method switches (S3) plus the free-text and per-method "datos del pago". */
+  payments: {
+    disabledCodes: string[];
+    instructions: string;
+    details: Record<string, string>;
+  };
   /**
    * Purchase-screen switches (S14 #2): `onlySupplierProducts` filters the
    * catalog the /dashboard/compras/nuevo screen offers for a supplier.
@@ -187,7 +191,7 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
     defaultInstallments: 3,
     settlementDayOfWeek: 2, // Martes
   },
-  payments: { disabledCodes: [], instructions: "" },
+  payments: { disabledCodes: [], instructions: "", details: {} },
   purchases: { onlySupplierProducts: false },
   inventory: { useRawMaterials: false, useServices: false },
   storefront: { whatsapp: "" },
@@ -444,6 +448,13 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
         typeof payments.instructions === "string"
           ? payments.instructions
           : defaults.payments.instructions,
+      details: isPlainObject(payments.details)
+        ? Object.fromEntries(
+            Object.entries(payments.details)
+              .filter(([k, v]) => typeof k === "string" && typeof v === "string")
+              .map(([k, v]) => [k, (v as string).slice(0, 1000)]),
+          )
+        : defaults.payments.details,
     },
     purchases: {
       onlySupplierProducts: asBool(
