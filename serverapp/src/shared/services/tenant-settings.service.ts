@@ -13,6 +13,7 @@ import {
   DEFAULT_TENANT_SETTINGS,
   FULFILLMENT_TYPES,
   cloneDefaultSettings,
+  isCasheaAllianceType,
   isCoordinationMethod,
   isCreditCadence,
   isFulfillmentType,
@@ -344,6 +345,99 @@ export class TenantSettingsService {
       result.credit = patchSection;
     }
 
+    if (input.cashea !== undefined) {
+      const cashea = input.cashea as Record<string, unknown>;
+      assertKnownKeys("cashea", cashea, [
+        "enabled",
+        "allianceType",
+        "baseCommissionPercent",
+        "expressCommissionPercent",
+        "defaultDownPaymentPercent",
+        "defaultInstallments",
+        "settlementDayOfWeek",
+      ]);
+
+      const patchSection: Partial<TenantSettings["cashea"]> = {};
+
+      if (cashea.enabled !== undefined) {
+        if (typeof cashea.enabled !== "boolean") {
+          throw new BadRequestException("cashea.enabled debe ser verdadero o falso.");
+        }
+        patchSection.enabled = cashea.enabled;
+      }
+
+      if (cashea.allianceType !== undefined) {
+        if (!isCasheaAllianceType(cashea.allianceType)) {
+          throw new BadRequestException(
+            `Modalidad de Cashea inválida: "${String(cashea.allianceType)}". Valores: BASE, EXPRESS.`,
+          );
+        }
+        patchSection.allianceType = cashea.allianceType;
+      }
+
+      if (cashea.baseCommissionPercent !== undefined) {
+        if (
+          typeof cashea.baseCommissionPercent !== "number" ||
+          !Number.isFinite(cashea.baseCommissionPercent) ||
+          cashea.baseCommissionPercent < 0 ||
+          cashea.baseCommissionPercent > 50
+        ) {
+          throw new BadRequestException("cashea.baseCommissionPercent debe estar entre 0 y 50.");
+        }
+        patchSection.baseCommissionPercent = Math.round(cashea.baseCommissionPercent * 100) / 100;
+      }
+
+      if (cashea.expressCommissionPercent !== undefined) {
+        if (
+          typeof cashea.expressCommissionPercent !== "number" ||
+          !Number.isFinite(cashea.expressCommissionPercent) ||
+          cashea.expressCommissionPercent < 0 ||
+          cashea.expressCommissionPercent > 50
+        ) {
+          throw new BadRequestException("cashea.expressCommissionPercent debe estar entre 0 y 50.");
+        }
+        patchSection.expressCommissionPercent = Math.round(cashea.expressCommissionPercent * 100) / 100;
+      }
+
+      if (cashea.defaultDownPaymentPercent !== undefined) {
+        if (
+          typeof cashea.defaultDownPaymentPercent !== "number" ||
+          !Number.isFinite(cashea.defaultDownPaymentPercent) ||
+          cashea.defaultDownPaymentPercent < 0 ||
+          cashea.defaultDownPaymentPercent > 100
+        ) {
+          throw new BadRequestException("cashea.defaultDownPaymentPercent debe estar entre 0 y 100.");
+        }
+        patchSection.defaultDownPaymentPercent = Math.round(cashea.defaultDownPaymentPercent);
+      }
+
+      if (cashea.defaultInstallments !== undefined) {
+        if (
+          typeof cashea.defaultInstallments !== "number" ||
+          !Number.isFinite(cashea.defaultInstallments) ||
+          cashea.defaultInstallments < 1 ||
+          cashea.defaultInstallments > 36
+        ) {
+          throw new BadRequestException("cashea.defaultInstallments debe ser entre 1 y 36 cuotas.");
+        }
+        patchSection.defaultInstallments = Math.floor(cashea.defaultInstallments);
+      }
+
+      if (cashea.settlementDayOfWeek !== undefined) {
+        if (
+          typeof cashea.settlementDayOfWeek !== "number" ||
+          !Number.isFinite(cashea.settlementDayOfWeek) ||
+          cashea.settlementDayOfWeek < 1 ||
+          cashea.settlementDayOfWeek > 7
+        ) {
+          throw new BadRequestException("cashea.settlementDayOfWeek debe ser entre 1 y 7.");
+        }
+        patchSection.settlementDayOfWeek = Math.floor(cashea.settlementDayOfWeek);
+      }
+
+      result.cashea = patchSection;
+    }
+
     if (input.payments !== undefined) {
       const payments = input.payments as Record<string, unknown>;
       assertKnownKeys("payments", payments, ["disabledCodes", "instructions"]);
@@ -527,6 +621,7 @@ export function mergeTenantSettings(
       reasons: patch.returns?.reasons ?? base.returns.reasons,
     },
     credit: { ...base.credit, ...(patch.credit ?? {}) },
+    cashea: { ...base.cashea, ...(patch.cashea ?? {}) },
     notifications: { ...base.notifications, ...(patch.notifications ?? {}) },
     payments: {
       ...base.payments,

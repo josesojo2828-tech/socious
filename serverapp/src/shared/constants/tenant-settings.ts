@@ -105,6 +105,38 @@ export interface TenantSettings {
     everyNDays: number;
     monthlyDay: number;
   };
+  /** Cashea (BNPL) alliance configuration: Base vs Express and payout rules. */
+  cashea: CasheaSettings;
+}
+
+export type CasheaAllianceType = "BASE" | "EXPRESS";
+export const CASHEA_ALLIANCE_TYPES: readonly CasheaAllianceType[] = [
+  "BASE",
+  "EXPRESS",
+];
+
+export function isCasheaAllianceType(value: unknown): value is CasheaAllianceType {
+  return (CASHEA_ALLIANCE_TYPES as readonly string[]).includes(value as string);
+}
+
+export interface CasheaSettings {
+  /** If Cashea is actively offered at POS. */
+  enabled: boolean;
+  /**
+   * BASE: Merchant receives payments as customer pays every 14 days.
+   * EXPRESS: Merchant receives 100% of financed amount advanced weekly.
+   */
+  allianceType: CasheaAllianceType;
+  /** Platform commission deducted by Cashea (e.g. 5.0%). */
+  baseCommissionPercent: number;
+  /** Additional express advance fee for weekly settlement (e.g. 3.0%). */
+  expressCommissionPercent: number;
+  /** Suggested initial payment percent (40, 50, 60%). */
+  defaultDownPaymentPercent: number;
+  /** Default number of installments (3 for Linea Principal). */
+  defaultInstallments: number;
+  /** Day of week Cashea liquidates for Express allies (1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri). */
+  settlementDayOfWeek: number;
 }
 
 /**
@@ -145,6 +177,15 @@ export const DEFAULT_TENANT_SETTINGS: TenantSettings = {
     cadence: "QUINCENAL",
     everyNDays: 15,
     monthlyDay: 1,
+  },
+  cashea: {
+    enabled: true,
+    allianceType: "BASE",
+    baseCommissionPercent: 5.0,
+    expressCommissionPercent: 3.0,
+    defaultDownPaymentPercent: 40,
+    defaultInstallments: 3,
+    settlementDayOfWeek: 2, // Martes
   },
   payments: { disabledCodes: [], instructions: "" },
   purchases: { onlySupplierProducts: false },
@@ -238,6 +279,56 @@ const asCredit = (
   };
 };
 
+const asCashea = (
+  value: Record<string, unknown>,
+  defaults: TenantSettings["cashea"],
+): TenantSettings["cashea"] => {
+  const enabled = asBool(value.enabled, defaults.enabled);
+  const allianceType = isCasheaAllianceType(value.allianceType)
+    ? value.allianceType
+    : defaults.allianceType;
+
+  const rawBaseComm = value.baseCommissionPercent;
+  const baseCommissionPercent =
+    typeof rawBaseComm === "number" && Number.isFinite(rawBaseComm) && rawBaseComm >= 0
+      ? Math.min(50, Math.round(rawBaseComm * 100) / 100)
+      : defaults.baseCommissionPercent;
+
+  const rawExpressComm = value.expressCommissionPercent;
+  const expressCommissionPercent =
+    typeof rawExpressComm === "number" && Number.isFinite(rawExpressComm) && rawExpressComm >= 0
+      ? Math.min(50, Math.round(rawExpressComm * 100) / 100)
+      : defaults.expressCommissionPercent;
+
+  const rawDownPayment = value.defaultDownPaymentPercent;
+  const defaultDownPaymentPercent =
+    typeof rawDownPayment === "number" && Number.isFinite(rawDownPayment) && rawDownPayment >= 0
+      ? Math.min(100, Math.round(rawDownPayment))
+      : defaults.defaultDownPaymentPercent;
+
+  const rawInstallments = value.defaultInstallments;
+  const defaultInstallments =
+    typeof rawInstallments === "number" && Number.isFinite(rawInstallments) && rawInstallments >= 1
+      ? Math.min(36, Math.floor(rawInstallments))
+      : defaults.defaultInstallments;
+
+  const rawDayOfWeek = value.settlementDayOfWeek;
+  const settlementDayOfWeek =
+    typeof rawDayOfWeek === "number" && Number.isFinite(rawDayOfWeek) && rawDayOfWeek >= 1 && rawDayOfWeek <= 7
+      ? Math.floor(rawDayOfWeek)
+      : defaults.settlementDayOfWeek;
+
+  return {
+    enabled,
+    allianceType,
+    baseCommissionPercent,
+    expressCommissionPercent,
+    defaultDownPaymentPercent,
+    defaultInstallments,
+    settlementDayOfWeek,
+  };
+};
+
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -296,6 +387,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
   const routes = isPlainObject(source.routes) ? source.routes : {};
   const returns = isPlainObject(source.returns) ? source.returns : {};
   const credit = isPlainObject(source.credit) ? source.credit : {};
+  const cashea = isPlainObject(source.cashea) ? source.cashea : {};
   const notifications = isPlainObject(source.notifications)
     ? source.notifications
     : {};
@@ -343,6 +435,7 @@ export function normalizeTenantSettings(raw: unknown): TenantSettings {
       reasons: asReasonList(returns.reasons, defaults.returns.reasons),
     },
     credit: asCredit(credit, defaults.credit),
+    cashea: asCashea(cashea, defaults.cashea),
     payments: {
       disabledCodes: Array.isArray(payments.disabledCodes)
         ? [...new Set(payments.disabledCodes.filter((c: unknown) => typeof c === "string"))]

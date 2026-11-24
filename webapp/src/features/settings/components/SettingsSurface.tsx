@@ -71,6 +71,7 @@ import {
   PaymentMethodsPanel,
   ReturnReasonsPanel,
 } from "@/features/settings/components/SalesSettingsPanels";
+import { CasheaSettingsPanel } from "./CasheaSettingsPanel";
 import { PLAN_ORDER, type Plan } from "@/features/plans/types/plan.type";
 import {
   applySettingsPatch,
@@ -180,6 +181,7 @@ export function SettingsSurface({
     | "store"
     | "inventory"
     | "payments"
+    | "cashea"
     | "credit"
     | "returns"
     | "notifications"
@@ -482,6 +484,7 @@ export function SettingsSurface({
               : []),
             ["inventory", "Inventario"],
             ["payments", "Pagos"],
+            ["cashea", "Cashea (BNPL)"],
             ["credit", "Ventas a crédito"],
             ...(canSeeSettingsSection("returns", platformAdmin)
               ? ([["returns", "Devoluciones"]] as const)
@@ -973,6 +976,10 @@ export function SettingsSurface({
           ) : null}
           <PaymentMethodsPanel />
         </div>
+      ) : null}
+
+      {tab === "cashea" && settings ? (
+        <CasheaSettingsPanel settings={settings} onSaved={setSettings} />
       ) : null}
 
       {tab === "credit" && settings ? (

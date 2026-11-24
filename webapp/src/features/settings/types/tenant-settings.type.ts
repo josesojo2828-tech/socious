@@ -47,6 +47,8 @@ export interface TenantSettings {
     everyNDays: number;
     monthlyDay: number;
   };
+  /** Cashea (BNPL) alliance configuration: Base vs Express and payout rules. */
+  cashea?: CasheaSettings;
   /** Built-ins the merchant turned off (S3). */
   /** Switches plus the free-text "datos del pago" (S4). */
   payments: { disabledCodes: string[]; instructions: string };
@@ -97,6 +99,28 @@ export const FULFILLMENT_TYPE_LABELS: Record<FulfillmentType, string> = {
   DELIVERY: "Delivery a domicilio",
   SHIPPING: "Envío por agencia",
 };
+
+export type CasheaAllianceType = "BASE" | "EXPRESS";
+
+export interface CasheaSettings {
+  /** If Cashea is actively offered at POS. */
+  enabled: boolean;
+  /**
+   * BASE: Merchant receives payments as customer pays every 14 days.
+   * EXPRESS: Merchant receives 100% of financed amount advanced weekly.
+   */
+  allianceType: CasheaAllianceType;
+  /** Platform commission deducted by Cashea (e.g. 5.0%). */
+  baseCommissionPercent: number;
+  /** Additional express advance fee for weekly settlement (e.g. 3.0%). */
+  expressCommissionPercent: number;
+  /** Suggested initial payment percent (40, 50, 60%). */
+  defaultDownPaymentPercent: number;
+  /** Default number of installments (3 for Linea Principal). */
+  defaultInstallments: number;
+  /** Day of week Cashea liquidates for Express allies (1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri). */
+  settlementDayOfWeek: number;
+}
 
 export const COORDINATION_LABELS: Record<CoordinationMethod, string> = {
   WHATSAPP: "WhatsApp",

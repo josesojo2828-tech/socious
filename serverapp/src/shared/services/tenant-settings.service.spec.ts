@@ -224,6 +224,50 @@ describe("TenantSettingsService", () => {
     });
   });
 
+  describe("cashea alliance settings", () => {
+    it("updates cashea allianceType, commissions and defaults", async () => {
+      const { service } = makeService();
+
+      const saved = await service.update(ORG, {
+        cashea: {
+          allianceType: "EXPRESS",
+          baseCommissionPercent: 4.5,
+          expressCommissionPercent: 2.5,
+          defaultDownPaymentPercent: 50,
+          defaultInstallments: 3,
+          settlementDayOfWeek: 4,
+        },
+      });
+
+      expect(saved.cashea.allianceType).toBe("EXPRESS");
+      expect(saved.cashea.baseCommissionPercent).toBe(4.5);
+      expect(saved.cashea.expressCommissionPercent).toBe(2.5);
+      expect(saved.cashea.defaultDownPaymentPercent).toBe(50);
+      expect(saved.cashea.defaultInstallments).toBe(3);
+      expect(saved.cashea.settlementDayOfWeek).toBe(4);
+    });
+
+    it("rejects invalid cashea alliance type", async () => {
+      const { service } = makeService();
+
+      await expect(
+        service.update(ORG, {
+          cashea: { allianceType: "INVALID" as any },
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("rejects commission greater than 50", async () => {
+      const { service } = makeService();
+
+      await expect(
+        service.update(ORG, {
+          cashea: { baseCommissionPercent: 60 },
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
   describe("mergeTenantSettings", () => {
     it("never lets a partial patch wipe an untouched sibling", async () => {
       const { service } = makeService();

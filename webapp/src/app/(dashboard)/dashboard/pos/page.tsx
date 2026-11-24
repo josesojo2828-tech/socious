@@ -1,14 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
+  Coins,
   Loader2,
   Minus,
   Plus,
   Receipt,
   Search,
   Trash2,
+  Zap,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -166,10 +169,14 @@ export default function PosPage() {
   const [creditInitial, setCreditInitial] = useState<string>("");
   /** Cashea (BNPL): initial at the counter + equal installments every 14 days. */
   const [isCashea, setIsCashea] = useState<boolean>(false);
-  const [casheaCount, setCasheaCount] = useState<number>(4);
+  const [casheaCount, setCasheaCount] = useState<number>(3);
   const [casheaFirstDueDate, setCasheaFirstDueDate] = useState<string>(() =>
     defaultCasheaFirstDueDate(),
   );
+  const [casheaInitialAmount, setCasheaInitialAmount] = useState<string>("");
+  const [casheaDownPercent, setCasheaDownPercent] = useState<number>(40);
+  const [casheaInitialMethodCode, setCasheaInitialMethodCode] =
+    useState<string>("CASH_USD");
   const [creditDays, setCreditDays] = useState<number>(15);
   const [creditMonthlyDay, setCreditMonthlyDay] = useState<number>(1);
   const [pickProduct, setPickProduct] = useState<Product | null>(null);
@@ -338,6 +345,104 @@ export default function PosPage() {
     ],
   );
 
+  // Configuración de Cashea del comercio
+  const casheaConfig = useMemo(() => {
+    return (
+      settings?.cashea ?? {
+        enabled: true,
+        allianceType: "BASE" as const,
+        baseCommissionPercent: 5.0,
+        expressCommissionPercent: 3.0,
+        defaultDownPaymentPercent: 40,
+        defaultInstallments: 3,
+        settlementDayOfWeek: 2,
+      }
+    );
+  }, [settings?.cashea]);
+
+  // Sincronizar inicial de Cashea cuando cambia el total o preset
+  useEffect(() => {
+    if (methodCode === "CASHEA" && totals.totalUSD > 0) {
+      const pct =
+        casheaDownPercent || casheaConfig.defaultDownPaymentPercent || 40;
+      const initialVal =
+        Math.round(totals.totalUSD * (pct / 100) * 100) / 100;
+      setCasheaInitialAmount(initialVal.toFixed(2));
+    }
+  }, [
+    methodCode,
+    totals.totalUSD,
+    casheaDownPercent,
+    casheaConfig.defaultDownPaymentPercent,
+  ]);
+
+  const casheaFinancedTotal = useMemo(() => {
+    return Math.max(
+      0,
+      totals.totalUSD - (Number(casheaInitialAmount) || 0),
+    );
+  }, [totals.totalUSD, casheaInitialAmount]);
+
+  const activeCasheaCount =
+    casheaCount || casheaConfig.defaultInstallments || 3;
+  const casheaInstallmentRaw =
+    activeCasheaCount > 0 ? casheaFinancedTotal / activeCasheaCount : 0;
+
+  const casheaBaseSchedule = useMemo(() => {
+    if (casheaFinancedTotal <= 0) return [];
+    const entries = [];
+    const baseCommPct = casheaConfig.baseCommissionPercent || 5.0;
+    const baseDate = new Date();
+    for (let i = 1; i <= activeCasheaCount; i++) {
+      const d = new Date(baseDate);
+      d.setDate(d.getDate() + i * 14);
+      const gross = Math.round(casheaInstallmentRaw * 100) / 100;
+      const fee = Math.round(gross * (baseCommPct / 100) * 100) / 100;
+      const net = Math.round((gross - fee) * 100) / 100;
+      entries.push({
+        installmentNumber: i,
+        days: i * 14,
+        date: d,
+        gross,
+        fee,
+        net,
+      });
+    }
+    return entries;
+  }, [
+    casheaConfig.baseCommissionPercent,
+    casheaFinancedTotal,
+    activeCasheaCount,
+    casheaInstallmentRaw,
+  ]);
+
+  const casheaExpressSchedule = useMemo(() => {
+    if (casheaFinancedTotal <= 0) return null;
+    const baseCommPct = casheaConfig.baseCommissionPercent || 5.0;
+    const expCommPct = casheaConfig.expressCommissionPercent || 3.0;
+    const totalCommPct = baseCommPct + expCommPct;
+    const fee =
+      Math.round(casheaFinancedTotal * (totalCommPct / 100) * 100) / 100;
+    const net = Math.round((casheaFinancedTotal - fee) * 100) / 100;
+
+    const targetDay = casheaConfig.settlementDayOfWeek || 2;
+    const nextDate = new Date();
+    const currentDay = nextDate.getDay() === 0 ? 7 : nextDate.getDay();
+    let diff = targetDay - currentDay;
+    if (diff <= 0) diff += 7;
+    nextDate.setDate(nextDate.getDate() + diff);
+
+    return {
+      settlementDate: nextDate,
+      gross: casheaFinancedTotal,
+      baseCommPct,
+      expCommPct,
+      totalCommPct,
+      fee,
+      net,
+    };
+  }, [casheaConfig, casheaFinancedTotal]);
+
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return products;
@@ -353,6 +458,13 @@ export default function PosPage() {
     setMethodCode(code);
     const method = methods.find((option) => option.code === code);
     if (method) setCurrency(method.currency);
+    if (code === "CASHEA") {
+      const defaultDown = casheaConfig.defaultDownPaymentPercent || 40;
+      setCasheaDownPercent(defaultDown);
+      const initialVal =
+        Math.round(totals.totalUSD * (defaultDown / 100) * 100) / 100;
+      setCasheaInitialAmount(initialVal > 0 ? initialVal.toFixed(2) : "");
+    }
   };
 
   const handleSelectProduct = (product: Product) => {
@@ -552,6 +664,46 @@ export default function PosPage() {
         setBusy(false);
       }
       return;
+    } else if (methodCode === "CASHEA") {
+      const initial = Number(casheaInitialAmount) || 0;
+      if (!Number.isFinite(initial) || initial < 0) {
+        addToast({
+          type: "warning",
+          title: "Cashea",
+          message: "El pago inicial no puede ser negativo.",
+        });
+        return;
+      }
+      if (initial > totals.totalUSD + 0.01) {
+        addToast({
+          type: "warning",
+          title: "Cashea",
+          message: "El pago inicial no puede superar el total de la venta.",
+        });
+        return;
+      }
+
+      const initialMethod = methods.find(
+        (m) => m.code === (casheaInitialMethodCode || "CASH_USD"),
+      );
+      const casheaPayment =
+        initial > 0
+          ? {
+              paymentMethod: initialMethod ? initialMethod.code : "CASH_USD",
+              currency: "USD" as const,
+              amountOriginal: initial,
+            }
+          : undefined;
+
+      payloadInput = {
+        ...payloadInput,
+        cashea: buildCasheaPlan(totals.totalUSD, {
+          initialUSD: initial,
+          installmentCount: activeCasheaCount,
+          firstDueDate: casheaFirstDueDate || defaultCasheaFirstDueDate(),
+        }),
+        ...(casheaPayment ? { payment: casheaPayment } : {}),
+      };
     } else {
       if (!method || !Number.isFinite(paymentAmount) || paymentAmount <= 0) {
         addToast({
@@ -583,11 +735,13 @@ export default function PosPage() {
         type: "success",
         title: "Venta registrada",
         message:
-          mode === "credit"
-            ? isCashea
-              ? `${data.saleNumber} con Cashea (${casheaCount} cuotas cada 14 días).`
-              : `${data.saleNumber} a crédito (${CREDIT_CADENCE_LABELS[creditCadence]}).`
-            : `${data.saleNumber} por ${currency} ${paymentAmount.toFixed(2)}.`,
+          methodCode === "CASHEA"
+            ? `${data.saleNumber} con Cashea (${casheaConfig.allianceType === "EXPRESS" ? "Express · Liquidación semanal" : `Base · ${activeCasheaCount} cuotas`}). Inicial: $${(Number(casheaInitialAmount) || 0).toFixed(2)}.`
+            : mode === "credit"
+              ? isCashea
+                ? `${data.saleNumber} con Cashea (${casheaCount} cuotas cada 14 días).`
+                : `${data.saleNumber} a crédito (${CREDIT_CADENCE_LABELS[creditCadence]}).`
+              : `${data.saleNumber} por ${currency} ${paymentAmount.toFixed(2)}.`,
       });
       setCart([]);
       setNotes("");
@@ -1349,21 +1503,222 @@ export default function PosPage() {
                 </label>
               ) : null}
 
-              <div className={mode !== "now" ? "hidden" : ""}>
-                <label className="block text-xs text-slate-500 dark:text-slate-400">
-                  Monto cobrado
-                  <span className="ml-1 font-semibold text-[#b2944a]">
-                    ({currency})
-                  </span>
-                  <DecimalInput
-                    mode="money"
-                    allowEmpty
-                    value={amount}
-                    onValueChange={setAmount}
-                    className="mt-1 w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 font-mono text-lg tabular-nums"
-                  />
-                </label>
-              </div>
+              {mode === "now" && methodCode === "CASHEA" ? (
+                <div className="space-y-3 rounded-2xl border border-[#b2944a]/40 bg-[#b2944a]/8 p-4">
+                  <div className="flex items-center justify-between border-b border-[#b2944a]/20 pb-2">
+                    <div className="flex items-center gap-1.5">
+                      <CasheaLogo size="sm" />
+                      <span className="text-xs font-bold text-[#8e7538] dark:text-[#d8bd7a]">
+                        Venta con Cashea (BNPL)
+                      </span>
+                    </div>
+                    <Link
+                      href="/dashboard/configuracion"
+                      className="text-[10px] font-semibold text-[#b2944a] hover:underline"
+                    >
+                      {casheaConfig.allianceType === "EXPRESS"
+                        ? "Aliado Express"
+                        : "Aliado Base"}
+                    </Link>
+                  </div>
+
+                  {/* Inicial en Caja */}
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Inicial del cliente (en caja)
+                      </label>
+                      <span className="font-mono text-xs font-bold text-[#b2944a]">
+                        ${Number(casheaInitialAmount || 0).toFixed(2)} USD
+                      </span>
+                    </div>
+
+                    <div className="mt-1 flex gap-1.5">
+                      {[40, 50, 60].map((pct) => (
+                        <button
+                          key={pct}
+                          type="button"
+                          onClick={() => {
+                            setCasheaDownPercent(pct);
+                            const val =
+                              Math.round(totals.totalUSD * (pct / 100) * 100) /
+                              100;
+                            setCasheaInitialAmount(val.toFixed(2));
+                          }}
+                          className={`flex-1 rounded-lg border py-1 text-[11px] font-semibold transition-colors ${
+                            casheaDownPercent === pct
+                              ? "border-[#b2944a] bg-[#b2944a] text-white"
+                              : "border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-900 text-slate-700 dark:text-slate-300"
+                          }`}
+                        >
+                          {pct}%
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-2">
+                      <DecimalInput
+                        mode="money"
+                        allowEmpty
+                        value={casheaInitialAmount}
+                        onValueChange={(val) => {
+                          setCasheaInitialAmount(val);
+                          setCasheaDownPercent(0);
+                        }}
+                        placeholder="Monto inicial en USD"
+                        className="w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 font-mono text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Método con el que el cliente paga la inicial */}
+                  <div>
+                    <label className="block text-[11px] text-slate-500 dark:text-slate-400">
+                      ¿Con qué paga la inicial en caja?
+                      <select
+                        value={casheaInitialMethodCode}
+                        onChange={(e) =>
+                          setCasheaInitialMethodCode(e.target.value)
+                        }
+                        className="mt-1 w-full rounded-lg border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-1.5 text-xs text-slate-800 dark:text-slate-100"
+                      >
+                        {methods
+                          .filter((m) => m.code !== "CASHEA")
+                          .map((m) => (
+                            <option key={m.code} value={m.code}>
+                              {m.label} ({m.currency})
+                            </option>
+                          ))}
+                      </select>
+                    </label>
+                  </div>
+
+                  {/* Saldo Financiado */}
+                  <div className="flex justify-between rounded-lg bg-white/60 p-2 text-xs dark:bg-slate-900/60">
+                    <span className="text-slate-600 dark:text-slate-400">
+                      Saldo financiado por Cashea:
+                    </span>
+                    <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
+                      ${casheaFinancedTotal.toFixed(2)} USD
+                    </span>
+                  </div>
+
+                  {/* Desglose de cómo cae el dinero */}
+                  <div className="rounded-xl border border-slate-200/80 bg-white/80 p-3 text-xs dark:border-slate-800 dark:bg-slate-950/60">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+                      <p className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
+                        <Coins className="h-3.5 w-3.5 text-[#b2944a]" />
+                        Cómo te caerá el dinero:
+                      </p>
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                        {casheaConfig.allianceType === "EXPRESS"
+                          ? "Express (Pronto Pago)"
+                          : "Base (Por Cuota)"}
+                      </span>
+                    </div>
+
+                    {casheaConfig.allianceType === "EXPRESS" &&
+                    casheaExpressSchedule ? (
+                      <div className="mt-2 space-y-1.5">
+                        <div className="rounded-lg bg-emerald-50/80 p-2 dark:bg-emerald-950/30">
+                          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
+                            <Zap className="h-3.5 w-3.5 text-emerald-600" />
+                            Liquidación Semanal Adelantada
+                          </div>
+                          <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-400">
+                            Cashea te transferirá el 100% financiado el próximo{" "}
+                            <strong className="text-slate-900 dark:text-slate-100">
+                              {casheaExpressSchedule.settlementDate.toLocaleDateString(
+                                "es-VE",
+                                {
+                                  weekday: "short",
+                                  day: "numeric",
+                                  month: "short",
+                                },
+                              )}
+                            </strong>
+                            .
+                          </p>
+                          <div className="mt-2 flex justify-between border-t border-emerald-200/60 pt-1.5 text-[11px] dark:border-emerald-900/40">
+                            <span>Monto financiado:</span>
+                            <span className="font-mono">
+                              ${casheaExpressSchedule.gross.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-[11px] text-rose-600 dark:text-rose-400">
+                            <span>
+                              Tarifa ({casheaExpressSchedule.baseCommPct}% base +{" "}
+                              {casheaExpressSchedule.expCommPct}% express):
+                            </span>
+                            <span className="font-mono">
+                              -${casheaExpressSchedule.fee.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between border-t border-emerald-300/60 pt-1 text-xs font-bold text-emerald-900 dark:text-emerald-200">
+                            <span>Neto a recibir en cuenta:</span>
+                            <span className="font-mono">
+                              +${casheaExpressSchedule.net.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-2 space-y-1">
+                        <p className="text-[10px] text-slate-500">
+                          Liquidación quincenal conforme el cliente paga sus cuotas:
+                        </p>
+                        {casheaBaseSchedule.map((cuota) => (
+                          <div
+                            key={cuota.installmentNumber}
+                            className="flex justify-between text-[11px] text-slate-600 dark:text-slate-300"
+                          >
+                            <span>
+                              Cuota {cuota.installmentNumber} (
+                              {cuota.date.toLocaleDateString("es-VE", {
+                                day: "numeric",
+                                month: "short",
+                              })}
+                              ):
+                            </span>
+                            <span className="font-mono">
+                              ${cuota.gross.toFixed(2)} -{" "}
+                              {casheaConfig.baseCommissionPercent}% ={" "}
+                              <strong className="text-slate-900 dark:text-white">
+                                ${cuota.net.toFixed(2)}
+                              </strong>
+                            </span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between border-t border-slate-200 pt-1 text-xs font-bold text-slate-800 dark:border-slate-800 dark:text-slate-100">
+                          <span>Total neto a recibir:</span>
+                          <span className="font-mono">
+                            +$
+                            {casheaBaseSchedule
+                              .reduce((acc, c) => acc + c.net, 0)
+                              .toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className={mode !== "now" ? "hidden" : ""}>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400">
+                    Monto cobrado
+                    <span className="ml-1 font-semibold text-[#b2944a]">
+                      ({currency})
+                    </span>
+                    <DecimalInput
+                      mode="money"
+                      allowEmpty
+                      value={amount}
+                      onValueChange={setAmount}
+                      className="mt-1 w-full rounded-xl border border-[#1a2a46]/15 dark:border-white/15 bg-white/70 dark:bg-slate-950/40 px-3 py-2 font-mono text-lg tabular-nums"
+                    />
+                  </label>
+                </div>
+              )}
 
               <label className="block text-xs text-slate-500 dark:text-slate-400">
                 Notas (opcional)
