@@ -488,37 +488,45 @@ export default function InitialLoadPage() {
 
       {step === 1 ? (
         <StepPanel
-          icon={<Upload className="h-5 w-5" />}
-          title="Productos"
-          description="Carga el catálogo con el que vas a operar. Puedes importar una planilla o registrarlos uno por uno."
+          icon={<FileSpreadsheet className="h-5 w-5" />}
+          title="Productos y Catálogo"
+          description="Carga el catálogo con el que vas a operar en tu negocio. Puedes importar una planilla de Excel (.xlsx, .xls) o CSV, o registrarlos uno a uno."
         >
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
-              <p className="font-semibold text-[#111018] dark:text-slate-100">
-                Importar planilla
-              </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border-2 border-dashed border-[#1a2a46]/20 bg-slate-50/60 p-5 dark:border-white/15 dark:bg-slate-900/40">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5 text-[#b2944a]" />
+                <p className="font-semibold text-[#111018] dark:text-slate-100">
+                  Importar Excel o CSV
+                </p>
+              </div>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Carga masiva desde un archivo compatible.
+                Carga masiva rápida. Sube tu planilla de Excel (.xlsx, .xls) o archivo CSV con tus productos, precios, costos y stock inicial.
               </p>
-              <Link
-                href="/dashboard/productos/importar"
-                className={`mt-3 h-10 px-4 text-sm ${CTA_NAVY}`}
-              >
-                <Upload className="h-4 w-4" /> Importar planilla
-              </Link>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/dashboard/productos/importar"
+                  className={`h-10 px-4 text-sm font-medium ${CTA_NAVY}`}
+                >
+                  <Upload className="h-4 w-4" /> Importar Excel o CSV
+                </Link>
+              </div>
             </div>
 
-            <div className="rounded-xl border border-[#1a2a46]/12 p-4 dark:border-white/10">
-              <p className="font-semibold text-[#111018] dark:text-slate-100">
-                Alta manual
-              </p>
+            <div className="rounded-xl border border-[#1a2a46]/12 p-5 dark:border-white/10">
+              <div className="flex items-center gap-2">
+                <Plus className="h-5 w-5 text-[#b2944a]" />
+                <p className="font-semibold text-[#111018] dark:text-slate-100">
+                  Carga manual
+                </p>
+              </div>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Registra cada producto desde el formulario del catálogo.
+                Registra cada producto uno a uno desde el formulario detallado del catálogo.
               </p>
               <Link
                 href="/dashboard/productos/nuevo"
                 aria-describedby="manual-notice"
-                className={`mt-3 h-10 px-4 text-sm ${CTA_BRASS}`}
+                className={`mt-4 h-10 px-4 text-sm ${CTA_BRASS}`}
               >
                 <Plus className="h-4 w-4" /> Alta manual
               </Link>

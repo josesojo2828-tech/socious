@@ -110,7 +110,7 @@ export default function ProductImportReviewPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 py-6 space-y-6">
       <header className="min-w-0">
         <div className={EYEBROW}>
           <span>Productos</span>
@@ -124,8 +124,7 @@ export default function ProductImportReviewPage() {
           <FileSpreadsheet className="h-4 w-4 shrink-0 text-[#b2944a]" />
           <span className="truncate">
             {fileName ? `Archivo: ${fileName}. ` : ""}
-            Edita las filas que necesites; al confirmar, los productos se crean y
-            vuelves al catálogo.
+            Edita las celdas que necesites directamente en la tabla. Al confirmar, los productos se crean y vuelves al catálogo.
           </span>
         </p>
       </header>
@@ -144,7 +143,7 @@ export default function ProductImportReviewPage() {
           onCancel={backToUpload}
           committing={committing}
           closeLabel="Volver a subir"
-          tableClassName="max-h-[65vh]"
+          tableClassName="overflow-x-auto w-full"
         />
       </section>
     </div>

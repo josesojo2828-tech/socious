@@ -1,6 +1,7 @@
 "use client";
 
-import { Upload } from "lucide-react";
+import { useMemo, useState } from "react";
+import { AlertCircle, CheckCircle2, Search, Upload } from "lucide-react";
 import { Button } from "@/shared/components/atoms/Button";
 import { INPUT } from "@/shared/lib/maison-style";
 import { DecimalInput } from "@/shared/components/atoms/DecimalInput";
@@ -84,11 +85,31 @@ export function ProductImportReviewTable({
   onCancel,
   committing,
   closeLabel = "Cancelar",
-  tableClassName = "max-h-[45vh]",
+  tableClassName = "w-full",
 }: ProductImportReviewTableProps) {
+  const [filter, setFilter] = useState<"all" | "errors" | "valid" | "excluded">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const summary = summarize(rows);
   const blockedReason = confirmBlockedReason(rows);
   const ready = canConfirm(rows);
+
+  const displayedRows = useMemo(() => {
+    return rows.filter((row) => {
+      if (filter === "errors" && row.errors.length === 0) return false;
+      if (filter === "valid" && (row.errors.length > 0 || !row.include)) return false;
+      if (filter === "excluded" && row.include) return false;
+
+      if (searchTerm.trim()) {
+        const query = searchTerm.toLowerCase();
+        const matchesSku = (row.values.sku || "").toLowerCase().includes(query);
+        const matchesName = (row.values.nombre || "").toLowerCase().includes(query);
+        const matchesCat = (row.values.categoria || "").toLowerCase().includes(query);
+        return matchesSku || matchesName || matchesCat;
+      }
+      return true;
+    });
+  }, [rows, filter, searchTerm]);
 
   const editCell = (
     line: number,
@@ -122,7 +143,7 @@ export function ProductImportReviewTable({
     const { errors, warnings } = messagesFor(row, field);
     const invalid = errors.length > 0;
     const title = [...errors, ...warnings].join(" ") || undefined;
-    const className = `w-full min-w-[7rem] rounded-lg border px-2 py-1 text-sm ${
+    const className = `w-full min-w-[7.5rem] rounded-lg border px-2 py-1 text-xs transition-colors ${
       invalid ? ERROR_INPUT : INPUT
     }`;
 
@@ -190,137 +211,205 @@ export function ProductImportReviewTable({
   };
 
   return (
-    <section className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#1a2a46]/12 px-3 py-2 text-xs dark:border-white/10">
-        <span className="font-medium text-[#111018] dark:text-slate-100">
-          Incluidas: {summary.included}
-        </span>
-        <span className="text-emerald-600 dark:text-emerald-400">
-          Válidas incluidas: {summary.includedValid}
-        </span>
-        <span
-          className={
-            summary.includedInvalid > 0
-              ? "text-red-600 dark:text-red-400"
-              : "text-slate-500 dark:text-slate-400"
-          }
-        >
-          Con error incluidas: {summary.includedInvalid}
-        </span>
-        <span className="text-slate-500 dark:text-slate-400">
-          Excluidas: {summary.excluded}
-        </span>
-        <div className="ml-auto flex flex-wrap gap-2">
+    <section className="space-y-4">
+      {/* Top Filter and Actions Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#1a2a46]/12 bg-slate-50/70 p-3 text-xs dark:border-white/10 dark:bg-slate-900/40">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFilter("all")}
+            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+              filter === "all"
+                ? "bg-[#1a2a46] text-white dark:bg-white dark:text-slate-900"
+                : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+            }`}
+          >
+            Todas ({summary.total})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilter("valid")}
+            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+              filter === "valid"
+                ? "bg-emerald-600 text-white"
+                : "bg-white text-emerald-700 hover:bg-emerald-50 dark:bg-slate-800 dark:text-emerald-400"
+            }`}
+          >
+            Válidas ({summary.includedValid})
+          </button>
+          {summary.includedInvalid > 0 ? (
+            <button
+              type="button"
+              onClick={() => setFilter("errors")}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+                filter === "errors"
+                  ? "bg-red-600 text-white"
+                  : "bg-white text-red-600 hover:bg-red-50 dark:bg-slate-800 dark:text-red-400"
+              }`}
+            >
+              Con error ({summary.includedInvalid})
+            </button>
+          ) : null}
+          {summary.excluded > 0 ? (
+            <button
+              type="button"
+              onClick={() => setFilter("excluded")}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+                filter === "excluded"
+                  ? "bg-slate-600 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-400"
+              }`}
+            >
+              Excluidas ({summary.excluded})
+            </button>
+          ) : null}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Buscar producto o SKU…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-8 rounded-lg border border-slate-200 bg-white pl-8 pr-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#b2944a] focus:outline-none dark:border-white/10 dark:bg-slate-950 dark:text-slate-100"
+            />
+          </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setRows((current) => includeAllValid(current))}
           >
-            Incluir todas las válidas
+            Incluir válidas
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setRows((current) => excludeInvalid(current))}
           >
-            Excluir las inválidas
+            Excluir con error
           </Button>
         </div>
       </div>
 
+      {/* Main Table: Natural height, no trapped vertical scroll */}
       <div
-        className={`${tableClassName} overflow-auto rounded-xl border border-[#1a2a46]/12 dark:border-white/10`}
+        className={`w-full overflow-x-auto rounded-xl border border-[#1a2a46]/12 dark:border-white/10 ${tableClassName}`}
       >
-        <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 z-10 bg-white dark:bg-slate-900">
+        <table className="w-full min-w-[1280px] border-collapse text-sm">
+          <thead className="sticky top-0 z-10 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-sm">
             <tr className="border-b border-[#1b1d21]/12 text-left text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:border-white/10 dark:text-slate-400">
-              <th className="px-2 py-2">Incluir</th>
-              <th className="px-2 py-2">Línea</th>
+              <th className="px-3 py-2.5 text-center w-12">Incluir</th>
+              <th className="px-2 py-2.5 w-12 text-center">Fila</th>
               {COLUMN_ORDER.map((column) => (
-                <th key={column} className="px-2 py-2 whitespace-nowrap">
+                <th key={column} className="px-2 py-2.5 whitespace-nowrap">
                   {COLUMN_LABELS[column]}
                 </th>
               ))}
-              <th className="px-2 py-2">Estado</th>
+              <th className="px-3 py-2.5 w-24">Estado</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.line}
-                className="border-b border-[#1b1d21]/8 align-top last:border-0 dark:border-white/5"
-              >
-                <td className="px-2 py-2">
-                  <input
-                    type="checkbox"
-                    aria-label={`Incluir la fila ${row.line}`}
-                    className="h-4 w-4 cursor-pointer accent-[#b2944a]"
-                    checked={row.include}
-                    onChange={(event) =>
-                      toggleInclude(row.line, event.target.checked)
-                    }
-                  />
-                </td>
-                <td className="px-2 py-2 font-mono text-xs text-slate-500 dark:text-slate-400">
-                  {row.line}
-                </td>
-                {COLUMN_ORDER.map((column) => (
-                  <td key={column} className="px-2 py-2">
-                    {renderCell(row, column)}
-                  </td>
-                ))}
-                <td className="px-2 py-2 text-xs">
-                  {row.errors.length > 0 ? (
-                    <span
-                      className="font-medium text-red-600 dark:text-red-400"
-                      title={row.errors.join("\n")}
-                    >
-                      {row.errors.length} error
-                      {row.errors.length === 1 ? "" : "es"}
-                    </span>
-                  ) : row.warnings.length > 0 ? (
-                    <span
-                      className="text-amber-600 dark:text-amber-400"
-                      title={row.warnings.join("\n")}
-                    >
-                      {row.warnings.length} aviso
-                      {row.warnings.length === 1 ? "" : "s"}
-                    </span>
-                  ) : (
-                    <span className="text-emerald-600 dark:text-emerald-400">
-                      Lista
-                    </span>
-                  )}
+          <tbody className="divide-y divide-[#1b1d21]/8 dark:divide-white/5">
+            {displayedRows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={COLUMN_ORDER.length + 3}
+                  className="py-12 text-center text-xs text-slate-400"
+                >
+                  No se encontraron productos con el filtro aplicado.
                 </td>
               </tr>
-            ))}
+            ) : (
+              displayedRows.map((row) => (
+                <tr
+                  key={row.line}
+                  className={`align-top transition-colors ${
+                    !row.include
+                      ? "opacity-50 bg-slate-50/40 dark:bg-slate-900/20"
+                      : "hover:bg-slate-50/60 dark:hover:bg-slate-800/30"
+                  }`}
+                >
+                  <td className="px-3 py-2 text-center">
+                    <input
+                      type="checkbox"
+                      aria-label={`Incluir la fila ${row.line}`}
+                      className="h-4 w-4 cursor-pointer accent-[#b2944a]"
+                      checked={row.include}
+                      onChange={(event) =>
+                        toggleInclude(row.line, event.target.checked)
+                      }
+                    />
+                  </td>
+                  <td className="px-2 py-2 font-mono text-xs text-slate-400 text-center">
+                    {row.line}
+                  </td>
+                  {COLUMN_ORDER.map((column) => (
+                    <td key={column} className="px-2 py-2">
+                      {renderCell(row, column)}
+                    </td>
+                  ))}
+                  <td className="px-3 py-2 text-xs whitespace-nowrap">
+                    {row.errors.length > 0 ? (
+                      <span
+                        className="inline-flex items-center gap-1 font-medium text-red-600 dark:text-red-400"
+                        title={row.errors.join("\n")}
+                      >
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        {row.errors.length} error{row.errors.length === 1 ? "" : "es"}
+                      </span>
+                    ) : row.warnings.length > 0 ? (
+                      <span
+                        className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400"
+                        title={row.warnings.join("\n")}
+                      >
+                        {row.warnings.length} aviso{row.warnings.length === 1 ? "" : "s"}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 className="h-3 w-3 shrink-0" />
+                        Lista
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-4 dark:border-white/10">
-        {blockedReason ? (
-          <span className="mr-auto text-xs text-slate-500 dark:text-slate-400">
-            {blockedReason}
-          </span>
-        ) : (
-          <span className="mr-auto text-xs text-slate-500 dark:text-slate-400">
-            Se importarán {summary.includedValid} fila
-            {summary.includedValid === 1 ? "" : "s"}.
-          </span>
-        )}
-        <Button variant="ghost" onClick={onCancel} disabled={committing}>
-          {closeLabel}
-        </Button>
-        <Button
-          variant="primary"
-          onClick={onConfirm}
-          disabled={!ready}
-          loading={committing}
-          loadingText="Importando…"
-        >
-          <Upload className="h-4 w-4" /> Importar
-        </Button>
+      {/* Sticky Bottom Action Toolbar */}
+      <div className="sticky bottom-4 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#1a2a46]/15 bg-white/95 p-4 shadow-xl backdrop-blur-md dark:border-white/15 dark:bg-slate-900/95">
+        <div className="flex items-center gap-2">
+          {blockedReason ? (
+            <div className="flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+              <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+              <span>{blockedReason}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+              <span>
+                Se importarán <strong>{summary.includedValid}</strong> de {summary.total} productos.
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={onCancel} disabled={committing}>
+            {closeLabel}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={onConfirm}
+            disabled={!ready}
+            loading={committing}
+            loadingText="Importando productos…"
+          >
+            <Upload className="h-4 w-4" /> Importar {summary.includedValid} productos
+          </Button>
+        </div>
       </div>
     </section>
   );
