@@ -85,15 +85,20 @@ async function main() {
 
   // 4. Suscripción activa a plan PREMIUM (Negocio)
   await prisma.subscription.upsert({
-    where: { id: `sub-demo-${org.id}` },
+    where: {
+      userId_organizationId: {
+        userId: user.id,
+        organizationId: org.id,
+      },
+    },
     update: {
-      planId: "PREMIUM",
+      plan: { connect: { id: "PREMIUM" } },
       status: "ACTIVE",
     },
     create: {
-      id: `sub-demo-${org.id}`,
-      organizationId: org.id,
-      planId: "PREMIUM",
+      user: { connect: { id: user.id } },
+      organization: { connect: { id: org.id } },
+      plan: { connect: { id: "PREMIUM" } },
       status: "ACTIVE",
       startDate: new Date(),
       endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 año
@@ -309,9 +314,9 @@ async function main() {
     await prisma.meatDeconstructionOrder.create({
       data: {
         orderNumber: "DSP-00001",
-        organizationId: org.id,
-        carcassId: carcassCochino.id,
-        supplierId: supplier.id,
+        organization: { connect: { id: org.id } },
+        carcass: { connect: { id: carcassCochino.id } },
+        supplier: { connect: { id: supplier.id } },
         createdById: user.id,
         incomingWeightKg: 82.50,
         unitCostUSD: 2.85,
@@ -324,35 +329,35 @@ async function main() {
         items: {
           create: [
             {
-              productId: chuleta.id,
+              product: { connect: { id: chuleta.id } },
               quantityKg: 20.0,
               unitCostUSD: 4.10,
               totalCostUSD: 82.00,
               isByProduct: false,
             },
             {
-              productId: costilla.id,
+              product: { connect: { id: costilla.id } },
               quantityKg: 9.5,
               unitCostUSD: 4.60,
               totalCostUSD: 43.70,
               isByProduct: false,
             },
             {
-              productId: pernil.id,
+              product: { connect: { id: pernil.id } },
               quantityKg: 24.0,
               unitCostUSD: 3.80,
               totalCostUSD: 91.20,
               isByProduct: false,
             },
             {
-              productId: tocino.id,
+              product: { connect: { id: tocino.id } },
               quantityKg: 11.5,
               unitCostUSD: 2.50,
               totalCostUSD: 28.75,
               isByProduct: true,
             },
             {
-              productId: hueso.id,
+              product: { connect: { id: hueso.id } },
               quantityKg: 13.0,
               unitCostUSD: 0.50,
               totalCostUSD: 6.50,
