@@ -9,11 +9,19 @@ export class MailService {
   private transporter: Transporter;
 
   constructor(private config: ConfigService) {
+    const disableMail = this.config.get<string>("DISABLE_MAIL");
+    const enableMail = this.config.get<string>("ENABLE_MAIL");
     const user = this.config.get<string>("SMTP_USER");
     const pass = this.config.get<string>("SMTP_PASS");
 
-    if (!user || !pass) {
-      this.logger.warn("SMTP_USER or SMTP_PASS not set — mail service disabled");
+    if (
+      disableMail === "true" ||
+      enableMail === "false" ||
+      !user ||
+      !pass ||
+      user.includes("nutringest")
+    ) {
+      this.logger.warn("Mail service disabled (config / unconfigured)");
       return;
     }
 
@@ -44,7 +52,6 @@ export class MailService {
       this.logger.log(`Email sent to ${to}: ${subject}`);
     } catch (err) {
       this.logger.error(`Failed to send email to ${to}: ${err}`);
-      throw err;
     }
   }
 }
