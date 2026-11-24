@@ -825,10 +825,9 @@ async function main() {
   if (!cashReg) {
     cashReg = await prisma.cashRegister.create({
       data: {
-        organizationId: org.id,
         name: "Caja Principal Showroom",
-        currency: "USD",
-        isActive: true,
+        status: "CLOSED",
+        organization: { connect: { id: org.id } },
       },
     });
   }
