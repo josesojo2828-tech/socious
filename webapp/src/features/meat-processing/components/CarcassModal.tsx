@@ -186,6 +186,7 @@ export function CarcassModal({
                   value={defaultCostUSD}
                   onValueChange={(text) => setDefaultCostUSD(parseFloat(text) || 0)}
                   decimals={2}
+                  allowEmpty
                   className="w-full text-xs px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
                 />
               </div>

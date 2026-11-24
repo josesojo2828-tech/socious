@@ -291,6 +291,11 @@ export class DashboardService {
             icon: "beef",
             link: "/dashboard/carnes",
           });
+          inventoryItems.push({
+            title: "Piezas / Canales",
+            icon: "bone",
+            link: "/dashboard/carnes?modal=carcasses",
+          });
         }
         sections.push({
           title: "Inventario",

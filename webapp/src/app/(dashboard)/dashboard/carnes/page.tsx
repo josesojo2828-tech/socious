@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Scale,
   Plus,
@@ -38,14 +39,29 @@ interface FormCutItem {
   productId: string;
   productName: string;
   sku?: string;
-  quantityKg: number;
-  unitCostUSD: number;
+  quantityKg: string | number;
+  unitCostUSD: string | number;
   isByProduct: boolean;
 }
 
 export default function CarnesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-[#b2944a]" />
+        </div>
+      }
+    >
+      <CarnesContent />
+    </Suspense>
+  );
+}
+
+function CarnesContent() {
   const { addToast } = useToastStore();
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  const searchParams = useSearchParams();
 
   // Data lists
   const [carcasses, setCarcasses] = useState<MeatCarcass[]>([]);
@@ -61,10 +77,17 @@ export default function CarnesPage() {
   const [carcassModalOpen, setCarcassModalOpen] = useState<boolean>(false);
   const [selectedOrder, setSelectedOrder] = useState<MeatDeconstructionOrder | null>(null);
 
+  // Auto-open carcass modal if URL requested ?modal=carcasses (S5 / Sidebar shortcut)
+  useEffect(() => {
+    if (searchParams.get("modal") === "carcasses") {
+      setCarcassModalOpen(true);
+    }
+  }, [searchParams]);
+
   // Form State: Left Panel (Canal Entrada)
   const [selectedCarcassId, setSelectedCarcassId] = useState<string>("");
-  const [incomingWeightKg, setIncomingWeightKg] = useState<number>(0);
-  const [unitCostUSD, setUnitCostUSD] = useState<number>(0);
+  const [incomingWeightKg, setIncomingWeightKg] = useState<string | number>("");
+  const [unitCostUSD, setUnitCostUSD] = useState<string | number>("");
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [lastDeconstruction, setLastDeconstruction] = useState<MeatDeconstructionOrder | null>(null);
@@ -102,7 +125,10 @@ export default function CarnesPage() {
       // Si hay piezas y no hay una seleccionada, seleccionar la primera
       if (carcassList.length > 0 && !selectedCarcassId) {
         setSelectedCarcassId(carcassList[0].id);
-        setUnitCostUSD(Number(carcassList[0].lastCostUSD || carcassList[0].defaultCostUSD || 0));
+        const suggestedCost = Number(carcassList[0].lastCostUSD || carcassList[0].defaultCostUSD || 0);
+        if (suggestedCost > 0) {
+          setUnitCostUSD(suggestedCost);
+        }
       }
     } catch (err: any) {
       addToast({
@@ -128,9 +154,8 @@ export default function CarnesPage() {
 
     const currentCarcass = carcasses.find((c) => c.id === selectedCarcassId);
     if (currentCarcass) {
-      // Sugerir el último costo registrado o el costo por defecto
       const suggested = Number(currentCarcass.lastCostUSD || currentCarcass.defaultCostUSD || 0);
-      if (suggested > 0 && unitCostUSD === 0) {
+      if (suggested > 0 && (!unitCostUSD || Number(unitCostUSD) === 0)) {
         setUnitCostUSD(suggested);
       }
     }
@@ -154,8 +179,8 @@ export default function CarnesPage() {
       productId: item.productId,
       productName: item.product?.name || "Corte previo",
       sku: item.product?.sku,
-      quantityKg: 0, // se deja en 0 para que el carnicero ingrese el pesaje actual
-      unitCostUSD: Number(item.unitCostUSD || 0),
+      quantityKg: "", // en blanco para que el carnicero ingrese el pesaje actual directamente
+      unitCostUSD: item.unitCostUSD != null ? String(item.unitCostUSD) : "0",
       isByProduct: item.isByProduct,
     }));
 
@@ -185,8 +210,8 @@ export default function CarnesPage() {
       productId: prod.id,
       productName: prod.name,
       sku: prod.sku,
-      quantityKg: 0,
-      unitCostUSD: Number(prod.costPriceUSD || unitCostUSD || 0),
+      quantityKg: "",
+      unitCostUSD: prod.costPriceUSD != null ? String(prod.costPriceUSD) : (unitCostUSD ? String(unitCostUSD) : "0"),
       isByProduct: false,
     };
 
@@ -204,23 +229,28 @@ export default function CarnesPage() {
     setCutLines((prev) => prev.filter((line) => line.id !== id));
   };
 
-  // Cálculos en vivo
+  // Cálculos en vivo fluidos
+  const numericIncomingWeight = Number(incomingWeightKg) || 0;
+  const numericUnitCost = Number(unitCostUSD) || 0;
+
   const totalCarcassCost = useMemo(() => {
-    return Number((incomingWeightKg * unitCostUSD).toFixed(2));
-  }, [incomingWeightKg, unitCostUSD]);
+    return Number((numericIncomingWeight * numericUnitCost).toFixed(2));
+  }, [numericIncomingWeight, numericUnitCost]);
 
   const totalYieldKg = useMemo(() => {
-    return Number(cutLines.reduce((acc, line) => acc + (Number(line.quantityKg) || 0), 0).toFixed(2));
+    return Number(
+      cutLines.reduce((acc, line) => acc + (Number(line.quantityKg) || 0), 0).toFixed(3),
+    );
   }, [cutLines]);
 
   const wasteKg = useMemo(() => {
-    return Number(Math.max(0, incomingWeightKg - totalYieldKg).toFixed(2));
-  }, [incomingWeightKg, totalYieldKg]);
+    return Number(Math.max(0, numericIncomingWeight - totalYieldKg).toFixed(3));
+  }, [numericIncomingWeight, totalYieldKg]);
 
   const wastePercentage = useMemo(() => {
-    if (incomingWeightKg <= 0) return 0;
-    return Number(((wasteKg / incomingWeightKg) * 100).toFixed(2));
-  }, [incomingWeightKg, wasteKg]);
+    if (numericIncomingWeight <= 0) return 0;
+    return Number(((wasteKg / numericIncomingWeight) * 100).toFixed(2));
+  }, [numericIncomingWeight, wasteKg]);
 
   const totalCutsCost = useMemo(() => {
     return Number(
@@ -233,12 +263,13 @@ export default function CarnesPage() {
   // Prorratear costos automáticamente (opcional con 1 click)
   const handleProrateCosts = () => {
     if (totalYieldKg <= 0 || totalCarcassCost <= 0) return;
-    // Si no tienen costo unitario diferenciado, divide el costo total entre los kilos de cortes limpios
     const uniformUnitCost = Number((totalCarcassCost / totalYieldKg).toFixed(2));
     setCutLines((prev) =>
       prev.map((line) => ({
         ...line,
-        unitCostUSD: line.isByProduct ? Math.min(line.unitCostUSD, 0.5) : uniformUnitCost,
+        unitCostUSD: line.isByProduct
+          ? Math.min(Number(line.unitCostUSD) || 0, 0.5)
+          : uniformUnitCost,
       })),
     );
     addToast({
@@ -250,7 +281,7 @@ export default function CarnesPage() {
 
   // Enviar orden de despiece
   const handleSubmitOrder = async () => {
-    if (incomingWeightKg <= 0) {
+    if (numericIncomingWeight <= 0) {
       addToast({ type: "error", title: "Validación", message: "Ingresa el peso recibido de la canal." });
       return;
     }
@@ -258,7 +289,7 @@ export default function CarnesPage() {
       addToast({ type: "error", title: "Validación", message: "Agrega al menos un corte obtenido del despiece." });
       return;
     }
-    const invalidQty = cutLines.some((l) => l.quantityKg <= 0);
+    const invalidQty = cutLines.some((l) => (Number(l.quantityKg) || 0) <= 0);
     if (invalidQty) {
       addToast({
         type: "error",
@@ -272,17 +303,21 @@ export default function CarnesPage() {
     try {
       const order = await meatProcessingService.createDeconstruction({
         carcassId: selectedCarcassId || undefined,
-        incomingWeightKg,
-        unitCostUSD,
+        incomingWeightKg: numericIncomingWeight,
+        unitCostUSD: numericUnitCost,
         supplierId: selectedSupplierId || undefined,
         notes: notes.trim() || undefined,
-        items: cutLines.map((line) => ({
-          productId: line.productId,
-          quantityKg: line.quantityKg,
-          unitCostUSD: line.unitCostUSD,
-          totalCostUSD: Number((line.quantityKg * line.unitCostUSD).toFixed(2)),
-          isByProduct: line.isByProduct,
-        })),
+        items: cutLines.map((line) => {
+          const qty = Number(line.quantityKg) || 0;
+          const cost = Number(line.unitCostUSD) || 0;
+          return {
+            productId: line.productId,
+            quantityKg: qty,
+            unitCostUSD: cost,
+            totalCostUSD: Number((qty * cost).toFixed(2)),
+            isByProduct: line.isByProduct,
+          };
+        }),
       });
 
       addToast({
@@ -292,7 +327,7 @@ export default function CarnesPage() {
       });
 
       // Reset form
-      setIncomingWeightKg(0);
+      setIncomingWeightKg("");
       setCutLines([]);
       setNotes("");
 
@@ -458,8 +493,9 @@ export default function CarnesPage() {
                     </label>
                     <DecimalInput
                       value={incomingWeightKg}
-                      onValueChange={(text) => setIncomingWeightKg(parseFloat(text) || 0)}
-                      decimals={2}
+                      onValueChange={(text) => setIncomingWeightKg(text)}
+                      decimals={3}
+                      allowEmpty
                       className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-semibold text-slate-900 dark:text-slate-100"
                     />
                   </div>
@@ -469,8 +505,9 @@ export default function CarnesPage() {
                     </label>
                     <DecimalInput
                       value={unitCostUSD}
-                      onValueChange={(text) => setUnitCostUSD(parseFloat(text) || 0)}
+                      onValueChange={(text) => setUnitCostUSD(text)}
                       decimals={2}
+                      allowEmpty
                       className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-semibold text-slate-900 dark:text-slate-100"
                     />
                   </div>
@@ -611,16 +648,18 @@ export default function CarnesPage() {
                               <td className="px-3 py-2 text-right">
                                 <DecimalInput
                                   value={line.quantityKg}
-                                  onValueChange={(text) => handleUpdateLine(line.id, "quantityKg", parseFloat(text) || 0)}
-                                  decimals={2}
+                                  onValueChange={(text) => handleUpdateLine(line.id, "quantityKg", text)}
+                                  decimals={3}
+                                  allowEmpty
                                   className="w-full text-xs px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-right font-semibold"
                                 />
                               </td>
                               <td className="px-3 py-2 text-right">
                                 <DecimalInput
                                   value={line.unitCostUSD}
-                                  onValueChange={(text) => handleUpdateLine(line.id, "unitCostUSD", parseFloat(text) || 0)}
+                                  onValueChange={(text) => handleUpdateLine(line.id, "unitCostUSD", text)}
                                   decimals={2}
+                                  allowEmpty
                                   className="w-full text-xs px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-right"
                                 />
                               </td>
@@ -653,7 +692,7 @@ export default function CarnesPage() {
               <div>
                 <span className="text-[11px] text-slate-500 font-medium block">Peso Canal</span>
                 <span className="text-xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
-                  {incomingWeightKg.toFixed(2)} kg
+                  {numericIncomingWeight.toFixed(2)} kg
                 </span>
                 <span className="text-[11px] text-slate-400 block">${totalCarcassCost.toFixed(2)} total</span>
               </div>
@@ -689,7 +728,7 @@ export default function CarnesPage() {
               <button
                 type="button"
                 onClick={handleSubmitOrder}
-                disabled={submitting || incomingWeightKg <= 0 || cutLines.length === 0}
+                disabled={submitting || numericIncomingWeight <= 0 || cutLines.length === 0}
                 className="px-6 py-3 bg-[#b2944a] hover:bg-[#9d803d] text-white text-sm font-semibold rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {submitting ? (

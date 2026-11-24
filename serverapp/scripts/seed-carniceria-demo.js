@@ -188,7 +188,7 @@ async function main() {
   });
   console.log("✔ 3 Canales/Piezas matrices registradas (Cochino, Res, Pollo)");
 
-  // 7. Catálogo de Cortes de Carne (Productos con unidad kg e imágenes)
+  // 7. Catálogo de Cortes de Carne (Productos con unidad kg e imágenes tipo foto producto)
   const cutsData = [
     {
       sku: "CER-CHUL-01",
@@ -197,7 +197,7 @@ async function main() {
       salePriceUSD: 5.80,
       stock: 45.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/chuleta.jpg",
     },
     {
       sku: "CER-COST-01",
@@ -206,7 +206,7 @@ async function main() {
       salePriceUSD: 6.50,
       stock: 25.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/costilla-cerdo.jpg",
     },
     {
       sku: "CER-PERN-01",
@@ -215,7 +215,7 @@ async function main() {
       salePriceUSD: 5.20,
       stock: 60.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/pernil.jpg",
     },
     {
       sku: "RES-SOL-01",
@@ -224,7 +224,7 @@ async function main() {
       salePriceUSD: 7.90,
       stock: 35.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1558030006-450675393462?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/solomo.jpg",
     },
     {
       sku: "RES-MOL-01",
@@ -233,7 +233,7 @@ async function main() {
       salePriceUSD: 5.90,
       stock: 30.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/carne-molida.jpg",
     },
     {
       sku: "RES-COST-01",
@@ -242,7 +242,7 @@ async function main() {
       salePriceUSD: 4.80,
       stock: 40.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/costilla-res.jpg",
     },
     {
       sku: "SUB-TOC-01",
@@ -251,7 +251,7 @@ async function main() {
       salePriceUSD: 3.80,
       stock: 20.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/panceta.jpg",
     },
     {
       sku: "SUB-HUES-01",
@@ -260,7 +260,7 @@ async function main() {
       salePriceUSD: 1.20,
       stock: 50.0,
       unit: "kg",
-      imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+      imageUrl: "/img/carnes/hueso-caldo.jpg",
     },
   ];
 

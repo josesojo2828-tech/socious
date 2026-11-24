@@ -71,6 +71,7 @@ const iconMap: Record<string, LucideIcon> = {
   briefcase: LucideIcons.Briefcase,
   adminstration: LucideIcons.ShieldAlert,
   beef: LucideIcons.Beef,
+  bone: LucideIcons.Bone,
 };
 
 function SidebarLink({
@@ -86,7 +87,14 @@ function SidebarLink({
 }) {
   const safePathname = (pathname || "").replace(/\/$/, "");
   const safeLink = (item?.link || "").replace(/\/$/, "");
-  const isActive = safePathname !== "" && safePathname === safeLink;
+  const hasQuery = item?.link?.includes("?");
+  const isActive =
+    safePathname !== "" &&
+    (hasQuery
+      ? safePathname === safeLink.split("?")[0] &&
+        typeof window !== "undefined" &&
+        window.location.search.includes(safeLink.split("?")[1] || "")
+      : safePathname === safeLink);
   const IconComponent = iconMap[item?.icon] || LucideIcons.FileText;
   const { t } = useTranslation();
 
