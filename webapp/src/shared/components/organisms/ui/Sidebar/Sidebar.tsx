@@ -70,6 +70,7 @@ const iconMap: Record<string, LucideIcon> = {
   truck: LucideIcons.Truck,
   briefcase: LucideIcons.Briefcase,
   adminstration: LucideIcons.ShieldAlert,
+  beef: LucideIcons.Beef,
 };
 
 function SidebarLink({

@@ -71,6 +71,9 @@ export interface TenantSettings {
    */
   /** Cliente mayorista (S1): habilita los campos de mayoreo. */
   wholesaler?: boolean;
+  /** Carnes y procesados (S1): habilita módulo de despiece y compra en canal. */
+  meatProcessing?: boolean;
+  isMeatProcessing?: boolean;
   planModules?: string[];
   /** Id of the active subscription plan (e.g. `STUDIO`). */
   planId?: string | null;

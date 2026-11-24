@@ -18,7 +18,7 @@ import { OrganizationService } from './organization.service';
 import { OrgAdminGuard } from './guards/org-admin.guard';
 import { AdminGuard } from 'src/shared/guards/admin.guard';
 import { FieldPolicy } from "src/modules/permit/field-policy/field-policy.decorator";
-import { CreateOrganizationDto, InviteMemberDto, UpdateMemberColorDto, UpdateMemberRoleDto, PurchaseSeatsDto, UpdateSeatsDto, CreateWorkspaceSubscriptionDto, UpdateWholesalerDto } from './dto/organization.dto';
+import { CreateOrganizationDto, InviteMemberDto, UpdateMemberColorDto, UpdateMemberRoleDto, PurchaseSeatsDto, UpdateSeatsDto, CreateWorkspaceSubscriptionDto, UpdateWholesalerDto, UpdateMeatProcessingDto } from './dto/organization.dto';
 
 @Controller('api/organizations')
 @UseGuards(SessionAuthGuard)
@@ -65,6 +65,19 @@ export class OrganizationController {
     @Body() body: UpdateWholesalerDto,
   ) {
     return this.organizationService.setWholesaler(id, body.isWholesaler);
+  }
+
+  /**
+   * Marca al cliente como carnes y procesados (S1). SOLO plataforma: el dueño del
+   * cliente no puede encenderse el flag, por eso AdminGuard y no OrgAdminGuard.
+   */
+  @Patch(':id/meat-processing')
+  @UseGuards(AdminGuard)
+  async setMeatProcessing(
+    @Param('id') id: string,
+    @Body() body: UpdateMeatProcessingDto,
+  ) {
+    return this.organizationService.setMeatProcessing(id, body.isMeatProcessing);
   }
 
   @Get('my-workspaces')

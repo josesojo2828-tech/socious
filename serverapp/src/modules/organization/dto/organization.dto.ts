@@ -76,6 +76,15 @@ export class UpdateWholesalerDto {
   isWholesaler: boolean;
 }
 
+/**
+ * Flag carnes y procesados (S1): lo enciende la plataforma desde la ficha del cliente.
+ * Protegido contra escritura por parte del propio tenant.
+ */
+export class UpdateMeatProcessingDto {
+  @IsBoolean({ message: "isMeatProcessing debe ser verdadero o falso." })
+  isMeatProcessing: boolean;
+}
+
 export class UpdateMemberColorDto {
   @IsString()
   colorHex: string;

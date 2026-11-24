@@ -232,6 +232,25 @@ export class OrganizationService {
     });
   }
 
+  /**
+   * S1: el flag carnes y procesados lo escribe solo la plataforma (AdminGuard en el controller).
+   */
+  async setMeatProcessing(organizationId: string, isMeatProcessing: boolean) {
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: organizationId, deletedAt: null },
+      select: { id: true },
+    });
+    if (!organization) {
+      throw new NotFoundException("Organización no encontrada.");
+    }
+
+    return this.prisma.organization.update({
+      where: { id: organization.id },
+      data: { isMeatProcessing },
+      select: { id: true, name: true, isMeatProcessing: true },
+    });
+  }
+
   async getUserOrganizations(userId: string) {
     const memberships = await this.prisma.organizationMember.findMany({
       where: { userId, status: 'ACTIVE' },

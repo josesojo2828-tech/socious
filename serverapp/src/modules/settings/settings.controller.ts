@@ -169,12 +169,14 @@ export class SettingsController {
     const organization = organizationId
       ? await this.prisma.organization.findFirst({
           where: { id: organizationId },
-          select: { isWholesaler: true },
+          select: { isWholesaler: true, isMeatProcessing: true },
         })
       : null;
     return {
       ...settings,
       wholesaler: organization?.isWholesaler ?? false,
+      meatProcessing: organization?.isMeatProcessing ?? false,
+      isMeatProcessing: organization?.isMeatProcessing ?? false,
       planModules,
       manualGrants: [...new Set(grants.map((g) => g.module.key))],
       planId: activeSubscription?.planId ?? null,

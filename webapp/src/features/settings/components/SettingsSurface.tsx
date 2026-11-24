@@ -18,6 +18,7 @@ import {
   Store,
   Upload,
   BadgeDollarSign,
+  Beef,
 } from "lucide-react";
 import { apiClient } from "@/shared/api/api.client";
 import { useToastStore } from "@/shared/store/ui/useToastStore";
@@ -188,6 +189,9 @@ export function SettingsSurface({
   /** Flag mayorista (S1): solo el admin lo escribe, va por su propio endpoint. */
   const [isWholesaler, setIsWholesaler] = useState<boolean>(false);
   const [wholesalerBusy, setWholesalerBusy] = useState<boolean>(false);
+  /** Flag carnes y procesados (S1): solo admin plataforma. */
+  const [isMeatProcessing, setIsMeatProcessing] = useState<boolean>(false);
+  const [meatProcessingBusy, setMeatProcessingBusy] = useState<boolean>(false);
   const [branchName, setBranchName] = useState<string>("");
   const [branchAddress, setBranchAddress] = useState<string>("");
 
@@ -199,6 +203,7 @@ export function SettingsSurface({
     if (settings) {
       setPaymentsInstructions(settings.payments?.instructions ?? "");
       setIsWholesaler(Boolean(settings.wholesaler));
+      setIsMeatProcessing(Boolean(settings.meatProcessing ?? settings.isMeatProcessing));
     }
   }, [settings]);
 
@@ -384,6 +389,34 @@ export function SettingsSurface({
     }
   };
 
+  const toggleMeatProcessing = async (next: boolean): Promise<void> => {
+    if (!targetOrganizationId) return;
+    setMeatProcessingBusy(true);
+    const previous = isMeatProcessing;
+    setIsMeatProcessing(next);
+    try {
+      await organizationsService.setMeatProcessing(targetOrganizationId, next);
+      addToast({
+        type: "success",
+        title: "Carnes y Procesados",
+        message: next
+          ? "Módulo de carnicería y despiece activado para el cliente."
+          : "Módulo de carnicería y despiece desactivado.",
+      });
+    } catch (error) {
+      setIsMeatProcessing(previous);
+      addToast({
+        type: "error",
+        title: "Carnes y Procesados",
+        message:
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message ?? "No se pudo cambiar el tipo de empresa.",
+      });
+    } finally {
+      setMeatProcessingBusy(false);
+    }
+  };
+
   return (
     <SettingsScopeProvider organizationId={organizationId}>
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -494,6 +527,29 @@ export function SettingsSurface({
               checked={isWholesaler}
               disabled={wholesalerBusy}
               onChange={(event) => void toggleWholesaler(event.target.checked)}
+            />
+          </SectionRow>
+        </SectionPanel>
+      ) : null}
+
+      {platformAdmin && targetOrganizationId ? (
+        <SectionPanel
+          icon={<Beef className="h-5 w-5" />}
+          title="Carnes y Procesados"
+          description="Habilita el módulo de carnicería: compra en canal, despiece de animales/piezas, balance de masa y cálculo de mermas."
+        >
+          <SectionRow
+            label="Módulo de Carnes y Despiece"
+            hint={
+              isMeatProcessing
+                ? "Activo: el cliente puede registrar compra de canales y despiece a cortes con cálculo de merma."
+                : "Inactivo: la organización trabaja con el inventario estándar."
+            }
+          >
+            <Toggle
+              checked={isMeatProcessing}
+              disabled={meatProcessingBusy}
+              onChange={(event) => void toggleMeatProcessing(event.target.checked)}
             />
           </SectionRow>
         </SectionPanel>

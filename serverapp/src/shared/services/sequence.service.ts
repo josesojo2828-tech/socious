@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "nestjs-prisma";
 import type { Prisma } from "@prisma/client";
 
-export type SequenceScope = "SALE" | "ORDER" | "PURCHASE" | "RETURN" | "ROUTE";
+export type SequenceScope = "SALE" | "ORDER" | "PURCHASE" | "RETURN" | "ROUTE" | "MEAT_DECONSTRUCTION";
 
 /** Tenant key used when the document has no organization (personal context). */
 export const GLOBAL_TENANT_KEY = "GLOBAL";

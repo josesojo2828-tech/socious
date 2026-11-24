@@ -73,6 +73,7 @@ import { SettingsModule } from "./modules/settings/settings.module";
 import { ShippingAgencyModule } from "./modules/shipping/shipping-agency.module";
 import { DeliveryRouteModule } from "./modules/delivery-route/delivery-route.module";
 import { BranchModule } from "./modules/branch/branch.module";
+import { MeatProcessingModule } from "./modules/meat-processing/meat-processing.module";
 import { StudioModule } from "./modules/studio/studio.module";
 import { ModuleFrameworkModule } from "./modules/module-framework/module-framework.module";
 
@@ -242,6 +243,7 @@ imports: [
     DeliveryRouteModule,
     BranchModule,
     StudioModule,
+    MeatProcessingModule,
   ],
   controllers: [AppController, SelectController],
   providers: [

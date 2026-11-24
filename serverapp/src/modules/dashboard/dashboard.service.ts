@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Optional } from "@nestjs/common";
+import { PrismaService } from "nestjs-prisma";
 import UserReporitory from "../user/repository/user.repository";
 import PermitReporitory from "../permit/repository/permit.repository";
 import { ModuleService } from "../module-framework/services/module.service";
@@ -17,6 +18,7 @@ export class DashboardService {
     private permitRepository: PermitReporitory,
     private moduleService: ModuleService,
     private readonly tenantSettings: TenantSettingsService,
+    @Optional() private readonly prisma?: PrismaService,
   ) { }
 
   async getSidebarSections({ id, permits, modules = [], isPremium = false, isGlobalRole = false, organizationId, organizationSlug }: { id: string; permits: string[]; modules?: string[]; isPremium?: boolean; isGlobalRole?: boolean; organizationId?: string | null; organizationSlug?: string | null }): Promise<SidebarSection[]> {
@@ -275,6 +277,19 @@ export class DashboardService {
             title: "Servicios",
             icon: "briefcase",
             link: "/dashboard/servicios",
+          });
+        }
+        const orgMeat = this.prisma
+          ? await this.prisma.organization.findUnique({
+              where: { id: organizationId },
+              select: { isMeatProcessing: true },
+            })
+          : null;
+        if (orgMeat?.isMeatProcessing) {
+          inventoryItems.push({
+            title: "Carnes / Despiece",
+            icon: "beef",
+            link: "/dashboard/carnes",
           });
         }
         sections.push({

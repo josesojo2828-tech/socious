@@ -5,4 +5,7 @@ export const OrganizationsEndpoints = {
   /** `PATCH` marca al cliente como mayorista (S1); global roles only. */
   wholesaler: (organizationId: string) =>
     `/api/organizations/${organizationId}/wholesaler`,
+  /** `PATCH` marca al cliente como carnes y procesados (S1); global roles only. */
+  meatProcessing: (organizationId: string) =>
+    `/api/organizations/${organizationId}/meat-processing`,
 };

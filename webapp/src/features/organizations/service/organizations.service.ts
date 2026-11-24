@@ -31,6 +31,21 @@ export const organizationsService = {
     return data;
   },
 
+  /**
+   * Enciende o apaga el flag carnes y procesados de un cliente (S1).
+   * Solo roles de plataforma (AdminGuard).
+   */
+  async setMeatProcessing(
+    organizationId: string,
+    isMeatProcessing: boolean,
+  ): Promise<{ id: string; name: string; isMeatProcessing: boolean }> {
+    const { data } = await apiClient.patch(
+      OrganizationsEndpoints.meatProcessing(organizationId),
+      { isMeatProcessing },
+    );
+    return data;
+  },
+
   /** Every non-deleted organization with plan + active grants. */
   async listAll(): Promise<AdminOrganization[]> {
     const { data } = await apiClient.get<AdminOrganization[]>(

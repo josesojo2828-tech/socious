@@ -244,13 +244,15 @@ describe("SettingsController", () => {
     const { controller, prisma } = makeController([], ORG_A, platformAdmin);
     prisma.organization.findFirst = jest
       .fn()
-      .mockResolvedValue({ isWholesaler: true });
+      .mockResolvedValue({ isWholesaler: true, isMeatProcessing: true });
 
     const settings = await controller.getSettings(
       request(platformAdmin, { "x-workspace-id": ORG_A }),
     );
 
     expect(settings.wholesaler).toBe(true);
+    expect(settings.meatProcessing).toBe(true);
+    expect(settings.isMeatProcessing).toBe(true);
   });
 
   it("refuses a write without an organization", async () => {
