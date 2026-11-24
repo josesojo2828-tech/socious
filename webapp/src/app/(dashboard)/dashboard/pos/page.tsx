@@ -980,7 +980,7 @@ export default function PosPage() {
                           : resolveUnitDecimals(line.unit);
                         return (
                           <DecimalInput
-                            mode="quantity"
+                            mode={isMeatLine ? "money" : "quantity"}
                             decimals={decimals}
                             value={line.quantity}
                             onValueChange={(text) => {
