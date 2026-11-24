@@ -70,6 +70,10 @@ export function isMeatOrWeight(
     "falda", "lagarto", "pechuga", "muslo", "ala", "hueso", "panceta",
     "ternera", "cordero", "chivo", "canal", "despiece", "pulpa",
     "bistec", "bisteck", "milanesa", "asado", "punta trasera",
+    // Charcutería y Fiambrería
+    "jamon", "jamón", "queso", "mortadela", "salchicha", "salchichon",
+    "salchichón", "tocineta", "chorizo", "salami", "pepperoni", "prosciutto",
+    "pastrami", "fiambre", "embutido", "paisa", "gouda", "mozzarella",
   ];
   return meatKeywords.some((keyword) => name.includes(keyword));
 }
