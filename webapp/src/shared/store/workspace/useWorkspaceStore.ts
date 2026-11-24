@@ -117,8 +117,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
             requiresSubscription: !hasPersonalPlan,
           };
 
-          const isClinicAdmin = orgs.some(o => o.role === 'CLINIC_ADMIN');
-          const allWorkspaces = isClinicAdmin ? orgs : [personalWorkspace, ...orgs];
+          const isOrgAdmin = orgs.some(o => o.role === 'OWNER' || o.role === 'ADMIN' || o.role === 'CLINIC_ADMIN');
+          const allWorkspaces = isOrgAdmin ? orgs : [personalWorkspace, ...orgs];
 
           if (options?.preserveSelection) {
             set({ workspaces: allWorkspaces, isLoading: false, hasLoaded: true });
@@ -127,9 +127,9 @@ export const useWorkspaceStore = create<WorkspaceState>()(
 
           const currentId = get().activeWorkspace.id;
           const matched = allWorkspaces.find((w) => w.id === currentId);
-          const primaryOrg = orgs.find((o) => o.role === 'CLINIC_ADMIN') || orgs[0];
-          const selectedWorkspace = isClinicAdmin
-            ? (matched && matched.type === 'ORGANIZATION' ? matched : orgs.find((o) => o.role === 'CLINIC_ADMIN') || orgs[0])
+          const primaryOrg = orgs.find((o) => o.role === 'OWNER' || o.role === 'ADMIN' || o.role === 'CLINIC_ADMIN') || orgs[0];
+          const selectedWorkspace = isOrgAdmin
+            ? (matched && matched.type === 'ORGANIZATION' ? matched : primaryOrg)
             : (matched || (primaryOrg || personalWorkspace));
 
           set({

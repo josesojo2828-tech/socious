@@ -10,10 +10,14 @@ export function useWorkspaceRole() {
   const isOrganization = activeWorkspace?.type === 'ORGANIZATION';
 
   const isGlobalAdmin =
+    activeWorkspace?.role === 'OWNER' ||
+    activeWorkspace?.role === 'ADMIN' ||
     activeWorkspace?.role === 'CLINIC_ADMIN' ||
     activeWorkspace?.role === 'CLINIC_MANAGER' ||
     user?.permits?.name === 'ADMIN' ||
-    user?.permits?.name === 'SUPERADMIN';
+    user?.permits?.name === 'SUPERADMIN' ||
+    user?.permitId === 'ADMIN' ||
+    user?.permitId === 'SUPERADMIN';
 
   const isNutritionist = isOrganization && !isGlobalAdmin;
 

@@ -2,7 +2,6 @@
 
 import { ClinicManagementPage } from "@/features/organization/pages/ClinicManagementPage";
 import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
-import { useAuthStore } from "@/shared/store/auth/useAuthStore";
 import { Users, Eye } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { organizationService } from "@/features/organization/services/organization.service";
@@ -24,7 +23,7 @@ interface Member {
   };
 }
 
-function NutritionistTeamView() {
+function TeamMemberView() {
   const { targetOrgWorkspace } = useWorkspaceRole();
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,28 +48,18 @@ function NutritionistTeamView() {
   }, [fetchMembers]);
 
   if (!targetOrgWorkspace) {
-    return (
-      <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/80 shadow-sm max-w-lg mx-auto my-12">
-        <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-indigo-100">
-          <Users className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-900">Equipo de la clínica</h2>
-        <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-          Seleccioná una clínica en el desplegable superior de workspaces para ver el equipo.
-        </p>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-indigo-600 to-indigo-600 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white shadow-sm">
         <div className="flex items-center gap-3 mb-2">
           <Users className="w-6 h-6" />
-          <h1 className="text-2xl font-bold">Equipo de la clínica</h1>
+          <h1 className="text-2xl font-bold">Equipo de {targetOrgWorkspace.name}</h1>
         </div>
         <p className="text-indigo-100 text-sm">
-          Miembros que forman parte de {targetOrgWorkspace.name}
+          Miembros y colaboradores de la empresa
         </p>
       </div>
 
@@ -81,7 +70,7 @@ function NutritionistTeamView() {
       ) : members.length === 0 ? (
         <div className="text-center py-12 text-slate-400">
           <Users className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-          <p>No hay miembros en el equipo</p>
+          <p>No hay otros miembros registrados en el equipo</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -122,7 +111,7 @@ function NutritionistTeamView() {
                     setSelectedMember(member);
                     setIsDetailModalOpen(true);
                   }}
-                  className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-semibold"
+                  className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer"
                 >
                   <Eye className="w-3.5 h-3.5" />
                   Ver Perfil
@@ -148,14 +137,24 @@ function NutritionistTeamView() {
 }
 
 export default function OrganizationDashboardPage() {
-  const { activeWorkspace } = useWorkspaceRole();
+  const { activeWorkspace, targetOrgWorkspace } = useWorkspaceRole();
   
-  const isAdmin = activeWorkspace?.role === 'CLINIC_ADMIN' || 
+  // Si no puede tener equipo (ej. espacio personal o maxSeats <= 1), no colocar nada.
+  const canHaveTeam =
+    targetOrgWorkspace != null &&
+    (targetOrgWorkspace.maxSeats == null || targetOrgWorkspace.maxSeats > 1);
+
+  if (!canHaveTeam) {
+    return null;
+  }
+
+  const isAdmin = activeWorkspace?.role === 'OWNER' ||
                   activeWorkspace?.role === 'ADMIN' || 
+                  activeWorkspace?.role === 'CLINIC_ADMIN' || 
                   activeWorkspace?.role === 'SUPERADMIN';
   
   if (!isAdmin) {
-    return <NutritionistTeamView />;
+    return <TeamMemberView />;
   }
   
   return <ClinicManagementPage />;

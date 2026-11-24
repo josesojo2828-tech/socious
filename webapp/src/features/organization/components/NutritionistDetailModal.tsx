@@ -124,7 +124,7 @@ export const NutritionistDetailModal: React.FC<NutritionistDetailModalProps> = (
   };
 
   const handleRemoveMember = async () => {
-    if (!confirm(`¿Estás seguro de dar de baja a ${member.user.firstName} ${member.user.lastName} de esta clínica?`)) {
+    if (!confirm(`¿Estás seguro de dar de baja a ${member.user.firstName} ${member.user.lastName} de este equipo?`)) {
       return;
     }
     setIsUpdating(true);

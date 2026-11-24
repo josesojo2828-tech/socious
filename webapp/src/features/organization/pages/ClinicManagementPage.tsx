@@ -45,7 +45,7 @@ export const ClinicManagementPage: React.FC = () => {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isSeatModalOpen, setIsSeatModalOpen] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'calendar' | 'members'>('calendar');
+  const [activeTab, setActiveTab] = useState<'calendar' | 'members'>('members');
 
   // Detail Modal state
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -111,7 +111,7 @@ export const ClinicManagementPage: React.FC = () => {
 
   const handleRemoveMember = async (member: Member) => {
     if (!clinic) return;
-    if (!confirm(`¿Estás seguro de dar de baja a ${member.user.firstName} ${member.user.lastName} de esta clínica?`)) {
+    if (!confirm(`¿Estás seguro de dar de baja a ${member.user.firstName} ${member.user.lastName} de este equipo?`)) {
       return;
     }
     try {
@@ -119,7 +119,7 @@ export const ClinicManagementPage: React.FC = () => {
       fetchClinicDetails();
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      alert(e?.response?.data?.message || 'Error al eliminar al profesional');
+      alert(e?.response?.data?.message || 'Error al eliminar al colaborador');
     }
   };
 
@@ -128,18 +128,8 @@ export const ClinicManagementPage: React.FC = () => {
     setIsDetailModalOpen(true);
   };
 
-  if (!targetOrgWorkspace) {
-    return (
-      <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/80 shadow-sm max-w-lg mx-auto my-12">
-        <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-indigo-100">
-          <Users className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-900">Gestión de clínica B2B</h2>
-        <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-          Actualmente estás en el contexto <strong className="text-slate-700 font-semibold">«Consulta Personal»</strong>. Seleccioná una clínica en el desplegable superior de workspaces para gestionar los colaboradores y la agenda compartida.
-        </p>
-      </div>
-    );
+  if (!targetOrgWorkspace || (targetOrgWorkspace.maxSeats != null && targetOrgWorkspace.maxSeats <= 1)) {
+    return null;
   }
 
   const activeSeats = clinic?.members?.length || 0;
@@ -156,18 +146,18 @@ export const ClinicManagementPage: React.FC = () => {
       <div className="relative overflow-hidden rounded-3xl bg-white p-6 sm:p-8 text-slate-900 shadow-sm border border-slate-200/80">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl font-extrabold border border-indigo-100">
-              🏥
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
+              <Users className="w-8 h-8" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">{clinic?.name || targetOrgWorkspace.name}</h1>
                 <span className="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200">
-                  Plan Enterprise {maxSeats} Seats
+                  {maxSeats} Cupos de equipo
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Gestión de colaboradores, asignación de colores de agenda y ficha operativa.
+                Gestión de colaboradores, roles y accesos del negocio.
               </p>
             </div>
           </div>
@@ -175,7 +165,7 @@ export const ClinicManagementPage: React.FC = () => {
           {/* Seat Capacity Gauge */}
           <div className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl min-w-[240px] space-y-2">
             <div className="flex justify-between items-center text-xs font-bold">
-              <span className="text-slate-500">Cupos del Equipo:</span>
+              <span className="text-slate-500">Cupos de Colaboradores:</span>
               <span className="text-slate-900 font-extrabold">{activeSeats} / {maxSeats}</span>
             </div>
             <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
@@ -225,7 +215,7 @@ export const ClinicManagementPage: React.FC = () => {
           }`}
         >
           <Users className="w-4 h-4" />
-          Miembros & Colores ({activeSeats})
+          Miembros del Equipo ({activeSeats})
         </button>
       </div>
 
@@ -237,10 +227,10 @@ export const ClinicManagementPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Colaboradores y personal de la clínica
+                Colaboradores y miembros del equipo
               </h3>
               <p className="text-xs text-slate-500">
-                Visualizá el perfil operativo, asigná colores para el calendario y gestioná el equipo.
+                Personal activo y roles asignados en el negocio
               </p>
             </div>
 
@@ -350,10 +340,10 @@ export const ClinicManagementPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="w-full max-w-2xl bg-base-100 text-base-content rounded-3xl border border-base-300 shadow-2xl p-6 sm:p-8 space-y-4 max-h-[85vh] overflow-y-auto">
             <h3 className="text-lg font-extrabold text-base-content">
-              Invitar colaborador a la clínica
+              Invitar colaborador al equipo
             </h3>
             <p className="text-xs text-base-content/70 leading-relaxed">
-              El profesional recibirá acceso a los pacientes y agenda de la clínica manteniendo su cuenta personal independiente.
+              El colaborador recibirá acceso a la plataforma según el rol asignado.
             </p>
 
             {inviteError && (
@@ -379,16 +369,16 @@ export const ClinicManagementPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-bold text-base-content mb-1">
-                  Rol en la Clínica
+                  Rol del colaborador
                 </label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-2xl border border-base-300 bg-base-200 focus:bg-base-100 text-xs text-base-content focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                 >
-                  <option value="NUTRITIONIST">Colaborador</option>
-                  <option value="CLINIC_ADMIN">Administrador de Clínica</option>
-                  <option value="RECEPTIONIST">Recepción / Secretaria</option>
+                  <option value="NUTRITIONIST">Colaborador / Operador</option>
+                  <option value="CLINIC_ADMIN">Administrador</option>
+                  <option value="RECEPTIONIST">Cajero / Atención</option>
                 </select>
               </div>
 
